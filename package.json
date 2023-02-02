@@ -1,0 +1,20 @@
+{
+  "name": "viewbovisdev",
+  "version": "1.0.0",
+  "description": "ViewBovis Alpha Prototype",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aphascience/ViewBovisDev.git"
+  },
+  "author": "Tom Jenkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aphascience/ViewBovisDev/issues"
+  },
+  "homepage": "https://github.com/aphascience/ViewBovisDev#readme"
+}

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ViewBovis</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="./src/css/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.css">
+        <link rel="stylesheet" href="./src/css/Leaflet.LinearMeasurement.css">
+        <link rel="stylesheet" href="./src/css/styles.css">
+    </head>
+    <body>
+        <!-- ================================== -->
+        <!-- Navbar -->
+        <!-- ================================== -->
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency">
+                    <!-- Navbar Logo -->
+                    <img src="./images/APHA_logo_svg.svg" alt="Logo" width="auto" height="60px" class="d-inline-block align-text-top">
+                </a>
+                <!-- Navbar Title -->
+                <strong id="nav-main-title">ViewBovis [Official Sensitive]</strong>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- Home Tab -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
+                        </li>
+                        <!-- Cattle Movement Tab -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
+                        </li>
+                        <!-- SNP Distances Tab -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-3" data-tab="3">SNP Distances</a>
+                        </li>
+                        <!-- Nextstrain Tab -->
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-4" data-tab="4">Nextstrain</a>
+                        </li>
+                        <!-- Help and Support Tab -->
+                        <li class="nav-item ">
+                            <a class="nav-link nav-link-5" data-tab="5">Help and Support</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- ================================== -->
+        <!-- Home Content -->
+        <!-- ================================== -->
+        <div class="container content content-1 hidden">
+            <div class="row">
+                <p id="home-view-bovis-description">
+                    <font color="#00703c">ViewBovis</font> is a web application for exploring and visualising whole genome sequencing data from bovine tuberculosis (bTB) isolates. The app links genetic relatedness with geographic information to provide insights into bTB transmission.
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-9">
+                    <p id="home-help-declaration">
+                        If you are using this application for the first time, please see the <a><font color="#0000EE">Help and Support</font></a> documentation for instructions on how to use this app.
+                    </p>
+                </div>
+                <div class="col-3">
+                    <p id="home-help-declaration">
+                        <img src="./images/Cow_GIS_Team.svg" width="auto" height="80px">
+                        <img src="./images/Bacteria_Hira_v2.svg" width="auto" height="60px">
+                        <img src="./images/DNA_Hira_v2.svg" width="auto" height="70px">
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 home-box" style="margin-right: 10px;">
+                    <strong>View Maps</strong>
+                    <p>
+                        <br/>
+                        There are two key map visualisations:
+                    </p>
+                    <p>
+                        <a><font color="#0000EE">Cattle Movement Map</font></a>
+                    </p>
+                    <p>
+                        <a><font color="#0000EE">SNP Distances Map</font></a>
+                    </p>
+                </div>
+                <div class="col-6 home-box" style="margin-left: 10px;">
+                    <strong>Phylogeny</strong>
+                    <p>
+                        <br/>
+                        Nextstrain presents interactive phylogenetic trees at the clade level with functionality to filter, zoom and download trees for target samples.
+                    </p>
+                    <p>
+                        <br/>
+                        <a><font color="#0000EE">Link to Nextstrain</font></a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer fs-6 fw-bold text-muted">
+                <div class="float-start">A Defra Digital, Data and Technology Service</div>
+                <!-- // Accessibility Statement Modal -->
+                <!-- // Purpose: popup information about accessibility on click -->
+                <div class="float-end text-decoration-underline" data-bs-toggle="modal" data-bs-target="#accessibilityModal" style="cursor: pointer;">Accessibility Statement</div>
+                <!-- Bootstrap modal -->
+                <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for View Bovis</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body fs-6">
+                          <p>
+                            This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                          </p>
+                          </br>
+                          <ul class="list-group">
+                            <li class="list-group-item">Statement 1</li>
+                            <li class="list-group-item">Statement 2</li>
+                            <li class="list-group-item">Statement 3</li>
+                            <li class="list-group-item">Statement 4</li>
+                            <li class="list-group-item">Statement 5</li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ================================== -->
+        <!-- Cattle Movement Content -->
+        <!-- ================================== -->
+        <div class="container-fluid content content-2">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div style="font-weight:bold;background:#C8C8C8;font-size:30px;padding:10px;margin-top:10px;">
+                        Select a Sample
+                    </div>
+                    <br>
+                    <p style="color:#696969;font-size:20px;">
+                        Ear-Tag or AF number
+                    </p>
+                    <p>
+                        <input type="text" id="cattle_input" placeholder="e.g. UK705113600438" name="Name" style="height:40px;">
+                    </p>
+                    <div>
+                        <button class="govuk-button" data-module="govuk-button" id="btn_show-movements">Show Movements</button>
+                    </div>
+                    <p class="fs-5 fw-bold">
+                        Layers
+                    </p>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="countyBox" type="checkbox">
+                            <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="riskAreasBox" type="checkbox">
+                            <label class="govuk-label govuk-checkboxes__label" for="riskAreasBox">Risk Areas</label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="homeRangesBox" type="checkbox">
+                            <label class="govuk-label govuk-checkboxes__label" for="homeRangesBox">Home Ranges</label>
+                        </div>
+                    </div>
+                    <br>
+                    <p class="fs-5 fw-bold">
+                        Filters
+                    </p>
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="box_movement-lines" disabled="disabled" type="checkbox" checked>
+                            <label class="govuk-label govuk-checkboxes__label" for="box_movement-lines">Movement Lines</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="custom-popup" id="map" style="margin-top:10px;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- ================================== -->
+        <!-- SNP Distance Content -->
+        <!-- ================================== -->
+        <div class="container-fluid content content-3 hidden" style="margin-top: 10px;">
+            <!-- Navbar for SNP Distance Sub-Tabs -->
+            <nav class="nav nav-pills nav-justified">
+                <div class="nav nav-tabs" id="snpDistanceNav" role="tablist">
+                    <button class="nav-link" id="navSnpMap" data-bs-toggle="tab" data-bs-target="#snpMapContent" type="button" role="tab" aria-controls="snpMapContent" aria-selected="true">SNP Distance Map</button>
+                    <button class="nav-link" id="navSnpMatrix" data-bs-toggle="tab" data-bs-target="#snpMatrixContent" type="button" role="tab" aria-controls="snpMatrixContent" aria-selected="false">SNP Matrix</button>
+                </div>
+            </nav>
+            <!-- Content -->
+            <div class="tab-content" id="snpDistanceContent">
+                <!-- SNP Distance Map Content -->
+                <div class="tab-pane fade show active" id="snpMapContent" role="tabpanel" aria-labelledby="navSnpMap" tabindex="0">
+                    <div style="margin-top: 10px">
+                        <!-- <iframe src="https://tom-jenkins.github.io/seafan_sdm/figures/Figure4_interactive.html" frameborder="0" height="800px" width="100%"></iframe> -->
+                        <!-- <style>.embed-container {position: relative; padding-bottom: 80%; height: 0; max-width: 100%;} .embed-container iframe, .embed-container object, .embed-container iframe{position: absolute; top: 0; left: 0; width: 100%; height: 100%;} small{position: absolute; z-index: 40; bottom: 0; margin-bottom: -15px;}</style><div class="embed-container"><small><a href="//apha-016.cvlnt.vla.gov.uk/portal/apps/Embed/index.html?webmap=0eac181c06064cd3b9b9238a11436339&amp;extent=-4.4399,51.255,1.4166,53.2678&amp;zoom=true&amp;scale=true&amp;search=true&amp;searchextent=true&amp;legendlayers=true&amp;disable_scroll=true&amp;theme=light" style="color:#0000FF;text-align:left" target="_blank">View larger map</a></small><br><iframe width="500" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="SNP Distance" src="//apha-016.cvlnt.vla.gov.uk/portal/apps/Embed/index.html?webmap=0eac181c06064cd3b9b9238a11436339&amp;extent=-4.4399,51.255,1.4166,53.2678&amp;zoom=true&amp;previewImage=false&amp;scale=true&amp;search=true&amp;searchextent=true&amp;legendlayers=true&amp;disable_scroll=true&amp;theme=light"></iframe></div> -->
+                        <iframe src="https://apha-016.cvlnt.vla.gov.uk/portal/apps/webappviewer/index.html?id=bb03273b0db1429f831284ed5d97242b" frameborder="0" height="800px" width="100%"></iframe>
+                    </div>
+                </div>
+                <!-- SNP Matrix Content -->
+                <div class="tab-pane fade" id="snpMatrixContent" role="tabpanel" aria-labelledby="navSnpMatrix" tabindex="0">
+                    <div style="margin-top: 10px">
+                        <iframe src="https://tomjenkins.shinyapps.io/SNP_Matrix_User_Testing/" frameborder="0" height="800px" width="100%"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================== -->
+        <!-- Nextstrain Content -->
+        <!-- ================================== -->
+        <div class="container-fluid content content-4 hidden" style="margin-top: 10px;">
+            <iframe src="https://nextstrain.org/" frameborder="0" height="850px" width="100%"></iframe>
+        </div>
+
+        <!-- ================================== -->
+        <!-- Help and Support Content -->
+        <!-- ================================== -->
+        <div class="container content content-5 hidden">
+            <div class="row">
+                <p id="home-view-bovis-description">
+                    <font color="#00703c">Help and Support</font>
+                </p>
+            </div>
+            <div class="row">
+                <div class="col-6 home-box" style="margin-right: 10px;">
+                    <strong>Support Documents</strong>
+                    <p>
+                        <ul style="line-height: 200%;">
+                            <li><a id="ln_glossary"><font color="#0000EE">Glossary of Terms</font></a></li>
+                            <li><a><font color="#0000EE">How To Use This App</font></a></li>
+                            <li><a><font color="#0000EE">Link To SharePoint Home Page</font></a></li>                   
+                        </ul>
+                    </p>
+                    <p style="margin-top: 60px;">
+                        <img src="../images/FeedbackForm_Hira_v2.svg" width="40px">
+                        Click <a id="ln_glossary"><font color="#0000EE">here</font></a> to submit feedback for this app
+                    </p>
+                </div>
+                <div class="col-6 home-box" style="margin-left: 10px;">
+                    <strong>Phylogenetic Tree Interpretation Video</strong>
+                    <div>
+                        <iframe width="100%" height="315" style="margin-top: 15px;" src="https://www.youtube.com/embed/QasuKryesOQ" title="Module 1.3 - How to read a phylogenetic tree" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p id="home-help-declaration">
+                    Please report any errors or issues to the <a><font color="#0000EE">ViewBovis User MS Teams Channel</font></a>.
+                </p>
+            </div>
+            <div class="footer fs-6 fw-bold text-muted" style="bottom: -7.35rem;">
+                <div class="float-start">A Defra Digital, Data and Technology Service</div>
+                <!-- // Accessibility Statement Modal -->
+                <!-- // Purpose: popup information about accessibility on click -->
+                <div class="float-end text-decoration-underline" data-bs-toggle="modal" data-bs-target="#accessibilityModal2" style="cursor: pointer;">Accessibility Statement</div>
+                <!-- Bootstrap modal -->
+                <div class="modal fade" id="accessibilityModal2" tabindex="-1" aria-labelledby="accessibilityModalLabel2" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel2">Accessibility Statement for View Bovis</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body fs-6">
+                          <p>
+                            This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                          </p>
+                          </br>
+                          <ul class="list-group">
+                            <li class="list-group-item">Statement 1</li>
+                            <li class="list-group-item">Statement 2</li>
+                            <li class="list-group-item">Statement 3</li>
+                            <li class="list-group-item">Statement 4</li>
+                            <li class="list-group-item">Statement 5</li>
+                          </ul>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- JavaScript -->
+    <script src="./src/js/govuk-frontend-4.4.1.min.js"></script>
+    <script src="./src/js/leaflet.shpfile.js"></script><script src="./src/js/shp.js"></script>
+    <script src="./src/js/leaflet.geometryutil.js"></script><script src="./src/js/leaflet-arrowheads.js"></script>
+    <script src="./src/js/L.LinearMeasurement.js"></script>
+    <script src="./src/js/cattle-movement.js"></script>
+    <script src="./src/js/main.js"></script>
+    </body>
+</html>
