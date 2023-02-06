@@ -35,16 +35,36 @@ npm --version
 
 ### 2. Install Libraries
 
-Install bootstrap v5.2.3
+
+ONLY THING USERS NEED TO DO:  
+```
+npm install
+```
+
+
+Install Bootstrap v5.2.3
 ```
 npm install bootstrap@5.2.3
 ```
 
-Install leaflet v1.9.3
+Install Leaflet v1.9.3
 ```
 npm install leaflet@1.9.3
 ```
 
+Install GOV.UK Frontend 
+```
+npm install govuk-frontend@4.5.0
+```
 
+Install Parcel and Dart Sass
+```
+npm install parcel@2.8.3 --save-dev
+npm install sass@1.58.0 --save-dev
+```
 
+### 3. Launch App
+```
+npm run start
+```
 

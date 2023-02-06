@@ -193,6 +193,28 @@ a.nav-link:hover {
     opacity: 0.7;
 }
 
+/* Government button size */
+
+/* Tooltip */
+.input-tooltip {
+    background-color: #eb0e0e;
+    font-size: 50px;
+}
+
+.cattle_input {
+    width: 100%;
+}
+
+/* Dropdown second movement style */
+.accordion-button:not(.collapsed) {
+    background-color: white;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+
+
 /* Apply this style to screens with a height >720px (larger laptop or desktop) */
 @media (min-height: 720px){
     /* Sample input box */

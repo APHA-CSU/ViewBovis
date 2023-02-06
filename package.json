@@ -1,11 +1,9 @@
 {
   "name": "viewbovisdev",
   "version": "1.0.0",
-  "description": "ViewBovis Alpha Prototype",
-  "main": "index.html",
+  "description": "ViewBovis Application Development",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "start": "parcel index.html"
   },
   "repository": {
     "type": "git",
@@ -16,5 +14,14 @@
   "bugs": {
     "url": "https://github.com/aphascience/ViewBovisDev/issues"
   },
-  "homepage": "https://github.com/aphascience/ViewBovisDev#readme"
+  "homepage": "https://github.com/aphascience/ViewBovisDev#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "govuk-frontend": "^4.5.0",
+    "leaflet": "^1.9.3"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.8.3",
+    "parcel": "^2.8.3"
+  }
 }
