@@ -1,0 +1,318 @@
+/* ================================ */
+/* Document Global Styles */
+/* ================================ */
+html {
+    font-family: Arial;
+    color: black;
+}
+
+/* Body */
+body {
+    background-color: #f2f2f2;
+}
+
+/* Paragraph */
+p {
+    color: black;
+}
+
+/* Main content visibility TODO */
+.hidden {
+    display: none;
+}
+
+/* All links have the pointer (hand) on mouse hover */
+a:hover {
+    cursor:pointer;
+}
+
+/* CSS variables */
+:root {
+    --gov-green: #00703c;
+}
+/* ================================ */
+
+
+/* ================================ */
+/* NAVBAR */
+/* ================================ */
+
+/* General */
+.navbar {
+    background-color: white !important;
+    border-bottom: 0.2rem solid var(--gov-green);
+    padding: 0;
+}
+/* Main title */
+#nav-main-title {
+    font-size: 25px;
+}
+/* Branding */
+.navbar-brand {
+    margin-right: 10px;
+    padding: 1px;
+}
+/* APHA logo */
+.navbar-brand img {
+    margin-right: 20px;
+}
+/* Tab navigation links */
+.navbar-nav {
+    margin-left: 50px;
+    font-size: 20px;
+}
+/* Space between tabs */
+/* .nav-item {
+    width: 120%;
+} */
+/* Active tab styling */
+a.nav-link.active {
+    color: black !important;
+    font-weight: bold;
+}
+/* Non-active tab styling */
+a.nav-link {
+    color: grey;
+}
+/* Tab styling on hover */
+a.nav-link:hover {
+    color: black;
+    font-weight: bold;
+}
+/* ================================ */
+
+
+/* ================================ */
+/* HOME CONTENT */
+/* ================================ */
+
+/* Apply this style to screens with a height >720px (larger laptop or desktop) */
+@media (min-height: 720px){
+    #home-view-bovis-description {
+        font-size: 30px;
+        font-weight: bold;
+        background-color: white;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    #home-help-declaration {
+        font-size: 30px;
+        margin-top: 50px;
+    }
+    .home-box {
+        background-color: white;
+        border-top: 10px solid var(--gov-green);
+        margin-top: 50px;
+        padding: 15px;
+        padding-top: 10px;
+        font-size: 25px;
+        /* Probably a better solution out there than this! */
+        width: 49%;
+    }
+    .footer {
+        bottom: -4rem;
+        position: relative;
+    }
+}
+
+/* Apply this style to screens with a maximum screen height of 720px (Defra laptops) */
+@media (max-height: 720px){
+    #home-view-bovis-description {
+        font-size: 20px;
+        font-weight: bold;
+        background-color: white;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    #home-help-declaration {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    .home-box {
+        background-color: white;
+        border-top: 10px solid var(--gov-green);
+        margin-top: 10px;
+        padding: 10px;
+        padding-bottom: 0;
+        font-size: 17px;
+        /* Probably a better solution out there than this! */
+        width: 49%;
+    }
+    .footer {
+        bottom: -2rem;
+        position: relative;
+        font-size: 10px !important;
+    }
+}
+/* ================================ */
+
+
+/* ================================ */
+/* CATTLE MOVEMENT CONTENT */
+/* ================================ */
+
+/* Leaflet popup style */
+.popupCustom .leaflet-popup-tip,
+.popupCustom .leaflet-popup-content-wrapper {
+    background: white;
+    opacity: 0.95;
+    color: black;
+    height: 400px;
+    /* max-height: 500px; */
+    overflow-y: scroll;
+}
+
+/* Leaflet custom control style */
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+.leaflet-control-layers-scrollbar {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+/* Leaflet legend styles */
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+/* Government button size */
+
+/* Tooltip */
+.input-tooltip {
+    background-color: #eb0e0e;
+    font-size: 50px;
+}
+
+.cattle_input {
+    width: 100%;
+}
+
+/* Dropdown second movement style */
+.accordion-button:not(.collapsed) {
+    background-color: white;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+
+
+/* Apply this style to screens with a height >720px (larger laptop or desktop) */
+@media (min-height: 720px){
+    /* Sample input box */
+    #cattle_input[type="text"] {
+        font-size:20px;
+    }
+    /* Leaflet map */
+    #map {
+        height: 850px;
+    }
+}
+
+/* Apply this style to screens with a maximum screen height of 720px (Defra laptops) */
+@media (max-height: 720px){
+    /* Sample input box */
+    #cattle_input[type="text"] {
+        font-size:15px;
+    }
+    /* Leaflet map */
+    #map {
+        height: 490px;
+    }
+    .content-2 {
+        font-size: 10px;
+    }
+    /* Scroll bar for side bar */
+    .content-2 > .row > .col-lg-2 {
+        max-height: 500px;
+        overflow-y: scroll;
+    }
+    /* Override gov-kit checkbox and text size */
+    .govuk-label {
+        font-size: 1rem;
+    }
+}
+/* ================================ */
+
+
+/* ================================ */
+/* SNP DISTANCE CONTENT */
+/* ================================ */
+
+/* No border between nav pills */
+#snpDistanceNav.nav.nav-tabs {
+    --bs-nav-tabs-border-width: 0;
+}
+/* Space between nav pills */
+#navSnpMap, #navSnpMatrix {
+    margin-right: 10px;
+    width: 250px;
+    font-size: 18px;
+}
+/* SNP Distance Active Nav Pill */
+.nav-pills .nav-link.active {
+    color: white;
+    background-color: var(--gov-green);
+    border-bottom: 2px solid black;
+    /* border-radius: 0; */
+}
+/* SNP Distance Inactive Nav Pill */
+.nav-pills .nav-link {
+    color: var(--gov-green);
+    font-weight: bold;
+}
+.nav-pills .nav-link:not(.active):hover {
+    background-color: #d3d1d1;
+}
+
+
+/* Apply this style to screens with a height >720px (larger laptop or desktop) */
+/* @media (min-height: 720px){   
+} */
+
+/* Apply this style to screens with a maximum screen height of 720px (Defra laptops) */
+/* @media (max-height: 720px){
+
+} */
+/* ================================ */
+
+
+
+/* ================================ */
+/* NEXTSTRAIN CONTENT */
+/* ================================ */
+
+/* Apply this style to screens with a height >720px (larger laptop or desktop) */
+/* @media (min-height: 720px){
+    
+} */
+
+/* Apply this style to screens with a maximum screen height of 720px (Defra laptops) */
+/* @media (max-height: 720px){
+
+} */
+/* ================================ */
+
+
+
+
+
+
