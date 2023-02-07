@@ -3,7 +3,7 @@ import pandas as pd
 
 app = Flask(__name__)
 
-metadata = pd.DataFrame({"sample": ["A", "B"], "Other": ["foo", "bar"]}).set_index("sample") 
+metadata = pd.DataFrame({"sample": ["A", "B"], "Other": ["foo", "bar"]})
 
 @app.route("/")
 def home():
@@ -12,5 +12,5 @@ def home():
 @app.route("/sample")
 def sample_data():
     sample_name = request.args.get("sample_name")
-    data = metadata.loc(sample_name)
-    return jsonify(data)
+    data = metadata.loc[metadata["sample"]==sample_name]
+    return jsonify(data.to_dict())

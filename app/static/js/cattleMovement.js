@@ -38,7 +38,6 @@ const mov1 = [
   [52.70011, -2.2853, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/10", "Slaughterhouse", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
 ];
 
-
 // ------------------------ //
 //
 // BASEMAP PARAMETERS
@@ -305,14 +304,10 @@ const customOptions = {
 // Show cattle movement content on click of 'Show Movements' button
 document.getElementById("btn_show-movements").addEventListener("click", function(){
 
-    console.log("hello world");
-    //const request = new XMLHttpRequest();
-    //request.open("GET", `/sample?sample_name=${cattle_input.name}`);
-    //request.onload = () => {
-    //const response = request.responseText;
-    //console.log(response);
-    //}; 
-    //request.send();
+    request.send();
+    fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`)
+      .then(response => response.json());
+    console.log(response)
     
     // Add all cattle movement points to the map
     for (let i = 0; i < mov1.length; i++){
