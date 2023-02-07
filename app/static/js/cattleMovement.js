@@ -304,6 +304,15 @@ const customOptions = {
 
 // Show cattle movement content on click of 'Show Movements' button
 document.getElementById("btn_show-movements").addEventListener("click", function(){
+
+    console.log("hello world");
+    //const request = new XMLHttpRequest();
+    //request.open("GET", `/sample?sample_name=${cattle_input.name}`);
+    //request.onload = () => {
+    //const response = request.responseText;
+    //console.log(response);
+    //}; 
+    //request.send();
     
     // Add all cattle movement points to the map
     for (let i = 0; i < mov1.length; i++){
