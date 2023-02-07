@@ -7,7 +7,7 @@ metadata = pd.DataFrame({"sample": ["A", "B"], "Other": ["foo", "bar"]})
 
 @app.route("/")
 def home():
-    return render_template("home.template")
+    return render_template("index.html")
 
 @app.route("/sample")
 def sample_data():
