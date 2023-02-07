@@ -304,10 +304,10 @@ const customOptions = {
 // Show cattle movement content on click of 'Show Movements' button
 document.getElementById("btn_show-movements").addEventListener("click", function(){
 
-    request.send();
     fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`)
-      .then(response => response.json());
-    console.log(response)
+      .then(response => console.log(response.json()))
+      .then(data => console.log(JSON.stringify(data)))
+      .then(json => console.log(json));
     
     // Add all cattle movement points to the map
     for (let i = 0; i < mov1.length; i++){
