@@ -218,17 +218,17 @@ const stylePoly = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly = new L.Shapefile("../data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
+countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
 const countyBox = document.getElementById("countyBox"); // select element from DOM
 countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly)); // event listener on the county checkbox
 
 // Toggle risk area polygons when checkbox is ticked or unticked
-riskAreaPoly = new L.Shapefile("../data/RiskAreas.zip", {style: styleRiskAreaPoly});
+riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
 const riskAreaBox = document.getElementById("riskAreasBox");
 riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
 
 // Toggle risk area polygons when checkbox is ticked or unticked
-homeRangePoly = new L.Shapefile("../data/HR2021.zip", stylePoly("purple"));
+homeRangePoly = new L.Shapefile("/static/data/HR2021.zip", stylePoly("purple"));
 const homeRangeBox = document.getElementById("homeRangesBox");
 homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
 
@@ -286,7 +286,7 @@ riskAreaBox.addEventListener("change", function() {
 
 // Cow icons
 const cowIcon = L.icon({
-    iconUrl: "../images/Cow_GIS_Team.svg",
+    iconUrl: "/static/img/Cow_GIS_Team.svg",
     // iconUrl: "file:///C:/Users/m1004795/OneDrive%20-%20Defra/bTB/ViewBovis/ViewBovis%20Design%20A/images/Cow_GIS_Team.svg",
     iconSize: [50, 50],
     iconAnchor: [25, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
@@ -395,7 +395,7 @@ document.getElementById("btn_show-movements").addEventListener("click", function
                 </tr> 
               </tbody>
             </table>
-            <img src="../images/peter-lloyd-qeABAF-3bEs-unsplash-min.jpg" alt="A photo of a cow" width="100%">
+            <img src="/static/img/peter-lloyd-qeABAF-3bEs-unsplash-min.jpg" alt="A photo of a cow" width="100%">
           </div>
         </div>           
       `;
