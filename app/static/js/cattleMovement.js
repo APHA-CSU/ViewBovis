@@ -303,7 +303,7 @@ const customOptions = {
 
 // Async function that executes when the main 'Show Cattle Movement' button is clicked
 const showMovements = async function () {
-  const response = await fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`);
+  const response = await fetch(`/sample?sample_name=${document.getElementById("input__sampleID--1").value}`);
   const data = await response.json();
   console.log("Output data from async function");
   console.log(data); 
@@ -445,6 +445,9 @@ document.getElementById("btn_show-movements").addEventListener("click", showMove
 // TOGGLE FILTER LAYERS
 //
 // ------------------------ //
+
+// BUG
+// Function does not work when user select A or B
 
 // Toggle lines and arrows from map when 'Movement Lines' checkbox ticked or unticked
 const boxMovementLines = document.getElementById("box_movement-lines");

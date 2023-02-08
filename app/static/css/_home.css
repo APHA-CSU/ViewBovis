@@ -1,0 +1,62 @@
+/* ================================ */
+/* HOME CONTENT */
+/* ================================ */
+
+/* Apply this style to screens with a height >720px (larger laptop or desktop) */
+@media (min-height: 720px){
+    #home-view-bovis-description {
+        font-size: 30px;
+        font-weight: bold;
+        background-color: white;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    #home-help-declaration {
+        font-size: 30px;
+        margin-top: 50px;
+    }
+    .home-box {
+        background-color: white;
+        border-top: 10px solid var(--gov-green);
+        margin-top: 50px;
+        padding: 15px;
+        padding-top: 10px;
+        font-size: 25px;
+        /* Probably a better solution out there than this! */
+        width: 49%;
+    }
+    .footer {
+        bottom: -4rem;
+        position: relative;
+    }
+}
+
+/* Apply this style to screens with a maximum screen height of 720px (Defra laptops) */
+@media (max-height: 720px){
+    #home-view-bovis-description {
+        font-size: 20px;
+        font-weight: bold;
+        background-color: white;
+        padding: 10px;
+        margin-top: 10px;
+    }
+    #home-help-declaration {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    .home-box {
+        background-color: white;
+        border-top: 10px solid var(--gov-green);
+        margin-top: 10px;
+        padding: 10px;
+        padding-bottom: 0;
+        font-size: 17px;
+        /* Probably a better solution out there than this! */
+        width: 49%;
+    }
+    .footer {
+        bottom: -2rem;
+        position: relative;
+        font-size: 10px !important;
+    }
+}

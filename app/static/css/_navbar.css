@@ -1,0 +1,56 @@
+/* ================================ */
+/*
+/* NAVBAR CSS */
+/*
+/* ================================ */
+
+/* General */
+.navbar {
+    background-color: white !important;
+    border-bottom: 0.2rem solid var(--gov-green);
+    padding: 0;
+}
+
+/* Main title */
+#nav-main-title {
+    font-size: 25px;
+}
+
+/* Branding */
+.navbar-brand {
+    margin-right: 10px;
+    padding: 1px;
+}
+
+/* APHA logo */
+.navbar-brand img {
+    margin-right: 20px;
+}
+
+/* Tab navigation links */
+.navbar-nav {
+    margin-left: 50px;
+    font-size: 20px;
+}
+
+/* Space between tabs */
+/* .nav-item {
+    width: 120%;
+} */
+
+/* Active tab styling */
+a.nav-link.active {
+    color: black !important;
+    font-weight: bold;
+}
+
+/* Non-active tab styling */
+a.nav-link {
+    color: grey;
+}
+
+/* Tab styling on hover */
+a.nav-link:hover {
+    color: black;
+    font-weight: bold;
+}
