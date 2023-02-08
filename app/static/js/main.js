@@ -39,11 +39,6 @@ navBar.addEventListener("click", function(e){
     // Activate content for nav-link clicked (remove 'hidden' class from content-X class using data-tab number extracted from the nav-link clicked)
     // console.log(clicked.dataset.tab);
     document.querySelector(`.content-${clicked.dataset.tab}`).classList.remove("hidden");   
-   
-    // Ensures the correct sub-tab is highlighted green on the SNP Distances page
-    // The code adds the active class when the content of either the SNP Distances Map or SNP Matrix are active
-    if(document.getElementById("snpMapContent").classList.contains("active")) document.getElementById("navSnpMap").classList.add("active");
-    if(document.getElementById("snpMatrixContent").classList.contains("active")) document.getElementById("navSnpMatrix").classList.add("active");
 
     // Redraw cattle movement leaflet map to solve sizing issue on startup
     map.invalidateSize();

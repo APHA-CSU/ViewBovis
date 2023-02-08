@@ -6,7 +6,12 @@ app = Flask(__name__)
 
 ls = LiveServer(app)
 
-metadata = pd.DataFrame({"sample": ["A", "B"], "Other": ["foo", "bar"]})
+metadata = pd.DataFrame(
+    {
+        "sample": ["A", "B"],
+        "Other": ["foo", "bar"]
+    }
+)
 
 @app.route("/")
 def home():

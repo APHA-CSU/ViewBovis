@@ -431,27 +431,23 @@ const showMovements = async function () {
   const bounds = L.latLngBounds(linePts).pad(0.10);
   map.fitBounds(bounds);
 
-  // Allow access to filters by removing the disabled class from the checkbox
-  document.getElementById("box_movement-lines").disabled = false;
+  // Allow user access to other elements by removing the disabled class
+  document.getElementById("toggle__movement-lines--1").disabled = false;
+  document.getElementById("input__sampleID--2").disabled = false;
+  document.getElementById("btn__cattle-movement--2").disabled = false;
+  document.getElementById("slider__snp-threshold").disabled = false;
+  document.getElementById("btn__related-isolates").disabled = false;
 };
 
 // Add event listener to the main 'Show Cattle Movement' button
 document.getElementById("btn_show-movements").addEventListener("click", showMovements);
 
 
-
-// ------------------------ //
-//
-// TOGGLE FILTER LAYERS
-//
-// ------------------------ //
-
 // BUG
 // Function does not work when user select A or B
-
 // Toggle lines and arrows from map when 'Movement Lines' checkbox ticked or unticked
-const boxMovementLines = document.getElementById("box_movement-lines");
-boxMovementLines.addEventListener("change", function(){
+const toggleMovementLines = document.getElementById("toggle__movement-lines--1");
+toggleMovementLines.addEventListener("change", function(){
 
   // When checkbox is ticked, add layer to map
   if(this.checked === true) cattleMovLine.addTo(map);
@@ -464,5 +460,20 @@ boxMovementLines.addEventListener("change", function(){
 
 
 
+// ------------------------ //
+//
+// PLOT SECOND CATTLE MOVEMENT
+//
+// ------------------------ //
 
+// TODO
+
+
+// ------------------------ //
+//
+// SNP DISTANCE SLIDER
+//
+// ------------------------ //
+
+// TODO
 

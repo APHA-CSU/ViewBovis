@@ -139,7 +139,7 @@
                         Enter Sample
                     </div>
                     <div>
-                        <!-- Element : input sample box for main cattle movement -->
+                        <!-- Element: input sample box for main cattle movement -->
                         <p>
                             <!-- Ear-Tag or AF number -->
                             <input type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
@@ -151,15 +151,15 @@
                     <!-- Element: toggle movement lines for main cattle movement -->
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="box_movement-lines" disabled="disabled" type="checkbox" checked>
-                            <label class="govuk-label govuk-checkboxes__label" for="box_movement-lines">Toggle Movement Lines</label>
+                            <input class="govuk-checkboxes__input" id="toggle__movement-lines--1" disabled="disabled" type="checkbox" checked>
+                            <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--1">Toggle Movement Lines</label>
                         </div>
                     </div>
                     <br> 
                     <!-- Element: dropdown box for inputting a second cattle movement -->
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                 <!-- Element: title text and style for dropdown box -->
                                 <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
                             </button>
@@ -167,17 +167,17 @@
                             <div class="accordion-body">
                                 <div>
                                     <!-- Element: input sample box for second cattle movement -->
-                                    <p class="input__sampleID">
-                                        <input type="text" placeholder="e.g. UK705113600438" name="Name" style="height:35px;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
+                                    <p>
+                                        <input type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
                                     </p>
                                     <!-- Element: button to show second cattle movement -->
-                                    <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn_show-movements2">Show Second Movement</button>
+                                    <button type="button" class="govuk-button" id="btn__cattle-movement--2" disabled="disabled" style="margin-bottom: 10px;" data-module="govuk-button">Show Second Movement</button>
                                     <br>
                                     <!-- Element: toggle movement lines for second cattle movement -->
                                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="govuk-checkboxes__item">
-                                            <input class="govuk-checkboxes__input" id="box_movement-lines" disabled="disabled" type="checkbox" checked>
-                                            <label class="govuk-label govuk-checkboxes__label" for="box_movement-lines">Toggle Movement</label>
+                                            <input class="govuk-checkboxes__input" id="toggle__movement-lines--2" disabled="disabled" type="checkbox" checked>
+                                            <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--2">Toggle Movement</label>
                                         </div>
                                     </div>
                                 </div>
@@ -210,8 +210,9 @@
                         SNP Distance
                     </div>
                     <div>
-                        <input type="range" class="form-range" min="0" max="10" step="1" id="snpThreshold" disabled="disabled">
-                        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                        <!-- Element: SNP range slider -->
+                        <input type="range" class="form-range" id="slider__snp-threshold" min="0" max="10" step="1" id="snpThreshold" disabled="disabled" value="3">
+                        <button class="govuk-button" id="btn__related-isolates" disabled="disabled" aria-disabled="true"  data-module="govuk-button">
                             Show Related Isolates
                         </button>
                     </div>
