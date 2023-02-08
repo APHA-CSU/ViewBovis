@@ -301,150 +301,142 @@ const customOptions = {
     className: "popupCustom" // must match a css class in styles.css
 };
 
-// Async function
-const logData = async function () {
+// Async function that executes when the main 'Show Cattle Movement' button is clicked
+const showMovements = async function () {
   const response = await fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`);
   const data = await response.json();
+  console.log("Output data from async function");
   console.log(data); 
   console.log(data.sample);
   console.log(data.Other);
-  // logs [{ name: 'Joker'}, { name: 'Batman' }]
+
+  // Add all cattle movement points to the map
+  for (let i = 0; i < mov1.length; i++){
+    cowMarker = new L.marker([mov1[i][0], mov1[i][1]], {icon: cowIcon}); // leaflet marker object to store coordinates
+
+    // Store data for each movement point in an array
+    const movData = mov1[i].slice(2, i.length); // extract data from third to last element in array (first two elements are lat and lon)
+
+    // Create HTML popup content using template literal
+    // The first number in movData[x-x] corresponds to the column number in the MDWH csv file (subtracting 1 as JS indexing starts at 0)
+    const popupContent = `
+    <div class="fs-5 fw-bold">${movData[2]}</div><br>
+    <div>
+      <nav>
+        <div class="nav nav-tabs" id="popupNav" role="tablist">
+          <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
+          <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="popTabContent">     
+        <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td><strong>Movement:</strong></td>
+                <td>${i+1} ${i===0 ? "(Origin)" : ""}${i===mov1.length-1 ? "(Death)" : ""}</td>
+              </tr>
+              <tr>
+                <td><strong>Lat Lon:</strong></td>
+                <td>${mov1[i][0].toFixed(3)} ${mov1[i][1].toFixed(3)}</td>
+              </tr>  
+              <tr>
+                <td><strong>AF Number:</strong></td>
+                <td>${movData[1-1]}</td> 
+              </tr>
+              <tr>
+                <td><strong>Clade:</strong></td>
+                <td>${movData[2-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Slaughter Date:</strong></td>
+                <td>${movData[5-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>CPH:</strong></td>
+                <td>${movData[6-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>CPH Type:</strong></td>
+                <td>${movData[7-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>County:</strong></td>
+                <td>${movData[8-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Risk Area:</strong></td>
+                <td>${movData[9-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>CPH Home Range:</strong></td>
+                <td>${movData[10-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Out of Home Range:</strong></td>
+                <td>${movData[11-1]}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td><strong>Host:</strong></td>
+                <td>${movData[4-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Breed:</strong></td>
+                <td>${movData[12-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Date of Birth:</strong></td>
+                <td>${movData[13-1]}</td>
+              </tr>
+              <tr>
+                <td><strong>Sex:</strong></td>
+                <td>${movData[14-1]}</td>
+              </tr> 
+            </tbody>
+          </table>
+          <img src="/static/img/peter-lloyd-qeABAF-3bEs-unsplash-min.jpg" alt="A photo of a cow" width="100%">
+        </div>
+      </div>           
+    `;
+    
+    // Add points to map as a layer
+    map.addLayer(cowMarker);
+
+    // Add popup to points
+    cowMarker.bindPopup(popupContent, customOptions);
+  };
+
+  // Connect the points with a blue line
+  const linePts = mov1.map(x => x.slice(0,2)); // extract lat and lon and store in a new array
+  cattleMovLine = L.polyline(linePts, {color: "#0096FF"}).addTo(map); // create polyline object and plot on map
+
+  // Add arrows to the line
+  // Leaflet plugin: https://github.com/slutske22/leaflet-arrowheads
+  cattleMovLine.arrowheads({
+    yawn: 40,
+    size: "5%",
+    fill: true,
+    fillColor: "#0096FF",
+    // color: "black",
+    frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
+  }).addTo(map);
+
+  // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
+  const bounds = L.latLngBounds(linePts).pad(0.10);
+  map.fitBounds(bounds);
+
+  // Allow access to filters by removing the disabled class from the checkbox
+  document.getElementById("box_movement-lines").disabled = false;
 };
 
-// Show cattle movement content on click of 'Show Movements' button
-document.getElementById("btn_show-movements").addEventListener("click", function(){
-
-    // fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`)
-    //   .then(response => console.log(response.json()))
-    //   .then(data => console.log(JSON.stringify(data)))
-    //   .then(json => console.log(json));
-    logData();
-    
-    // Add all cattle movement points to the map
-    for (let i = 0; i < mov1.length; i++){
-      cowMarker = new L.marker([mov1[i][0], mov1[i][1]], {icon: cowIcon}); // leaflet marker object to store coordinates
-
-      // Store data for each movement point in an array
-      const movData = mov1[i].slice(2, i.length); // extract data from third to last element in array (first two elements are lat and lon)
-
-      // Create HTML popup content using template literal
-      // The first number in movData[x-x] corresponds to the column number in the MDWH csv file (subtracting 1 as JS indexing starts at 0)
-      const popupContent = `
-      <div class="fs-5 fw-bold">${movData[2]}</div><br>
-      <div>
-        <nav>
-          <div class="nav nav-tabs" id="popupNav" role="tablist">
-            <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
-            <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
-          </div>
-        </nav>
-        <div class="tab-content" id="popTabContent">     
-          <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <td><strong>Movement:</strong></td>
-                  <td>${i+1} ${i===0 ? "(Origin)" : ""}${i===mov1.length-1 ? "(Death)" : ""}</td>
-                </tr>
-                <tr>
-                  <td><strong>Lat Lon:</strong></td>
-                  <td>${mov1[i][0].toFixed(3)} ${mov1[i][1].toFixed(3)}</td>
-                </tr>  
-                <tr>
-                  <td><strong>AF Number:</strong></td>
-                  <td>${movData[1-1]}</td> 
-                </tr>
-                <tr>
-                  <td><strong>Clade:</strong></td>
-                  <td>${movData[2-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Slaughter Date:</strong></td>
-                  <td>${movData[5-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>CPH:</strong></td>
-                  <td>${movData[6-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>CPH Type:</strong></td>
-                  <td>${movData[7-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>County:</strong></td>
-                  <td>${movData[8-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Risk Area:</strong></td>
-                  <td>${movData[9-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>CPH Home Range:</strong></td>
-                  <td>${movData[10-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Out of Home Range:</strong></td>
-                  <td>${movData[11-1]}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <td><strong>Host:</strong></td>
-                  <td>${movData[4-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Breed:</strong></td>
-                  <td>${movData[12-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Date of Birth:</strong></td>
-                  <td>${movData[13-1]}</td>
-                </tr>
-                <tr>
-                  <td><strong>Sex:</strong></td>
-                  <td>${movData[14-1]}</td>
-                </tr> 
-              </tbody>
-            </table>
-            <img src="/static/img/peter-lloyd-qeABAF-3bEs-unsplash-min.jpg" alt="A photo of a cow" width="100%">
-          </div>
-        </div>           
-      `;
-      
-      // Add points to map as a layer
-      map.addLayer(cowMarker);
-
-      // Add popup to points
-      cowMarker.bindPopup(popupContent, customOptions);
-    };
-
-    // Connect the points with a blue line
-    const linePts = mov1.map(x => x.slice(0,2)); // extract lat and lon and store in a new array
-    cattleMovLine = L.polyline(linePts, {color: "#0096FF"}).addTo(map); // create polyline object and plot on map
-
-    // Add arrows to the line
-    // Leaflet plugin: https://github.com/slutske22/leaflet-arrowheads
-    cattleMovLine.arrowheads({
-      yawn: 40,
-      size: "5%",
-      fill: true,
-      fillColor: "#0096FF",
-      // color: "black",
-      frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
-    }).addTo(map);
-
-    // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
-    const bounds = L.latLngBounds(linePts).pad(0.10);
-    map.fitBounds(bounds);
-
-    // Allow access to filters by removing the disabled class from the checkbox
-    document.getElementById("box_movement-lines").disabled = false;
-
-});
+// Add event listener to the main 'Show Cattle Movement' button
+document.getElementById("btn_show-movements").addEventListener("click", showMovements);
 
 
 
