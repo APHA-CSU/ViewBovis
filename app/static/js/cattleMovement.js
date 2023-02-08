@@ -279,7 +279,7 @@ riskAreaBox.addEventListener("change", function() {
 
 // ------------------------ //
 //
-// MAIN SCRIPT FUNCTIONALITY
+// PLOT MAIN CATTLE MOVEMENT
 //
 // ------------------------ //
 
@@ -301,13 +301,24 @@ const customOptions = {
     className: "popupCustom" // must match a css class in styles.css
 };
 
+// Async function
+const logData = async function () {
+  const response = await fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`);
+  const data = await response.json();
+  console.log(data); 
+  console.log(data.sample);
+  console.log(data.Other);
+  // logs [{ name: 'Joker'}, { name: 'Batman' }]
+};
+
 // Show cattle movement content on click of 'Show Movements' button
 document.getElementById("btn_show-movements").addEventListener("click", function(){
 
-    fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`)
-      .then(response => console.log(response.json()))
-      .then(data => console.log(JSON.stringify(data)))
-      .then(json => console.log(json));
+    // fetch(`/sample?sample_name=${document.querySelector(".cattle_input").value}`)
+    //   .then(response => console.log(response.json()))
+    //   .then(data => console.log(JSON.stringify(data)))
+    //   .then(json => console.log(json));
+    logData();
     
     // Add all cattle movement points to the map
     for (let i = 0; i < mov1.length; i++){
@@ -433,7 +444,7 @@ document.getElementById("btn_show-movements").addEventListener("click", function
     // Allow access to filters by removing the disabled class from the checkbox
     document.getElementById("box_movement-lines").disabled = false;
 
-}, {once : true}) // once: true means function is only executed once (on first click)
+});
 
 
 
