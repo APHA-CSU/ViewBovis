@@ -433,7 +433,7 @@ document.getElementById("btn_show-movements").addEventListener("click", function
     // Allow access to filters by removing the disabled class from the checkbox
     document.getElementById("box_movement-lines").disabled = false;
 
-}, {once : true}) // once: true means function is only executed once (on first click)
+});
 
 
 

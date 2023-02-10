@@ -1,6 +1,6 @@
 import viewbovis
 
-# Setup app
+# setup app
 app = viewbovis.app
 
 if __name__ == '__main__':
