@@ -1,0 +1,123 @@
+/* ================================ */
+/*
+/* CATTLE MOVEMENT CSS */
+/*
+/* ================================ */
+
+/* ---------------- */
+/* 
+/* Apply these styles to all screen sizes */
+/* 
+/* ---------------- */
+
+/* Leaflet popups style */
+.popupCustom .leaflet-popup-tip,
+.popupCustom .leaflet-popup-content-wrapper {
+    background: white;
+    opacity: 0.95;
+    color: black;
+    height: 400px;
+    /* max-height: 500px; */
+    overflow-y: scroll;
+}
+
+/* Leaflet custom control style */
+/* This CSS styles the Basemaps control in the top-right of the map */
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+.leaflet-control-layers-scrollbar {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+/* Leaflet legend styles */
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+/* Customise the style of the dropdown box for second cattle movement */
+.accordion-button:not(.collapsed) {
+    background-color: white;
+    box-shadow: none;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+.accordion {
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+
+
+/* ---------------- */
+/* 
+/* Apply these styles to all screen sizes with a height >720px (larger laptop or desktop) */
+/* 
+/* ---------------- */
+
+/* @media (min-height: 720px){ */
+
+    /* Sample input style */
+    .input__sampleID {
+        color: black;
+        font-size: 20px;
+        width: 100%;
+        height: 35px;
+        margin-top: 5px;
+}
+
+    /* Height of the leaflet map */
+    #map {
+        height: 850px;
+    }
+/* } */
+
+
+/* ---------------- */
+/* 
+/* Apply these styles to all screen sizes with a maximum screen height of 720px (Defra laptops) */
+/* TODO -- DO THIS AFTER ALPHA
+/* 
+/* ---------------- */
+
+/* @media (max-height: 720px){ */
+    /* Sample input box */
+    /* #cattle_input[type="text"] {
+        font-size:15px;
+    } */
+    /* Leaflet map */
+    /* #map {
+        height: 490px;
+    }
+    .content-2 {
+        font-size: 10px;
+    } */
+    /* Scroll bar for side bar */
+    /* .content-2 > .row > .col-lg-2 {
+        max-height: 500px;
+        overflow-y: scroll;
+    } */
+    /* Override gov-kit checkbox and text size */
+    /* .govuk-label {
+        font-size: 1rem;
+    }
+} */
+

@@ -2,18 +2,21 @@ import json
 
 from flask import Flask, jsonify, render_template, request
 import numpy as np
+from liveserver import LiveServer
 
 from data import Data
-
-app = Flask(__name__)
 
 # production data
 data_path = "/home/nickpestell/tmp/viewbovis/"
 data = Data(data_path)
 
+app = Flask(__name__)
+
+ls = LiveServer(app)
+
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return ls.render_template("index.html")
 
 @app.route("/sample")
 def sample_data():

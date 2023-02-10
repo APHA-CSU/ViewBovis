@@ -1,0 +1,35 @@
+/* ================================ */
+/*
+/* APP GLOBAL CSS */
+/*
+/* ================================ */
+
+/* CSS variables */
+:root {
+    --gov-green: #00703c;
+}
+
+html {
+    font-family: Arial;
+    color: black;
+}
+
+/* Body */
+body {
+    background-color: #f2f2f2;
+}
+
+/* Paragraph */
+p {
+    color: black;
+}
+
+/* Main content visibility TODO */
+.hidden {
+    display: none;
+}
+
+/* All links have the pointer (hand) on mouse hover */
+a:hover {
+    cursor:pointer;
+}

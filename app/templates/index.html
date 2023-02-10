@@ -5,11 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>ViewBovis</title>
         <!-- CSS -->
-        <link rel="stylesheet" href="/static/libraries/bootstrap-5.2.3-dist/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.css">
-        <link rel="stylesheet" href="/static/libraries/leaflet-1.9.3/leaflet.css">
-        <link rel="stylesheet" href="/static/css/Leaflet.LinearMeasurement.css">
-        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/main.css">
     </head>
     <body>
         <!-- ================================== -->
@@ -30,7 +26,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <!-- Home Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
+                            <a class="nav-link nav-link-1" data-tab="1">Home</a>
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
@@ -42,7 +38,7 @@
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-4" data-tab="4">Nextstrain</a>
+                            <a class="nav-link nav-link-4 active" data-tab="4">Nextstrain</a>
                         </li>
                         <!-- Help and Support Tab -->
                         <li class="nav-item ">
@@ -64,7 +60,8 @@
             <div class="row">
                 <div class="col-9">
                     <p id="home-help-declaration">
-                        Please see the <a><font color="#0000EE">Help and Support</font></a> documentation for instructions on how to use this app.
+                        <!-- Element: hyperlink to help and support -->
+                        Please see the <a id="hyperlink__toHelp"><font color="#0000EE">Help and Support</font></a> documentation for instructions on how to use this app.
                     </p>
                 </div>
                 <div class="col-3">
@@ -84,7 +81,8 @@
                     </p>
                     <p>
                         <br/>
-                        <a><font color="#0000EE">Link to Map</font></a>
+                        <!-- Element: hyperlink to map -->
+                        <a id="hyperlink__toMap"><font color="#0000EE">Link to Map</font></a>
                     </p>
                 </div>
                 <div class="col-6 home-box" style="margin-left: 10px;">
@@ -95,7 +93,8 @@
                     </p>
                     <p>
                         <br/>
-                        <a><font color="#0000EE">Link to Nextstrain</font></a>
+                        <!-- Element: hyperlink to nextstrain -->
+                        <a id="hyperlink__toNextstrain"><font color="#0000EE">Link to Nextstrain</font></a>
                     </p>
                 </div>
             </div>
@@ -136,45 +135,52 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2">
+        <div class="container-fluid content content-2 hidden">
             <div class="row">
                 <div class="col-lg-2">
                     <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:10px;margin-bottom: 1px;">
                         Enter Sample
                     </div>
                     <div>
-                        <p style="color:#919191;font-size:20px;">
+                        <!-- Element: input sample box for main cattle movement -->
+                        <p>
                             <!-- Ear-Tag or AF number -->
-                            <input type="text" class="cattle_input" placeholder="e.g. UK705113600438" name="Name" style="height:35px;margin-top: 5px;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
+                            <input type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
                         </p>
+                        <!-- Element: button to show main cattle movement -->
                         <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn_show-movements">Show Cattle Movement</button>
                     </div>
                     <br>
+                    <!-- Element: toggle movement lines for main cattle movement -->
                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="box_movement-lines" disabled="disabled" type="checkbox" checked>
-                            <label class="govuk-label govuk-checkboxes__label" for="box_movement-lines">Toggle Movement Lines</label>
+                            <input class="govuk-checkboxes__input" id="toggle__movement-lines--1" disabled="disabled" type="checkbox" checked>
+                            <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--1">Toggle Movement Lines</label>
                         </div>
                     </div>
                     <br> 
+                    <!-- Element: dropdown box for inputting a second cattle movement -->
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                              <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
+                            <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <!-- Element: title text and style for dropdown box -->
+                                <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
                             </button>
                           <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
                                 <div>
-                                    <p style="color:#919191;font-size:20px;">
-                                        <!-- Ear-Tag or AF number -->
-                                        <input type="text" class="cattle_input" placeholder="e.g. UK705113600438" name="Name" style="height:35px;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
+                                    <!-- Element: input sample box for second cattle movement -->
+                                    <p>
+                                        <input type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
                                     </p>
-                                    <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn_show-movements2">Show Second Movement</button>
+                                    <!-- Element: button to show second cattle movement -->
+                                    <button type="button" class="govuk-button" id="btn__cattle-movement--2" disabled="disabled" style="margin-bottom: 10px;" data-module="govuk-button">Show Second Movement</button>
                                     <br>
+                                    <!-- Element: toggle movement lines for second cattle movement -->
                                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="govuk-checkboxes__item">
-                                            <input class="govuk-checkboxes__input" id="box_movement-lines" disabled="disabled" type="checkbox" checked>
-                                            <label class="govuk-label govuk-checkboxes__label" for="box_movement-lines">Toggle Movement</label>
+                                            <input class="govuk-checkboxes__input" id="toggle__movement-lines--2" disabled="disabled" type="checkbox" checked>
+                                            <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--2">Toggle Movement</label>
                                         </div>
                                     </div>
                                 </div>
@@ -207,8 +213,9 @@
                         SNP Distance
                     </div>
                     <div>
-                        <input type="range" class="form-range" min="0" max="10" step="1" id="snpThreshold" disabled="disabled">
-                        <button disabled="disabled" aria-disabled="true" class="govuk-button govuk-button--disabled" data-module="govuk-button">
+                        <!-- Element: SNP range slider -->
+                        <input type="range" class="form-range" id="slider__snp-threshold" min="0" max="10" step="1" id="snpThreshold" disabled="disabled" value="3">
+                        <button class="govuk-button" id="btn__related-isolates" disabled="disabled" aria-disabled="true"  data-module="govuk-button">
                             Show Related Isolates
                         </button>
                     </div>
@@ -231,8 +238,22 @@
         <!-- ================================== -->
         <!-- Nextstrain Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-4 hidden" style="margin-top: 10px;">
-            <iframe src="https://nextstrain.org/" frameborder="0" height="850px" width="100%"></iframe>
+        <div class="container-fluid content content-4" style="margin-top: 5px;">
+            <div class="row" id="filter-clade">
+                <div>
+                    <p id="home-view-bovis-description">
+                        <font color="#00703c">Nextstrain</font>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <!-- Element: hyperlink to Zika example -->
+                        <a id="link_toZika"><font color="#0000EE">Clade Zika</font></a>
+                    </p>
+                </div>
+            </div>
+            <!-- <iframe src="https://nextstrain.org/" frameborder="0" height="850px" width="100%"></iframe> -->
+            <!-- <iframe src="http://127.0.0.1:1234" frameborder="0" height="850px" width="100%"></iframe> -->
         </div>
 
         <!-- ================================== -->
