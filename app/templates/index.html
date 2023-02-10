@@ -26,7 +26,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <!-- Home Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
+                            <a class="nav-link nav-link-1" data-tab="1">Home</a>
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
@@ -38,7 +38,7 @@
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-4" data-tab="4">Nextstrain</a>
+                            <a class="nav-link nav-link-4 active" data-tab="4">Nextstrain</a>
                         </li>
                         <!-- Help and Support Tab -->
                         <li class="nav-item ">
@@ -135,7 +135,7 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2">
+        <div class="container-fluid content content-2 hidden">
             <div class="row">
                 <div class="col-lg-2">
                     <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:10px;margin-bottom: 1px;">
@@ -238,8 +238,22 @@
         <!-- ================================== -->
         <!-- Nextstrain Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-4 hidden" style="margin-top: 10px;">
-            <iframe src="https://nextstrain.org/" frameborder="0" height="850px" width="100%"></iframe>
+        <div class="container-fluid content content-4" style="margin-top: 5px;">
+            <div class="row" id="filter-clade">
+                <div>
+                    <p id="home-view-bovis-description">
+                        <font color="#00703c">Nextstrain</font>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <!-- Element: hyperlink to Zika example -->
+                        <a id="link_toZika"><font color="#0000EE">Clade Zika</font></a>
+                    </p>
+                </div>
+            </div>
+            <!-- <iframe src="https://nextstrain.org/" frameborder="0" height="850px" width="100%"></iframe> -->
+            <!-- <iframe src="http://127.0.0.1:1234" frameborder="0" height="850px" width="100%"></iframe> -->
         </div>
 
         <!-- ================================== -->

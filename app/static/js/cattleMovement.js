@@ -15,7 +15,7 @@
 // ------------------------ //
 
 // DUMMY DATA #1
-// const mov1 = [
+// const mov2 = [
 //   [52.478146, 0.796967, "Farm1"],
 //   [52.452912, 1.123962, "Farm2"],
 //   [52.749631, 0.887175, "CPH1"],
@@ -292,7 +292,7 @@ const cowIcon = L.icon({
 });
 
 // Initiate variables to store spatial data for cow markers and cattle movement lines
-let cowMarker, cattleMovLine;
+let cowMarker, cattleMovLine, linePts;
 
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
@@ -301,14 +301,8 @@ const customOptions = {
     className: "popupCustom" // must match a css class in styles.css
 };
 
-// Async function that executes when the main 'Show Cattle Movement' button is clicked
-const showMovements = async function () {
-  const response = await fetch(`/sample?sample_name=${document.getElementById("input__sampleID--1").value}`);
-  const data = await response.json();
-  console.log("Output data from async function");
-  console.log(data); 
-  console.log(data.sample);
-  console.log(data.Other);
+// Function to add cattle movement points and popups to map
+const addPtsPopupsToMap = function() {
 
   // Add all cattle movement points to the map
   for (let i = 0; i < mov1.length; i++){
@@ -413,7 +407,7 @@ const showMovements = async function () {
   };
 
   // Connect the points with a blue line
-  const linePts = mov1.map(x => x.slice(0,2)); // extract lat and lon and store in a new array
+  linePts = mov1.map(x => x.slice(0,2)); // extract lat and lon and store in a new array
   cattleMovLine = L.polyline(linePts, {color: "#0096FF"}).addTo(map); // create polyline object and plot on map
 
   // Add arrows to the line
@@ -426,6 +420,31 @@ const showMovements = async function () {
     // color: "black",
     frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
   }).addTo(map);
+};
+
+// Async function that executes when the main 'Show Cattle Movement' button is clicked
+const showMovements = async function () {
+
+  // Fetch data for sample
+  const response = await fetch(`/sample?sample_name=${document.getElementById("input__sampleID--1").value}`);
+  const json = await response.json();
+
+  // Log json data to the console
+  console.log("Output data from async function");
+  delete json.sample;
+  console.log(json, typeof json); 
+
+
+  const arr1 = [...Object.entries(json)];
+  console.log(arr1);
+
+  // Store data in variables using destructuring
+  // const { lat, lon } = json;
+  // console.log(Object.values(lat), lon);
+
+
+  // Add points and popups to map
+  addPtsPopupsToMap();
 
   // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
   const bounds = L.latLngBounds(linePts).pad(0.10);
@@ -455,8 +474,6 @@ toggleMovementLines.addEventListener("change", function(){
   // When checkbox is unticked, remove layer from map
   if(this.checked === false) cattleMovLine.remove();
 });
-
-// TODO Reset View
 
 
 

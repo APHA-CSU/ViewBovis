@@ -9,7 +9,8 @@ ls = LiveServer(app)
 metadata = pd.DataFrame(
     {
         "sample": ["A", "B"],
-        "Other": ["foo", "bar"]
+        "mov1": [[52.478146, 0.796967, "Farm1"], [51.81296, -1.738453, "AF-12-00001-22"]],
+        "mov2": [[52.452912, 1.123962, "Farm2"], [52.32055, -1.871136, "AF-12-00001-22"]]
     }
 )
 
@@ -22,3 +23,4 @@ def sample_data():
     sample_name = request.args.get("sample_name")
     data = metadata.loc[metadata["sample"]==sample_name]
     return jsonify(data.to_dict())
+

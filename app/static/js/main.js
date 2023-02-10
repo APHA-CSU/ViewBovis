@@ -99,6 +99,40 @@ document.getElementById("hyperlink__toNextstrain").addEventListener("click", () 
 });
 
 
+// ------------------------ //
+//
+//  LOADING NEXTSTRAIN DATA SETS
+//
+// ------------------------ //
+
+// Load Zika example when hyperlink is clicked
+document.getElementById("link_toZika"). addEventListener("click", () => {
+
+    // Remove all content from Nextstrain page (add 'hidden' class to 'filter-clade' element ID)
+    document.getElementById("filter-clade").classList.add("hidden");
+
+    // Render a back button on the top-right of the container
+    const btnContent = document.createElement("button");
+    btnContent.classList.add("btn", "btn-secondary", "btn-sm", "btn-backToDatasets");
+    btnContent.setAttribute("type", "button");
+    btnContent.innerText = "< Back To Dataset Selection";
+    btnContent.style.marginBottom = "5px";
+    
+
+    // Get maximum height of the container where Nextstrain will render based on the users screen height
+    // const navHeight = document.querySelector(".navbar").offsetHeight;
+    // const backBtnHeight = document.querySelector(".btn-backToDatasets").offsetHeight;
+    // const screenHeight = window.innerHeight - (navHeight + backBtnHeight);
+
+    // Render Zika example on page by inserting HTML
+    document.querySelector(".content-4").insertAdjacentHTML("afterbegin", `
+        <iframe src="http://127.0.0.1:1234/zika" frameborder="0" height="800px" width="100%"></iframe>
+    `);
+    document.querySelector(".content-4").insertAdjacentElement("afterbegin", btnContent);
+    
+
+});
+
 
 // ------------------------ //
 //
@@ -110,7 +144,6 @@ document.getElementById("hyperlink__toNextstrain").addEventListener("click", () 
 // Get screen height
 // const screenHeight = window.innerHeight;
 
-// Dynamically update height of
 
 
 
