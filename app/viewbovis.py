@@ -1,17 +1,30 @@
-from os import path
-
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, g 
 from liveserver import LiveServer
 
 from data import Data
 
-# production data
-DB_PATH = path.join(path.dirname(path.dirname(path.abspath(__file__))),
-                    "viewbovis.db")
-
 app = Flask(__name__)
 
 ls = LiveServer(app)
+
+def get_data_object():
+    """
+        Creates a Data object if one does not already exist in the 
+        application context. Assigns the Data object as an atribute to 
+        the application context. Creating the data object connects to 
+        the database. This function is called before every request.
+    """
+    if not hasattr(g, "data"):
+        g.data = Data()
+
+@app.teardown_appcontext
+def disconnect_db(exception):
+    """
+        Closes the database connection. This function is called when the
+        application conext ends.
+    """
+    if hasattr(g, 'data'):
+        g.data.db.close()
 
 @app.route("/")
 def home():
@@ -26,6 +39,6 @@ def sample_data():
         with the sample_name encoded in the URL query string; e.g. 
         "/sample?sample_name=AF-61-04255-17". 
     """
-    data = Data(DB_PATH)
+    get_data_object()
     sample_name = request.args.get("sample_name")
-    return jsonify(data.submission_metadata(sample_name))
+    return jsonify(g.data.submission_metadata(sample_name))
