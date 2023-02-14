@@ -3,16 +3,17 @@ from os import path
 
 import pandas as pd
 
-# production data
-DEFAULT_DB_PATH = path.join(path.dirname(path.dirname(path.abspath(__file__))),
-                            "viewbovis.db")
+class ViewBovisData:
+    _DEFAULT_DB_PATH = \
+        path.join(path.dirname(path.dirname(path.abspath(__file__))), 
+                  "viewbovis.db")
 
-# TODO: dataclass?
-class Data:
-    def __init__(self, db_path=DEFAULT_DB_PATH):
-        # connect to database
-        self.db = sqlite3.connect(db_path)
-        self.cursor = self.db.cursor()
+    def __init__(self, db_path=_DEFAULT_DB_PATH):
+        self._db = sqlite3.connect(db_path)
+        self._cursor = self._db.cursor()
+    
+    def __del__(self):
+        self._db.close()
 
     # TODO: handle eartag in query string.
     def submission_metadata(self, submission):
@@ -22,7 +23,7 @@ class Data:
         """
         query = f"SELECT * FROM metadata WHERE Submission='{submission}'"
         # get metadata entry for submission - read into DataFrame 
-        df_sample_md = pd.read_sql_query(query, self.db).dropna(axis=1)
+        df_sample_md = pd.read_sql_query(query, self._db).dropna(axis=1)
         # calculated the number of locations
         n_locs = int((len(df_sample_md.columns) - 9) / 4)
         move_dict = {}
@@ -31,7 +32,7 @@ class Data:
             query = f"SELECT latlon.* FROM latlon LEFT JOIN metadata ON \
                 latlon.cph = metadata.Loc{loc_num+1} \
                     WHERE metadata.Submission='{submission}'"
-            res = self.cursor.execute(query)
+            res = self._cursor.execute(query)
             sample_latlon = res.fetchall()[0][3:5]
             move_dict[str(loc_num)] = \
                 {"lat": sample_latlon[0],

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request, g 
 from liveserver import LiveServer
 
-from data import Data
+from viewbovis_data import ViewBovisData
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ def get_data_object():
         the database. This function is called before every request.
     """
     if not hasattr(g, "data"):
-        g.data = Data()
+        g.data = ViewBovisData()
 
 @app.teardown_appcontext
 def disconnect_db(exception):
@@ -24,7 +24,7 @@ def disconnect_db(exception):
         application conext ends.
     """
     if hasattr(g, 'data'):
-        g.data.db.close()
+        g.data.__del__()
 
 @app.route("/")
 def home():
