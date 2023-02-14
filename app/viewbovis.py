@@ -1,11 +1,13 @@
+from os import path
+
 from flask import Flask, jsonify, render_template, request
 from liveserver import LiveServer
 
 from data import Data
 
 # production data
-data_path = "/home/nickpestell/tmp/viewbovis/"
-data = Data(data_path)
+DB_PATH = path.join(path.dirname(path.dirname(path.abspath(__file__))),
+                    "viewbovis.db")
 
 app = Flask(__name__)
 
@@ -24,5 +26,6 @@ def sample_data():
         with the sample_name encoded in the URL query string; e.g. 
         "/sample?sample_name=AF-61-04255-17". 
     """
+    data = Data(DB_PATH)
     sample_name = request.args.get("sample_name")
     return jsonify(data.submission_metadata(sample_name))
