@@ -30,9 +30,8 @@ def disconnect_db(exception):
 def home():
     return ls.render_template("index.html")
 
-# TODO: handle eartag in query string.
 @app.route("/sample")
-def sample_data():
+def sample():
     """
         Returns meta and movement data in json format for a single 
         sample in respone to a client GET request at route /sample/,
@@ -42,3 +41,12 @@ def sample_data():
     get_data_object()
     sample_name = request.args.get("sample_name")
     return jsonify(g.data.submission_metadata(sample_name))
+
+@app.route("/related")
+def related_samples():
+    """
+    """
+    get_data_object()
+    sample_name = request.args.get("sample_name")
+    snp_dist = request.args.get("snp_distance")
+    return jsonify(g.data.related_submissions_metadata(sample_name, snp_dist))
