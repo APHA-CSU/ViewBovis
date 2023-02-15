@@ -21,7 +21,8 @@ class ViewBovisData:
             Returns metadata and movement data for 'submission' as a 
             dictionary. 
         """
-        query = f"SELECT * FROM metadata WHERE Submission='{submission}'"
+        query = f"SELECT * FROM metadata WHERE Submission='{submission}' or \
+            Identifier='{submission}'"
         # get metadata entry for submission - read into DataFrame 
         df_sample_md = pd.read_sql_query(query, self._db).dropna(axis=1)
         # calculated the number of locations
@@ -31,7 +32,8 @@ class ViewBovisData:
             # get latlon data for cph of location loc_num
             query = f"SELECT latlon.* FROM latlon LEFT JOIN metadata ON \
                 latlon.cph = metadata.Loc{loc_num+1} \
-                    WHERE metadata.Submission='{submission}'"
+                    WHERE metadata.Submission='{submission}' or \
+                        metadata.Identifier='{submission}'"
             res = self._cursor.execute(query)
             sample_latlon = res.fetchall()[0][3:5]
             move_dict[str(loc_num)] = \
