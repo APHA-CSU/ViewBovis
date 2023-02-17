@@ -20,11 +20,12 @@ def get_data_object():
 @app.teardown_appcontext
 def disconnect_db(exception):
     """
-        Closes the database connection. This function is called when the
-        application conext ends.
+        Closes the database connection and delete the database object. 
+        Called automatically when the application conext ends.
     """
     if hasattr(g, 'data'):
         g.data.__del__()
+        del g.data
 
 @app.route("/")
 def home():
@@ -45,6 +46,11 @@ def sample():
 @app.route("/related")
 def related_samples():
     """
+        Returns meta and SNP distance data in json format for all 
+        samples within a given SNP distance of the selected sample in 
+        response to a client GET request on route /related/ with the
+        sample_name and snp_distance encoded in the URL query string;
+        e.g. "/related?sample_name=AF-61-04255-17&snp_distance=5".
     """
     get_data_object()
     sample_name = request.args.get("sample_name")
