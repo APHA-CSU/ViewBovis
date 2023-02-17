@@ -41,7 +41,7 @@ def sample():
     """
     get_data_object()
     sample_name = request.args.get("sample_name")
-    return jsonify(g.data.submission_metadata(sample_name))
+    return jsonify(g.data.submission_movement_metadata(sample_name))
 
 @app.route("/related")
 def related_samples():
@@ -54,5 +54,6 @@ def related_samples():
     """
     get_data_object()
     sample_name = request.args.get("sample_name")
-    snp_dist = request.args.get("snp_distance")
-    return jsonify(g.data.related_submissions_metadata(sample_name, snp_dist))
+    snp_threshold = int(request.args.get("snp_distance"))
+    return jsonify(g.data.related_submissions_metadata(sample_name, 
+                                                       snp_threshold))

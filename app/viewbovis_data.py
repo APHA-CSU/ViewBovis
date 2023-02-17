@@ -4,37 +4,49 @@ from os import path
 import pandas as pd
 
 class ViewBovisData:
-    _DEFAULT_DB_PATH = \
-        path.join(path.dirname(path.dirname(path.abspath(__file__))), 
-                  "viewbovis.db")
+    _DEFAULT_DATA_DIR = \
+        path.join(path.dirname(path.dirname(path.abspath(__file__))), "data")
 
-    def __init__(self, db_path=_DEFAULT_DB_PATH):
+    def __init__(self, data_dir=_DEFAULT_DATA_DIR):
+        self._matrix_dir = path.join(data_dir, "snp_matrix")
+        db_path = path.join(data_dir, "viewbovis.db")
+        print(db_path)
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
     
     def __del__(self):
         self._db.close()
 
-    def submission_metadata(self, submission):
+    def _submission_metadata(self, submission):
         """
-            Returns metadata and movement data for 'submission' as a 
-            dictionary. 
+            Returns a DataFrame containing metadata for 'submission'. 
         """
         query = f"SELECT * FROM metadata WHERE Submission='{submission}' or \
             Identifier='{submission}'"
         # get metadata entry for submission - read into DataFrame 
-        df_sample_md = pd.read_sql_query(query, self._db).dropna(axis=1)
+        return pd.read_sql_query(query, self._db).dropna(axis=1)
+
+    def _get_lat_long(self, cph):
+        """
+            Returns a tuple containing latitude and longitude for a 
+            given cph 
+        """
+        query = f"SELECT Lat, Long FROM latlon WHERE CPH='{cph}'"
+        res = self._cursor.execute(query)
+        return res.fetchall()[0]
+
+    def submission_movement_metadata(self, submission):
+        """
+            Returns metadata and movement data for 'submission' as a 
+            dictionary. 
+        """
+        df_sample_md = self._submission_metadata(submission)
         # calculated the number of locations
         n_locs = int((len(df_sample_md.columns) - 9) / 6)
         move_dict = {}
         for loc_num in range(n_locs):
-            # get latlon data for cph of location loc_num
-            query = f"SELECT latlon.Lat, latlon.Long FROM latlon JOIN metadata \
-                ON latlon.cph=metadata.Loc{loc_num} WHERE \
-                    metadata.Submission='{submission}' or \
-                        metadata.Identifier='{submission}'"
-            res = self._cursor.execute(query)
-            sample_latlon = res.fetchall()[0]
+            cph = df_sample_md[f"Loc{loc_num}"][0]
+            sample_latlon = self._get_lat_long(cph)
             move_dict[str(loc_num)] = \
                 {"lat": sample_latlon[0],
                 "lon": sample_latlon[1],
@@ -53,28 +65,26 @@ class ViewBovisData:
                 "risk_area": df_sample_md["RiskArea"][0],
                 "move": move_dict}
 
-    def related_submissions_metadata(self, submission, snp_dist):
+    def related_submissions_metadata(self, submission, snp_threshold):
         # retrieve af_number if Identifier is used
-        query = f"SELECT Submission FROM metadata WHERE \
-            Submission='{submission}' or Identifier='{submission}'"
-        res = self._cursor.execute(query)
-        af_number = res.fetchall()[0][0]
-        # get samples within snp_dist by querying snp_matrix data
-        query = f"SELECT * FROM '{af_number}' WHERE snp_dist<={snp_dist}"
-        res = self._cursor.execute(query)
-        related_samples = res.fetchall()
-        related_sample_metadata = {}
-        for sample in related_samples:
-            query = f"SELECT metadata.Identifier, metadata.wsdSlaughterDate, \
-                latlon.Lat, latlon.Long FROM metadata JOIN latlon ON \
-                    metadata.CPH=latlon.CPH WHERE \
-                        metadata.Submission='{sample[0]}'"
-            df_sample_md = pd.read_sql_query(query, self._db).dropna(axis=1)
-            print(df_sample_md)
-            related_sample_metadata[sample[0]] = \
-                {"lat": df_sample_md["Lat"][0], 
-                 "lon": df_sample_md["Long"][0], 
-                 "snp_distance": sample[1],
-                 "animal_id": df_sample_md["Identifier"][0],
-                 "date": df_sample_md["wsdSlaughterDate"][0]}
-        return related_sample_metadata
+        df_sample_md = self._submission_metadata(submission)
+        af_number = df_sample_md["Submission"][0]
+        clade = df_sample_md["Clade"][0]
+        df_snp_data = pd.read_csv(path.join(self._matrix_dir, f"{clade}.csv"), 
+                                  usecols=["snp-dists 0.7.0", af_number], 
+                                  index_col="snp-dists 0.7.0")
+        df_snp_data.rename({af_number: "snp_dist"}, axis=1, inplace=True)
+        df_snp_data.index.names = ["Submission"]
+        # get samples within snp_threshold
+        df_related = df_snp_data.loc[df_snp_data["snp_dist"]<=snp_threshold]
+        related_metadata = {}
+        for index, row in df_related.iterrows():
+            df_related_sample_md = self._submission_metadata(index)
+            sample_latlon = self._get_lat_long(df_related_sample_md["CPH"][0])
+            related_metadata[index] = \
+                {"lat": sample_latlon[0], 
+                 "lon": sample_latlon[1], 
+                 "snp_distance": int(row["snp_dist"]), 
+                 "animal_id": df_related_sample_md["Identifier"][0], 
+                 "date": df_related_sample_md["wsdSlaughterDate"][0]}
+        return related_metadata
