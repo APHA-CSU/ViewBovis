@@ -21,18 +21,21 @@ class ViewBovisData:
         """
             Returns a DataFrame containing metadata for 'submission'. 
         """
-        query = f"SELECT * FROM metadata WHERE Submission='{submission}' or \
-            Identifier='{submission}'"
+        query = "SELECT * FROM metadata WHERE Submission=:submission OR \
+            Identifier=:submission"
+        print(query)
         # get metadata entry for submission - read into DataFrame 
-        return pd.read_sql_query(query, self._db).dropna(axis=1)
+        return pd.read_sql_query(query, self._db, 
+                                 params={"submission": submission})\
+                                    .dropna(axis=1)
 
     def _get_lat_long(self, cph):
         """
             Returns a tuple containing latitude and longitude for a 
             given cph 
         """
-        query = f"SELECT Lat, Long FROM latlon WHERE CPH='{cph}'"
-        res = self._cursor.execute(query)
+        query = "SELECT Lat, Long FROM latlon WHERE CPH=:cph"
+        res = self._cursor.execute(query, {"cph": cph})
         return res.fetchall()[0]
 
     def submission_movement_metadata(self, submission):
