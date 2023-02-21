@@ -17,7 +17,8 @@ class ViewBovisData:
     def __del__(self):
         self._db.close()
 
-    def _submission_metadata(self, submission):
+    # TODO: validate input
+    def _submission_metadata(self, submission: str) -> pd.DataFrame:
         """
             Returns a DataFrame containing metadata for 'submission'. 
         """
@@ -25,11 +26,17 @@ class ViewBovisData:
             Identifier=:submission"
         print(query)
         # get metadata entry for submission - read into DataFrame 
-        return pd.read_sql_query(query, self._db, 
-                                 params={"submission": submission})\
-                                    .dropna(axis=1)
+        df_sample = pd.read_sql_query(query, self._db, 
+                                      params={"submission": submission})
+        # TODO: below is dropping location columns with NULL but leaving
+        # leaving all other columns this is done by splitting the df and
+        # re-joining after: there is probably a nicer way to do this.
+        df_sample_md = df_sample[df_sample.columns[:10]]
+        df_sample_locs = df_sample[df_sample.columns[10:]].dropna(axis=1)
+        return df_sample_md.join(df_sample_locs)
 
-    def _get_lat_long(self, cph):
+    # TODO: validate input
+    def _get_lat_long(self, cph: str) -> tuple:
         """
             Returns a tuple containing latitude and longitude for a 
             given cph 
@@ -38,7 +45,7 @@ class ViewBovisData:
         res = self._cursor.execute(query, {"cph": cph})
         return res.fetchall()[0]
 
-    def submission_movement_metadata(self, submission):
+    def submission_movement_metadata(self, submission: str) -> dict:
         """
             Returns metadata and movement data for 'submission' as a 
             dictionary. 
@@ -52,10 +59,10 @@ class ViewBovisData:
             sample_latlon = self._get_lat_long(cph)
             move_dict[str(loc_num)] = \
                 {"lat": sample_latlon[0],
-                "lon": sample_latlon[1],
-                "on_date": df_sample_md[f"Loc{loc_num}_StartDateTime{loc_num}"][0], 
-                "off_date": df_sample_md[f"Loc{loc_num}_EndDateTime{loc_num}"][0], 
-                "type": df_sample_md[f"Loc{loc_num}_Type{loc_num}"][0]} 
+                 "lon": sample_latlon[1],
+                 "on_date": df_sample_md[f"Loc{loc_num}_StartDateTime{loc_num}"][0], 
+                 "off_date": df_sample_md[f"Loc{loc_num}_EndDateTime{loc_num}"][0], 
+                 "type": df_sample_md[f"Loc{loc_num}_Type{loc_num}"][0]} 
         return {"submission": submission,
                 "clade": df_sample_md["Clade"][0],
                 "identifier": df_sample_md["Identifier"][0],
@@ -68,7 +75,9 @@ class ViewBovisData:
                 "risk_area": df_sample_md["RiskArea"][0],
                 "move": move_dict}
 
-    def related_submissions_metadata(self, submission, snp_threshold):
+    def related_submissions_metadata(self, 
+                                     submission: str, 
+                                     snp_threshold: int) -> dict:
         # retrieve af_number if Identifier is used
         df_sample_md = self._submission_metadata(submission)
         af_number = df_sample_md["Submission"][0]
