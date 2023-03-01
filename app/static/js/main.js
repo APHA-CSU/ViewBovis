@@ -12,7 +12,31 @@ const navContent = document.querySelectorAll(".content");
 
 // ------------------------ //
 //
-//  MAIN NAVIGATION
+//  LAUNCH MODAL ON PAGE LOAD
+//
+// ------------------------ //
+
+// // Launch modal immediately after DOM contents have been loaded
+// // Modal will not disappear when user clicks background or when escape on the keyboard is pressed
+// let securityModal;
+// document.addEventListener("DOMContentLoaded", function() {
+//     securityModal = new bootstrap.Modal(document.getElementById("modal--security"), {backdrop: "static", keyboard: false});
+//     securityModal.show();
+// });
+
+// // Hide modal after user agrees to security message
+// document.getElementById("checkbox--agree").addEventListener("change", function(){
+//     // Add half a second delay to allow user to see the box being ticked
+//     setTimeout(function(){
+//         securityModal.hide();
+//     }, 500);    
+// });
+
+
+
+// ------------------------ //
+//
+//  PAGE NAVIGATION
 //
 // ------------------------ //
 
@@ -50,52 +74,38 @@ navBar.addEventListener("click", function(e){
     map.invalidateSize();
 });
 
-
-// Hyperlink to Help and Support page
-// Purpose: hide all content when the Help and Support link is clicked then show Help and Support content
-document.getElementById("hyperlink__toHelp").addEventListener("click", () => {
-
-    // Hide all content function
-    hideContent();
-
-    // Activate bold font for Help and Support page (add 'active' class)
-    document.querySelector(".nav-link-5").classList.add("active");
-
-    // Show content for Help and Support page
-    document.querySelector(".content-5").classList.remove("hidden");
-});
-
-
 // Hyperlink to Cattle Movement Map
-// Purpose: hide all content when Link to Map is clicked then show Cattle Movement Map content
-document.getElementById("hyperlink__toMap").addEventListener("click", () => {
+// Purpose: hide all content when button is clicked then show content
+document.getElementById("btn-home-cattleLink").addEventListener("click", () => {
 
     // Hide all content function
     hideContent();
 
-    // Activate bold font for Help and Support page (add 'active' class)
+    // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-2").classList.add("active");
 
-    // Show content for Help and Support page
+    // Show content
     document.querySelector(".content-2").classList.remove("hidden");
 
     // Redraw cattle movement leaflet map to solve sizing issue on startup
     map.invalidateSize();
 });
 
-
 // Hyperlink to Nextstrain
-// Purpose: hide all content when Link to Nextstrain is clicked then show Nexstraincontent
-document.getElementById("hyperlink__toNextstrain").addEventListener("click", () => {
+// Purpose: hide all content when button is clicked then show content
+document.getElementById("btn-home-nextstrainLink").addEventListener("click", () => {
 
     // Hide all content function
     hideContent();
 
-    // Activate bold font for Help and Support page (add 'active' class)
+    // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-4").classList.add("active");
 
-    // Show content for Help and Support page
+    // Show content
     document.querySelector(".content-4").classList.remove("hidden");
+
+    // Redraw cattle movement leaflet map to solve sizing issue on startup
+    map.invalidateSize();
 });
 
 
@@ -124,9 +134,9 @@ document.getElementById("link_toZika"). addEventListener("click", () => {
     // const backBtnHeight = document.querySelector(".btn-backToDatasets").offsetHeight;
     // const screenHeight = window.innerHeight - (navHeight + backBtnHeight);
 
-    // Render Zika example on page by inserting HTML
+    // Render XXX example on page by inserting HTML
     document.querySelector(".content-4").insertAdjacentHTML("afterbegin", `
-        <iframe src="http://127.0.0.1:1234/zika" frameborder="0" height="800px" width="100%"></iframe>
+        <iframe src="http://127.0.0.1:1235/B6-13" frameborder="0" height="800px" width="100%"></iframe>
     `);
     document.querySelector(".content-4").insertAdjacentElement("afterbegin", btnContent);
     

@@ -4,9 +4,10 @@
 /*
 /* ================================ */
 
-/* CSS variables */
 :root {
-    --gov-green: #00703c;
+    /* APHA official green */
+    /* http://aphaintranet/how-do-I/communications-press/Pages/findandusetheAPHAlogo.aspx */
+    --gov-green: #00A33B;
 }
 
 html {
@@ -14,22 +15,38 @@ html {
     color: black;
 }
 
-/* Body */
 body {
-    background-color: #f2f2f2;
+    background-color: white;
 }
 
-/* Paragraph */
 p {
     color: black;
 }
 
-/* Main content visibility TODO */
 .hidden {
     display: none;
 }
 
-/* All links have the pointer (hand) on mouse hover */
 a:hover {
+    /* All links have the pointer (hand) on mouse hover */
     cursor:pointer;
+}
+
+.text-green {
+    /* APHA green text */
+    color: var(--gov-green);
+}
+
+.text-hyperlink {
+    /* Blue hyperlink text */
+    color: #0000EE;
+}
+
+.govuk-button {
+    background-color: var(--gov-green);
+}
+
+.navbar-margin {
+    /* Space between navbar and component */
+    margin-top: 10px;
 }

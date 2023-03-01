@@ -15,7 +15,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency">
                     <!-- Navbar Logo -->
-                    <img src="/static/img/APHA_logo_svg.svg" alt="Logo" width="auto" height="60px" class="d-inline-block align-text-top">
+                    <img src="/static/img/APHA_logo_svg.svg" alt="Logo" width="auto" class="d-inline-block align-text-top">
                 </a>
                 <!-- Navbar Title -->
                 <strong id="nav-main-title">ViewBovis [Official Sensitive]</strong>
@@ -23,18 +23,18 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav">
                         <!-- Home Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-1" data-tab="1">Home</a>
+                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2 active" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-3" data-tab="3">SNP Matrix</a>
+                            <a class="nav-link nav-link-3" data-tab="3">SNP Distance</a>
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
@@ -49,93 +49,204 @@
             </div>
         </nav>
         <!-- ================================== -->
-        <!-- Home Content -->
+        <!-- Security modal -->
         <!-- ================================== -->
-        <div class="container content content-1 hidden">
-            <div class="row">
-                <p id="home-view-bovis-description">
-                    <font color="#00703c">ViewBovis</font> is a web application for exploring and visualising whole genome sequencing data from <em>Mycobacterium bovis</em> isolates. The app links genetic relatedness with geographic information to provide insights into <em>M. bovis</em> transmission.
-                </p>
-            </div>
-            <div class="row">
-                <div class="col-9">
-                    <p id="home-help-declaration">
-                        <!-- Element: hyperlink to help and support -->
-                        Please see the <a id="hyperlink__toHelp"><font color="#0000EE">Help and Support</font></a> documentation for instructions on how to use this app.
-                    </p>
-                </div>
-                <div class="col-3">
-                    <p id="home-help-declaration">
-                        <img src="/static/img/Cow_GIS_Team.svg" width="auto" height="80px">
-                        <img src="/static/img/Bacteria_Hira_v2.svg" width="auto" height="60px">
-                        <img src="/static/img/DNA_Hira_v2.svg" width="auto" height="70px">
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 home-box" style="margin-right: 10px;">
-                    <strong>Cattle Movement Map</strong>
-                    <p>
-                        <br/>
-                        This map presents cattle movement and the location of genetically related isolates on a map. It requires the user to enter a sample ID and a SNP distance threshold.
-                    </p>
-                    <p>
-                        <br/>
-                        <!-- Element: hyperlink to map -->
-                        <a id="hyperlink__toMap"><font color="#0000EE">Link to Map</font></a>
-                    </p>
-                </div>
-                <div class="col-6 home-box" style="margin-left: 10px;">
-                    <strong>Phylogenetic Tree</strong>
-                    <p>
-                        <br/>
-                        Nextstrain presents an interactive phylogenetic tree at the clade level with functionality to filter, zoom and download trees for target samples.
-                    </p>
-                    <p>
-                        <br/>
-                        <!-- Element: hyperlink to nextstrain -->
-                        <a id="hyperlink__toNextstrain"><font color="#0000EE">Link to Nextstrain</font></a>
-                    </p>
-                </div>
-            </div>
-            <div class="footer fs-6 fw-bold text-muted">
-                <div class="float-start">A Defra Digital, Data and Technology Service</div>
-                <!-- // Accessibility Statement Modal -->
-                <!-- // Purpose: popup information about accessibility on click -->
-                <div class="float-end text-decoration-underline" data-bs-toggle="modal" data-bs-target="#accessibilityModal" style="cursor: pointer;">Accessibility Statement</div>
-                <!-- Bootstrap modal -->
-                <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for View Bovis</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal" id="modal--security">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="background-color: transparent; border: none; width: fit-content;">
+                    <div class="modal-body">
+                        <div class="govuk-notification-banner govuk-notification-banner--success">
+                            <!-- Security Modal Header -->
+                            <div class="govuk-notification-banner__header">
+                                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                                    Important Information
+                                </h2>
+                            </div>
+                            <!-- Security Modal Content -->
+                            <div class="govuk-notification-banner__content">
+                                <div class="govuk-warning-text">
+                                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                    <strong class="govuk-warning-text__text">
+                                        <span class="govuk-warning-text__assistive">Warning</span>
+                                        Do not share login details between users
+                                    </strong>
+                                </div>
+                                <div>
+                                    <p>
+                                        ViewBovis displays Official Sensitive data which must only be viewed by those with appropriate access. Failure to comply risks shutdown of the ViewBovis service by APHA IT, due to mishandling of Official Sensitive data.
+                                    </p>
+                                </div>
+                                <div class="govuk-form-group">
+                                    <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item" style="margin-left: 33%;">
+                                            <input class="govuk-checkboxes__input" id="checkbox--agree" type="checkbox">
+                                            <label class="govuk-label govuk-checkboxes__label" for="checkbox--agree">
+                                                I agree to the above
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- -------------- -->
                         </div>
-                        <div class="modal-body fs-6">
-                          <p>
-                            This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
-                          </p>
-                          </br>
-                          <ul class="list-group">
-                            <li class="list-group-item">Statement 1</li>
-                            <li class="list-group-item">Statement 2</li>
-                            <li class="list-group-item">Statement 3</li>
-                            <li class="list-group-item">Statement 4</li>
-                            <li class="list-group-item">Statement 5</li>
-                          </ul>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
-                        </div>
-                      </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- ================================== -->
+        <!-- Home Content -->
+        <!-- ================================== -->
+        <div class="container content content-1">
+            <!-- Government ALPHA Banner -->
+            <div class="row">
+                <div class="govuk-phase-banner navbar-margin">
+                    <div>
+                        <strong class="govuk-tag govuk-phase-banner__content__tag">
+                            alpha
+                        </strong>
+                        <span>
+                            This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- ViewBovis Logo and Description -->
+            <div class="row navbar-margin">
+                <!-- Column: logo -->
+                <div class="col-1">
+                    <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo">
+                </div>
+                <!-- Column: description -->
+                <div class="col-8">
+                    <div class="home-description-container">
+                        <p class="home-description fs-5">
+                            <span class="text-green fw-bold">ViewBovis</span> is a web application for exploring whole genome sequencing (WGS) data from <em>Mycobacterium bovis</em>. By linking genetic relatedness with geographical neighbourhood, you will be able to understand the transmission of this disease in both bovine and non-bovine animals.
+                        </p>
+                    </div>
+                </div>
+                <!-- Column: data last updated -->
+                <div class="col-3">
+                    <div class="govuk-notification-banner fs-6 home-banner-container">
+                        <div class="govuk-notification-banner__header">
+                            <h2 class="govuk-notification-banner__title fs-6" id="govuk-notification-banner-title">
+                                Service Last Updated:
+                            </h2>
+                        </div>
+                        <div class="govuk-notification-banner__content home-banner-content">
+                            <p>
+                                <span class="fw-bold float-start">Metadata</span>
+                                <span class="float-end">01/01/2001</span> 
+                            </p>
+                            <p style="padding-top: 10px">
+                                <span class="fw-bold float-start">WGS</span>
+                                <span class="float-end">01/01/2001</span> 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Box Quick-Links Content -->
+            <div class="row gx-2 navbar-margin">
+                <div class="col">
+                    <!-- Cattle movement box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Cattle Movement</p>
+                        <p>
+                            View cattle movements on an interactive map which helps with tracing cattle to control and eradicate bovine tuberculosis (bTB).
+                        </p>
+                        <br>
+                        <div class="text-center">
+                            <button type="button" id="btn-home-cattleLink" class="btn govuk-button custom-govuk-button-home">
+                                Cattle Movement Map
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Relatedness box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Relatedness</p>
+                        <p>
+                            Visualise the relationships between samples with the help of WGS and location data for bovine and non-bovine samples.
+                        </p>
+                        <p class="text-center">
+                            View SNP distance visualisations:<br>
+                            <button type="button" id="btn-home-snpMapLink" class="btn govuk-button custom-govuk-button-home">
+                                SNP Distance Map
+                            </button>
+                            <button type="button" id="btn-home-snpMatrixLink" class="btn govuk-button custom-govuk-button-home">
+                                SNP Matrix
+                            </button>
+                        </p>
+                        <p class="text-center">
+                            View interactive phylogenetic tree:<br>
+                            <button type="button" id="btn-home-nextstrainLink" class="btn govuk-button custom-govuk-button-home">
+                                Nextstrain
+                            </button>
+                        </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Help and support box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Help & Support</p>
+                        <p>
+                            View a range of resources to familiarise yourself with the content of ViewBovis and access support.
+                        </p>
+                        <p class="text-center">
+                            <button type="button" id="btn-home-helpLink1" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">About The Data & Data Dictionary</button><br>
+                            <button type="button" id="btn-home-helpLink2" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">Training Resources</button><br>
+                            <button type="button" id="btn-home-helpLink3" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">Missing Samples Report</button><br>
+                            <button type="button" id="btn-home-helpLink4" class="btn govuk-button custom-govuk-button-home">Technical Support</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Footer -->
+            <footer class="row footer">
+                <div class="d-flex justify-content-between">
+                    <div class="text-start footer-text">
+                        A Defra Digital, Data and Technology Service
+                    </div>
+                    <!-- Accessibility Statement Modal -->
+                    <!-- Purpose: popup information about accessibility on click -->
+                    <div data-bs-toggle="modal" data-bs-target="#accessibilityModal">
+                        <a class="text-end text-decoration-underline text-hyperlink" href="#">Accessibility Statement</a>
+                    </div>
+                    <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fs-6">
+                                <p>
+                                This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                                </p>
+                                </br>
+                                <ul class="list-group">
+                                <li class="list-group-item">Statement 1</li>
+                                <li class="list-group-item">Statement 2</li>
+                                <li class="list-group-item">Statement 3</li>
+                                <li class="list-group-item">Statement 4</li>
+                                <li class="list-group-item">Statement 5</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </footer>
+        </div>
+        <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2">
+        <div class="container-fluid content content-2 hidden">
             <div class="row">
                 <div class="col-lg-2">
                     <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:10px;margin-bottom: 1px;">
@@ -231,7 +342,7 @@
         <div class="container-fluid content content-3 hidden" style="margin-top: 10px;">
             <!-- SNP Matrix Content -->
             <div style="margin-top: 10px">
-                <iframe src="https://tomjenkins.shinyapps.io/SNP_Matrix_User_Testing/" frameborder="0" height="800px" width="100%"></iframe>
+                <iframe src="https://tomjenkins.shinyapps.io/SNP_Matrix_User_Testing/" frameborder="0" height="600px" width="100%"></iframe>
             </div>
         </div>
 
