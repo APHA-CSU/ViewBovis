@@ -11,7 +11,7 @@ def run():
     # write metadata to sqlite db
     df_metadata = pd.read_csv(data_path + "WGS_WarehouseExport_Samples.csv", 
                               index_col="Submission", dtype=str)
-    df_metadata.to_sql("metadata", con=conn, if_exists="replace")
+    df_metadata.to_sql("metadata", conn, if_exists="replace")
     # write lat-lon data to sqlite db
     df_latlon = pd.read_csv(data_path + "WGS_WarehouseExport_Locations.csv", 
                             index_col="CPH", dtype={"CPH": str, 
@@ -19,7 +19,8 @@ def run():
                                                     #"y": int, 
                                                     "Lat": float,
                                                     "Long": float})
-    df_latlon.to_sql("latlon", con=conn, if_exists="replace")
+    df_latlon.to_sql("latlon", conn, if_exists="replace")
+    conn.close()
 
 if __name__ == "__main__":
     run()

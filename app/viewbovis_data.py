@@ -10,7 +10,6 @@ class ViewBovisData:
     def __init__(self, data_dir=_DEFAULT_DATA_DIR):
         self._matrix_dir = path.join(data_dir, "snp_matrix")
         db_path = path.join(data_dir, "viewbovis.db")
-        print(db_path)
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
     
@@ -20,11 +19,12 @@ class ViewBovisData:
     # TODO: validate input
     def _submission_metadata(self, submission: str) -> pd.DataFrame:
         """
-            Returns a DataFrame containing metadata for 'submission'. 
+            Fetches metadata for a given a submission. Returns a 
+            DataFrame containing metadata if it exists, otherwise 
+            returns None. 
         """
         query = "SELECT * FROM metadata WHERE Submission=:submission OR \
             Identifier=:submission"
-        print(query)
         # get metadata entry for submission - read into DataFrame 
         df_sample = pd.read_sql_query(query, self._db, 
                                       params={"submission": submission})
@@ -60,8 +60,10 @@ class ViewBovisData:
             move_dict[str(loc_num)] = \
                 {"lat": sample_latlon[0],
                  "lon": sample_latlon[1],
-                 "on_date": df_sample_md[f"Loc{loc_num}_StartDateTime{loc_num}"][0], 
-                 "off_date": df_sample_md[f"Loc{loc_num}_EndDateTime{loc_num}"][0], 
+                 "on_date": \
+                    df_sample_md[f"Loc{loc_num}_StartDateTime{loc_num}"][0], 
+                 "off_date": \
+                    df_sample_md[f"Loc{loc_num}_EndDateTime{loc_num}"][0], 
                  "type": df_sample_md[f"Loc{loc_num}_Type{loc_num}"][0]} 
         return {"submission": submission,
                 "clade": df_sample_md["Clade"][0],
@@ -82,7 +84,8 @@ class ViewBovisData:
         df_sample_md = self._submission_metadata(submission)
         af_number = df_sample_md["Submission"][0]
         clade = df_sample_md["Clade"][0]
-        df_snp_data = pd.read_csv(path.join(self._matrix_dir, f"{clade}.csv"), 
+        df_snp_data = pd.read_csv(path.join(self._matrix_dir, 
+                                            f"{clade}_matrix.csv"), 
                                   usecols=["snp-dists 0.7.0", af_number], 
                                   index_col="snp-dists 0.7.0")
         df_snp_data.rename({af_number: "snp_dist"}, axis=1, inplace=True)
@@ -92,11 +95,14 @@ class ViewBovisData:
         related_metadata = {}
         for index, row in df_related.iterrows():
             df_related_sample_md = self._submission_metadata(index)
-            sample_latlon = self._get_lat_long(df_related_sample_md["CPH"][0])
-            related_metadata[index] = \
-                {"lat": sample_latlon[0], 
-                 "lon": sample_latlon[1], 
-                 "snp_distance": int(row["snp_dist"]), 
-                 "animal_id": df_related_sample_md["Identifier"][0], 
-                 "date": df_related_sample_md["wsdSlaughterDate"][0]}
+            if not df_related_sample_md.empty and \
+                  df_related_sample_md["Host"]=="Cow":
+                sample_latlon = \
+                    self._get_lat_long(df_related_sample_md["CPH"][0])
+                related_metadata[index] = \
+                    {"lat": sample_latlon[0], 
+                    "lon": sample_latlon[1], 
+                    "snp_distance": int(row["snp_dist"]), 
+                    "animal_id": df_related_sample_md["Identifier"][0], 
+                    "date": df_related_sample_md["wsdSlaughterDate"][0]}
         return related_metadata
