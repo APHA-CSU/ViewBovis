@@ -71,8 +71,19 @@ const Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/re
 const map = L.map("map", {
   center: defaultCoords,
   zoom: defaultZoom,
-  layers: [osm, Esri_WorldGrayCanvas, Esri_WorldImagery]
+  layers: [osm, Esri_WorldGrayCanvas, Esri_WorldImagery],
+  zoomControl: false,
 });
+
+// Get maximum height of the container where the map will render based on the users screen height
+const navbarHeight = document.querySelector(".navbar").offsetHeight;
+const navbarMarginHeight = 10; // TODO this should dynamically extract height from navbar-margin class
+const mapHeight = window.innerHeight - navbarHeight - navbarMarginHeight;
+
+// Set the height of sidebar and map containers
+document.getElementById("map").style.height = `${mapHeight}px`;
+document.getElementById("map-sidebar-container").style.height = `${mapHeight}px`;
+map.invalidateSize();
 
 
 // ------------------------ //
@@ -81,8 +92,39 @@ const map = L.map("map", {
 //
 // ------------------------ //
 
-// TODO
-// Reset view to default coordinates and zoom on click of button
+// Add a back button to the map
+// This code creates and adds a custom control using the leaflet library
+const backButton = L.Control.extend({
+  options: {
+    position: "topleft",
+  },
+  onAdd: function(map) {
+    const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    divContainer.setAttribute("id", "map-fullscreen-button");
+
+    divContainer.insertAdjacentHTML("afterbegin", `
+      <a title="Full screen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"/>
+        </svg>
+      </a>
+    `);
+    return divContainer;
+  }
+});
+map.addControl(new backButton());
+
+// Toggle sidebar when back / forward button is clicked
+// document.getElementById("map-fullscreen-button").addEventListener("click", function(){
+//   document.getElementById("content2-column1-container").classList.add("hidden");
+//   map.invalidateSize();
+// })
+
+
+// Add a zoom control to the map
+L.control.zoom({
+  position: "topleft",
+}).addTo(map);
 
 // Add a measurement tool to the map
 // Leaflet plugin: https://github.com/NLTGit/Leaflet.LinearMeasurement
@@ -94,6 +136,9 @@ map.addControl(
     type: "line",
   })
 );
+
+// TODO
+// Reset view to default coordinates and zoom on click of button
 
 // Add a control layer for basemaps in the top-right to allow user to change the basemap tiles
 const baseMaps = {

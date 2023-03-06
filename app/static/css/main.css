@@ -1,9 +1,11 @@
 @import "/static/libraries/bootstrap-5.2.3-dist/bootstrap.min.css";
 @import "/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.css";
 @import "/static/libraries/leaflet-1.9.3/leaflet.css";
+@import "/static/libraries/tabulator/tabulator.min.css";
 @import "./_global.css";
 @import "./_navbar.css";
 @import "./_home.css";
 @import "./_nextstrain.css";
 @import "./_Leaflet.LinearMeasurement.css";
+@import "./_easy-button.css";
 @import "./_cattleMovement.css";

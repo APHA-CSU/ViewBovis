@@ -1,6 +1,9 @@
-// ================================================== //
-// Main JavaScript Codebase for View Bovis Front-End
-// ================================================== //
+// =========================================== //
+// Main JavaScript Code for View Bovis App
+//
+// Code: JavaScript
+// Author: Tom Jenkins (Tom.Jenkins@apha.gov.uk)
+// =========================================== //
 
 "use strict";
 
@@ -31,7 +34,6 @@ const navContent = document.querySelectorAll(".content");
 //         securityModal.hide();
 //     }, 500);    
 // });
-
 
 
 // ------------------------ //
@@ -103,57 +105,28 @@ document.getElementById("btn-home-nextstrainLink").addEventListener("click", () 
 
     // Show content
     document.querySelector(".content-4").classList.remove("hidden");
+});
 
-    // Redraw cattle movement leaflet map to solve sizing issue on startup
-    map.invalidateSize();
+// Hyperlink to Help and Support
+// Purpose: hide all content when button is clicked then show content
+document.querySelector(".footer-help-link").addEventListener("click", () => {
+
+    // Hide all content function
+    hideContent();
+
+    // Activate bold font (add 'active' class)
+    document.querySelector(".nav-link-5").classList.add("active");
+
+    // Show content
+    document.querySelector(".content-5").classList.remove("hidden");
 });
 
 
 // ------------------------ //
 //
-//  LOADING NEXTSTRAIN DATA SETS
+// RENDER FOOTER
 //
 // ------------------------ //
-
-// Load Zika example when hyperlink is clicked
-document.getElementById("link_toZika"). addEventListener("click", () => {
-
-    // Remove all content from Nextstrain page (add 'hidden' class to 'filter-clade' element ID)
-    document.getElementById("filter-clade").classList.add("hidden");
-
-    // Render a back button on the top-right of the container
-    const btnContent = document.createElement("button");
-    btnContent.classList.add("btn", "btn-secondary", "btn-sm", "btn-backToDatasets");
-    btnContent.setAttribute("type", "button");
-    btnContent.innerText = "< Back To Dataset Selection";
-    btnContent.style.marginBottom = "5px";
-    
-
-    // Get maximum height of the container where Nextstrain will render based on the users screen height
-    // const navHeight = document.querySelector(".navbar").offsetHeight;
-    // const backBtnHeight = document.querySelector(".btn-backToDatasets").offsetHeight;
-    // const screenHeight = window.innerHeight - (navHeight + backBtnHeight);
-
-    // Render XXX example on page by inserting HTML
-    document.querySelector(".content-4").insertAdjacentHTML("afterbegin", `
-        <iframe src="http://127.0.0.1:1235/B6-13" frameborder="0" height="800px" width="100%"></iframe>
-    `);
-    document.querySelector(".content-4").insertAdjacentElement("afterbegin", btnContent);
-    
-
-});
-
-
-// ------------------------ //
-//
-//  DYNAMICALLY SET HEIGHT
-//
-// ------------------------ //
-
-// TODO
-// Get screen height
-// const screenHeight = window.innerHeight;
-
 
 
 

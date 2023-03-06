@@ -1,67 +1,68 @@
 /* ================================ */
-/* HOME CONTENT */
+/*
+/* HOME CSS */
+/*
 /* ================================ */
 
+/* ------------------- */
+/* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
+/* ------------------- */
 
-/* Apply these styles to screens with a maximum height of 768px (Defra laptops) */
-@media (max-height: 768px){
+/* Security modal */
 
-    /* Security modal */
-
-    /* Government ALPHA Banner */
-
-    /* ViewBovis Logo */
-    .home-logo {
-        height: 90px;
-        width: "auto";
-        margin-top: 15px;
-    }
-
-    /* ViewBovis Description */
-    .home-description-container {
-        border-left: 10px solid #b1b4b6;
-        margin-left: 10px;
-    }
-    .home-description {
-        margin-left: 10px;
-    }
-
-    /* Service Last Updated */
-    .home-banner-container {
-        margin-bottom: 0;
-    }
-    .home-banner-content {
-        height: 80px;
-    }
-
-    /* Box Quick-Links Content */
-    .home-box {
-        background-color: #f2f2f2;
-        border-top: 10px solid var(--gov-green);
-        padding: 10px;
-        font-size: 17px;
-        height: 335px;
-    }
-    .custom-govuk-button-home {
-        margin-bottom: 0;
-        font-size: 15px;
-    }
-
-    /* Footer style */
-    .footer {
-        bottom: -2rem;
-        position: relative;
-        font-size: 12px;
-        background-color: #f2f2f2;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        margin-left: 0.5px;
-        margin-right: 0.5px;
-    }
+/* Government ALPHA Banner */
+.alpha-side-margin {
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
+/* ViewBovis Logo */
+.home-logo {
+    height: 90px;
+    width: "auto";
+}
 
+/* ViewBovis Description */
+.home-description-container {
+    border-left: 10px solid #b1b4b6;
+    margin-left: 10px;
+}
+.home-description {
+    margin-left: 10px;
+}
 
+/* Service Last Updated */
+.home-banner-container {
+    margin-bottom: 10px;
+}
+.home-banner-content {
+    height: 80px;
+}
+
+/* Box Quick-Links Content */
+.home-box {
+    background-color: #f2f2f2;
+    border-top: 10px solid var(--gov-green);
+    padding: 10px;
+    font-size: 17px;
+    height: 335px;
+}
+.custom-govuk-button-home {
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+/* Footer style */
+.footer {
+    bottom: -2rem;
+    position: relative;
+    font-size: 12px;
+    background-color: #f2f2f2;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: 0.5px;
+    margin-right: 0.5px;
+}
 
 
 /* Apply this style to screens with a height >768px (larger laptop or desktop) */
