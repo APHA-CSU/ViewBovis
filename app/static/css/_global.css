@@ -46,8 +46,3 @@ a:hover {
 .govuk-button {
     background-color: var(--gov-green);
 }
-
-.navbar-margin {
-    /* Space between navbar and component */
-    margin-top: 10px;
-}

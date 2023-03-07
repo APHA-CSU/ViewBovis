@@ -99,7 +99,7 @@
         <div class="container-fluid content content-1 hidden">
             <!-- Government ALPHA Banner -->
             <div class="row alpha-side-margin">
-                <div class="govuk-phase-banner navbar-margin">
+                <div class="govuk-phase-banner ">
                     <div>
                         <strong class="govuk-tag govuk-phase-banner__content__tag">
                             alpha
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <!-- ViewBovis Logo and Description -->
-            <div class="row navbar-margin align-items-center">
+            <div class="row  align-items-center">
                 <!-- Column: logo -->
                 <div class="col-1">
                     <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo">
@@ -146,7 +146,7 @@
                 </div>
             </div>
             <!-- Box Quick-Links Content -->
-            <div class="row gx-2 navbar-margin">
+            <div class="row gx-2 ">
                 <div class="col">
                     <!-- Cattle movement box -->
                     <div class="home-box">
@@ -251,22 +251,22 @@
         <!-- ================================== -->
         <div class="container-fluid content content-2">
             <div class="row">
-                <div class="col-3" id="content2-column1-container">
+                <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <!-- Button to collapse sidebar -->
-                    <!-- <span type="button" class="navbar-margin float-end">
+                    <!-- <span type="button" class=" float-end">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black" class="bi bi-caret-left-fill" viewBox="0 0 16 18">
                             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
                         </svg>
                     </span> -->
                     <div id="map-sidebar-container">
-                        <div class="govuk-heading-m navbar-margin" id="enter-sample-container">
+                        <div class="govuk-heading-m " id="enter-sample-container">
                             Enter Sample
                         </div>
                         <div>
                             <!-- Element: input sample box for main cattle movement -->
                             <p>
                                 <!-- Ear-Tag or AF number -->
-                                <input type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="AF Number or Ear Tag">
+                                <input value="AF-21-07021-21" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="AF Number or Ear Tag">
                             </p>
                             <!-- Element: button to show main cattle movement -->
                             <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn_show-movements">Show Cattle Movement</button>
@@ -351,7 +351,7 @@
                 </div>
                     
                 <div class="col">
-                    <div class="navbar-margin custom-popup" id="map"></div>
+                    <div class=" custom-popup" id="map"></div>
                 </div>
             </div>
         </div>
@@ -360,7 +360,7 @@
         <!-- ================================== -->
         <div class="container-fluid content content-3 hidden">
             <!-- SNP Matrix Content -->
-            <div class="navbar-margin">
+            <div class="">
                 <!-- <iframe src="https://tomjenkins.shinyapps.io/SNP_Matrix_User_Testing/" frameborder="0" height="600px" width="100%"></iframe> -->
                 <h1>Development in Progress</h1>
             </div>
@@ -373,7 +373,7 @@
             <div id="nextstrain-splash-page">
                 <!-- Government ALPHA Banner -->
                 <div class="row alpha-side-margin">
-                    <div class="govuk-phase-banner navbar-margin">
+                    <div class="govuk-phase-banner ">
                         <div>
                             <strong class="govuk-tag govuk-phase-banner__content__tag">
                                 alpha
@@ -385,7 +385,7 @@
                     </div>
                 </div>
                 <!-- Nextstrain Logo and Description -->    
-                <div class="row navbar-margin align-items-center">
+                <div class="row  align-items-center">
                     <div class="col-3 text-center">
                         <img src="/static/img/nextstrain-logo.svg" id="nextstrain-logo">
                     </div>
@@ -398,7 +398,7 @@
                     </div>
                 </div>
                 <!-- Box Content -->
-                <div class="row gx-2 navbar-margin">
+                <div class="row gx-2 ">
                     <div class="col-9">
                         <!-- Search box -->
                         <div class="nextstrain-box">
@@ -414,9 +414,9 @@
                                     </p>
                                 </div>
                                 <div class="col-8 nextstrain-select-data">
-                                    <div class="row navbar-margin" style="margin-right:0; background-color: white;">
+                                    <div class="row " style="margin-right:0; background-color: white;">
                                         <!-- Input text -->
-                                        <div class="col-6 navbar-margin">
+                                        <div class="col-6 ">
                                             <div class="govuk-form-group" style="margin-bottom: 10px;">
                                                 <label class="govuk-label fs-6">
                                                     Search by AF, CPH or Ear tag
@@ -435,7 +435,7 @@
                                             </div>
                                         </div>
                                         <!-- Popular clades shortcut -->
-                                        <div class="col-6 navbar-margin">
+                                        <div class="col-6 ">
                                             <span>Commonly Viewed Clades</span>
                                             <p>
                                                 <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B613">B6-13</a></span>
@@ -444,7 +444,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="row navbar-margin" style="margin-right: 0">
+                                    <div class="row " style="margin-right: 0">
                                         <!-- Table for sample or clade selection -->
                                         <div id="nextstrain-search-table"></div>
                                     </div>
@@ -515,7 +515,7 @@
         <!-- Help and Support Content -->
         <!-- ================================== -->
         <div class="container-fluid content content-5 hidden">
-            <div class="navbar-margin">
+            <div class="">
                 <h1>Development in Progress</h1>
             </div>
             

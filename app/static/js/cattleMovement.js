@@ -14,29 +14,20 @@
 //
 // ------------------------ //
 
-// DUMMY DATA #1
-// const mov2 = [
-//   [52.478146, 0.796967, "Farm1"],
-//   [52.452912, 1.123962, "Farm2"],
-//   [52.749631, 0.887175, "CPH1"],
-//   [52.832337, 1.144929, "CPH2"],
-//   [52.760774, 1.36849, "Slaughterhouse"]
+// const mov1 = [
+//   [51.81296, -1.738453, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/01", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.32055, -1.871136, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/02", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [51.84591, -2.314109, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/03", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.89763, -1.719953, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/04", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.9762, -1.038638, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/05", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03"],
+//   [52.86099, -0.8604088, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/06", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.54504, -1.982333, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/07", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.42978, -1.132525, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/08", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.93212, -0.930516, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/09", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//   [52.70011, -2.2853, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/10", "Slaughterhouse", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
 // ];
 
-// DUMMY DATA #2
-// Structure corresponds to MDWH format: shorturl.at/ftIN0
-const mov1 = [
-  [51.81296, -1.738453, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/01", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.32055, -1.871136, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/02", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [51.84591, -2.314109, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/03", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.89763, -1.719953, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/04", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.9762, -1.038638, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/05", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03"],
-  [52.86099, -0.8604088, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/06", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.54504, -1.982333, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/07", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.42978, -1.132525, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/08", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.93212, -0.930516, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/09", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-  [52.70011, -2.2853, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/10", "Slaughterhouse", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-];
+
 
 // ------------------------ //
 //
@@ -75,35 +66,54 @@ const map = L.map("map", {
   zoomControl: false,
 });
 
-// Get maximum height of the container where the map will render based on the users screen height
-const navbarHeight = document.querySelector(".navbar").offsetHeight;
-const navbarMarginHeight = 10; // TODO this should dynamically extract height from navbar-margin class
-const mapHeight = window.innerHeight - navbarHeight - navbarMarginHeight;
 
-// Set the height of sidebar and map containers
+
+// ------------------------ //
+//
+// DYNAMICALLY SET HEIGHT OF MAP
+//
+// ------------------------ //
+
+// Calculate maximum height of the container where the map will render based on the users screen height
+const navbarHeight = document.querySelector(".navbar").offsetHeight;
+const navbarHeightMargin = parseInt(window.getComputedStyle(document.querySelector(".navbar")).getPropertyValue("margin-bottom"));
+const mapHeight = window.innerHeight - navbarHeight - navbarHeightMargin;
+
+// Set the height of map and sidebar containers
 document.getElementById("map").style.height = `${mapHeight}px`;
 document.getElementById("map-sidebar-container").style.height = `${mapHeight}px`;
 map.invalidateSize();
 
+// Change the height of the map when the window is resized
+// For example, when the user drags the browser from a laptop screen to a desktop screen (or vice versa)
+window.addEventListener("resize", () => {
+  document.getElementById("map").style.height = `${window.innerHeight - navbarHeight - navbarHeightMargin}px`;
+  document.getElementById("map-sidebar-container").style.height = `${window.innerHeight - navbarHeight - navbarHeightMargin}px`;
+  map.invalidateSize();
+});
+
+
 
 // ------------------------ //
 //
-//  ADDITIONAL MAP FEATURES
+//  TOGGLE FULL SCREEN AND HIDING SIDEBAR
 //
 // ------------------------ //
 
-// Add a back button to the map
-// This code creates and adds a custom control using the leaflet library
-const backButton = L.Control.extend({
+// Add a full screen button to the top-left corner of the map
+// Collapse the sidebar when this button is clicked
+// [Detail: this code creates and adds a custom control using the leaflet library]
+// [Detail: this code adds a collapse data-bs-toggle collapse property using the bootstrap library]
+const btnFullScreen = L.Control.extend({
   options: {
     position: "topleft",
   },
   onAdd: function(map) {
     const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
-    divContainer.setAttribute("id", "map-fullscreen-button");
+    divContainer.setAttribute("id", "btn__map-fullscreen");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a title="Full screen">
+      <a title="Full screen" data-bs-toggle="collapse" href="#content2-column1-container">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"/>
         </svg>
@@ -112,21 +122,89 @@ const backButton = L.Control.extend({
     return divContainer;
   }
 });
-map.addControl(new backButton());
+map.addControl(new btnFullScreen());
 
-// Toggle sidebar when back / forward button is clicked
-// document.getElementById("map-fullscreen-button").addEventListener("click", function(){
-//   document.getElementById("content2-column1-container").classList.add("hidden");
-//   map.invalidateSize();
-// })
+// Add a right arrow button to the top-left corner of the map (hidden by default)
+// Expand the sidebar when this button is clicked
+const btnRightArrow = L.Control.extend({
+  options: {
+    position: "topleft",
+  },
+  onAdd: function(map) {
+    const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar hidden");
+    divContainer.setAttribute("id", "btn__map-exitfullscreen");
+
+    divContainer.insertAdjacentHTML("afterbegin", `
+      <a title="Exit full screen and show sidebar" data-bs-toggle="collapse" href="#content2-column1-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+          <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+        </svg>
+      </a>
+    `);
+    return divContainer;
+  }
+});
+map.addControl(new btnRightArrow());
+
+// Change button and refresh map size after sidebar has completed collapse 
+document.getElementById("content2-column1-container").addEventListener("hidden.bs.collapse", () => {
+  document.getElementById("btn__map-exitfullscreen").classList.remove("hidden");
+  document.getElementById("btn__map-fullscreen").classList.add("hidden");
+  map.invalidateSize();
+})
+
+// Change button and refresh map size after sidebar has completed expansion
+document.getElementById("content2-column1-container").addEventListener("shown.bs.collapse", () => {
+  document.getElementById("btn__map-fullscreen").classList.remove("hidden");
+  document.getElementById("btn__map-exitfullscreen").classList.add("hidden");
+  map.invalidateSize();
+})
 
 
-// Add a zoom control to the map
+
+// ------------------------ //
+//
+//  ADDITIONAL MAP FEATURES
+//
+// ------------------------ //
+
+// Add a zoom control to the top-left corner of the map
 L.control.zoom({
   position: "topleft",
 }).addTo(map);
 
-// Add a measurement tool to the map
+
+// Add a repeat arrow button to the top-left corner of the map
+// [Detail: this code creates and adds a custom control using the leaflet library]
+const resetView = L.Control.extend({
+  options: {
+    position: "topleft",
+  },
+  onAdd: function(map) {
+    const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    divContainer.setAttribute("id", "btn__map-resetview");
+
+    divContainer.insertAdjacentHTML("afterbegin", `
+      <a title="Reset view">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+          <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+          <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+        </svg>
+      </a>
+    `);
+    return divContainer;
+  }
+});
+map.addControl(new resetView());
+
+// Reset view to default coordinates when repeat arrow button is clicked
+document.getElementById("btn__map-resetview").addEventListener("click", () => {
+  map.setView(defaultCoords, defaultZoom);
+});
+
+
+// Add a measurement tool to the top-left corner of the map
 // Leaflet plugin: https://github.com/NLTGit/Leaflet.LinearMeasurement
 map.addControl(
   new L.Control.LinearMeasurement({
@@ -137,8 +215,6 @@ map.addControl(
   })
 );
 
-// TODO
-// Reset view to default coordinates and zoom on click of button
 
 // Add a control layer for basemaps in the top-right to allow user to change the basemap tiles
 const baseMaps = {
@@ -147,30 +223,19 @@ const baseMaps = {
   "Esri World Imagery": Esri_WorldImagery,
 };
 let layerControl = L.control.layers(baseMaps, null, {collapsed: false}).addTo(map);
+
 // Add a title to the basemap control
 document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
 document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
 
-// TODO
 // Add scalebar to the map
 L.control.scale({imperial: false}).addTo(map);
 
-// TODO (MAYBE)
-// Function that creates a popup to user (lat-lon coordinates) upon clicking on the map
-// https://leafletjs.com/examples/quick-start/
-// var popup = L.popup();
-// function onMapClick(e) {
-//     popup
-//         .setLatLng(e.latlng)
-//         .setContent("You clicked the map at " + e.latlng.toString())
-//         .openOn(map);
-// }
-// map.on('click', onMapClick);
 
 
 // ------------------------ //
 //
-// TOGGLE SIDEBAR LAYERS
+// TOGGLE SHAPEFILE LAYERS IN SIDEBAR
 //
 // ------------------------ //
 
@@ -466,6 +531,7 @@ const addPtsPopupsToMap = function() {
     frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
   }).addTo(map);
 };
+
 
 // Async function that executes when the main 'Show Cattle Movement' button is clicked
 const showMovements = async function () {
