@@ -96,7 +96,7 @@ window.addEventListener("resize", () => {
 
 // ------------------------ //
 //
-//  TOGGLE FULL SCREEN AND HIDING SIDEBAR
+// TOGGLE FULL SCREEN AND HIDING SIDEBAR
 //
 // ------------------------ //
 
@@ -113,9 +113,10 @@ const btnFullScreen = L.Control.extend({
     divContainer.setAttribute("id", "btn__map-fullscreen");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a title="Full screen" data-bs-toggle="collapse" href="#content2-column1-container">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"/>
+      <a title="Hide sidebar" data-bs-toggle="collapse" href="#content2-column1-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+          <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
         </svg>
       </a>
     `);
@@ -135,7 +136,7 @@ const btnRightArrow = L.Control.extend({
     divContainer.setAttribute("id", "btn__map-exitfullscreen");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a title="Exit full screen and show sidebar" data-bs-toggle="collapse" href="#content2-column1-container">
+      <a title="Show sidebar" data-bs-toggle="collapse" href="#content2-column1-container">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
           <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
@@ -235,171 +236,33 @@ L.control.scale({imperial: false}).addTo(map);
 
 // ------------------------ //
 //
-// TOGGLE SHAPEFILE LAYERS IN SIDEBAR
-//
-// ------------------------ //
-
-// Initiate variables to store shapefile data
-let countyPoly, riskAreaPoly, homeRangePoly;
-
-// Function to toggle layers on or off
-const toggleLayers = function(layer){
-
-  // When checkbox is ticked, add layer to map
-  if(this.checked === true){
-    layer.addTo(map) 
-  };
-
-  // When checkbox is unticked, remove layer from map
-  if(this.checked === false) map.removeLayer(layer);
-};
-
-// Leaflet plugin URL for adding shapefiles
-// https://github.com/calvinmetcalf/leaflet.shapefile
-
-// Function to highlight borders of each polygon on mouseover (when mouse hovers over them)
-const highlightFeature = function(e) {
-  const layer = e.target;
-
-  layer.setStyle({
-    weight: 3,
-    color: "#252525",
-  });
-
-  layer.bringToFront();
-};
-
-// Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
-const resetHighlight = function(e) {
-  countyPoly.resetStyle(e.target);
-  console.log(e.target);
-};
-
-// Function to zoom to a polygon when it is clicked
-const zoomToPoly = function(e) {
-  map.fitBounds(e.target.getBounds());
-};
-
-// Function to add highlighting parameters to a layer
-const onEachFeature = function(feature, layer) {
-  layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
-    click: zoomToPoly,
-  });
-};
-
-// Function to set a range of polygon colours for Risk Areas
-const riskAreaCols = function(area) {
-  switch (area) {
-    case "High Risk Area": return "#C62828";
-    case "High TB Area": return "#C62828";
-    case "Intermediate TB Area": return "orange";
-    case "Edge Area": return "orange";
-    case "Low Risk Area" : return "#00C853";
-    case "Low TB Area": return "#00C853";
-    case "TB Free Area": return "#CFD8DC";
-  };
-};
-
-// Function to set custom styles for Risk Area polygons
-const styleRiskAreaPoly = function(feature){
-    return {
-      fillColor: riskAreaCols(feature.properties.TB_Area),
-      weight: 1.5,  
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.50,
-  };
-};
-
-// Function to set custom styles for other polygons
-const stylePoly = function(color = "blue"){
-    return {
-      fillColor: color,
-      weight: 1.5,  
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.50,
-  };
-};
-
-// Toggle county polygons when checkbox is ticked or unticked
-countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
-const countyBox = document.getElementById("countyBox"); // select element from DOM
-countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly)); // event listener on the county checkbox
-
-// Toggle risk area polygons when checkbox is ticked or unticked
-riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
-const riskAreaBox = document.getElementById("riskAreasBox");
-riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
-
-// Toggle risk area polygons when checkbox is ticked or unticked
-homeRangePoly = new L.Shapefile("/static/data/HR2021.zip", stylePoly("purple"));
-const homeRangeBox = document.getElementById("homeRangesBox");
-homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
-
-// Legend for Risk Areas
-// https://leafletjs.com/examples/choropleth/
-// TODO
-let legend = L.control({position: "bottomright"});
-legend.onAdd = function (map) {
-
-    let div = L.DomUtil.create('div', 'info legend');
-    const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
-    const colours = ["#C62828", "orange", "#00C853", "#C62828", "orange","#00C853", "#CFD8DC"];
-    const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
-
-    // Build legend: loop through levels and generate a label with a colored square
-
-    // England
-    div.insertAdjacentHTML("afterbegin", "<strong>England</strong><br>");
-    for (let i = 0; i < levels.length; i++) 
-      if (country[i] === "ENG") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
-    
-    div.insertAdjacentHTML("beforeend", "<br>");
-
-    // Wales
-    div.insertAdjacentHTML("beforeend", "<strong>Wales</strong><br>");
-    for (let i = 0; i < levels.length; i++) 
-      if (country[i] === "WAL") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
-
-    div.insertAdjacentHTML("beforeend", "<br>");
-
-    // Scotland
-    div.insertAdjacentHTML("beforeend", "<strong>Scotland</strong><br>");
-    for (let i = 0; i < levels.length; i++) 
-      if (country[i] === "SCO") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
-
-    return div;
-};
-
-// Toggle legend when checkbox is (un)ticked
-riskAreaBox.addEventListener("change", function() {
-
-    // When checkbox is ticked
-    if(this.checked === true) legend.addTo(map);
-  
-    // When checkbox is unticked
-    if(this.checked === false) legend.remove();
-});
-
-
-// ------------------------ //
-//
 // PLOT MAIN CATTLE MOVEMENT
 //
 // ------------------------ //
 
-// Cow icons
-const cowIcon = L.icon({
-    iconUrl: "/static/img/Cow_GIS_Team.svg",
-    // iconUrl: "file:///C:/Users/m1004795/OneDrive%20-%20Defra/bTB/ViewBovis/ViewBovis%20Design%20A/images/Cow_GIS_Team.svg",
+// Object to store cow icons
+const cowIcons = {
+  cowStandard: L.icon({
+    iconUrl: "/static/img/CowHead.svg",
     iconSize: [50, 50],
     iconAnchor: [25, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
-});
+  }),
+  cowShowground: L.icon({
+    iconUrl: "/static/img/CH_Showground.svg",
+    iconSize: [50, 50],
+    iconAnchor: [25, 35],
+  }),
+  cowMarket: L.icon({
+    iconUrl: "/static/img/CH_Market.svg",
+    iconSize: [50, 50],
+    iconAnchor: [25, 35],
+  }),
+  cowSlaughter: L.icon({
+    iconUrl: "/static/img/CH_Slaughterhouse.svg",
+    iconSize: [50, 50],
+    iconAnchor: [25, 35],
+  }),
+}; 
 
 // Initiate variables to store spatial data for cow markers and cattle movement lines
 let cowMarker, cattleMovLine, linePts;
@@ -408,15 +271,16 @@ let cowMarker, cattleMovLine, linePts;
 // https://leafletjs.com/reference.html#popup
 const customOptions = {
     maxWidth: 400, // in pixels
-    className: "popupCustom" // must match a css class in styles.css
+    className: "popupCustom" // must match a css class in _cattleMovement.css
 };
+
 
 // Function to add cattle movement points and popups to map
 const addPtsPopupsToMap = function() {
 
   // Add all cattle movement points to the map
   for (let i = 0; i < mov1.length; i++){
-    cowMarker = new L.marker([mov1[i][0], mov1[i][1]], {icon: cowIcon}); // leaflet marker object to store coordinates
+    cowMarker = new L.marker([mov1[i][0], mov1[i][1]], {icon: cowIcons.cowStandard}); // leaflet marker object to store coordinates
 
     // Store data for each movement point in an array
     const movData = mov1[i].slice(2, i.length); // extract data from third to last element in array (first two elements are lat and lon)
@@ -533,43 +397,59 @@ const addPtsPopupsToMap = function() {
 };
 
 
-// Async function that executes when the main 'Show Cattle Movement' button is clicked
+// Async function that renders cattle movement points and popups to map
 const showMovements = async function () {
 
   // Fetch data for sample
   const response = await fetch(`/sample?sample_name=${document.getElementById("input__sampleID--1").value}`);
   const json = await response.json();
+  console.log(json);
+
+  // Extract movement data from object
+  const move = json.move;
+  console.log(...move);
 
   // Log json data to the console
-  console.log("Output data from async function");
-  delete json.sample;
-  console.log(json, typeof json); 
-
-
-  const arr1 = [...Object.entries(json)];
-  console.log(arr1);
+  // console.log("Output data from async function");
+  // delete json.sample;
+  // console.log(json, typeof json); 
+  // const arr1 = [...Object.entries(json)];
+  // console.log(arr1);
 
   // Store data in variables using destructuring
   // const { lat, lon } = json;
   // console.log(Object.values(lat), lon);
+//   const mov1 = [
+//     [51.81296, -1.738453, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/01", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//     [52.32055, -1.871136, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/02", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+//     [51.84591, -2.314109, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/03", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
+// ];
+  // Add all cattle movement points to the map
+  for (let i = 0; i < json.move.length; i++){
+    cowMarker = new L.marker([json.move[i][0], json.move[i][1]], {icon: cowIcons.cowStandard}); // leaflet marker object to store coordinates
+
+    // Add points to map as a layer
+    map.addLayer(cowMarker);
+  }
+
 
 
   // Add points and popups to map
-  addPtsPopupsToMap();
+  // addPtsPopupsToMap();
 
-  // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
-  const bounds = L.latLngBounds(linePts).pad(0.10);
-  map.fitBounds(bounds);
+  // // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
+  // const bounds = L.latLngBounds(linePts).pad(0.10);
+  // map.fitBounds(bounds);
 
-  // Allow user access to other elements by removing the disabled class
-  document.getElementById("toggle__movement-lines--1").disabled = false;
-  document.getElementById("input__sampleID--2").disabled = false;
-  document.getElementById("btn__cattle-movement--2").disabled = false;
-  document.getElementById("slider__snp-threshold").disabled = false;
-  document.getElementById("btn__related-isolates").disabled = false;
+  // // Allow user access to other elements by removing the disabled class
+  // document.getElementById("toggle__movement-lines--1").disabled = false;
+  // document.getElementById("input__sampleID--2").disabled = false;
+  // document.getElementById("btn__cattle-movement--2").disabled = false;
+  // document.getElementById("slider__snp-threshold").disabled = false;
+  // document.getElementById("btn__related-isolates").disabled = false;
 };
 
-// Add event listener to the main 'Show Cattle Movement' button
+// Executes the async showMovements() function when the main "Show Cattle Movement" button is clicked
 document.getElementById("btn_show-movements").addEventListener("click", showMovements);
 
 
@@ -595,6 +475,159 @@ toggleMovementLines.addEventListener("change", function(){
 // ------------------------ //
 
 // TODO
+
+
+// ------------------------ //
+//
+// TOGGLE SHAPEFILE LAYERS IN SIDEBAR
+//
+// ------------------------ //
+
+// Initiate variables to store shapefile data
+let countyPoly, riskAreaPoly, homeRangePoly;
+
+// Function to toggle layers on or off
+const toggleLayers = function(layer){
+
+  // When checkbox is ticked, add layer to map
+  if(this.checked === true){
+    layer.addTo(map) 
+  };
+
+  // When checkbox is unticked, remove layer from map
+  if(this.checked === false) map.removeLayer(layer);
+};
+
+// Leaflet plugin URL for adding shapefiles
+// https://github.com/calvinmetcalf/leaflet.shapefile
+
+// Function to highlight borders of each polygon on mouseover (when mouse hovers over them)
+const highlightFeature = function(e) {
+  const layer = e.target;
+
+  layer.setStyle({
+    weight: 3,
+    color: "#252525",
+  });
+
+  layer.bringToFront();
+};
+
+// Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
+const resetHighlight = function(e) {
+  countyPoly.resetStyle(e.target);
+};
+
+// Function to zoom to a polygon when it is clicked
+const zoomToPoly = function(e) {
+  map.fitBounds(e.target.getBounds());
+};
+
+// Function to add highlighting parameters to a layer
+const onEachFeature = function(feature, layer) {
+  layer.on({
+    mouseover: highlightFeature,
+    mouseout: resetHighlight,
+    click: zoomToPoly,
+  });
+};
+
+// Function to set polygon colours for Risk Areas
+const riskAreaCols = function(area) {
+  switch (area) {
+    case "High Risk Area": return "#C62828";
+    case "High TB Area": return "#C62828";
+    case "Intermediate TB Area": return "orange";
+    case "Edge Area": return "orange";
+    case "Low Risk Area" : return "#00C853";
+    case "Low TB Area": return "#00C853";
+    case "TB Free Area": return "#CFD8DC";
+  };
+};
+
+// Function to set custom styles for Risk Area polygons
+const styleRiskAreaPoly = function(feature){
+    return {
+      fillColor: riskAreaCols(feature.properties.TB_Area),
+      weight: 1.5,  
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.50,
+  };
+};
+
+// Function to set custom styles for other polygons
+const stylePoly = function(color = "blue"){
+    return {
+      fillColor: color,
+      weight: 1.5,  
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.50,
+  };
+};
+
+// Toggle county polygons when checkbox is ticked or unticked
+countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
+const countyBox = document.getElementById("countyBox"); // select element from DOM
+countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly)); // event listener on the county checkbox
+
+// Toggle risk area polygons when checkbox is ticked or unticked
+riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
+const riskAreaBox = document.getElementById("riskAreasBox");
+riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
+
+// Toggle risk area polygons when checkbox is ticked or unticked
+homeRangePoly = new L.Shapefile("/static/data/HR2021.zip", stylePoly("purple"));
+const homeRangeBox = document.getElementById("homeRangesBox");
+homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
+
+// Legend for Risk Areas
+// https://leafletjs.com/examples/choropleth/
+let legend = L.control({position: "bottomright"});
+legend.onAdd = function (map) {
+
+    let div = L.DomUtil.create('div', 'info legend');
+    const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
+    const colours = ["#C62828", "orange", "#00C853", "#C62828", "orange","#00C853", "#CFD8DC"];
+    const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
+
+    // Build legend: loop through levels and generate a label with a colored square
+
+    // England
+    div.insertAdjacentHTML("afterbegin", "<strong>England</strong><br>");
+    for (let i = 0; i < levels.length; i++) 
+      if (country[i] === "ENG") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
+    
+    div.insertAdjacentHTML("beforeend", "<br>");
+
+    // Wales
+    div.insertAdjacentHTML("beforeend", "<strong>Wales</strong><br>");
+    for (let i = 0; i < levels.length; i++) 
+      if (country[i] === "WAL") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
+
+    div.insertAdjacentHTML("beforeend", "<br>");
+
+    // Scotland
+    div.insertAdjacentHTML("beforeend", "<strong>Scotland</strong><br>");
+    for (let i = 0; i < levels.length; i++) 
+      if (country[i] === "SCO") div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`);
+
+    return div;
+};
+
+// Toggle legend when layer is (un)ticked
+riskAreaBox.addEventListener("change", function() {
+
+    // When checkbox is ticked
+    if(this.checked === true) legend.addTo(map);
+  
+    // When checkbox is unticked
+    if(this.checked === false) legend.remove();
+});
+
 
 
 // ------------------------ //
