@@ -57,16 +57,14 @@ class ViewBovisData:
             move_dict[str(loc_num)] = \
                 {"lat": sample_latlon[0],
                  "lon": sample_latlon[1],
-                 "on_date": \
-                    df_sample_md[f"Loc{loc_num}_StartDateTime{loc_num}"][0], 
-                 "off_date": \
-                    df_sample_md[f"Loc{loc_num}_EndDateTime{loc_num}"][0], 
-                 "type": df_sample_md[f"Loc{loc_num}_Type{loc_num}"][0]} 
+                 "on_date": df_sample_md[f"Loc{loc_num}_StartDate"][0], 
+                 "off_date": df_sample_md[f"Loc{loc_num}_EndDate"][0], 
+                 "type": df_sample_md[f"Loc{loc_num}_Type"][0]} 
         return {"submission": submission,
                 "clade": df_sample_md["Clade"][0],
                 "identifier": df_sample_md["Identifier"][0],
                 "species": df_sample_md["Host"][0],
-                "slaughter_date": df_sample_md["wsdSlaughterDate"][0],
+                "slaughter_date": df_sample_md["SlaughterDate"][0],
                 "cph": df_sample_md["CPH"][0],
                 "cphh": df_sample_md["CPHH"][0],
                 "cph_type": df_sample_md["CPH_Type"][0],
