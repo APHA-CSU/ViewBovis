@@ -15,7 +15,7 @@ def get_data_object():
         the database. This function is called before every request.
     """
     if not hasattr(g, "data"):
-        g.data = ViewBovisData()
+        g.data = ViewBovisData(app.data_path)
 
 @app.teardown_appcontext
 def disconnect_db(exception):
