@@ -4,12 +4,9 @@ from os import path
 import pandas as pd
 
 class ViewBovisData:
-    _DEFAULT_DATA_DIR = \
-        path.join(path.dirname(path.dirname(path.abspath(__file__))), "data")
-
-    def __init__(self, data_dir=_DEFAULT_DATA_DIR):
-        self._matrix_dir = path.join(data_dir, "snp_matrix")
-        db_path = path.join(data_dir, "viewbovis.db")
+    def __init__(self, data_path):
+        self._matrix_dir = path.join(data_path, "snp_matrix")
+        db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
     
