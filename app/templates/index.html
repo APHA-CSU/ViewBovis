@@ -269,46 +269,39 @@
                                 <input value="AF-21-07021-21" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="AF Number or Ear Tag">
                             </p>
                             <!-- Element: button to show main cattle movement -->
-                            <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn_show-movements">Show Cattle Movement</button>
+                            <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn__cattleMovement--1">Show Cattle Movement</button>
                         </div>
                         <br>
-                        <!-- Element: toggle movement lines for main cattle movement -->
-                        <!-- <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="toggle__movement-lines--1" disabled="disabled" type="checkbox" checked>
-                                <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--1">Toggle Movement Lines</label>
-                            </div>
-                        </div> -->
-                        <!-- <br> -->
                         <!-- Element: dropdown box for inputting a second cattle movement -->
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                    <!-- Element: title text and style for dropdown box -->
-                                    <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
-                                </button>
-                              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <div>
-                                        <!-- Element: input sample box for second cattle movement -->
-                                        <p>
-                                            <input type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
-                                        </p>
-                                        <!-- Element: button to show second cattle movement -->
-                                        <button type="button" class="govuk-button" id="btn__cattle-movement--2" disabled="disabled" style="margin-bottom: 10px;" data-module="govuk-button">Show Second Movement</button>
-                                        <br>
-                                        <!-- Element: toggle movement lines for second cattle movement -->
-                                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                            <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="toggle__movement-lines--2" disabled="disabled" type="checkbox" checked>
-                                                <label class="govuk-label govuk-checkboxes__label" for="toggle__movement-lines--2">Toggle Movement</label>
+                        <div class="row">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <!-- Element: title text and style for dropdown box -->
+                                        <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
+                                    </button>
+                                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body" id="accordion__secondMovement">
+                                        <div>
+                                            <!-- Element: input sample box for second cattle movement -->
+                                            <p>
+                                                <input value="AF-61-01504-20" type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
+                                            </p>
+                                            <!-- Element: button to show second cattle movement -->
+                                            <button type="button" class="govuk-button" id="btn__cattleMovement--2" disabled="disabled" data-module="govuk-button" style="margin-bottom: 10px;">Show Second Movement</button>
+                                            <!-- Element: toggle movement lines for second cattle movement -->
+                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--2" disabled="disabled" type="checkbox" checked>
+                                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--2">Toggle Movement</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                  </div>
                                 </div>
-                              </div>
                             </div>
-                          </div>
+                        </div>
                         <br>
                         <div class="row">
                             <p class="fs-5 fw-bold">
@@ -333,8 +326,8 @@
                                     <label class="govuk-label govuk-checkboxes__label" for="homeRangesBox">Home Ranges</label>
                                 </div>
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="mainMovementLines" type="checkbox" disabled="disabled" >
-                                    <label class="govuk-label govuk-checkboxes__label" for="mainMovementLines">Movement Lines</label>
+                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--1" type="checkbox" disabled="disabled" checked>
+                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--1">Movement Lines</label>
                                 </div>
                             </div>
                         </div>
@@ -568,7 +561,6 @@
     <script src="/static/js/leaflet.geometryutil.js"></script>
     <script src="/static/js/leaflet-arrowheads.js"></script>
     <script src="/static/js/L.LinearMeasurement.js"></script>
-    <!-- <script src="/static/js/easy-button.js"></script> -->
     <script src="/static/js/cattleMovement.js"></script>
     <script src="/static/js/main.js"></script>
     </body>

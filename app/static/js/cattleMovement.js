@@ -10,27 +10,6 @@
 
 // ------------------------ //
 //
-// DUMMY DATA (TESTING ONLY)
-//
-// ------------------------ //
-
-// const mov1 = [
-//   [51.81296, -1.738453, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/01", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.32055, -1.871136, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/02", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [51.84591, -2.314109, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/03", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.89763, -1.719953, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/04", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.9762, -1.038638, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/05", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03"],
-//   [52.86099, -0.8604088, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/06", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.54504, -1.982333, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/07", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.42978, -1.132525, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/08", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.93212, -0.930516, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/09", "Farm", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//   [52.70011, -2.2853, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/10", "Slaughterhouse", "Norfolk", "HRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-// ];
-
-
-
-// ------------------------ //
-//
 // BASEMAP PARAMETERS
 //
 // ------------------------ //
@@ -148,19 +127,22 @@ const btnRightArrow = L.Control.extend({
 });
 map.addControl(new btnRightArrow());
 
-// Change button and refresh map size after sidebar has completed collapse 
+// Refresh map size after sidebar has completed collapse 
 document.getElementById("content2-column1-container").addEventListener("hidden.bs.collapse", () => {
+  map.invalidateSize();
+});
+
+// Change icon to right-arrow after sidebar has collapsed
+document.getElementById("btn__map-fullscreen").addEventListener("click", () => {
   document.getElementById("btn__map-exitfullscreen").classList.remove("hidden");
   document.getElementById("btn__map-fullscreen").classList.add("hidden");
-  map.invalidateSize();
-})
+});
 
-// Change button and refresh map size after sidebar has completed expansion
-document.getElementById("content2-column1-container").addEventListener("shown.bs.collapse", () => {
+// Change icon to left-arrow after sidebar has expanded
+document.getElementById("btn__map-exitfullscreen").addEventListener("click", () => {
   document.getElementById("btn__map-fullscreen").classList.remove("hidden");
   document.getElementById("btn__map-exitfullscreen").classList.add("hidden");
-  map.invalidateSize();
-})
+});
 
 
 
@@ -217,6 +199,10 @@ map.addControl(
 );
 
 
+// Add scalebar to the bottom-left corner of the map
+L.control.scale({imperial: false}).addTo(map);
+
+
 // Add a control layer for basemaps in the top-right to allow user to change the basemap tiles
 const baseMaps = {
   "Open Street Map": osm,
@@ -229,14 +215,11 @@ let layerControl = L.control.layers(baseMaps, null, {collapsed: false}).addTo(ma
 document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
 document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
 
-// Add scalebar to the map
-L.control.scale({imperial: false}).addTo(map);
-
 
 
 // ------------------------ //
 //
-// PLOT MAIN CATTLE MOVEMENT
+// COW HEAD POPUP CONTENT
 //
 // ------------------------ //
 
@@ -264,207 +247,241 @@ const cowIcons = {
   }),
 }; 
 
-// Initiate variables to store spatial data for cow markers and cattle movement lines
-let cowMarker, cattleMovLine, linePts;
-
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
 const customOptions = {
-    maxWidth: 400, // in pixels
-    className: "popupCustom" // must match a css class in _cattleMovement.css
+  maxWidth: 400, // in pixels
+  className: "popupCustom" // must match a css class in _cattleMovement.css
+};
+
+// Function to create HTML popup content using template literal
+const popupContent = function(data, index) {
+
+  return `
+  <div class="fs-5 fw-bold">${data.identifier}</div><br>
+  <div>
+    <nav>
+      <div class="nav nav-tabs" id="popupNav" role="tablist">
+        <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
+        <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="popTabContent">     
+      <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td><strong>Movement:</strong></td>
+              <td>${`${index+1} of ${Object.entries(data.move).length}`}</td>
+            </tr>
+            <tr>
+              <td><strong>AF Number:</strong></td>
+              <td>${data.submission}</td> 
+            </tr>
+            <tr>
+              <td><strong>Species:</strong></td>
+              <td>${data.species}</td>
+            </tr>
+            <tr>
+              <td><strong>Lat Lon / OSM?:</strong></td>
+              <td>XXXXX</td>
+            </tr>
+            <tr>
+              <td><strong>Clade:</strong></td>
+              <td>${data.clade}</td>
+            </tr>
+            <tr>
+              <td><strong>Slaughter Date:</strong></td>
+              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
+            </tr>
+            <tr>
+              <td><strong>CPH:</strong></td>
+              <td>${data.cph}</td>
+            </tr>
+            <tr>
+              <td><strong>CPH Type:</strong></td>
+              <td>${data.cph_type}</td>
+            </tr>
+            <tr>
+              <td><strong>CPHH:</strong></td>
+              <td>${data.cphh}</td>
+            </tr>
+            <tr>
+              <td><strong>County:</strong></td>
+              <td>${data.county}</td>
+            </tr>
+            <tr>
+              <td><strong>Risk Area:</strong></td>
+              <td>${data.risk_area}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <td><strong>Host:</strong></td>
+              <td>XXXXX</td>
+            </tr>
+            <tr>
+              <td><strong>Breed:</strong></td>
+              <td>XXXXX</td>
+            </tr>
+            <tr>
+              <td><strong>Date of Birth:</strong></td>
+              <td>XXXXX</td>
+            </tr>
+            <tr>
+              <td><strong>Sex:</strong></td>
+              <td>XXXXX</td>
+            </tr> 
+          </tbody>
+        </table>
+        <h3>More content here?</h3>
+      </div>
+    </div>           
+  `;
 };
 
 
-// Function to add cattle movement points and popups to map
-const addPtsPopupsToMap = function() {
 
-  // Add all cattle movement points to the map
-  for (let i = 0; i < mov1.length; i++){
-    cowMarker = new L.marker([mov1[i][0], mov1[i][1]], {icon: cowIcons.cowStandard}); // leaflet marker object to store coordinates
+// ------------------------ //
+//
+// UTILITY FUNCTIONS FOR PLOTTING MOVEMENTS
+//
+// ------------------------ //
 
-    // Store data for each movement point in an array
-    const movData = mov1[i].slice(2, i.length); // extract data from third to last element in array (first two elements are lat and lon)
+// // Function to clear any previous cattle movements currently rendered on map
+// const clearPreviousMovements = function () {
+//   if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
+//   if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
+// };
 
-    // Create HTML popup content using template literal
-    // The first number in movData[x-x] corresponds to the column number in the MDWH csv file (subtracting 1 as JS indexing starts at 0)
-    const popupContent = `
-    <div class="fs-5 fw-bold">${movData[2]}</div><br>
-    <div>
-      <nav>
-        <div class="nav nav-tabs" id="popupNav" role="tablist">
-          <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
-          <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
-        </div>
-      </nav>
-      <div class="tab-content" id="popTabContent">     
-        <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <td><strong>Movement:</strong></td>
-                <td>${i+1} ${i===0 ? "(Origin)" : ""}${i===mov1.length-1 ? "(Death)" : ""}</td>
-              </tr>
-              <tr>
-                <td><strong>Lat Lon:</strong></td>
-                <td>${mov1[i][0].toFixed(3)} ${mov1[i][1].toFixed(3)}</td>
-              </tr>  
-              <tr>
-                <td><strong>AF Number:</strong></td>
-                <td>${movData[1-1]}</td> 
-              </tr>
-              <tr>
-                <td><strong>Clade:</strong></td>
-                <td>${movData[2-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Slaughter Date:</strong></td>
-                <td>${movData[5-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>CPH:</strong></td>
-                <td>${movData[6-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>CPH Type:</strong></td>
-                <td>${movData[7-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>County:</strong></td>
-                <td>${movData[8-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Risk Area:</strong></td>
-                <td>${movData[9-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>CPH Home Range:</strong></td>
-                <td>${movData[10-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Out of Home Range:</strong></td>
-                <td>${movData[11-1]}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <td><strong>Host:</strong></td>
-                <td>${movData[4-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Breed:</strong></td>
-                <td>${movData[12-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Date of Birth:</strong></td>
-                <td>${movData[13-1]}</td>
-              </tr>
-              <tr>
-                <td><strong>Sex:</strong></td>
-                <td>${movData[14-1]}</td>
-              </tr> 
-            </tbody>
-          </table>
-          <img src="/static/img/peter-lloyd-qeABAF-3bEs-unsplash-min.jpg" alt="A photo of a cow" width="100%">
-        </div>
-      </div>           
-    `;
-    
-    // Add points to map as a layer
-    map.addLayer(cowMarker);
 
-    // Add popup to points
-    cowMarker.bindPopup(popupContent, customOptions);
+// ***Function to clear any previous cattle movements currently rendered on map
+const clearPreviousMovements = function (second = false) {
+  // Execute this code to clear main cattle movement
+  if(second === false) {
+    if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
+    if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
+  };
+  // Execute this code to clear second cattle movement
+  if(second === true) {
+    if(typeof cowMarker2 !== "undefined") map.removeLayer(cowLayer2);
+    if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.remove();
+  };
+};
+
+
+// Function to render the correct cow icon
+// const renderCowIcon = function () {};
+
+
+// ***Function whose input is the json file returned by Flask and whose output is rendering the cow markers and lines on the map
+const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
+
+  // Extract movement data from json object into an array
+  const moveArr = Object.values(json.move);
+
+  // Array for latitude and longitude
+  const moveLat = moveArr.map(arr => arr.lat);
+  const moveLon = moveArr.map(arr => arr.lon);
+
+  // Create a layer group that will contain all the cow markers
+  second === false ? cowLayer = L.layerGroup().addTo(map) : cowLayer2 = L.layerGroup().addTo(map);
+
+  // Add cow head markers to map
+  for (let i = 0; i < moveLat.length; i++) {
+    // TODO dynamically load the correct cow head marker
+    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: cowIcon}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: cowIcon});
+    second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
+
+    // Add popup content to each cow head marker
+    second === false ? cowMarker.bindPopup(popupContent(json, i), customOptions) : cowMarker2.bindPopup(popupContent(json, i), customOptions);
   };
 
-  // Connect the points with a blue line
-  linePts = mov1.map(x => x.slice(0,2)); // extract lat and lon and store in a new array
-  cattleMovLine = L.polyline(linePts, {color: "#0096FF"}).addTo(map); // create polyline object and plot on map
+  // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
+  if(second === false) {
+    linePts = moveLat.map( (lat, index) => { return [lat, moveLon[index]] });
+  };
+  if(second === true) {
+    linePts2 = moveLat.map( (lat, index) => { return [lat, moveLon[index]] });
+  };
 
-  // Add arrows to the line
+  // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
+  second === false ? map.fitBounds(L.latLngBounds(linePts).pad(0.10)) : map.fitBounds(L.latLngBounds(linePts.concat(linePts2)).pad(0.10));
+
+  // Connect the points with a line
+  second === false ? cattleMovLine = L.polyline(linePts, {color: lineColour}).addTo(map) : cattleMovLine2 = L.polyline(linePts2, {color: lineColour}).addTo(map);
+
+  // Add directional arrows to the line
   // Leaflet plugin: https://github.com/slutske22/leaflet-arrowheads
-  cattleMovLine.arrowheads({
-    yawn: 40,
-    size: "5%",
-    fill: true,
-    fillColor: "#0096FF",
-    // color: "black",
-    frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
-  }).addTo(map);
+  if(second === false) {
+    cattleMovLine.arrowheads({
+      yawn: 40,
+      size: "5%",
+      fill: true,
+      fillColor: lineColour,
+      // color: "black",
+      frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
+    }).addTo(map);
+  };
+  if(second === true) {
+    cattleMovLine2.arrowheads({
+      yawn: 40,
+      size: "5%",
+      fill: true,
+      fillColor: lineColour,
+      // color: "black",
+      frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
+    }).addTo(map);
+  };
 };
 
 
-// Async function that renders cattle movement points and popups to map
+
+// ------------------------ //
+//
+// PLOT MAIN CATTLE MOVEMENT
+//
+// ------------------------ //
+
+// Initiate variables
+let cowMarker, cowLayer, linePts, cattleMovLine;
+
+// Async function that renders main cattle movement
 const showMovements = async function () {
 
-  // Fetch data for sample
-  const response = await fetch(`/sample?sample_name=${document.getElementById("input__sampleID--1").value}`);
+  // First clear any previous cattle movements on map
+  clearPreviousMovements();
+
+  // Extract the element ID number from the event listener
+  // E.g. input__sampleID--1 or input__sampleID--2
+  const elementID = this.id.at(-1);
+
+  // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
+  // This is important for when users plot cattle movement on the map for subsequent samples
+  document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
+
+  // Fetch json data from backend
+  const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
   const json = await response.json();
-  console.log(json);
+  // console.log(json);
 
-  // Extract movement data from object
-  const move = json.move;
-  console.log(...move);
+  // Render cow markers and lines
+  renderCowMarkers(json, cowIcons.cowStandard, "#0096FF");
 
-  // Log json data to the console
-  // console.log("Output data from async function");
-  // delete json.sample;
-  // console.log(json, typeof json); 
-  // const arr1 = [...Object.entries(json)];
-  // console.log(arr1);
-
-  // Store data in variables using destructuring
-  // const { lat, lon } = json;
-  // console.log(Object.values(lat), lon);
-//   const mov1 = [
-//     [51.81296, -1.738453, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/01", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//     [52.32055, -1.871136, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/02", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-//     [51.84591, -2.314109, "AF-12-00001-22", "B1-11", "UK000000000001", "Bovine", "2022-01-01", "12/345/67/03", "Farm", "Norfolk", "LRA", "B2-11", "Yes", "North Devon", "2014-01-03", "Female"],
-// ];
-  // Add all cattle movement points to the map
-  for (let i = 0; i < json.move.length; i++){
-    cowMarker = new L.marker([json.move[i][0], json.move[i][1]], {icon: cowIcons.cowStandard}); // leaflet marker object to store coordinates
-
-    // Add points to map as a layer
-    map.addLayer(cowMarker);
-  }
-
-
-
-  // Add points and popups to map
-  // addPtsPopupsToMap();
-
-  // // Zoom in to the bounds of all markers and allow some padding (buffer) to ensure all points are in view
-  // const bounds = L.latLngBounds(linePts).pad(0.10);
-  // map.fitBounds(bounds);
-
-  // // Allow user access to other elements by removing the disabled class
-  // document.getElementById("toggle__movement-lines--1").disabled = false;
-  // document.getElementById("input__sampleID--2").disabled = false;
-  // document.getElementById("btn__cattle-movement--2").disabled = false;
+  // Allow user access to other elements by removing the disabled class
+  document.getElementById("cattleMovementLines--1").disabled = false;
+  document.getElementById("input__sampleID--2").disabled = false;
+  document.getElementById("btn__cattleMovement--2").disabled = false;
   // document.getElementById("slider__snp-threshold").disabled = false;
   // document.getElementById("btn__related-isolates").disabled = false;
 };
 
 // Executes the async showMovements() function when the main "Show Cattle Movement" button is clicked
-document.getElementById("btn_show-movements").addEventListener("click", showMovements);
-
-
-// BUG
-// Function does not work when user select A or B
-// Toggle lines and arrows from map when 'Movement Lines' checkbox ticked or unticked
-const toggleMovementLines = document.getElementById("toggle__movement-lines--1");
-toggleMovementLines.addEventListener("change", function(){
-
-  // When checkbox is ticked, add layer to map
-  if(this.checked === true) cattleMovLine.addTo(map);
-
-  // When checkbox is unticked, remove layer from map
-  if(this.checked === false) cattleMovLine.remove();
-});
+document.getElementById("btn__cattleMovement--1").addEventListener("click", showMovements);
 
 
 
@@ -474,7 +491,71 @@ toggleMovementLines.addEventListener("change", function(){
 //
 // ------------------------ //
 
-// TODO
+// Initiate variables
+let cowMarker2, cowLayer2, linePts2, cattleMovLine2;
+
+// Async function that renders main cattle movement
+const showMovements2 = async function () {
+
+  // First clear any previous cattle movements on map
+  clearPreviousMovements(true);
+
+  // Extract the element ID number from the event listener
+  // E.g. input__sampleID--1 or input__sampleID--2
+  const elementID = this.id.at(-1);
+
+  // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
+  // This is important for when users plot cattle movement on the map for subsequent samples
+  document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
+
+  // Fetch json data from backend
+  const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+  const json = await response.json();
+  // console.log(json);
+
+  // Render cow markers and lines
+  renderCowMarkers(json, cowIcons.cowStandard, "#cb181d", true);
+
+  // Allow user access to other elements by removing the disabled class
+  document.getElementById("cattleMovementLines--2").disabled = false;
+};
+
+
+// Executes the async showMovements() function when the second "Show Cattle Movement" button is clicked
+document.getElementById("btn__cattleMovement--2").addEventListener("click", showMovements2);
+
+
+
+// ------------------------ //
+//
+// TOGGLE MOVEMENT LINES
+//
+// ------------------------ //
+
+// Function to toggle lines and arrows from map 
+const toggleMovementLines = function() {
+  if(this.checked === true) cattleMovLine.addTo(map);
+  if(this.checked === false) cattleMovLine.remove();
+};
+
+// Execute toggleMovementLines when "Movement Lines" checkbox is ticked or unticked
+document.getElementById("cattleMovementLines--1").addEventListener("change", toggleMovementLines);
+
+// Function to toggle lines and arrows from map 
+const toggleMovementLines2 = function() {
+  if(this.checked === true) {
+    map.addLayer(cowLayer2);
+    cattleMovLine2.addTo(map);
+  };
+  if(this.checked === false) {
+    map.removeLayer(cowLayer2);
+    cattleMovLine2.remove();
+  };
+};
+
+// Execute toggleMovementLines when "Toggle Movement" checkbox is ticked or unticked
+document.getElementById("cattleMovementLines--2").addEventListener("change", toggleMovementLines2);
+
 
 
 // ------------------------ //
@@ -570,6 +651,7 @@ const stylePoly = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
+// BUG shapefiles may need to be relocated to data/ directory outside ViewBovis repo if this repo becomes public
 countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
 const countyBox = document.getElementById("countyBox"); // select element from DOM
 countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly)); // event listener on the county checkbox
