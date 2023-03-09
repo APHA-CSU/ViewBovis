@@ -374,8 +374,15 @@ const clearPreviousMovements = function (second = false) {
 };
 
 
-// Function to render the correct cow icon
-// const renderCowIcon = function () {};
+// // Function to render the correct cow icon
+// const renderCowIcon = function (json) {
+
+//   // Extract location type from json object into an array
+//   const moveType = Object.values(json.move).map(arr => arr.type);
+
+//   // 
+
+// };
 
 
 // ***Function whose input is the json file returned by Flask and whose output is rendering the cow markers and lines on the map
@@ -520,8 +527,7 @@ const showMovements2 = async function () {
   document.getElementById("cattleMovementLines--2").disabled = false;
 };
 
-
-// Executes the async showMovements() function when the second "Show Cattle Movement" button is clicked
+// Executes the async showMovements2() function when the second "Show Second Movement" button is clicked
 document.getElementById("btn__cattleMovement--2").addEventListener("click", showMovements2);
 
 
