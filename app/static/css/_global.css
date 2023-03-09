@@ -46,3 +46,7 @@ a:hover {
 .govuk-button {
     background-color: var(--gov-green);
 }
+
+.govuk-button--secondary {
+    background-color: #f3f2f1;;
+}

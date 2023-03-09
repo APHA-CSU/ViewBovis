@@ -49,6 +49,11 @@
     margin-top: 5px;
 }
 
+/* Accordion space in second cattle movement */
+#accordion__secondMovement {
+    margin-bottom: 30px;
+}
+
 /* LAYERS checkboxes */
 .govuk-checkboxes--small {
     padding-left: 25px;
