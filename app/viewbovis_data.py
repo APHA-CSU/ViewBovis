@@ -14,24 +14,22 @@ class ViewBovisData:
         self._db.close()
 
     # TODO: validate input
-    def _submission_metadata(self, submission: str) -> pd.DataFrame:
+    def _submission_metadata(self, id: str) -> pd.DataFrame:
         """
-            Fetches metadata for a given a submission. Returns a 
-            DataFrame containing metadata if it exists, otherwise 
-            returns None. 
+            Fetches metadata for a given a id. Returns a DataFrame 
+            containing metadata if it exists, otherwise returns None. 
         """
-        query = "SELECT * FROM metadata WHERE Submission=:submission OR \
-            Identifier=:submission"
+        query = "SELECT * FROM metadata WHERE Submission=:id OR \
+            Identifier=:id"
         # get metadata entry for submission - read into DataFrame 
-        df_submission = pd.read_sql_query(query, self._db, 
-                                          params={"submission": submission})
+        df_metadata_sub = pd.read_sql_query(query, self._db, params={"id": id})
         # TODO: below is dropping location columns with NULL but leaving
         # leaving all other columns this is done by splitting the df and
         # re-joining after: there is probably a nicer way to do this.
-        df_submission_md = df_submission[df_submission.columns[:10]]
-        df_submission_locs = \
-            df_submission[df_submission.columns[10:]].dropna(axis=1)
-        return df_submission_md.join(df_submission_locs)
+        df_metadata_sub_0 = df_metadata_sub[df_metadata_sub.columns[:10]]
+        df_metadata_sub_1 = \
+            df_metadata_sub[df_metadata_sub.columns[10:]].dropna(axis=1)
+        return df_metadata_sub_0.join(df_metadata_sub_1)
 
     # TODO: validate input
     def _get_lat_long(self, cph: str) -> tuple:
@@ -45,79 +43,78 @@ class ViewBovisData:
 
     def _submission_to_sample(self, submission: str) -> str:
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
-        df_sample_wgs_md = pd.read_sql_query(query, self._db, 
-                                             params={"submission": submission})
+        df_wgs_sub = pd.read_sql_query(query, self._db, 
+                                       params={"submission": submission})
         # TODO: custom exception
-        if df_sample_wgs_md.empty:
+        if df_wgs_sub.empty:
             raise Exception(f"No WGS data for {submission}")
-        return df_sample_wgs_md["Sample"][0]
+        return df_wgs_sub["Sample"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
-        df_sample_wgs_md = pd.read_sql_query(query, self._db, 
-                                             params={"sample": sample})
+        df_wgs_sub = pd.read_sql_query(query, self._db, 
+                                       params={"sample": sample})
         # TODO: custom exception
-        if df_sample_wgs_md.empty:
+        if df_wgs_sub.empty:
             raise Exception(f"No WGS data for {sample}")
-        return df_sample_wgs_md["Submission"][0]
+        return df_wgs_sub["Submission"][0]
 
-    def submission_movement_metadata(self, submission: str) -> dict:
+    def submission_movement_metadata(self, id: str) -> dict:
         """
-            Returns metadata and movement data for 'submission' as a 
-            dictionary. 
+            Returns metadata and movement data for 'id' as a dictionary. 
         """
-        df_submission_md = self._submission_metadata(submission)
+        df_metadata_sub = self._submission_metadata(id)
         # calculated the number of locations
-        n_locs = int((len(df_submission_md.columns) - 9) / 6)
+        n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
         move_dict = {}
         for loc_num in range(n_locs):
-            cph = df_submission_md[f"Loc{loc_num}"][0]
-            sample_latlon = self._get_lat_long(cph)
+            cph = df_metadata_sub[f"Loc{loc_num}"][0]
+            latlon_sub = self._get_lat_long(cph)
             move_dict[str(loc_num)] = \
-                {"lat": sample_latlon[0],
-                 "lon": sample_latlon[1],
-                 "on_date": df_submission_md[f"Loc{loc_num}_StartDate"][0], 
-                 "off_date": df_submission_md[f"Loc{loc_num}_EndDate"][0], 
-                 "type": df_submission_md[f"Loc{loc_num}_Type"][0]} 
-        return {"submission": submission,
-                "clade": df_submission_md["Clade"][0],
-                "identifier": df_submission_md["Identifier"][0],
-                "species": df_submission_md["Host"][0],
-                "slaughter_date": df_submission_md["SlaughterDate"][0],
-                "cph": df_submission_md["CPH"][0],
-                "cphh": df_submission_md["CPHH"][0],
-                "cph_type": df_submission_md["CPH_Type"][0],
-                "county": df_submission_md["County"][0],
-                "risk_area": df_submission_md["RiskArea"][0],
+                {"lat": latlon_sub[0],
+                 "lon": latlon_sub[1],
+                 "on_date": df_metadata_sub[f"Loc{loc_num}_StartDate"][0], 
+                 "off_date": df_metadata_sub[f"Loc{loc_num}_EndDate"][0], 
+                 "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]} 
+        return {"submission": df_metadata_sub["Submission"][0],
+                "clade": df_metadata_sub["Clade"][0],
+                "identifier": df_metadata_sub["Identifier"][0],
+                "species": df_metadata_sub["Host"][0],
+                "slaughter_date": df_metadata_sub["SlaughterDate"][0],
+                "cph": df_metadata_sub["CPH"][0],
+                "cphh": df_metadata_sub["CPHH"][0],
+                "cph_type": df_metadata_sub["CPH_Type"][0],
+                "county": df_metadata_sub["County"][0],
+                "risk_area": df_metadata_sub["RiskArea"][0],
                 "move": move_dict}
 
     def related_submissions_metadata(self, 
-                                     submission: str, 
+                                     id: str, 
                                      snp_threshold: int) -> dict:
         # retrieve af_number if Identifier is used
-        df_submission_md = self._submission_metadata(submission)
-        af_number = df_submission_md["Submission"][0]
+        df_metadata_sub = self._submission_metadata(id)
+        submission = df_metadata_sub["Submission"][0]
         # retrieve sample_name for submission
-        sample_name = self._submission_to_sample(af_number)
-        clade = df_submission_md["Clade"][0]
+        sample_name = self._submission_to_sample(submission)
+        clade = df_metadata_sub["Clade"][0]
         df_snp_data = pd.read_csv(path.join(self._matrix_dir, 
                                             f"{clade}_matrix.csv"), 
                                   usecols=["snp-dists 0.7.0", sample_name], 
                                   index_col="snp-dists 0.7.0")
-        df_snp_data.rename({af_number: "snp_dist"}, axis=1, inplace=True)
+        df_snp_data.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
         df_snp_data.index.names = ["Submission"]
         # get samples within snp_threshold
         df_related = df_snp_data.loc[df_snp_data["snp_dist"]<=snp_threshold]
         related_metadata = {}
         for index, row in df_related.iterrows():
             try:
-                af_number = self._sample_to_submission(index)
-                df_related_sample_md = self._submission_metadata(af_number)
+                submission = self._sample_to_submission(index)
+                df_related_sample_md = self._submission_metadata(submission)
                 if not df_related_sample_md.empty and \
                     df_related_sample_md["Host"][0]=="COW":
                     sample_latlon = \
                         self._get_lat_long(df_related_sample_md["CPH"][0])
-                    related_metadata[af_number] = \
+                    related_metadata[submission] = \
                         {"lat": sample_latlon[0], 
                         "lon": sample_latlon[1], 
                         "snp_distance": int(row["snp_dist"]), 
