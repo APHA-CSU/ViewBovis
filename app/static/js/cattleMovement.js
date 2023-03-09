@@ -352,14 +352,7 @@ const popupContent = function(data, index) {
 //
 // ------------------------ //
 
-// // Function to clear any previous cattle movements currently rendered on map
-// const clearPreviousMovements = function () {
-//   if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
-//   if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
-// };
-
-
-// ***Function to clear any previous cattle movements currently rendered on map
+// Function to clear any previous cattle movements currently rendered on map
 const clearPreviousMovements = function (second = false) {
   // Execute this code to clear main cattle movement
   if(second === false) {
@@ -374,22 +367,29 @@ const clearPreviousMovements = function (second = false) {
 };
 
 
-// // Function to render the correct cow icon
-// const renderCowIcon = function (json) {
+// Function to render the correct cow icon
+let iconToReturn;
+const renderCowIcon = function (movementArr, cowIconObj) {
 
-//   // Extract location type from json object into an array
-//   const moveType = Object.values(json.move).map(arr => arr.type);
+  // Extract location type from movement array
+  let moveType = movementArr.type;
+  // console.log(moveType);
 
-//   // 
+  // Return the correct cow icon given the location type
+  iconToReturn = moveType === "Agricultural Holding"      ? cowIconObj.cowStandard   :
+                 moveType === "Market"                    ? cowIconObj.cowMarket     :
+                 moveType === "Slaughterhouse (Red Meat)" ? cowIconObj.cowSlaughter  :
+                 moveType === "Showground"                ? cowIconObj.cowShowground : cowIconObj.cowStandard;           
+  return iconToReturn;
+};
 
-// };
 
-
-// ***Function whose input is the json file returned by Flask and whose output is rendering the cow markers and lines on the map
+// Function whose input is the json file returned by Flask and whose output is rendering the cow markers and lines on the map
 const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Extract movement data from json object into an array
   const moveArr = Object.values(json.move);
+  // console.log(moveArr);
 
   // Array for latitude and longitude
   const moveLat = moveArr.map(arr => arr.lat);
@@ -400,8 +400,8 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Add cow head markers to map
   for (let i = 0; i < moveLat.length; i++) {
-    // TODO dynamically load the correct cow head marker
-    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: cowIcon}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: cowIcon});
+    // Render markers and the correct cow icons
+    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(moveArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(moveArr[i], cowIcon)});
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
@@ -474,10 +474,10 @@ const showMovements = async function () {
   // Fetch json data from backend
   const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
   const json = await response.json();
-  // console.log(json);
+  console.log(json);
 
   // Render cow markers and lines
-  renderCowMarkers(json, cowIcons.cowStandard, "#0096FF");
+  renderCowMarkers(json, cowIcons, "#0096FF");
 
   // Allow user access to other elements by removing the disabled class
   document.getElementById("cattleMovementLines--1").disabled = false;
@@ -521,7 +521,7 @@ const showMovements2 = async function () {
   // console.log(json);
 
   // Render cow markers and lines
-  renderCowMarkers(json, cowIcons.cowStandard, "#cb181d", true);
+  renderCowMarkers(json, cowIcons, "#cb181d", true);
 
   // Allow user access to other elements by removing the disabled class
   document.getElementById("cattleMovementLines--2").disabled = false;
