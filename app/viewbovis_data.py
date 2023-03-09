@@ -1,4 +1,5 @@
 import sqlite3
+import glob
 from os import path
 
 import pandas as pd
@@ -56,7 +57,8 @@ class ViewBovisData:
                                        params={"sample": sample})
         # TODO: custom exception
         if df_wgs_sub.empty:
-            raise Exception(f"No WGS data for {sample}")
+            return None
+            #raise Exception(f"No WGS data for {sample}")
         return df_wgs_sub["Submission"][0]
 
     def submission_movement_metadata(self, id: str) -> dict:
@@ -91,30 +93,32 @@ class ViewBovisData:
     def related_submissions_metadata(self, 
                                      id: str, 
                                      snp_threshold: int) -> dict:
-        # retrieve af_number if Identifier is used
+        # retrieve af_number if eartag is used
         df_metadata_sub = self._submission_metadata(id)
         submission = df_metadata_sub["Submission"][0]
-        # retrieve sample_name for submission
+        # retrieve sample_name from submission number
         sample_name = self._submission_to_sample(submission)
         clade = df_metadata_sub["Clade"][0]
-        df_snp_data = pd.read_csv(path.join(self._matrix_dir, 
-                                            f"{clade}_matrix.csv"), 
-                                  usecols=["snp-dists 0.7.0", sample_name], 
-                                  index_col="snp-dists 0.7.0")
+        matrix_path = glob.glob(path.join(self._matrix_dir, 
+                                          f"{clade}_*_matrix.csv"))
+        df_snp_data = pd.read_csv(matrix_path[0],
+                                  usecols=["snp-dists 0.8.2", sample_name], 
+                                  index_col="snp-dists 0.8.2")
         df_snp_data.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
-        df_snp_data.index.names = ["Submission"]
+        df_snp_data.index.names = ["sample"]
         # get samples within snp_threshold
-        df_related = df_snp_data.loc[df_snp_data["snp_dist"]<=snp_threshold]
+        df_related_sample = \
+            df_snp_data.loc[df_snp_data["snp_dist"]<=snp_threshold]
+        df_related_sample.index.map(lambda x: self._sample_to_submission(x))
         related_metadata = {}
-        for index, row in df_related.iterrows():
+        for index, row in df_related_sample.iterrows():
             try:
-                submission = self._sample_to_submission(index)
-                df_related_sample_md = self._submission_metadata(submission)
+                df_related_sample_md = self._submission_metadata(index)
                 if not df_related_sample_md.empty and \
                     df_related_sample_md["Host"][0]=="COW":
                     sample_latlon = \
                         self._get_lat_long(df_related_sample_md["CPH"][0])
-                    related_metadata[submission] = \
+                    related_metadata[index] = \
                         {"lat": sample_latlon[0], 
                         "lon": sample_latlon[1], 
                         "snp_distance": int(row["snp_dist"]), 
