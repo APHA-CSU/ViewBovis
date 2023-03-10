@@ -15,32 +15,48 @@ class ViewBovisData:
         self._db.close()
 
     # TODO: validate input
-    def _submission_metadata(self, id: str) -> pd.DataFrame:
+    def _submission_metadata(self, ids: list) -> pd.DataFrame:
         """
-            Fetches metadata for a given a id. Returns a DataFrame 
-            containing metadata if it exists, otherwise returns None. 
+            Fetches metadata for a given a list of ids. Returns a 
+            DataFrame containing metadata if it exists, otherwise 
+            returns an empty DataFrame. 
         """
-        query = "SELECT * FROM metadata WHERE Submission=:id OR \
-            Identifier=:id"
-        # get metadata entry for submission - read into DataFrame 
-        df_metadata_sub = pd.read_sql_query(query, self._db, params={"id": id})
-        # TODO: below is dropping location columns with NULL but leaving
-        # leaving all other columns this is done by splitting the df and
+        query = f"""SELECT * FROM metadata WHERE Submission IN 
+                    ({','.join('?' * len(ids))}) OR Identifier IN 
+                    ({','.join('?' * len(ids))})"""
+        return pd.read_sql_query(query, 
+                                 self._db, 
+                                 index_col="Submission", 
+                                 params=ids+ids)
+
+    def _clean_metadata(self, df_metadata: pd.DataFrame) -> pd.DataFrame:
+        """
+            Removes NULL columns from location data in metadata 
+            DataFrame. Use only for DataFrame with single row.
+        """
+        if len(df_metadata) > 1:
+            # TODO: custom exception
+            raise Exception("DataFrame must contain only one row")
+        # TODO: below is dropping location columns with NULL but leaving 
+        # all other columns this is done by splitting the df and
         # re-joining after: there is probably a nicer way to do this.
-        df_metadata_sub_0 = df_metadata_sub[df_metadata_sub.columns[:10]]
-        df_metadata_sub_1 = \
-            df_metadata_sub[df_metadata_sub.columns[10:]].dropna(axis=1)
-        return df_metadata_sub_0.join(df_metadata_sub_1)
+        df_metadata_0 = df_metadata[df_metadata.columns[:9]]
+        df_metadata_1 = df_metadata[df_metadata.columns[9:]].dropna(axis=1)
+        return df_metadata_0.join(df_metadata_1)
 
     # TODO: validate input
-    def _get_lat_long(self, cph: str) -> tuple:
+    def _get_lat_long(self, cphs: list) -> tuple:
         """
-            Returns a tuple containing latitude and longitude for a 
-            given cph 
+            Fetches latitude and longitude for a given a list of CPHs. 
+            Returns a DataFrame with columns 'lat' and 'lon' and the 
+            corresponding CPH in the index. 
         """
-        query = "SELECT Lat, Long FROM latlon WHERE CPH=:cph"
-        res = self._cursor.execute(query, {"cph": cph})
-        return res.fetchall()[0]
+        query =f"""SELECT * FROM latlon WHERE CPH IN
+                   ({','.join('?' * len(cphs))})"""
+        return pd.read_sql_query(query, 
+                                 self._db,
+                                 index_col="CPH", 
+                                 params=cphs)
 
     def _submission_to_sample(self, submission: str) -> str:
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
@@ -65,20 +81,22 @@ class ViewBovisData:
         """
             Returns metadata and movement data for 'id' as a dictionary. 
         """
-        df_metadata_sub = self._submission_metadata(id)
+        # get cleaned metadata for a single id
+        df_metadata_sub = self._submission_metadata([id])\
+            .pipe(self._clean_metadata)
         # calculated the number of locations
         n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
         move_dict = {}
         for loc_num in range(n_locs):
             cph = df_metadata_sub[f"Loc{loc_num}"][0]
-            latlon_sub = self._get_lat_long(cph)
+            df_cph_latlon_map = self._get_lat_long([cph])
             move_dict[str(loc_num)] = \
-                {"lat": latlon_sub[0],
-                 "lon": latlon_sub[1],
+                {"lat": df_cph_latlon_map["Lat"][cph],
+                 "lon": df_cph_latlon_map["Long"][cph],
                  "on_date": df_metadata_sub[f"Loc{loc_num}_StartDate"][0], 
                  "off_date": df_metadata_sub[f"Loc{loc_num}_EndDate"][0], 
                  "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]} 
-        return {"submission": df_metadata_sub["Submission"][0],
+        return {"submission": df_metadata_sub.index[0],
                 "clade": df_metadata_sub["Clade"][0],
                 "identifier": df_metadata_sub["Identifier"][0],
                 "species": df_metadata_sub["Host"][0],
@@ -94,8 +112,8 @@ class ViewBovisData:
                                      id: str, 
                                      snp_threshold: int) -> dict:
         # retrieve af_number if eartag is used
-        df_metadata_sub = self._submission_metadata(id)
-        submission = df_metadata_sub["Submission"][0]
+        df_metadata_sub = self._submission_metadata([id])
+        submission = df_metadata_sub.index[0]
         # retrieve sample_name from submission number
         sample_name = self._submission_to_sample(submission)
         clade = df_metadata_sub["Clade"][0]
@@ -112,29 +130,16 @@ class ViewBovisData:
         df_snps_related_processed = df_snps_related.copy().\
             set_index(df_snps_related.index.\
                       map(lambda x: self._sample_to_submission(x)))
-        query = f"""SELECT * FROM metadata WHERE Submission IN 
-                    ({','.join('?' * len(df_snps_related))})"""
         df_metadata_related = \
-            pd.read_sql_query(query, 
-                              self._db, 
-                              index_col="Submission",
-                              params=df_snps_related_processed.index.to_list()) 
+            self._submission_metadata(df_snps_related_processed.index.to_list())
         cph_set = set(df_metadata_related["CPH"].to_list())
-        query =f"""SELECT * FROM latlon WHERE CPH IN
-                   ({','.join('?' * len(cph_set))})"""
-        df_cph_latlon_map = \
-            pd.read_sql_query(query, 
-                              self._db,
-                              index_col="CPH", 
-                              params=list(cph_set))
-        related_metadata = {index:
-                                {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                                 "lon": df_cph_latlon_map["Long"][row["CPH"]],
-                                 "snp_distance": 
-                                    int(df_snps_related_processed\
-                                        ["snp_dist"][index]),
-                                 "animal_id": row["Identifier"], 
-                                 "date": row["SlaughterDate"]}
-                            for index, row in df_metadata_related.iterrows() 
-                            if row["Host"] == "COW"}
-        return related_metadata
+        df_cph_latlon_map = self._get_lat_long(list(cph_set))
+        return {index:
+                    {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                     "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                     "snp_distance": int(df_snps_related_processed\
+                        ["snp_dist"][index]),
+                      "animal_id": row["Identifier"], 
+                      "date": row["SlaughterDate"]}
+                for index, row in df_metadata_related.iterrows() 
+                if row["Host"] == "COW"}
