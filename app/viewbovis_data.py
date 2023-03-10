@@ -59,22 +59,26 @@ class ViewBovisData:
                                  params=cphs)
 
     def _submission_to_sample(self, submission: str) -> str:
+        """
+            Maps a sample name to submission number.
+        """
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
         df_wgs_sub = pd.read_sql_query(query, self._db, 
                                        params={"submission": submission})
-        # TODO: custom exception
         if df_wgs_sub.empty:
+            # TODO: custom exception
             raise Exception(f"No WGS data for {submission}")
         return df_wgs_sub["Sample"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
+        """
+            Maps a submission number to sample name.
+        """
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db, 
                                        params={"sample": sample})
-        # TODO: custom exception
         if df_wgs_sub.empty:
             return None
-            #raise Exception(f"No WGS data for {sample}")
         return df_wgs_sub["Submission"][0]
 
     def submission_movement_metadata(self, id: str) -> dict:
@@ -87,6 +91,7 @@ class ViewBovisData:
         # calculated the number of locations
         n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
         move_dict = {}
+        # TODO: functional/comprehension
         for loc_num in range(n_locs):
             cph = df_metadata_sub[f"Loc{loc_num}"][0]
             df_cph_latlon_map = self._get_lat_long([cph])
@@ -111,12 +116,13 @@ class ViewBovisData:
     def related_submissions_metadata(self, 
                                      id: str, 
                                      snp_threshold: int) -> dict:
-        # retrieve af_number if eartag is used
+        # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
         submission = df_metadata_sub.index[0]
-        # retrieve sample_name from submission number
+        # retrieve sample name from submission number
         sample_name = self._submission_to_sample(submission)
         clade = df_metadata_sub["Clade"][0]
+        # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir, 
                                           f"{clade}_*_matrix.csv"))
         df_snps = pd.read_csv(matrix_path[0],
@@ -130,10 +136,13 @@ class ViewBovisData:
         df_snps_related_processed = df_snps_related.copy().\
             set_index(df_snps_related.index.\
                       map(lambda x: self._sample_to_submission(x)))
+        # get metadata for all related samples
         df_metadata_related = \
             self._submission_metadata(df_snps_related_processed.index.to_list())
+        # get lat/long mappings for CPH of related samples
         cph_set = set(df_metadata_related["CPH"].to_list())
         df_cph_latlon_map = self._get_lat_long(list(cph_set))
+        # construct data response for client
         return {index:
                     {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
                      "lon": df_cph_latlon_map["Long"][row["CPH"]],
