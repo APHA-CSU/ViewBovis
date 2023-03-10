@@ -68,4 +68,4 @@ def exception_handler(error):
         <h3> Stack Trace </h3>
         {traceback.format_exc()}
         </html>
-    """
+    """, 500
