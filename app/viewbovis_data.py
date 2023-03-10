@@ -88,6 +88,8 @@ class ViewBovisData:
         # get cleaned metadata for a single id
         df_metadata_sub = self._submission_metadata([id])\
             .pipe(self._clean_metadata)
+        if df_metadata_sub.empty:
+            raise Exception(f"{id} does not match a valid eartag or AF-number")
         # calculated the number of locations
         n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
         # get lat/long mappings for CPH of movement data
