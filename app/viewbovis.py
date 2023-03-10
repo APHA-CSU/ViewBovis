@@ -61,11 +61,11 @@ def related_samples():
 @app.errorhandler(Exception)
 def exception_handler(error):
     return f"""
-        <html>
-        <h1>An error has occured (500) </h1>
-        <h3> Error Summary </h3>
-        {str(error)}
-        <h3> Stack Trace </h3>
-        {traceback.format_exc()}
+            <html>
+                <h1>An error has occured (500) </h1>
+                <h3> Error Summary </h3>
+                {str(error)}
+                <h3> Stack Trace </h3>
+            {traceback.format_exc()}
         </html>
-    """, 500
+        """, 500
