@@ -55,5 +55,4 @@ def related_samples():
     get_data_object()
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    return jsonify(g.data.related_submissions_metadata(id, 
-                                                       snp_threshold))
+    return jsonify(g.data.related_submissions_metadata(id, snp_threshold))
