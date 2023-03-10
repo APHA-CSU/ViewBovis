@@ -101,29 +101,40 @@ class ViewBovisData:
         clade = df_metadata_sub["Clade"][0]
         matrix_path = glob.glob(path.join(self._matrix_dir, 
                                           f"{clade}_*_matrix.csv"))
-        df_snp_data = pd.read_csv(matrix_path[0],
-                                  usecols=["snp-dists 0.8.2", sample_name], 
-                                  index_col="snp-dists 0.8.2")
-        df_snp_data.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
-        df_snp_data.index.names = ["sample"]
+        df_snps = pd.read_csv(matrix_path[0],
+                              usecols=["snp-dists 0.8.2", sample_name], 
+                              index_col="snp-dists 0.8.2")
+        df_snps.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
+        df_snps.index.names = ["sample"]
         # get samples within snp_threshold
-        df_related_sample = \
-            df_snp_data.loc[df_snp_data["snp_dist"]<=snp_threshold]
-        df_related_sample.index.map(lambda x: self._sample_to_submission(x))
-        related_metadata = {}
-        for index, row in df_related_sample.iterrows():
-            try:
-                df_related_sample_md = self._submission_metadata(index)
-                if not df_related_sample_md.empty and \
-                    df_related_sample_md["Host"][0]=="COW":
-                    sample_latlon = \
-                        self._get_lat_long(df_related_sample_md["CPH"][0])
-                    related_metadata[index] = \
-                        {"lat": sample_latlon[0], 
-                        "lon": sample_latlon[1], 
-                        "snp_distance": int(row["snp_dist"]), 
-                        "animal_id": df_related_sample_md["Identifier"][0], 
-                        "date": df_related_sample_md["SlaughterDate"][0]}
-            except Exception as e:
-                print(e)
+        df_snps_related =  df_snps.loc[df_snps["snp_dist"]<=snp_threshold]
+        # map the index from sample name to submission number
+        df_snps_related_processed = df_snps_related.copy().\
+            set_index(df_snps_related.index.\
+                      map(lambda x: self._sample_to_submission(x)))
+        query = f"""SELECT * FROM metadata WHERE Submission IN 
+                    ({','.join('?' * len(df_snps_related))})"""
+        df_metadata_related = \
+            pd.read_sql_query(query, 
+                              self._db, 
+                              index_col="Submission",
+                              params=df_snps_related_processed.index.to_list()) 
+        cph_set = set(df_metadata_related["CPH"].to_list())
+        query =f"""SELECT * FROM latlon WHERE CPH IN
+                   ({','.join('?' * len(cph_set))})"""
+        df_cph_latlon_map = \
+            pd.read_sql_query(query, 
+                              self._db,
+                              index_col="CPH", 
+                              params=list(cph_set))
+        related_metadata = {index:
+                                {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                                 "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                                 "snp_distance": 
+                                    int(df_snps_related_processed\
+                                        ["snp_dist"][index]),
+                                 "animal_id": row["Identifier"], 
+                                 "date": row["SlaughterDate"]}
+                            for index, row in df_metadata_related.iterrows() 
+                            if row["Host"] == "COW"}
         return related_metadata
