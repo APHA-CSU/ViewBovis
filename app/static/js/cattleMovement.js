@@ -132,6 +132,11 @@ document.getElementById("content2-column1-container").addEventListener("hidden.b
   map.invalidateSize();
 });
 
+// Refresh map size after sidebar has expanded 
+document.getElementById("content2-column1-container").addEventListener("shown.bs.collapse", () => {
+  map.invalidateSize();
+});
+
 // Change icon to right-arrow after sidebar has collapsed
 document.getElementById("btn__map-fullscreen").addEventListener("click", () => {
   document.getElementById("btn__map-exitfullscreen").classList.remove("hidden");
@@ -249,9 +254,9 @@ const cowIcons = {
 
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
-const customOptions = {
+const cowheadPopupOptions = {
   maxWidth: 400, // in pixels
-  className: "popupCustom" // must match a css class in _cattleMovement.css
+  className: "cowheadPopupOptions" // must match a css class in _cattleMovement.css
 };
 
 // Function to create HTML popup content using template literal
@@ -405,7 +410,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, i), customOptions) : cowMarker2.bindPopup(popupContent(json, i), customOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, i), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -588,36 +593,19 @@ const toggleLayers = function(layer){
 // Leaflet plugin URL for adding shapefiles
 // https://github.com/calvinmetcalf/leaflet.shapefile
 
-// Function to highlight borders of each polygon on mouseover (when mouse hovers over them)
-const highlightFeature = function(e) {
-  const layer = e.target;
 
-  layer.setStyle({
-    weight: 3,
-    color: "#252525",
-  });
 
-  layer.bringToFront();
-};
+// ------------------------ //
+//
+// RISK AREAS LAYER
+//
+// ------------------------ //
 
-// Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
-const resetHighlight = function(e) {
-  countyPoly.resetStyle(e.target);
-};
+// TODO
+// SEPARATE SHAPEFILE INTO SUB-CATEGORIES
 
-// Function to zoom to a polygon when it is clicked
-const zoomToPoly = function(e) {
-  map.fitBounds(e.target.getBounds());
-};
-
-// Function to add highlighting parameters to a layer
-const onEachFeature = function(feature, layer) {
-  layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
-    click: zoomToPoly,
-  });
-};
+// ELement ID from DOM
+const riskAreaBox = document.getElementById("riskAreasBox");
 
 // Function to set polygon colours for Risk Areas
 const riskAreaCols = function(area) {
@@ -644,40 +632,12 @@ const styleRiskAreaPoly = function(feature){
   };
 };
 
-// Function to set custom styles for other polygons
-const stylePoly = function(color = "blue"){
-    return {
-      fillColor: color,
-      weight: 1.5,  
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.50,
-  };
-};
-
-// Toggle county polygons when checkbox is ticked or unticked
-// BUG shapefiles may need to be relocated to data/ directory outside ViewBovis repo if this repo becomes public
-countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
-const countyBox = document.getElementById("countyBox"); // select element from DOM
-countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly)); // event listener on the county checkbox
-
-// Toggle risk area polygons when checkbox is ticked or unticked
-riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
-const riskAreaBox = document.getElementById("riskAreasBox");
-riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
-
-// Toggle risk area polygons when checkbox is ticked or unticked
-homeRangePoly = new L.Shapefile("/static/data/HR2021.zip", stylePoly("purple"));
-const homeRangeBox = document.getElementById("homeRangesBox");
-homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
-
 // Legend for Risk Areas
 // https://leafletjs.com/examples/choropleth/
 let legend = L.control({position: "bottomright"});
 legend.onAdd = function (map) {
 
-    let div = L.DomUtil.create('div', 'info legend');
+    let div = L.DomUtil.create("div", "info legend");
     const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
     const colours = ["#C62828", "orange", "#00C853", "#C62828", "orange","#00C853", "#CFD8DC"];
     const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
@@ -715,6 +675,126 @@ riskAreaBox.addEventListener("change", function() {
     // When checkbox is unticked
     if(this.checked === false) legend.remove();
 });
+
+// Toggle risk area polygons when checkbox is ticked or unticked
+riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
+riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
+
+
+
+// ------------------------ //
+//
+// COUNTIES LAYER
+//
+// ------------------------ //
+
+// ELement ID from DOM
+const countyBox = document.getElementById("countyBox");
+
+// Function to convert uppercase to lowercase with the first letter capitalised
+const formatCounty = function(countyNum, county) {
+  // E.g. ["WILTSHIRE"] or ["SOUTH YORKSHIRE"]
+  const countyArr = county.split(" ");
+  // firstLetter: ["W"] or ["S", "Y"]
+  const firstLetter = countyArr.map(x => x[0].toUpperCase());
+  // remainingLetters: ["iltshire"] or ["outh", "orkshire"]
+  const remainingLetters = countyArr.map(x => x.slice(1).toLowerCase());
+
+  // Execute for counties with a single word
+  if (firstLetter.length === 1) return `${countyNum} ${firstLetter[0]}${remainingLetters}`;
+
+  // Execute for counties with more than one word
+  let fullCountyName = "";
+  if (firstLetter.length > 1) {
+    for (let i = 0; i < firstLetter.length; i++) {
+      fullCountyName += firstLetter[i] + remainingLetters[i] + " ";
+    };
+  };
+  return `${countyNum} ${fullCountyName}`;
+};
+
+// Custom popup options
+// https://leafletjs.com/reference.html#popup
+const countyPopupOptions = {
+  className: "countyPopupOptions", // must match a css class in _cattleMovement.css
+  closeButton: false,
+  maxWidth: 100,
+  autoPan: false,
+};
+
+// Function to highlight polygon borders and show popup on mouseover (when mouse hovers over them)
+const highlightCounty = function(e) {
+  const poly = e.target;
+
+  // Polygon borders
+  poly.setStyle({
+    weight: 3,
+    color: "#252525",
+  });
+
+  // Popup on hover
+  poly.bindPopup(formatCounty(poly.feature.properties.C, poly.feature.properties.COUNTY), countyPopupOptions)
+    .openPopup();
+
+  poly.bringToFront();
+};
+
+// Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
+const resetHighlight = function(e) {
+  countyPoly.resetStyle(e.target);
+};
+
+// Function to zoom to a polygon when it is clicked
+const zoomToPoly = function(e) {
+  map.fitBounds(e.target.getBounds());
+};
+
+// Function to add highlighting parameters to a layer
+const onEachFeature = function(feature, layer) {
+  layer.on({
+    mouseover: highlightCounty,
+    mouseout: resetHighlight,
+    click: zoomToPoly,
+  });
+};
+
+// Function to set custom styles for county polygons
+const stylePoly = function(color = "blue"){
+  return {
+    fillColor: color,
+    weight: 1.5,  
+    opacity: 1,
+    color: "white",
+    dashArray: "3",
+    fillOpacity: 0.50,
+  };
+};
+
+// Toggle county polygons when checkbox is ticked or unticked
+countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
+countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
+
+
+
+// ------------------------ //
+//
+// HOME RANGES LAYER
+//
+// ------------------------ //
+
+// ELement ID from DOM
+const homeRangeBox = document.getElementById("homeRangesBox");
+
+// TODO
+// Home range legend scrollable
+// Ask for feedback?
+
+
+
+
+// Toggle home range polygons when checkbox is ticked or unticked
+homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
+homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
 
 
 
