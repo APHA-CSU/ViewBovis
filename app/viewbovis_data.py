@@ -4,6 +4,14 @@ from os import path
 
 import pandas as pd
 
+class InvalidIdException(Exception):
+    def __init__(self, message="ID does not match a valid eartag or AF-number"):
+        super().__init__(message)
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
 class ViewBovisData:
     def __init__(self, data_path):
         self._matrix_dir = path.join(data_path, "snp_matrix")
@@ -88,8 +96,11 @@ class ViewBovisData:
         # get cleaned metadata for a single id
         df_metadata_sub = self._submission_metadata([id])\
             .pipe(self._clean_metadata)
+        if df_metadata_sub.empty:
+            raise InvalidIdException(
+                    f"'{id}' does not match a valid eartag or AF-number")
         # calculated the number of locations
-        n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
+        n_locs = int((len(df_metadata_sub.columns) - 9) / 5)
         # get lat/long mappings for CPH of movement data
         df_cph_latlon_map = \
             self._get_lat_long(\
@@ -125,6 +136,9 @@ class ViewBovisData:
                                      snp_threshold: int) -> dict:
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
+        if df_metadata_sub.empty:
+            raise \
+                Exception(f"'{id}' does not match a valid eartag or AF-number")
         submission = df_metadata_sub.index[0]
         # retrieve sample name from submission number
         sample_name = self._submission_to_sample(submission)
