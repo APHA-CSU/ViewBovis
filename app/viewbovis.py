@@ -1,7 +1,9 @@
+import traceback
 from flask import Flask, jsonify, render_template, request, g 
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData
+from viewbovis_data import InvalidIdException 
 
 app = Flask(__name__)
 
@@ -56,3 +58,19 @@ def related_samples():
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
     return jsonify(g.data.related_submissions_metadata(id, snp_threshold))
+
+@app.errorhandler(Exception)
+def exception_handler(error):
+    return (f"""
+            <html>
+                <h1>An error has occured (500) </h1>
+                <h3> Error Summary </h3>
+                {str(error)}
+                <h3> Stack Trace </h3>
+                {traceback.format_exc()}
+            </html>
+            """, 500)
+
+@app.errorhandler(InvalidIdException)
+def custom_exception_handler(error):
+    return jsonify({"error": f"{str(error)}"})
