@@ -100,7 +100,7 @@ class ViewBovisData:
             raise InvalidIdException(
                     f"'{id}' does not match a valid eartag or AF-number")
         # calculated the number of locations
-        n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
+        n_locs = int((len(df_metadata_sub.columns) - 9) / 5)
         # get lat/long mappings for CPH of movement data
         df_cph_latlon_map = \
             self._get_lat_long(\
