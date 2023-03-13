@@ -89,7 +89,7 @@ class ViewBovisData:
         df_metadata_sub = self._submission_metadata([id])\
             .pipe(self._clean_metadata)
         # calculated the number of locations
-        n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
+        n_locs = int((len(df_metadata_sub.columns) - 9) / 5)
         # get lat/long mappings for CPH of movement data
         df_cph_latlon_map = \
             self._get_lat_long(\
