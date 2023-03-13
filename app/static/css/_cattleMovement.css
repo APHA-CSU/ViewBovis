@@ -58,16 +58,34 @@
 .govuk-checkboxes--small {
     padding-left: 25px;
 }
+.accordion-button::after {
+    margin-left: 10px;
+}
+/* .govuk-checkboxes__input:hover {
+    background-color: red;
+} */
 
-/* Leaflet popups style */
-.popupCustom .leaflet-popup-tip,
-.popupCustom .leaflet-popup-content-wrapper {
+/* Leaflet popups: cow head markers */
+.cowheadPopupOptions .leaflet-popup-tip,
+.cowheadPopupOptions .leaflet-popup-content-wrapper {
     background: white;
     opacity: 0.95;
     color: black;
-    height: 400px;
-    /* max-height: 500px; */
+    height: 300px;
     overflow-y: scroll;
+}
+
+/* Leaflet popups: county polygons */
+.countyPopupOptions .leaflet-popup-tip,
+.countyPopupOptions .leaflet-popup-content-wrapper {
+    background: black;
+    opacity: 0.80;
+    color: white;
+    font-size: 0.8em;
+    text-align: center;
+}
+.countyPopupOptions .leaflet-popup-content {
+    margin: 0;
 }
 
 /* Leaflet custom control style */

@@ -313,10 +313,37 @@
                                 </span>
                             </p>
                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                <div class="govuk-checkboxes__item">
+                                <!-- <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="riskAreasBox" type="checkbox">
                                     <label class="govuk-label govuk-checkboxes__label" for="riskAreasBox">Risk Areas</label>
+                                </div> -->
+                                
+                                <!-- Risk areas checkbox and accordion -->
+                                <div class="govuk-checkboxes__item" style="width: 100%;">
+                                    <input class="govuk-checkboxes__input" id="riskAreasBox" type="checkbox">
+                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__riskAreas" for="riskAreasBox" style="width: 100%; padding: 0; border: none;">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__riskAreas" aria-expanded="false" aria-controls="body__riskAreas" style="padding: 10px;">
+                                            <span class="govuk-label" style="margin: 0;">Risk Areas</span>
+                                        </button>
+                                        <div id="body__riskAreas" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas">
+                                            <div class="accordion-body" style="padding-top: 0;">
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__HRA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">HRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__LRA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">LRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__Edge" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">Edge</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
                                 </div>
+
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="countyBox" type="checkbox">
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
