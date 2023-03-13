@@ -4,8 +4,8 @@ from os import path
 
 import pandas as pd
 
-class CustomException(Exception):
-    def __init__(self, message="custom error message"):
+class InvalidIdException(Exception):
+    def __init__(self, message="ID does not match a valid eartag or AF-number"):
         super().__init__(message)
         self.message = message
 
@@ -97,7 +97,7 @@ class ViewBovisData:
         df_metadata_sub = self._submission_metadata([id])\
             .pipe(self._clean_metadata)
         if df_metadata_sub.empty:
-            raise CustomException(
+            raise InvalidIdException(
                     f"'{id}' does not match a valid eartag or AF-number")
         # calculated the number of locations
         n_locs = int((len(df_metadata_sub.columns) - 9) / 6)

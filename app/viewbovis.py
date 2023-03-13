@@ -3,7 +3,7 @@ from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData
-from viewbovis_data import CustomException 
+from viewbovis_data import InvalidIdException 
 
 app = Flask(__name__)
 
@@ -71,6 +71,6 @@ def exception_handler(error):
             </html>
             """, 500)
 
-@app.errorhandler(CustomException)
+@app.errorhandler(InvalidIdException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})
