@@ -16,4 +16,4 @@ if __name__ == '__main__':
                         default=DEFAULT_DATA_PATH)
     args = parser.parse_args()
     app.data_path = args.data_path
-    app.run()
+    app.run(host='0.0.0.0')
