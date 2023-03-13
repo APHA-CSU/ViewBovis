@@ -90,17 +90,24 @@ class ViewBovisData:
             .pipe(self._clean_metadata)
         # calculated the number of locations
         n_locs = int((len(df_metadata_sub.columns) - 9) / 6)
-        move_dict = {}
-        # TODO: functional/comprehension
-        for loc_num in range(n_locs):
-            cph = df_metadata_sub[f"Loc{loc_num}"][0]
-            df_cph_latlon_map = self._get_lat_long([cph])
-            move_dict[str(loc_num)] = \
-                {"lat": df_cph_latlon_map["Lat"][cph],
-                 "lon": df_cph_latlon_map["Long"][cph],
-                 "on_date": df_metadata_sub[f"Loc{loc_num}_StartDate"][0], 
-                 "off_date": df_metadata_sub[f"Loc{loc_num}_EndDate"][0], 
-                 "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]} 
+        # get lat/long mappings for CPH of movement data
+        df_cph_latlon_map = \
+            self._get_lat_long(\
+            [df_metadata_sub[f"Loc{loc_num}"][0] for loc_num in range(n_locs)])
+        # construct dictionary of movement data
+        move_dict = {str(loc_num):
+                        {"lat": 
+                            df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                         "lon": 
+                            df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                         "on_date": 
+                            df_metadata_sub[f"Loc{loc_num}_StartDate"][0], 
+                         "off_date": 
+                            df_metadata_sub[f"Loc{loc_num}_EndDate"][0], 
+                         "stay_length": 
+                            df_metadata_sub[f"Loc{loc_num}_Duration"][0],
+                         "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
+                     for loc_num in range(n_locs)}
         return {"submission": df_metadata_sub.index[0],
                 "clade": df_metadata_sub["Clade"][0],
                 "identifier": df_metadata_sub["Identifier"][0],
