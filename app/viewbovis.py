@@ -3,6 +3,7 @@ from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData
+from viewbovis_data import CustomException 
 
 app = Flask(__name__)
 
@@ -60,12 +61,16 @@ def related_samples():
 
 @app.errorhandler(Exception)
 def exception_handler(error):
-    return f"""
+    return (f"""
             <html>
                 <h1>An error has occured (500) </h1>
                 <h3> Error Summary </h3>
                 {str(error)}
                 <h3> Stack Trace </h3>
-            {traceback.format_exc()}
-        </html>
-        """, 500
+                {traceback.format_exc()}
+            </html>
+            """, 500)
+
+@app.errorhandler(CustomException)
+def custom_exception_handler(error):
+    return jsonify({"error": f"{str(error)}"})
