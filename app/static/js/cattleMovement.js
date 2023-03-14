@@ -771,7 +771,7 @@ const stylePoly = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly = new L.Shapefile("/static/data/AHVLACounties20120315.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
+countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
 countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 
 
