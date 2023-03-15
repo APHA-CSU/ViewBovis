@@ -1,5 +1,7 @@
 # ViewBovis
 
+* TODO: add details on Nextstrain!
+
 ### **under development**
 ---
 
