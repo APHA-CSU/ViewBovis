@@ -58,16 +58,40 @@
 .govuk-checkboxes--small {
     padding-left: 25px;
 }
+label.govuk-label.govuk-checkboxes__label {
+    margin-left: 10px;
+}
+.accordion-button::after {
+    margin-left: 20px;
+}
 
-/* Leaflet popups style */
-.popupCustom .leaflet-popup-tip,
-.popupCustom .leaflet-popup-content-wrapper {
+/* Remove the grey background on hover of Risk Area sub-category checkboxes */
+.accordion-body .govuk-checkboxes__input:not(:disabled)+.govuk-checkboxes__label:before {
+    box-shadow: none !important;
+}
+
+
+/* Leaflet popups: cow head markers */
+.cowheadPopupOptions .leaflet-popup-tip,
+.cowheadPopupOptions .leaflet-popup-content-wrapper {
     background: white;
     opacity: 0.95;
     color: black;
-    height: 400px;
-    /* max-height: 500px; */
+    height: 300px;
     overflow-y: scroll;
+}
+
+/* Leaflet popups: county polygons */
+.countyPopupOptions .leaflet-popup-tip,
+.countyPopupOptions .leaflet-popup-content-wrapper {
+    background: black;
+    opacity: 0.80;
+    color: white;
+    font-size: 0.8em;
+    text-align: center;
+}
+.countyPopupOptions .leaflet-popup-content {
+    margin: 0;
 }
 
 /* Leaflet custom control style */
