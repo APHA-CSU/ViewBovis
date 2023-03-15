@@ -1,70 +1,103 @@
-# ViewBovis Development Repository
-This repo contains the source code for the ViewBovis application. The README.md contains instructions on how to launch this app from an instance in the SCE.
+# ViewBovis
 
-### 1. Setup
+* TODO: add details on Nextstrain!
 
-Clone the GitHub repository  
-```
-git clone https://github.com/aphascience/ViewBovisDev.git
-cd ViewBovisDev
-```
+### **under development**
+---
 
-Install NVM (Node Version Manager)
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-```
+`ViewBovis` is an APHA web application for exploring Whole Genome Sequencing (WGS) data of M. bovis, linking genetic relatedness with geographical locations of hosts to understand bTB transmission.
 
-Verify `nvm` was properly installed
-```
-nvm --version
-```
-
-Install Node.js (v18.13.0) and npm (v8.19.3)
-```
-nvm install 18.13.0
-```
-
-Verify `node` and `npm` installs and versions
-```
-node --version
-npm --version
-```
-
-### 2. Install Libraries
+![Capture](https://user-images.githubusercontent.com/10742324/225293739-eaf5ac12-53ad-44d3-abe0-449d4988bdf5.PNG)
 
 
-ONLY THING USERS NEED TO DO:  
+## Data
+
+A local data repository must be structured as follows:
+
 ```
-npm install
+├── snp_matrix
+│   ├── B1-11_01Mar23_matrix.csv
+│   ├── B2-11_01Mar23_matrix.csv
+│   ├── B3-11_01Mar23_matrix.csv
+│   .
+|   .
+|   .
+└── viewbovis.db
 ```
 
+where the `snp_matrix` directory contains SNP matrix CSV files for all 30 M. bovis clades and `viewbovis.db` is a sqlite database. All data are outputs of [`btb-forestry`](https://github.com/APHA-CSU/btb-forestry). 
 
-Install Bootstrap v5.2.3
-```
-npm install bootstrap@5.2.3
-```
 
-Install Leaflet v1.9.3
-```
-npm install leaflet@1.9.3
-```
+## Installation
 
-Install GOV.UK Frontend 
+### Source code
+To get source code, Javascript and HTML files, clone this GitHub repository:  
 ```
-npm install govuk-frontend@4.5.0
+git clone https://github.com/aphascience/ViewBovis.git
+cd ViewBovis
 ```
 
-Install Parcel and Dart Sass
+### Python and dependencies
+
+1. The app depends on Python and is tested on `Python3.10`. To install `Python3.10`:
+
 ```
-npm install parcel@2.8.3 --save-dev
-npm install sass@1.58.0 --save-dev
+sudo apt-get update -y
+sudo apt-add-repository ppa:deadsnakes/ppa
+sudo apt-get install Python3.10
+```
+2. Install the pip package manager:
+
+```
+curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
+```
+3. It is recommended to use a virtual environment using either [`venv`](https://docs.python.org/3/library/venv.html) or [`virtualenv`](https://virtualenv.pypa.io/en/stable/installation.html). To install `virtualenv`:
+
+```
+python3 -m pip install virtualenv
+```
+4. Setup and activate new virtual environment:
+```
+virtualenv -p /usr/bin/python3.10 </path/to/the/new/virtualenv/>
+source </path/to/the/new/virtualenv/>bin/activate
+```
+5. The app uses the [`Flask`](https://flask.palletsprojects.com/en/2.0.x/) web development framework and has a number of other Python dependencies. To install all dependencies:
+```
+pip install -r requirements.txt
 ```
 
-### 3. Launch App
+## Running the app
+
+***currently the app is only built for running in development mode**
+
+### Native
+If Python and all dependencies have been correctly installed the app can be run natively. 
+
+Simply run:
+
 ```
-npm run start
+cd app
+python deploy.py --data_path <path/to/data/dir>
 ```
+This will start a Flask development server listening at localhost on port 5000. 
+
+To connect to the app simply visit `http://127.0.0.1:5000` on the device that the server is running on.
+
+### Docker
+To run the app inside a Docker container, you must have the [Docker engine](https://docs.docker.com/engine/install/) installed on your system.
+
+You will not need to have Python and other dependencies installed.
+
+1. Build the docker container:
+
+```
+cd ViewBovis
+docker build -t viewbovis .
+```
+2. Run the container
+```
+bash deploy.sh <path/to/data/directory>
+```
+
+As with running the app natively, to connect to the app simply visit `http://127.0.0.1:5000` on the device that the Docker container is running on.
 
