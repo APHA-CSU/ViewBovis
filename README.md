@@ -2,10 +2,13 @@
 
 ### **under development**
 ---
+
 `ViewBovis` is an APHA web application for exploring Whole Genome Sequencing (WGS) data of M. bovis, linking genetic relatedness with geographical locations of hosts to understand bTB transmission.
 
+![Capture](https://user-images.githubusercontent.com/10742324/225293739-eaf5ac12-53ad-44d3-abe0-449d4988bdf5.PNG)
+
+
 ## Data
----
 
 A local data repository must be structured as follows:
 
@@ -24,7 +27,6 @@ where the `snp_matrix` directory contains SNP matrix CSV files for all 30 M. bov
 
 
 ## Installation
----
 
 ### Source code
 To get source code, Javascript and HTML files, clone this GitHub repository:  
@@ -63,8 +65,8 @@ pip install -r requirements.txt
 ```
 
 ## Running the app
----
-***currently the app is only build for running in development mode**
+
+***currently the app is only built for running in development mode**
 
 ### Native
 If Python and all dependencies have been correctly installed the app can be run natively. 
