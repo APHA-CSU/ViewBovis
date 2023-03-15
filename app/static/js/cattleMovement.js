@@ -576,7 +576,7 @@ document.getElementById("cattleMovementLines--2").addEventListener("change", tog
 // ------------------------ //
 
 // Initiate variables to store shapefile data
-let countyPoly, riskAreaPoly, homeRangePoly;
+let countyPoly, riskAreaPoly, HRAPoly, LRAPoly, EdgePoly, HTBAPoly, ITBAPoly, LTBAPoly, TBFAPoly;
 
 // Function to toggle layers on or off
 const toggleLayers = function(layer){
@@ -606,6 +606,13 @@ const toggleLayers = function(layer){
 
 // ELement ID from DOM
 const riskAreaBox = document.getElementById("riskAreasBox");
+const HRACheckBox = document.getElementById("checkbox__HRA");
+const LRACheckBox = document.getElementById("checkbox__LRA");
+const EdgeCheckBox = document.getElementById("checkbox__Edge");
+const HTBACheckBox = document.getElementById("checkbox__HTBA");
+const ITBACheckBox = document.getElementById("checkbox__ITBA");
+const LTBACheckBox = document.getElementById("checkbox__LTBA");
+const TBFACheckBox = document.getElementById("checkbox__TBFA");
 
 // Function to set polygon colours for Risk Areas
 const riskAreaCols = function(area) {
@@ -666,19 +673,74 @@ legend.onAdd = function (map) {
     return div;
 };
 
-// Toggle legend when layer is (un)ticked
+// Create new shapefile object
+riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
+HRAPoly = new L.Shapefile("/static/data/RiskAreas_HighRiskArea.zip", {style: styleRiskAreaPoly});
+LRAPoly = new L.Shapefile("/static/data/RiskAreas_LowRiskArea.zip", {style: styleRiskAreaPoly});
+EdgePoly = new L.Shapefile("/static/data/RiskAreas_EdgeArea.zip", {style: styleRiskAreaPoly});
+HTBAPoly = new L.Shapefile("/static/data/RiskAreas_HighTBArea.zip", {style: styleRiskAreaPoly});
+ITBAPoly = new L.Shapefile("/static/data/RiskAreas_IntermediateTBArea.zip", {style: styleRiskAreaPoly});
+LTBAPoly = new L.Shapefile("/static/data/RiskAreas_LowTBArea.zip", {style: styleRiskAreaPoly});
+TBFAPoly = new L.Shapefile("/static/data/RiskAreas_TBFreeArea.zip", {style: styleRiskAreaPoly});
+
+// Toggle legend and subcategories when Risk Areas layer is (un)ticked
 riskAreaBox.addEventListener("change", function() {
 
-    // When checkbox is ticked
-    if(this.checked === true) legend.addTo(map);
-  
-    // When checkbox is unticked
-    if(this.checked === false) legend.remove();
+  // When checkbox is ticked
+  if(this.checked === true) {
+
+    // Add legend to map
+    legend.addTo(map);
+
+    // Tick all risk area sub-category checkboxes
+    HRACheckBox.checked = true;
+    HRAPoly.addTo(map);
+    LRACheckBox.checked = true;
+    LRAPoly.addTo(map);
+    EdgeCheckBox.checked = true;
+    EdgePoly.addTo(map);
+    HTBACheckBox.checked = true;
+    HTBAPoly.addTo(map);
+    ITBACheckBox.checked = true;
+    ITBAPoly.addTo(map);
+    LTBACheckBox.checked = true;
+    LTBAPoly.addTo(map);
+    TBFACheckBox.checked = true;
+    TBFAPoly.addTo(map);
+  }; 
+
+  // When checkbox is unticked
+  if(this.checked === false) {
+
+    // Remove legend from map
+    legend.remove();
+
+    // Untick all risk area sub-category checkboxes
+    HRACheckBox.checked = false;
+    map.removeLayer(HRAPoly);
+    LRACheckBox.checked = false;
+    map.removeLayer(LRAPoly);
+    EdgeCheckBox.checked = false;
+    map.removeLayer(EdgePoly);
+    HTBACheckBox.checked = false;
+    map.removeLayer(HTBAPoly);
+    ITBACheckBox.checked = false;
+    map.removeLayer(ITBAPoly);
+    LTBACheckBox.checked = false;
+    map.removeLayer(LTBAPoly);
+    TBFACheckBox.checked = false;
+    map.removeLayer(TBFAPoly);
+  }; 
 });
 
-// Toggle risk area polygons when checkbox is ticked or unticked
-riskAreaPoly = new L.Shapefile("/static/data/RiskAreas.zip", {style: styleRiskAreaPoly});
-riskAreaBox.addEventListener("change", toggleLayers.bind(riskAreaBox, riskAreaPoly));
+// Toggle risk area polygons
+HRACheckBox.addEventListener("change", toggleLayers.bind(HRACheckBox, HRAPoly));
+LRACheckBox.addEventListener("change", toggleLayers.bind(LRACheckBox, LRAPoly));
+EdgeCheckBox.addEventListener("change", toggleLayers.bind(EdgeCheckBox, EdgePoly));
+HTBACheckBox.addEventListener("change", toggleLayers.bind(HTBACheckBox, HTBAPoly));
+ITBACheckBox.addEventListener("change", toggleLayers.bind(ITBACheckBox, ITBAPoly));
+LTBACheckBox.addEventListener("change", toggleLayers.bind(LTBACheckBox, LTBAPoly));
+TBFACheckBox.addEventListener("change", toggleLayers.bind(TBFACheckBox, TBFAPoly));
 
 
 
@@ -783,18 +845,11 @@ countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 // ------------------------ //
 
 // ELement ID from DOM
-const homeRangeBox = document.getElementById("homeRangesBox");
-
-// TODO
-// Home range legend scrollable
-// Ask for feedback?
-
-
-
+// const homeRangeBox = document.getElementById("homeRangesBox");
 
 // Toggle home range polygons when checkbox is ticked or unticked
-homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
-homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
+// homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
+// homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
 
 
 
