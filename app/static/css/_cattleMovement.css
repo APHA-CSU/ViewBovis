@@ -58,12 +58,18 @@
 .govuk-checkboxes--small {
     padding-left: 25px;
 }
-.accordion-button::after {
+label.govuk-label.govuk-checkboxes__label {
     margin-left: 10px;
 }
-/* .govuk-checkboxes__input:hover {
-    background-color: red;
-} */
+.accordion-button::after {
+    margin-left: 20px;
+}
+
+/* Remove the grey background on hover of Risk Area sub-category checkboxes */
+.accordion-body .govuk-checkboxes__input:not(:disabled)+.govuk-checkboxes__label:before {
+    box-shadow: none !important;
+}
+
 
 /* Leaflet popups: cow head markers */
 .cowheadPopupOptions .leaflet-popup-tip,
