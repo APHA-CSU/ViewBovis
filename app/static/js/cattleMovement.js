@@ -589,14 +589,14 @@ const toggleLayers = function(layer){
   // When checkbox is unticked, remove layer from map
   if(this.checked === false) map.removeLayer(layer);
 
-  // Automatically tick the Risk Areas main checkbox and add legend if a sub-category checkbox is ticked
-  if(HRACheckBox.checked ||
-    LRACheckBox.checked  ||
-    EdgeCheckBox.checked ||
-    HTBACheckBox.checked ||
-    ITBACheckBox.checked ||
-    LTBACheckBox.checked ||
-    TBFACheckBox.checked) {
+  // Automatically tick the Risk Areas main checkbox and add legend if a sub-category checkbox is ticked first
+  if(HRACheckBox.checked  ||
+     LRACheckBox.checked  ||
+     EdgeCheckBox.checked ||
+     HTBACheckBox.checked ||
+     ITBACheckBox.checked ||
+     LTBACheckBox.checked ||
+     TBFACheckBox.checked) {
       riskAreaBox.checked = true;
       legend.addTo(map);
     };
