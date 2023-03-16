@@ -1,5 +1,7 @@
 flask==2.2.2
 pandas==1.5.3
+# possibly don't need to have this in the requirements.txt if using github actions
+pytest==7.2.2
 # TODO:
 # remove in real thing (not sure how well maintained this package is)
 flask-liveserver==0.0.4
