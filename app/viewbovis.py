@@ -37,7 +37,7 @@ def home():
     return ls.render_template("index.html")
 
 
-@app.route("/sample")
+@app.route("/sample", methods=["GET"])
 def sample():
     """
         Returns meta and movement data in json format for a single
@@ -50,7 +50,7 @@ def sample():
     return jsonify(g.data.submission_movement_metadata(id))
 
 
-@app.route("/related")
+@app.route("/sample/related", methods=["GET"])
 def related_samples():
     """
         Returns meta and SNP distance data in json format for all
