@@ -61,7 +61,7 @@ class ViewBovisData:
             Returns a DataFrame with columns 'lat' and 'lon' and the
             corresponding CPH in the index.
         """
-        query =f"""SELECT * FROM latlon WHERE CPH IN
+        query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
         return pd.read_sql_query(query,
                                  self._db,
@@ -85,7 +85,7 @@ class ViewBovisData:
             Maps a submission number to sample name.
         """
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
-        df_wgs_sub = pd.read_sql_query(query, self._db, 
+        df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"sample": sample})
         if df_wgs_sub.empty:
             return None
@@ -93,7 +93,7 @@ class ViewBovisData:
 
     def submission_movement_metadata(self, id: str) -> dict:
         """
-            Returns metadata and movement data for 'id' as a dictionary. 
+            Returns metadata and movement data for 'id' as a dictionary.
         """
         # get cleaned metadata for a single id
         df_metadata_sub = self._submission_metadata([id])\
@@ -117,7 +117,7 @@ class ViewBovisData:
                          df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
                          "off_date":
                          df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
-                         "stay_length": 
+                         "stay_length":
                          df_metadata_sub[f"Loc{loc_num}_Duration"][0],
                          "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
                      for loc_num in range(n_locs)}
