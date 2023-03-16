@@ -13,7 +13,7 @@ ls = LiveServer(app)
 def get_data_object():
     """
         Creates a Data object if one does not already exist in the
-        application context. Assigns the Data object as an atribute to
+        application context. Assigns the Data object as an attribute to
         the application context. Creating the data object connects to
         the database. This function is called before every request.
     """
@@ -25,7 +25,7 @@ def get_data_object():
 def disconnect_db(exception):
     """
         Closes the database connection and delete the database object.
-        Called automatically when the application conext ends.
+        Called automatically when the application context ends.
     """
     if hasattr(g, 'data'):
         g.data.__del__()
@@ -41,7 +41,7 @@ def home():
 def sample():
     """
         Returns meta and movement data in json format for a single
-        sample in respone to a client GET request at route /sample/,
+        sample in response to a client GET request at route /sample/,
         with the sample_name encoded in the URL query string; e.g.
         "/sample?sample_name=AF-61-04255-17".
     """
@@ -69,7 +69,7 @@ def related_samples():
 def exception_handler(error):
     return (f"""
             <html>
-                <h1>An error has occured (500) </h1>
+                <h1>An error has occurred (500) </h1>
                 <h3> Error Summary </h3>
                 {str(error)}
                 <h3> Stack Trace </h3>
