@@ -7,9 +7,10 @@
 
 "use strict";
 
+
 // ------------------------ //
 //
-// CREATE SEARCH TABLE
+// RENDER SEARCH TABLE ON SAMPLE SEARCH
 //
 // ------------------------ //
 
@@ -38,8 +39,25 @@ const table = new Tabulator("#nextstrain-search-table", {
     ],
     layout: "fitColumns",
     
-
 });
+
+
+
+// ------------------------ //
+//
+// DYNAMICALLY CHANGE HEIGHT OF NEXTSTRAIN IFRAME
+//
+// ------------------------ //
+
+// Initiate variables
+let navbarHeight2, navbarHeightMargin2, iframeHeight;
+
+// Change the height of Nextstrain when the window is resized
+// For example, when the user drags the browser from a laptop screen to a desktop screen (or vice versa)
+window.addEventListener("resize", () => {
+  document.getElementById("nextstrain-iframe").style.height = `${window.innerHeight - navbarHeight - navbarHeightMargin}px`;
+});
+
 
 
 // ------------------------ //
@@ -53,36 +71,46 @@ let backBtn = document.createElement("button");
 backBtn.classList.add("btn");
 backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
+// backBtn.innerHTML = `        
+//     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+//         <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+//     </svg>
+//     <span style="color: white; font-size:10px;">Back</span>
+//     `;
 backBtn.innerHTML = `        
-    <svg style="margin-bottom: 1px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-        <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--gov-green)" class="bi bi-caret-left-square-fill" viewBox="0 0 16 16">
+    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10V4a.5.5 0 0 0-.832-.374l-4.5 4a.5.5 0 0 0 0 .748l4.5 4A.5.5 0 0 0 10.5 12z"/>
     </svg>
-    <span style="color: white;">Back</span>
-    `;
-backBtn.style.padding = "0";
+`;
+backBtn.style.padding = 0;
+backBtn.style.margin = 0;
+backBtn.style.marginTop= "-7px";
 backBtn.style.position = "absolute";
+// backBtn.style.backgroundColor = "var(--gov-green)";
 
 
-// Function to render nextstrain app when a clade or sample is clicked
+// Function to render nextstrain app when a clade is clicked
 const renderNextstrain = function(clade = ""){
 
     // Remove all content from Nextstrain page (add 'hidden' class to 'nextstrain-splash-page' element ID)
     document.getElementById("nextstrain-splash-page").classList.add("hidden");
 
-    // Get maximum height of the container where Nextstrain will render based on the users screen height
-    const navbarHeight = document.querySelector(".navbar").offsetHeight;
-    const navbarMarginHeight = 10; // TODO this should dynamically extract height from navbar-margin class
-    const nextstrainHeight = window.innerHeight - navbarHeight - navbarMarginHeight;
+    // Calculate maximum height of the container where Nextstrain will render based on the users screen height
+    navbarHeight2 = document.querySelector(".navbar").offsetHeight;
+    navbarHeightMargin2 = parseInt(window.getComputedStyle(document.querySelector(".navbar")).getPropertyValue("margin-bottom"));
+    iframeHeight = window.innerHeight - navbarHeight2 - navbarHeightMargin2;
 
     // Render Nextstrain on page using a template literal containing the correct URL for the sample or clade selected
     document.getElementById("nextstrain-container-id").insertAdjacentHTML("afterbegin", `
         <div class="navbar-margin" id="nextstrain-div">
-            <iframe src="http://127.0.0.1:1235/${clade}" id="nextstrain-iframe" frameborder="0" height="${nextstrainHeight}px" width="100%"></iframe>
+            <iframe src="http://127.0.0.1:4001/${clade}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
         </div>
     `);
 
-    // Render a back button
-    document.getElementById("nextstrain-container-id").insertAdjacentElement("afterbegin", backBtn);
+    // Render a back button with a 1/2 second delay
+    setTimeout( () => {
+        document.getElementById("nextstrain-container-id").insertAdjacentElement("afterbegin", backBtn);
+    }, 500);    
 
     // Ensure hidden class removed from back button
     backBtn.classList.remove("hidden");
@@ -93,7 +121,6 @@ const renderNextstrain = function(clade = ""){
 document.getElementById("clade-B613").addEventListener("click", (e) => {
     e.preventDefault();
     renderNextstrain("B6-13");
-
 });
 
 // Render Nextstrain for B6-71
@@ -116,19 +143,7 @@ document.getElementById("clade-B671").addEventListener("click", (e) => {
 //   }
 
 
-// ------------------------ //
-//
-//  DYNAMICALLY CHANGE HEIGHT OF IFRAME
-//
-// ------------------------ //
 
-// TODO BUG
-// When the window is resized, the function inside the event listener is called, which updates the height of the iframe.
-// This ensures that the iframe height is always up-to-date with the user's screen size, even if they resize their window.
-// window.addEventListener("resize", function() {
-//     const iframe = document.getElementById("nextstrain-iframe");
-//     iframe.style.height = `${document.getElementById("nextstrain-container-id")}px`;
-// });
   
 
 
