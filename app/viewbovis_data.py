@@ -4,6 +4,7 @@ from os import path
 
 import pandas as pd
 
+
 class InvalidIdException(Exception):
     def __init__(self, message="ID does not match a valid eartag or AF-number"):
         super().__init__(message)
@@ -12,40 +13,41 @@ class InvalidIdException(Exception):
     def __str__(self):
         return self.message
 
+
 class ViewBovisData:
     def __init__(self, data_path):
         self._matrix_dir = path.join(data_path, "snp_matrix")
         db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
-    
+
     def __del__(self):
         self._db.close()
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
         """
-            Fetches metadata for a given a list of ids. Returns a 
-            DataFrame containing metadata if it exists, otherwise 
-            returns an empty DataFrame. 
+            Fetches metadata for a given a list of ids. Returns a
+            DataFrame containing metadata if it exists, otherwise
+            returns an empty DataFrame.
         """
-        query = f"""SELECT * FROM metadata WHERE Submission IN 
-                    ({','.join('?' * len(ids))}) OR Identifier IN 
+        query = f"""SELECT * FROM metadata WHERE Submission IN
+                    ({','.join('?' * len(ids))}) OR Identifier IN
                     ({','.join('?' * len(ids))})"""
-        return pd.read_sql_query(query, 
-                                 self._db, 
-                                 index_col="Submission", 
+        return pd.read_sql_query(query,
+                                 self._db,
+                                 index_col="Submission",
                                  params=ids+ids)
 
     def _clean_metadata(self, df_metadata: pd.DataFrame) -> pd.DataFrame:
         """
-            Removes NULL columns from location data in metadata 
+            Removes NULL columns from location data in metadata
             DataFrame. Use only for DataFrame with single row.
         """
         if len(df_metadata) > 1:
             # TODO: custom exception
             raise Exception("DataFrame must contain only one row")
-        # TODO: below is dropping location columns with NULL but leaving 
+        # TODO: below is dropping location columns with NULL but leaving
         # all other columns this is done by splitting the df and
         # re-joining after: there is probably a nicer way to do this.
         df_metadata_0 = df_metadata[df_metadata.columns[:9]]
@@ -55,15 +57,15 @@ class ViewBovisData:
     # TODO: validate input
     def _get_lat_long(self, cphs: list) -> tuple:
         """
-            Fetches latitude and longitude for a given a list of CPHs. 
-            Returns a DataFrame with columns 'lat' and 'lon' and the 
-            corresponding CPH in the index. 
+            Fetches latitude and longitude for a given a list of CPHs.
+            Returns a DataFrame with columns 'lat' and 'lon' and the
+            corresponding CPH in the index.
         """
         query =f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
-        return pd.read_sql_query(query, 
+        return pd.read_sql_query(query,
                                  self._db,
-                                 index_col="CPH", 
+                                 index_col="CPH",
                                  params=cphs)
 
     def _submission_to_sample(self, submission: str) -> str:
@@ -71,7 +73,7 @@ class ViewBovisData:
             Maps a sample name to submission number.
         """
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
-        df_wgs_sub = pd.read_sql_query(query, self._db, 
+        df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"submission": submission})
         if df_wgs_sub.empty:
             # TODO: custom exception
@@ -103,20 +105,20 @@ class ViewBovisData:
         n_locs = int((len(df_metadata_sub.columns) - 9) / 5)
         # get lat/long mappings for CPH of movement data
         df_cph_latlon_map = \
-            self._get_lat_long(\
-            [df_metadata_sub[f"Loc{loc_num}"][0] for loc_num in range(n_locs)])
+            self._get_lat_long(
+                [df_metadata_sub[f"Loc{loc_num}"][0] for loc_num in range(n_locs)])
         # construct dictionary of movement data
         move_dict = {str(loc_num):
-                        {"lat": 
-                            df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "lon": 
-                            df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "on_date": 
-                            df_metadata_sub[f"Loc{loc_num}_StartDate"][0], 
-                         "off_date": 
-                            df_metadata_sub[f"Loc{loc_num}_EndDate"][0], 
+                     {"lat":
+                         df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                         "lon":
+                         df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                         "on_date":
+                         df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
+                         "off_date":
+                         df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
                          "stay_length": 
-                            df_metadata_sub[f"Loc{loc_num}_Duration"][0],
+                         df_metadata_sub[f"Loc{loc_num}_Duration"][0],
                          "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
                      for loc_num in range(n_locs)}
         return {"submission": df_metadata_sub.index[0],
@@ -131,8 +133,8 @@ class ViewBovisData:
                 "risk_area": df_metadata_sub["RiskArea"][0],
                 "move": move_dict}
 
-    def related_submissions_metadata(self, 
-                                     id: str, 
+    def related_submissions_metadata(self,
+                                     id: str,
                                      snp_threshold: int) -> dict:
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
@@ -144,18 +146,18 @@ class ViewBovisData:
         sample_name = self._submission_to_sample(submission)
         clade = df_metadata_sub["Clade"][0]
         # load snp matrix for the required clade
-        matrix_path = glob.glob(path.join(self._matrix_dir, 
+        matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
         df_snps = pd.read_csv(matrix_path[0],
-                              usecols=["snp-dists 0.8.2", sample_name], 
+                              usecols=["snp-dists 0.8.2", sample_name],
                               index_col="snp-dists 0.8.2")
         df_snps.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
         df_snps.index.names = ["sample"]
         # get samples within snp_threshold
-        df_snps_related =  df_snps.loc[df_snps["snp_dist"]<=snp_threshold]
+        df_snps_related = df_snps.loc[df_snps["snp_dist"] <= snp_threshold]
         # map the index from sample name to submission number
         df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.\
+            set_index(df_snps_related.index.
                       map(lambda x: self._sample_to_submission(x)))
         # get metadata for all related samples
         df_metadata_related = \
@@ -165,11 +167,11 @@ class ViewBovisData:
         df_cph_latlon_map = self._get_lat_long(list(cph_set))
         # construct data response for client
         return {index:
-                    {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                     "lon": df_cph_latlon_map["Long"][row["CPH"]],
-                     "snp_distance": int(df_snps_related_processed\
-                        ["snp_dist"][index]),
-                      "animal_id": row["Identifier"], 
-                      "date": row["SlaughterDate"]}
-                for index, row in df_metadata_related.iterrows() 
+                {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                 "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                 "snp_distance":
+                    int(df_snps_related_processed["snp_dist"][index]),
+                 "animal_id": row["Identifier"],
+                 "date": row["SlaughterDate"]}
+                for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
