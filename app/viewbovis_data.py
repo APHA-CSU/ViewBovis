@@ -133,9 +133,30 @@ class ViewBovisData:
                 "risk_area": df_metadata_sub["RiskArea"][0],
                 "move": move_dict}
 
+    # TODO: not just cows
     def related_submissions_metadata(self,
                                      id: str,
                                      snp_threshold: int) -> dict:
+        """
+            Returns metadata for genetically related submissions.
+
+            Parameters:
+                id (str): eartag or submission number for sample of
+                interest.
+
+                snp_threshold (str): maximum SNP distance for genetic
+                related samples
+
+            Returns:
+                metadata (dict): metadata for related samples
+                    {submission_number:
+                        "lat": latitude,
+                        "lon": longitude,
+                        "snp_distance": SNPs to sample of interest,
+                        "animal_id": eartag,
+                        "date": date of slaughter
+                    }
+        """
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
         if df_metadata_sub.empty:
