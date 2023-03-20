@@ -10,35 +10,111 @@
 
 // ------------------------ //
 //
+// HIGHLIGHT INDIVIDUAL CELLS IN TABLE
+//
+// ------------------------ //
+
+// Define the CSS class to apply to the hovered cell
+const highlightClass = "cell-highlight";
+
+// Define the cell mouse over event listener function
+const onCellMouseOver = function(e, cell) {
+  // Add the highlight class to the cell
+  cell.getElement().classList.add(highlightClass);
+}
+
+// Define the cell mouse out event listener function
+const onCellMouseOut = function(e, cell) {
+  // Remove the highlight class from the cell
+  cell.getElement().classList.remove(highlightClass);
+}
+
+
+
+// ------------------------ //
+//
 // RENDER SEARCH TABLE ON SAMPLE SEARCH
 //
 // ------------------------ //
 
-// Array containing table data
-const tabledata = [
-    {cph: "14/351/0044", af: "AF-16-00326-16", eartag: "UK744195702366", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-16", eartag: "UK744195702367", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-17", eartag: "UK744195702368", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-18", eartag: "UK744195702369", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-19", eartag: "UK744195702100", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-20", eartag: "UK744195702101", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-21", eartag: "UK744195702102", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-22", eartag: "UK744195702103", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-23", eartag: "UK744195702104", clade: "B6-13"},
-    {cph: "14/351/0044", af: "AF-16-00326-24", eartag: "UK744195702105", clade: "B6-13"},
-]
+// Initalise variables
+let tableData, table;
 
-// Inititalise table
-const table = new Tabulator("#nextstrain-search-table", {
-    data: tabledata, // assign data to table
-    columns:[
-        {title:"CPH", field:"cph", resizable:false},
-        {title:"AF number", field:"af", resizable:false},
-        {title:"Ear tag", field:"eartag", resizable:false},
-        {title:"Clade", field:"clade", resizable:false},
-    ],
-    layout: "fitColumns",
+// Async function that renders table
+const showTable = async function() {
+
+    // Clear any previous rendered tables
+    document.getElementById("nextstrain-search-table").classList.add("hidden");
+
+    // Render spinner
+    document.getElementById("nextstrain-search-table-spinner").classList.remove("hidden");
+
+    // Fetch json data from backend
+    const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
+    const json = await response.json();
+    // console.log(json);
+
+    // Remove spinner and activate search table when fetch is complete 
+    document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
+    document.getElementById("nextstrain-search-table").classList.remove("hidden");
+
+    // Create an array containing table data
+    tableData = [
+        {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
+    ];
+
+    // Create table
+    table = new Tabulator("#nextstrain-search-table", {
+        data: tableData,
+        selectable:false,
+        columnDefaults:{
+            resizable:false,
+          },
+        layout: "fitColumns",
+        columns: [
+            {title:"CPH", field:"cph"},
+            {title: "County", field:"county"},
+            {title:"AF Number", field:"af"},
+            {title:"Ear tag", field:"eartag"},
+            {title:"Clade", field:"clade"},
+        ],
+    });
+
+    // Event handler on each table cell when clicked
+    table.on("cellClick", function(e, cell){
+        // The click event object (e)
+        // console.log(e.target);
+        
+        // Get the cell value
+        let cellValue = cell.getValue();
+        // console.log(cellValue);
+
+        // Get the column (field) heading
+        let cellField = cell.getField();
+        // console.log(cellField);
+
+        // Get the clade of the row clicked
+        let clade = cell.getRow().getData().clade;
+        // console.log(clade);
+
+        // Render Nextstrain for clade, county, AF, Ear tag or CPH
+        if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
+        if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
+        if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
+        if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
+        if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
+    });
+
+    // Add the cell mouse over and mouse out event listeners to the table
+    table.on("cellMouseOver", onCellMouseOver);
+    table.on("cellMouseOut", onCellMouseOut);
+};
+
+// Executes the async showTable() function when the "nextstrain-search-button" button is clicked
+document.getElementById("nextstrain-search-button").addEventListener("click", () => {
     
+    // Execute async function to render search table
+    showTable();
 });
 
 
@@ -71,26 +147,25 @@ let backBtn = document.createElement("button");
 backBtn.classList.add("btn");
 backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
-// backBtn.innerHTML = `        
-//     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
-//         <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
-//     </svg>
-//     <span style="color: white; font-size:10px;">Back</span>
-//     `;
-backBtn.innerHTML = `        
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--gov-green)" class="bi bi-caret-left-square-fill" viewBox="0 0 16 16">
-    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10V4a.5.5 0 0 0-.832-.374l-4.5 4a.5.5 0 0 0 0 .748l4.5 4A.5.5 0 0 0 10.5 12z"/>
-    </svg>
+backBtn.innerHTML = `
+    <span style="font-size:10px; font-weight: bold; background-color: var(--gov-green); color: white; padding-right: 5px;">
+        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+            <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+        </svg>
+        Back
+    </span>
 `;
+
 backBtn.style.padding = 0;
 backBtn.style.margin = 0;
-backBtn.style.marginTop= "-7px";
+backBtn.style.marginTop = "-16px";
+backBtn.style.border = "none";
 backBtn.style.position = "absolute";
 // backBtn.style.backgroundColor = "var(--gov-green)";
 
 
 // Function to render nextstrain app when a clade is clicked
-const renderNextstrain = function(clade = ""){
+const renderNextstrain = function(URL){
 
     // Remove all content from Nextstrain page (add 'hidden' class to 'nextstrain-splash-page' element ID)
     document.getElementById("nextstrain-splash-page").classList.add("hidden");
@@ -102,8 +177,8 @@ const renderNextstrain = function(clade = ""){
 
     // Render Nextstrain on page using a template literal containing the correct URL for the sample or clade selected
     document.getElementById("nextstrain-container-id").insertAdjacentHTML("afterbegin", `
-        <div class="navbar-margin" id="nextstrain-div">
-            <iframe src="http://127.0.0.1:4001/${clade}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
+        <div id="nextstrain-div">
+            <iframe src="http://127.0.0.1:4001/${URL}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
         </div>
     `);
 
@@ -120,7 +195,7 @@ const renderNextstrain = function(clade = ""){
 // Render Nextstrain for B6-13
 document.getElementById("clade-B613").addEventListener("click", (e) => {
     e.preventDefault();
-    renderNextstrain("B6-13");
+    renderNextstrain("B6-13");    
 });
 
 // Render Nextstrain for B6-71
@@ -129,22 +204,6 @@ document.getElementById("clade-B671").addEventListener("click", (e) => {
     renderNextstrain("B6-71");
 });
 
-
-// Example sample
-// http://127.0.0.1:1234/B6-13?f_StandardEartag=UK161705304996
-
-// const rmAuspiceElements = function(){ 
-// };
-// }
-// function myFunction() {
-//     var iframe = document.getElementById("myFrame");
-//     var elmnt = iframe.contentWindow.document.getElementsByTagName("H1")[0];
-//     elmnt.style.display = "none";
-//   }
-
-
-
-  
 
 
 // ------------------------ //

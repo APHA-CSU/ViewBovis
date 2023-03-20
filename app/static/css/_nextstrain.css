@@ -33,14 +33,23 @@
 #nextstrain-input {
     width: 220px;
 }
+#nextstrain-search-button:hover {
+    background-color: 	#b1b4b6;
+}
 
 /* Table */
 #nextstrain-search-table {
-    height: 210px;
+    height: 235px;
     padding: 0;
     background-color: transparent;
     border: none;
 }
 div.tabulator-tableholder {
     overflow-x: hidden !important;
+}
+.cell-highlight {
+    background-color: var(--gov-green);
+    cursor:pointer;
+    /* font-weight: bold; */
+    color: white;
 }
