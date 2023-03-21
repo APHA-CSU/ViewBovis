@@ -30,7 +30,7 @@
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2 active" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
@@ -38,7 +38,7 @@
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-4" data-tab="4">Nextstrain</a>
+                            <a class="nav-link nav-link-4 active" data-tab="4">Nextstrain</a>
                         </li>
                         <!-- Help and Support Tab -->
                         <li class="nav-item ">
@@ -249,7 +249,7 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2">
+        <div class="container-fluid content content-2 hidden">
             <div class="row">
                 <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <!-- Button to collapse sidebar -->
@@ -428,7 +428,7 @@
         <!-- ================================== -->
         <!-- Nextstrain Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-4 hidden" id="nextstrain-container-id">
+        <div class="container-fluid content content-4" id="nextstrain-container-id">
             <div id="nextstrain-splash-page">
                 <!-- Government ALPHA Banner -->
                 <div class="row alpha-side-margin">
@@ -473,7 +473,7 @@
                                     </p>
                                 </div>
                                 <div class="col-8 nextstrain-select-data">
-                                    <div class="row " style="margin-right:0; background-color: white;">
+                                    <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
                                         <!-- Input text -->
                                         <div class="col-6 ">
                                             <div class="govuk-form-group" style="margin-bottom: 10px;">
@@ -481,8 +481,8 @@
                                                     Search by AF, CPH or Ear tag
                                                 </label>
                                                 <div class="govuk-input__wrapper">
-                                                    <input class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
-                                                    <div class="govuk-input__suffix" aria-hidden="true">
+                                                    <input value="UK262728200982" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
+                                                    <div class="govuk-input__suffix" aria-hidden="true" id="nextstrain-search-button" style="cursor: pointer;">
                                                         <a>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -503,7 +503,15 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="row " style="margin-right: 0">
+                                    <div class="row" id="nextstrain-search-table-container" style="margin-right: 0; margin-top: 5px;">
+                                        <!-- Search table spinner -->
+                                        <div class="text-center hidden" id="nextstrain-search-table-spinner">
+                                            <br>
+                                            <div class="spinner-border text-secondary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                        
                                         <!-- Table for sample or clade selection -->
                                         <div id="nextstrain-search-table"></div>
                                     </div>
