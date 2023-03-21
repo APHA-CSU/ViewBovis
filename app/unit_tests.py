@@ -43,7 +43,6 @@ class TestViewBovisData(unittest.TestCase):
 
     def test_submission_movement_metadata(self):
         self.data._clean_metadata = mock.Mock(wraps=lambda x: x)
-        with self.assertRaises(view)
         self.data._submission_metadata = mock.Mock()
         self.data._submission_metadata.return_value = \
             pd.DataFrame({"Clade": ["A"], "Identifier": ["B"], "Host": ["C"],
@@ -76,9 +75,15 @@ class TestViewBovisData(unittest.TestCase):
                                    "2": {"lat": 3, "lon": 6, "on_date": "V",
                                          "off_date": "X", "stay_length": "W",
                                          "type": "U"}}})
-        
+
     def test_related_submission_metadata(self):
-        pass
+        self.data._submission_metadata = mock.Mock()
+        self.data._submission_metadata.side_effect = [pd.DataFrame({}),
+                                                      pd.DataFrame({})]
+        self.data._submission_to_sample = mock.Mock()
+        self.data._submission_to_sample.return_value = pd.DataFrame({})
+        with mock.patch("viewbovis_data.pandas.read_csv") as mock_read_csv:
+            mock_read_csv.return_value = pd.DataFrame({})
 
 
 if __name__ == "__main__":
