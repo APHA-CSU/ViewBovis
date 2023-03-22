@@ -76,14 +76,36 @@ class TestViewBovisData(unittest.TestCase):
                                          "off_date": "X", "stay_length": "W",
                                          "type": "U"}}})
 
-    def test_related_submission_metadata(self):
+    @mock.patch("viewbovis_data.glob.glob")
+    def test_related_submission_metadata(self, mock_glob):
+        mock_glob.return_value = "mock_matrix_path"
         self.data._submission_metadata = mock.Mock()
-        self.data._submission_metadata.side_effect = [pd.DataFrame({}),
-                                                      pd.DataFrame({})]
+        self.data._submission_metadata.side_effect = \
+            [pd.DataFrame({"Clade": ["A"]}, index=["foo"]),
+             pd.DataFrame({"Identifier": ["foo_id", "bar_id", "baz_id"],
+                           "SlaughterDate": ["foo_date", "bar_date", 
+                                             "baz_date"],
+                           "CPH": ["J", "O", "T"],
+                           "Loc2_EndDate": ["X"]},
+                          index=["foo_sub", "bar_sub", "baz_sub"])]
         self.data._submission_to_sample = mock.Mock()
-        self.data._submission_to_sample.return_value = pd.DataFrame({})
-        with mock.patch("viewbovis_data.pandas.read_csv") as mock_read_csv:
-            mock_read_csv.return_value = pd.DataFrame({})
+        self.data._submission_to_sample = mock.Mock(wraps=lambda x: x)
+        self.data._sample_to_submission = mock.Mock()
+        self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
+        self.data._get_lat_long = mock.Mock()
+        self.data._get_lat_long.return_value = \
+            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6]},
+                         index=["J", "O", "T"])
+        with mock.patch("viewbovis_data.pd.read_csv") as mock_read_csv:
+            mock_read_csv.return_value = \
+                pd.DataFrame({"snp-dists 0.8.2": ["foo"], "foo": [0],
+                              "bar": [3], "baz": [5]})
+            self.assertDictEqual(
+                self.data.related_submissions_metadata("foo", 3),
+                {"foo_sub": {"lat": 1, "lon": 4, "snp_distance": 0,
+                             "animal_id": "foo_id", "date": "foo_date"},
+                 "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
+                             "animal_id": "bar_id", "date": "bar_date"}})
 
 
 if __name__ == "__main__":

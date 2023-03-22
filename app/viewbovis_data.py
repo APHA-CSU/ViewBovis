@@ -102,7 +102,7 @@ class ViewBovisData:
             raise InvalidIdException(
                     f"'{id}' does not match a valid eartag or AF-number")
         # calculated the number of locations
-        n_locs = int((len(df_metadata_sub.columns) - 9) / 5)
+        n_locs = len(df_metadata_sub.columns[10::5])
         # get lat/long mappings for CPH of movement data
         df_cph_latlon_map = \
             self._get_lat_long(
@@ -172,14 +172,14 @@ class ViewBovisData:
         df_snps = pd.read_csv(matrix_path[0],
                               usecols=["snp-dists 0.8.2", sample_name],
                               index_col="snp-dists 0.8.2")
-        df_snps.rename({sample_name: "snp_dist"}, axis=1, inplace=True)
-        df_snps.index.names = ["sample"]
         # get samples within snp_threshold
-        df_snps_related = df_snps.loc[df_snps["snp_dist"] <= snp_threshold]
+        df_snps_related = df_snps.loc[df_snps[sample_name] <= snp_threshold]
         # map the index from sample name to submission number
         df_snps_related_processed = df_snps_related.copy().\
             set_index(df_snps_related.index.
-                      map(lambda x: self._sample_to_submission(x)))
+                      map(lambda x: self._sample_to_submission(x))).\
+            rename({sample_name: "snp_dist"}, axis=1)#.index.names = ["sample"]
+        print(df_snps_related)
         # get metadata for all related samples
         df_metadata_related = \
             self._submission_metadata(df_snps_related_processed.index.to_list())
