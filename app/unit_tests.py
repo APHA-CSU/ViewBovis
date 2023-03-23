@@ -80,6 +80,8 @@ class TestViewBovisData(unittest.TestCase):
         # test expected output
         self.assertDictEqual(self.data.submission_movement_metadata("A"),
                              expected)
+        # assert mock calls
+        self.data._get_lat_long.assert_called_once_with(["J", "O", "T"])
 
     @mock.patch("viewbovis_data.glob.glob")
     @mock.patch("viewbovis_data.pd.read_csv")
