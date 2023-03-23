@@ -25,17 +25,18 @@ class TestViewBovisData(unittest.TestCase):
         return super().tearDown()
 
     def test_clean_metadata(self):
-        # test usual input
+        # test expected 
         df_test_input = pd.DataFrame({"A": [None], "B": [None], "C": [None],
                                       "D": [None], "E": [None], "F": [None],
                                       "G": [None], "H": [None], "I": [None],
                                       "J": [None], "K": ["foo"], "L": [None]})
-        df_test_output = pd.DataFrame({"A": [None], "B": [None], "C": [None],
-                                       "D": [None], "E": [None], "F": [None],
-                                       "G": [None], "H": [None], "I": [None],
-                                       "K": ["foo"]})
+        df_expected_output = pd.DataFrame({"A": [None], "B": [None],
+                                           "C": [None], "D": [None],
+                                           "E": [None], "F": [None],
+                                           "G": [None], "H": [None],
+                                           "I": [None], "K": ["foo"]})
         pd.testing.assert_frame_equal(self.data._clean_metadata(df_test_input),
-                                      df_test_output)
+                                      df_expected_output)
         # test exception
         df_test_input = pd.DataFrame({"A": [None, None]})
         with self.assertRaises(Exception):
