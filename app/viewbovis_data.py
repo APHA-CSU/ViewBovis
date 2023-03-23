@@ -154,8 +154,7 @@ class ViewBovisData:
                         "lon": longitude,
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
-                        "date": date of slaughter
-                    }
+                        "date": date of slaughter}
         """
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
@@ -178,8 +177,7 @@ class ViewBovisData:
         df_snps_related_processed = df_snps_related.copy().\
             set_index(df_snps_related.index.
                       map(lambda x: self._sample_to_submission(x))).\
-            rename({sample_name: "snp_dist"}, axis=1)#.index.names = ["sample"]
-        print(df_snps_related)
+            rename({sample_name: "snp_dist"}, axis=1)
         # get metadata for all related samples
         df_metadata_related = \
             self._submission_metadata(df_snps_related_processed.index.to_list())
