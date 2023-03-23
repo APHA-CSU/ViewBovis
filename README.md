@@ -3,6 +3,9 @@
 * TODO: add details on Nextstrain!
 
 ### **under development**
+
+![GitHub Actions](https://github.com/aphascience/ViewBovis/actions/workflows/build_and_test.yml/badge.svg)
+
 ---
 
 `ViewBovis` is an APHA web application for exploring Whole Genome Sequencing (WGS) data of M. bovis, linking genetic relatedness with geographical locations of hosts to understand bTB transmission.
