@@ -1,10 +1,10 @@
 # ViewBovis
 
+![GitHub Actions](https://github.com/aphascience/ViewBovis/actions/workflows/build_and_test.yml/badge.svg)
+
 * TODO: add details on Nextstrain!
 
 ### **under development**
-
-![GitHub Actions](https://github.com/aphascience/ViewBovis/actions/workflows/build_and_test.yml/badge.svg)
 
 ---
 
