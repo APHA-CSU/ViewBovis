@@ -42,8 +42,11 @@ class TestViewBovisData(unittest.TestCase):
             self.data._clean_metadata(df_test_input)
 
     def test_submission_movement_metadata(self):
-        self.data._clean_metadata = mock.Mock(wraps=lambda x: x)
+        # setup - mock private methods
+        self.data._get_lat_long = mock.Mock()
         self.data._submission_metadata = mock.Mock()
+        self.data._clean_metadata = mock.Mock(wraps=lambda x: x)
+        # setup - return values for private method mocks
         self.data._submission_metadata.return_value = \
             pd.DataFrame({"Clade": ["A"], "Identifier": ["B"], "Host": ["C"],
                           "SlaughterDate": ["D"], "CPH": ["E"], "CPHH": ["F"],
@@ -56,29 +59,30 @@ class TestViewBovisData(unittest.TestCase):
                           "Loc2": ["T"], "Loc2_Type": ["U"],
                           "Loc2_StartDate": ["V"], "Loc2_Duration": ["W"],
                           "Loc2_EndDate": ["X"]}, index=["Y"])
-        self.data._get_lat_long = mock.Mock()
         self.data._get_lat_long.return_value = \
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6]},
                          index=["J", "O", "T"])
+        # expected output
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "C", "slaughter_date": "D", "cph": "E",
+                    "cphh": "F", "cph_type": "G", "county": "H",
+                    "risk_area": "I", "move":
+                        {"0": {"lat": 1, "lon": 4, "on_date": "L",
+                               "off_date": "N", "stay_length": "M",
+                               "type": "K"},
+                         "1": {"lat": 2, "lon": 5, "on_date": "Q",
+                               "off_date": "S", "stay_length": "R",
+                               "type": "P"},
+                         "2": {"lat": 3, "lon": 6, "on_date": "V",
+                               "off_date": "X", "stay_length": "W",
+                               "type": "U"}}}
+        # test expected output
         self.assertDictEqual(self.data.submission_movement_metadata("A"),
-                             {"submission": "Y", "clade": "A",
-                              "identifier": "B", "species": "C",
-                              "slaughter_date": "D", "cph": "E", "cphh": "F",
-                              "cph_type": "G", "county": "H", "risk_area": "I",
-                              "move":
-                                  {"0": {"lat": 1, "lon": 4, "on_date": "L",
-                                         "off_date": "N", "stay_length": "M",
-                                         "type": "K"},
-                                   "1": {"lat": 2, "lon": 5, "on_date": "Q",
-                                         "off_date": "S", "stay_length": "R",
-                                         "type": "P"},
-                                   "2": {"lat": 3, "lon": 6, "on_date": "V",
-                                         "off_date": "X", "stay_length": "W",
-                                         "type": "U"}}})
+                             expected)
 
     @mock.patch("viewbovis_data.glob.glob")
     @mock.patch("viewbovis_data.pd.read_csv")
-    def test_related_submission_metadata(self, mock_glob, mock_read_csv):
+    def test_related_submission_metadata(self, mock_read_csv, mock_glob):
         # setup - return values for external mocks
         mock_glob.return_value = "mock_matrix_path"
         mock_read_csv.return_value = \
