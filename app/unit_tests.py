@@ -25,7 +25,7 @@ class TestViewBovisData(unittest.TestCase):
         return super().tearDown()
 
     def test_clean_metadata(self):
-        # test expected 
+        # test expected
         df_test_input = pd.DataFrame({"A": [None], "B": [None], "C": [None],
                                       "D": [None], "E": [None], "F": [None],
                                       "G": [None], "H": [None], "I": [None],
@@ -95,12 +95,12 @@ class TestViewBovisData(unittest.TestCase):
         self.data._get_lat_long = mock.Mock()
         # setup - return values for private method mocks
         self.data._submission_metadata.side_effect = \
-            [pd.DataFrame({"Clade": ["A"]}, index=["foo"]),
+            [pd.DataFrame({"Clade": ["foo_clade"]}, index=["foo_sub"]),
              pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                            "SlaughterDate": ["foo_date", "bar_date"],
                            "CPH": ["J", "O"], "Host": ["COW", "COW"]},
                           index=["foo_sub", "bar_sub"])]
-        self.data._submission_to_sample = mock.Mock(wraps=lambda x: x)
+        self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
         self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
         self.data._get_lat_long.return_value = \
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6]},
@@ -113,7 +113,16 @@ class TestViewBovisData(unittest.TestCase):
                          "animal_id": "bar_id", "date": "bar_date"}}
         # test expected output
         self.assertDictEqual(
-            self.data.related_submissions_metadata("foo", 3), expected)
+            self.data.related_submissions_metadata("foo_sub", 3), expected)
+        # assert mock calls
+        self.data._submission_metadata.assert_has_calls([mock.call(["foo_sub"]),
+                                                         mock.call(["foo_sub",
+                                                                    "bar_sub"])])
+        self.data._submission_to_sample.assert_called_once_with("foo_sub")
+        self.data._sample_to_submission.assert_has_calls([mock.call("foo"),
+                                                          mock.call("bar")])
+        mock_glob.assert_called_once_with(
+            f"{self.data._matrix_dir}/foo_clade_*_matrix.csv")
 
 
 if __name__ == "__main__":
