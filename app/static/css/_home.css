@@ -1,0 +1,95 @@
+/* ================================ */
+/*
+/* HOME CSS */
+/*
+/* ================================ */
+
+/* ------------------- */
+/* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
+/* ------------------- */
+
+/* Security modal */
+
+/* Government ALPHA Banner */
+.alpha-side-margin {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+/* ViewBovis Logo */
+.home-logo {
+    height: 90px;
+    width: "auto";
+}
+
+/* ViewBovis Description */
+.home-description-container {
+    border-left: 10px solid #b1b4b6;
+    margin-left: 10px;
+}
+.home-description {
+    margin-left: 10px;
+}
+
+/* Service Last Updated */
+.home-banner-container {
+    margin-bottom: 10px;
+}
+.home-banner-content {
+    height: 80px;
+}
+
+/* Box Quick-Links Content */
+.home-box {
+    background-color: #f2f2f2;
+    border-top: 10px solid var(--apha-green);
+    padding: 10px;
+    font-size: 17px;
+    height: 335px;
+}
+.custom-govuk-button-home {
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+/* Footer style */
+.footer {
+    bottom: -2rem;
+    position: relative;
+    font-size: 12px;
+    background-color: #f2f2f2;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: 0.5px;
+    margin-right: 0.5px;
+}
+
+
+/* Apply this style to screens with a height >768px (larger laptop or desktop) */
+/* @media (min-height: 768px){
+    #home-view-bovis-description {
+        font-size: 30px;
+        font-weight: bold;
+        background-color: white;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    #home-help-declaration {
+        font-size: 30px;
+        margin-top: 50px;
+    }
+    .home-box {
+        background-color: white;
+        border-top: 10px solid var(--apha-green);
+        margin-top: 50px;
+        padding: 15px;
+        padding-top: 10px;
+        font-size: 25px;
+    }
+    .footer {
+        bottom: -4rem;
+        position: relative;
+    }
+} */
+
+

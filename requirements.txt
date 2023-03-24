@@ -1,0 +1,5 @@
+flask==2.2.2
+pandas==1.5.3
+# TODO:
+# remove in real thing (not sure how well maintained this package is)
+flask-liveserver==0.0.4

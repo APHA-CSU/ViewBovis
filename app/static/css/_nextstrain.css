@@ -1,0 +1,55 @@
+/* ================================ */
+/*
+/* NEXTSTRAIN CSS */
+/*
+/* ================================ */
+
+/* ------------------- */
+/* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
+/* ------------------- */
+
+/* Nextstrain logo */
+#nextstrain-logo {
+    height: 60px;
+    width: "auto";
+}
+
+/* Nextstrain box */
+.nextstrain-box {
+    background-color: #f2f2f2;
+    border-top: 10px solid var(--apha-green);
+    padding: 10px;
+    padding-top: 0;
+    font-size: 17px;
+    height: 335px;
+}
+
+/* Nextstrain box – search and select column */
+.nextstrain-search-container {
+    padding-right: 25px;
+}
+
+/* Nextstrain box – input text box */
+#nextstrain-input {
+    width: 220px;
+}
+#nextstrain-search-button:hover {
+    background-color: 	#b1b4b6;
+}
+
+/* Table */
+#nextstrain-search-table {
+    height: 235px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+}
+div.tabulator-tableholder {
+    overflow-x: hidden !important;
+}
+.cell-highlight {
+    background-color: var(--apha-green);
+    cursor:pointer;
+    /* font-weight: bold; */
+    color: white;
+}

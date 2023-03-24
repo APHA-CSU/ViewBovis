@@ -1,0 +1,140 @@
+/* ================================ */
+/*
+/* CATTLE MOVEMENT CSS */
+/*
+/* ================================ */
+
+/* ------------------- */
+/* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
+/* ------------------- */
+
+/* Height of the map page */
+#map {
+    height: auto;
+}
+#map-sidebar-container {
+    height: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+/* Column 1 container */
+#content2-column1-container {
+    padding-right: 0;
+}
+
+/* Enter sample container  */
+#enter-sample-container {
+    background: #d1d1d1;
+    padding: 10px;
+    margin-bottom: 1px;
+}
+
+/* Custom leaflet control button  */
+.custom-leaflet-control {
+    width: 30px;
+    height: 30px;
+    margin-left: 15px;
+    background-color: #fff;
+    border: 2px solid rgba(0,0,0,0.2);
+}
+
+/* Sample input style */
+.input__sampleID {
+    color: black;
+    font-size: 20px;
+    width: 100%;
+    height: 35px;
+    margin-top: 5px;
+}
+
+/* Accordion space in second cattle movement */
+#accordion__secondMovement {
+    margin-bottom: 30px;
+}
+
+/* LAYERS checkboxes */
+.govuk-checkboxes--small {
+    padding-left: 25px;
+}
+label.govuk-label.govuk-checkboxes__label {
+    margin-left: 10px;
+}
+.accordion-button::after {
+    margin-left: 20px;
+}
+
+/* Remove the grey background on hover of Risk Area sub-category checkboxes */
+.accordion-body .govuk-checkboxes__input:not(:disabled)+.govuk-checkboxes__label:before {
+    box-shadow: none !important;
+}
+
+
+/* Leaflet popups: cow head markers */
+.cowheadPopupOptions .leaflet-popup-tip,
+.cowheadPopupOptions .leaflet-popup-content-wrapper {
+    background: white;
+    opacity: 0.95;
+    color: black;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+/* Leaflet popups: county polygons */
+.countyPopupOptions .leaflet-popup-tip,
+.countyPopupOptions .leaflet-popup-content-wrapper {
+    background: black;
+    opacity: 0.80;
+    color: white;
+    font-size: 0.8em;
+    text-align: center;
+}
+.countyPopupOptions .leaflet-popup-content {
+    margin: 0;
+}
+
+/* Leaflet custom control style */
+/* This CSS styles the Basemaps control in the top-right of the map */
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+.leaflet-control-layers-scrollbar {
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+/* Leaflet legend styles */
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+/* Customise the style of the dropdown box for second cattle movement */
+.accordion-button:not(.collapsed) {
+    background-color: white;
+    box-shadow: none;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+.accordion {
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+

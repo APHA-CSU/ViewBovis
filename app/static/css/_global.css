@@ -1,0 +1,52 @@
+/* ================================ */
+/*
+/* APP GLOBAL CSS */
+/*
+/* ================================ */
+
+:root {
+    /* APHA official green */
+    /* http://aphaintranet/how-do-I/communications-press/Pages/findandusetheAPHAlogo.aspx */
+    --apha-green: #00A33B;
+    --apha-blue: #007CBA;
+}
+
+html {
+    font-family: Arial;
+    color: black;
+}
+
+body {
+    background-color: white;
+}
+
+p {
+    color: black;
+}
+
+.hidden {
+    display: none;
+}
+
+a:hover {
+    /* All links have the pointer (hand) on mouse hover */
+    cursor:pointer;
+}
+
+.text-green {
+    /* APHA green text */
+    color: var(--apha-green);
+}
+
+.text-hyperlink {
+    /* Blue hyperlink text */
+    color: #0000EE;
+}
+
+.govuk-button {
+    background-color: var(--apha-green);
+}
+
+.govuk-button--secondary {
+    background-color: #f3f2f1;;
+}
