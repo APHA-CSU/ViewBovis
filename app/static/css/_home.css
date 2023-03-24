@@ -42,7 +42,7 @@
 /* Box Quick-Links Content */
 .home-box {
     background-color: #f2f2f2;
-    border-top: 10px solid var(--gov-green);
+    border-top: 10px solid var(--apha-green);
     padding: 10px;
     font-size: 17px;
     height: 335px;
@@ -80,7 +80,7 @@
     }
     .home-box {
         background-color: white;
-        border-top: 10px solid var(--gov-green);
+        border-top: 10px solid var(--apha-green);
         margin-top: 50px;
         padding: 15px;
         padding-top: 10px;

@@ -7,8 +7,8 @@
 :root {
     /* APHA official green */
     /* http://aphaintranet/how-do-I/communications-press/Pages/findandusetheAPHAlogo.aspx */
-    --gov-green: #00A33B;
-    --gov-blue: #1d70b8;
+    --apha-green: #00A33B;
+    --apha-blue: #007CBA;
 }
 
 html {
@@ -35,7 +35,7 @@ a:hover {
 
 .text-green {
     /* APHA green text */
-    color: var(--gov-green);
+    color: var(--apha-green);
 }
 
 .text-hyperlink {
@@ -44,7 +44,7 @@ a:hover {
 }
 
 .govuk-button {
-    background-color: var(--gov-green);
+    background-color: var(--apha-green);
 }
 
 .govuk-button--secondary {

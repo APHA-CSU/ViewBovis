@@ -17,7 +17,7 @@
 /* Nextstrain box */
 .nextstrain-box {
     background-color: #f2f2f2;
-    border-top: 10px solid var(--gov-green);
+    border-top: 10px solid var(--apha-green);
     padding: 10px;
     padding-top: 0;
     font-size: 17px;
@@ -48,7 +48,7 @@ div.tabulator-tableholder {
     overflow-x: hidden !important;
 }
 .cell-highlight {
-    background-color: var(--gov-green);
+    background-color: var(--apha-green);
     cursor:pointer;
     /* font-weight: bold; */
     color: white;

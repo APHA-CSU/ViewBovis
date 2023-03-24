@@ -148,7 +148,7 @@ backBtn.classList.add("btn");
 backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
 backBtn.innerHTML = `
-    <span style="font-size:10px; font-weight: bold; background-color: var(--gov-green); color: white; padding-right: 5px;">
+    <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
         </svg>
@@ -161,7 +161,7 @@ backBtn.style.margin = 0;
 backBtn.style.marginTop = "-16px";
 backBtn.style.border = "none";
 backBtn.style.position = "absolute";
-// backBtn.style.backgroundColor = "var(--gov-green)";
+// backBtn.style.backgroundColor = "var(--apha-green)";
 
 
 // Function to render nextstrain app when a clade is clicked

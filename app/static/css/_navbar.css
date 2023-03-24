@@ -7,7 +7,7 @@
 /* General */
 .navbar {
     background-color: white !important;
-    border-bottom: 0.2rem solid var(--gov-green);
+    border-bottom: 0.2rem solid var(--apha-green);
     padding: 0;
     height: 55px;
     margin-top: -10px;
@@ -50,7 +50,7 @@ a.nav-link.active {
     /* color: black !important; */
     color: white !important;
     font-weight: bold;
-    background-color: var(--gov-green);
+    background-color: var(--apha-green);
 }
 
 /* Non-active text styling */
