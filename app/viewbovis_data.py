@@ -120,17 +120,20 @@ class ViewBovisData:
         n_locs = self._extract_location_number(df_metadata_sub.columns[-5]) + 1
         # construct dictionary of movement data
         move_dict = {(str(loc_num)):
-                     ({"lat":
-                         df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "lon":
-                         df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "on_date":
-                         df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
-                         "off_date":
-                         df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
-                         "stay_length":
-                         df_metadata_sub[f"Loc{loc_num}_Duration"][0],
-                         "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
+                     ({"cph":
+                           df_metadata_sub[f"Loc{loc_num}"][0],
+                       "lat":
+                           df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                       "lon":
+                           df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                       "on_date":
+                           df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
+                       "off_date":
+                           df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
+                       "stay_length":
+                           df_metadata_sub[f"Loc{loc_num}_Duration"][0],
+                       "type":
+                           df_metadata_sub[f"Loc{loc_num}_Type"][0]}
                      if loc_num in loc_nums_valid else "missing data point")
                      for loc_num in range(n_locs)}
         return {"submission": df_metadata_sub.index[0],
