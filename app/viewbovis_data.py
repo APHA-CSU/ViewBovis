@@ -109,17 +109,19 @@ class ViewBovisData:
                 [df_metadata_sub[f"Loc{loc_num}"][0] for loc_num in range(n_locs)])
         # construct dictionary of movement data
         move_dict = {str(loc_num):
-                     {"lat":
+                     {"cph":
+                         df_metadata_sub[f"Loc{loc_num}"][0],
+                      "lat":
                          df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "lon":
+                      "lon":
                          df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "on_date":
+                      "on_date":
                          df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
-                         "off_date":
+                      "off_date":
                          df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
-                         "stay_length":
+                      "stay_length":
                          df_metadata_sub[f"Loc{loc_num}_Duration"][0],
-                         "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
+                      "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
                      for loc_num in range(n_locs)}
         return {"submission": df_metadata_sub.index[0],
                 "clade": df_metadata_sub["Clade"][0],
