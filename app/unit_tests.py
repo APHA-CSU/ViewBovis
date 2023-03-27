@@ -68,13 +68,13 @@ class TestViewBovisData(unittest.TestCase):
                     "species": "C", "slaughter_date": "D", "cph": "E",
                     "cphh": "F", "cph_type": "G", "county": "H",
                     "risk_area": "I", "move":
-                        {"0": {"lat": 1, "lon": 4, "on_date": "L",
+                        {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "L",
                                "off_date": "N", "stay_length": "M",
                                "type": "K"},
-                         "1": {"lat": 2, "lon": 5, "on_date": "Q",
+                         "1": {"cph": "O", "lat": 2, "lon": 5, "on_date": "Q",
                                "off_date": "S", "stay_length": "R",
                                "type": "P"},
-                         "2": {"lat": 3, "lon": 6, "on_date": "V",
+                         "2": {"cph": "T", "lat": 3, "lon": 6, "on_date": "V",
                                "off_date": "X", "stay_length": "W",
                                "type": "U"}}}
         # test expected output
