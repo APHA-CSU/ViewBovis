@@ -1,5 +1,6 @@
 import sqlite3
 import glob
+import re
 from os import path
 
 import pandas as pd
@@ -92,6 +93,13 @@ class ViewBovisData:
             return None
         return df_wgs_sub["Submission"][0]
 
+    def _extract_location_number(self, column_name: str) -> int:
+        """
+            Extracts the location number from the location column name;
+            e.g. "Loc1" -> 1, "Loc_type256" -> 256
+        """
+        return int(re.sub(r'[^\d]+', '', column_name))
+
     def submission_movement_metadata(self, id: str) -> dict:
         """
             Returns metadata and movement data for 'id' as a dictionary.
@@ -102,25 +110,32 @@ class ViewBovisData:
         if df_metadata_sub.empty:
             raise InvalidIdException(
                     f"'{id}' does not match a valid eartag or AF-number")
-        # calculated the number of locations
-        n_locs = len(df_metadata_sub.columns[10::5])
-        # get lat/long mappings for CPH of movement data
+        # get valid location numbers (missing data is not valid)
+        loc_nums_valid = [self._extract_location_number(i)
+                          for i in df_metadata_sub.columns[9::5]]
         df_cph_latlon_map = \
             self._get_lat_long(
-                [df_metadata_sub[f"Loc{loc_num}"][0] for loc_num in range(n_locs)])
+                [df_metadata_sub[f"Loc{loc_num}"][0]
+                    for loc_num in loc_nums_valid])
+        # get total number of locations (inc. missing data)
+        n_locs = self._extract_location_number(df_metadata_sub.columns[-5]) + 1
         # construct dictionary of movement data
-        move_dict = {str(loc_num):
-                     {"lat":
-                         df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "lon":
-                         df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
-                         "on_date":
-                         df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
-                         "off_date":
-                         df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
-                         "stay_length":
-                         df_metadata_sub[f"Loc{loc_num}_Duration"][0],
-                         "type": df_metadata_sub[f"Loc{loc_num}_Type"][0]}
+        move_dict = {(str(loc_num)):
+                     ({"cph":
+                           df_metadata_sub[f"Loc{loc_num}"][0],
+                       "lat":
+                           df_cph_latlon_map["Lat"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                       "lon":
+                           df_cph_latlon_map["Long"][df_metadata_sub[f"Loc{loc_num}"][0]],
+                       "on_date":
+                           df_metadata_sub[f"Loc{loc_num}_StartDate"][0],
+                       "off_date":
+                           df_metadata_sub[f"Loc{loc_num}_EndDate"][0],
+                       "stay_length":
+                           df_metadata_sub[f"Loc{loc_num}_Duration"][0],
+                       "type":
+                           df_metadata_sub[f"Loc{loc_num}_Type"][0]}
+                     if loc_num in loc_nums_valid else "missing data point")
                      for loc_num in range(n_locs)}
         return {"submission": df_metadata_sub.index[0],
                 "clade": df_metadata_sub["Clade"][0],
