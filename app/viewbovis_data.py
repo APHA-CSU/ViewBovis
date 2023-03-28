@@ -29,12 +29,13 @@ class ViewBovisData:
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
         """
             Fetches metadata for a given a list of ids. Returns a
-            DataFrame containing metadata if it exists, otherwise
-            returns an empty DataFrame.
+            DataFrame containing metadata if it exists in both metadata
+            and wgs_metadata, otherwise returns an empty DataFrame.
         """
-        query = f"""SELECT * FROM metadata WHERE Submission IN
-                    ({','.join('?' * len(ids))}) OR Identifier IN
-                    ({','.join('?' * len(ids))})"""
+        query = f"""SELECT metadata.* FROM wgs_metadata INNER JOIN metadata
+                    ON metadata.Submission=wgs_metadata.Submission WHERE
+                    metadata.Submission IN ({','.join('?' * len(ids))}) OR
+                    metadata.Identifier IN ({','.join('?' * len(ids))}) """
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
