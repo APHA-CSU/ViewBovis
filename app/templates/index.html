@@ -596,33 +596,145 @@
                 </div>
             </div>
             <!-- Box Quick-Links Content -->
-            <div class="row gx-2 ">
+            <div class="row gx-2 help-quicklink-boxes">
                 <div class="col">
                     <!-- Support Documents box -->
                     <div class="home-box">
                         <p class="fw-bold">Support Documents</p>
+                        <p>
+                            These support documents should be the first port of call
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">How to use the app</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Glossary</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Data Dictionary</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Missing Samples Report</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">About the data</a>
+                        </p>
                     </div>
                 </div>
                 <div class="col">
                     <!-- Training Videos box -->
                     <div class="home-box">
                         <p class="fw-bold">Training Videos</p>
+                        <p>
+                            These cover different aspects of learning and usability
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Phylogeny interpretation</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise - Cattle Movement</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise - SNP</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise - Phylogeny</a>
+                        </p>
                     </div>
                 </div>
                 <div class="col">
                     <!-- Other links and tools box -->
                     <div class="home-box">
                         <p class="fw-bold">Other links and tools</p>
+                        <p>
+                            Other associated tools which may be of use
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Sam</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">SPIDA</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">CRYSTAL</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">ibTB</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">MAGIC</a>
+                        </p>
                     </div>
                 </div>
                 <div class="col">
                     <!-- Contact Us box -->
                     <div class="home-box">
                         <p class="fw-bold">Contact Us</p>
+                        <p>
+                            We would love to hear your feedback about the app, any tech issues and any questions you may have using the links below
+                        </p>
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-3 align-self-center">
+                                    <img src="/static/img/feedback_form.svg" width="40px" class="d-inline-block align-text-top">
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold">Feedback Form</p>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-3 align-self-center">
+                                    <img src="/static/img/ms_teams.svg" width="60px" class="d-inline-block align-text-top">
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold">MS Teams</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
+            <!-- Government Footer -->
+            <!-- TODO WRITE THIS AS A FUNCTION IN main.js AND RENDER IT HERE AND IN OTHER PLACES -->
+            <footer class="row footer">
+                <div class="d-flex justify-content-between">
+                    <div class="text-start footer-text">
+                        A Defra Digital, Data and Technology Service
+                    </div>
+                    <div>
+                        <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                        <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal">Accessibility Statement</a>
+                    </div>
+                    <!-- Accessibility Statement Modal -->
+                    <!-- Purpose: popup information about accessibility on click -->
+                    <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fs-6">
+                                    <p>
+                                    This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                                    </p>
+                                    </br>
+                                    <ul class="list-group">
+                                    <li class="list-group-item">Statement 1</li>
+                                    <li class="list-group-item">Statement 2</li>
+                                    <li class="list-group-item">Statement 3</li>
+                                    <li class="list-group-item">Statement 4</li>
+                                    <li class="list-group-item">Statement 5</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </footer>
         </div>
 
     <!-- JavaScript -->
