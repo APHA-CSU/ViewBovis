@@ -62,6 +62,7 @@ const showTable = async function() {
     tableData = [
         {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
     ];
+    // console.log(tableData);
 
     // Create table
     table = new Tabulator("#nextstrain-search-table", {
@@ -131,7 +132,7 @@ let navbarHeight2, navbarHeightMargin2, iframeHeight;
 // Change the height of Nextstrain when the window is resized
 // For example, when the user drags the browser from a laptop screen to a desktop screen (or vice versa)
 window.addEventListener("resize", () => {
-  document.getElementById("nextstrain-iframe").style.height = `${window.innerHeight - navbarHeight - navbarHeightMargin}px`;
+  document.getElementById("nextstrain-iframe").style.height = `${window.innerHeight - navbarHeight2 - navbarHeightMargin2}px`;
 });
 
 
