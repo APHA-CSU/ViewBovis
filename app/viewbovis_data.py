@@ -51,7 +51,7 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
-                                 params=submission)
+                                 params={"submission": submission})
 
     def _get_lat_long(self, cphs: list) -> tuple:
         """
@@ -59,7 +59,7 @@ class ViewBovisData:
             Returns a DataFrame with columns 'lat' and 'lon' and the
             corresponding CPH in the index.
         """
-        query = f"""SELECT Lat,Long FROM latlon WHERE CPH IN
+        query = f"""SELECT CPH,Lat,Long FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
         return pd.read_sql_query(query,
                                  self._db,
@@ -88,13 +88,6 @@ class ViewBovisData:
         if df_wgs_sub.empty:
             return None
         return df_wgs_sub["Submission"][0]
-
-    def _extract_location_number(self, column_name: str) -> int:
-        """
-            Extracts the location number from the location column name;
-            e.g. "Loc1" -> 1, "Loc_type256" -> 256
-        """
-        return int(re.sub(r'[^\d]+', '', column_name))
 
     def submission_movement_metadata(self, id: str) -> dict:
         """
