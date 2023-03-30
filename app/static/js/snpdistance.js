@@ -60,6 +60,7 @@ const mapHeight3 = window.innerHeight - navbarHeight3 - navbarHeightMargin3;
 // Set the height of map and sidebar containers
 document.getElementById("map2").style.height = `${mapHeight3}px`;
 document.getElementById("snpmap-sidebar-container").style.height = `${mapHeight3}px`;
+document.getElementById("table-sidebar-container").style.height = `${mapHeight3}px`;
 map2.invalidateSize();
 
 // Change the height of the map when the window is resized
@@ -67,6 +68,7 @@ map2.invalidateSize();
 window.addEventListener("resize", () => {
   document.getElementById("map2").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
   document.getElementById("snpmap-sidebar-container").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
+  document.getElementById("table-sidebar-container").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
   map2.invalidateSize();
 });
 
@@ -598,6 +600,44 @@ const cowIcons2 = {
   })
 };
 
+// Custom popup options
+// https://leafletjs.com/reference.html#popup
+const cowheadPopupOptions2 = {
+  maxWidth: 400, // in pixels
+  className: "relatedPopupOptions" // must match a css class in _cattleMovement.css
+};
+
+// Function to create HTML popup content using template literal
+const popupContentSNPMap = function(data, AFnumber) {
+
+  return `
+  <div class="fs-5 fw-bold">${data.animal_id}</div><br>
+    <div id="popTabContent">     
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td><strong>AF Number:</strong></td>
+            <td>${AFnumber}</td> 
+          </tr>
+          <tr>
+            <td><strong>Date:</strong></td>
+            <td>${data.date}</td>
+          </tr>
+          <tr>
+            <td><strong>Lat Lon:</strong></td>
+            <td>${parseInt(data.lat).toFixed(2)}, ${parseInt(data.lon).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td><strong>SNP Distance:</strong></td>
+            <td>${data.snp_distance}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>        
+  `;
+};
+
 
 // ------------------------ //
 //
@@ -622,25 +662,31 @@ const renderRelatedMarkers = function (json, target) {
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
   markerLayer.addLayer(targetMarker);
 
+  // Add popup to target sample
+  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), cowheadPopupOptions2);
+
   // Extract data for related sample(s)
-  let relatedSample = json;
+  let relatedSample = {...json}; // deep copy json object
   delete relatedSample[target];
-  relatedSample = Object.values(json);
+  let relatedSampleArr = Object.values(relatedSample);
   // console.log(relatedSample);
 
   // Add related sample(s) to map
-  for (let i = 0; i < relatedSample.length; i++) {
-    relatedMarker = L.marker([relatedSample[i].lat, relatedSample[i].lon], {
+  for (let i = 0; i < relatedSampleArr.length; i++) {
+    relatedMarker = L.marker([relatedSampleArr[i].lat, relatedSampleArr[i].lon], {
       icon: new L.AwesomeNumberMarkers({
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: relatedSample[i].snp_distance,
+        number: relatedSampleArr[i].snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
-    })
-    markerLayer.addLayer(relatedMarker);
+    });
+  markerLayer.addLayer(relatedMarker);
+
+  // Add popup to related sample(s)
+  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -651,7 +697,6 @@ const renderRelatedMarkers = function (json, target) {
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
-
 };
 
 
@@ -664,6 +709,13 @@ const showRelatedSamples = async function () {
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
     document.getElementById("snpmap-warning-text").classList.add("hidden");
 
+    // If table-sidebar-title is not empty then set text and table content to empty
+    if(document.getElementById("table-sidebar-title") !== "") {
+      document.getElementById("table-sidebar-title").textContent = "";
+      document.getElementById("table-content-container").textContent = "";
+      document.getElementById("table-content-container").style.border = "none";
+    };
+
     // Select elements from DOM
     const sampleID = document.getElementById("input__sampleID_temp--1").value;
     const snpDistance = document.getElementById("snp-distance-value").textContent;
@@ -674,7 +726,7 @@ const showRelatedSamples = async function () {
     // Fetch json data from backend
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
+    let json = await response.json();
     // console.log(response);
     // console.log(json);
 
@@ -685,25 +737,43 @@ const showRelatedSamples = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
+    // Remove time from date property
+    Object.values(json).forEach((item) => {
+      item.date = item.date.replace(" 00:00:00.000", "");
+    });
+
     // Render related markers
     renderRelatedMarkers(json, sampleID);
 
+    // Render html table title in right sidebar
+    document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
+      <h4>${sampleID}</h4>
+      <p>
+        <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
+        <span>Location: ${json[sampleID].lat}, ${json[sampleID].lon}<br/></span>
+        <span>Clade: XXX<br/></span>
+        <span>Herd: XXX<br/></span>
+      </p>
+      <button id="btn-download-snptable" class="govuk-button govuk-button--secondary" onclick="downloadSNPTable()">Download CSV</button>
+    `);
 
-    // Render table in right sidebar TODO
+    // Render table in right sidebar
     snpTable = new Tabulator("#table-content-container", {
       data: Object.values(json),
-      selectable:false,
+      selectable:true,
       columnDefaults:{
-          resizable:false,
+          resizable:true,
         },
       layout: "fitColumns",
+      movableColumns: true,
       columns: [
-          {title:"Animal ID", field:"animal_id"},
-          {title:"Date", field:"date"},
-          {title:"SNP Distance", field:"snp_distance"},
+          {title:"Animal ID", field:"animal_id", headerFilter:"input"},
+          {title:"Herd", field:"animal_id", headerFilter:"input"},
+          {title:"Miles", field:"snp_distance", headerFilter:"input"},
+          {title:"Date", field:"date", headerFilter:"input"},
+          {title:"SNP Distance", field:"snp_distance", headerFilter:"input"},
       ],
-    });   
-
+    });
 
   } catch(err) {
       console.error(err)
@@ -741,7 +811,7 @@ const btnShowTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__show-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-buttons" data-bs-toggle="collapse" href="#table-sidebar-container">Show Table</a>
+      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" href="#table-sidebar-container">Show Table</a>
     `);
     return divContainer;
   }
@@ -759,7 +829,7 @@ const btnHideTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__hide-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-buttons" data-bs-toggle="collapse" href="#table-sidebar-container">Hide table</a>
+      <a class="snp-table-toggle" data-bs-toggle="collapse" href="#table-sidebar-container">Hide Table</a>
     `);
     return divContainer;
   }
@@ -792,32 +862,14 @@ document.getElementById("btn__hide-table").addEventListener("click", () => {
 
 // ------------------------ //
 //
-//  RENDER TABLE
+//  DOWNLOAD TABLE
 //
 // ------------------------ //
 
-
-// Create an array containing table data
-// tableData = [
-//   {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
-// ];
-
-// // Create table
-// table = new Tabulator("#nextstrain-search-table", {
-//   data: tableData,
-//   selectable:false,
-//   columnDefaults:{
-//       resizable:false,
-//     },
-//   layout: "fitColumns",
-//   columns: [
-//       {title:"CPH", field:"cph"},
-//       {title: "County", field:"county"},
-//       {title:"AF Number", field:"af"},
-//       {title:"Ear tag", field:"eartag"},
-//       {title:"Clade", field:"clade"},
-//   ],
-// });
+// Function to trigger download of snpTable CSV file
+const downloadSNPTable = function() {
+  snpTable.download("csv", "snptable.csv");
+;}
 
 
 

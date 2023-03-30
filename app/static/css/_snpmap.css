@@ -72,8 +72,8 @@ input[type="range"]::-webkit-slider-thumb:active {
     font-size: 20px;
 }
 
-.snp-table-buttons {
-    width: fit-content !important;
+.snp-table-toggle {
+    width: 142px !important;
     font-size: 20px;
     font-weight: bold;
     padding-right: 16px;
@@ -85,4 +85,38 @@ input[type="range"]::-webkit-slider-thumb:active {
     overflow-y: scroll;
     overflow-x: hidden;
     padding-right: 10px;
+}
+
+#table-content-container {
+    max-height: 63%;
+}
+
+#table-content-container.tabulator {
+    font-size: 0.8em;
+}
+
+#table-content-container input {
+    padding: 0 !important;
+    margin-top: 4px !important;
+    font-size: 0.9em;
+}
+
+#table-content-container input:focus-visible {
+    outline-offset: 0;
+}
+
+#btn-download-snptable {
+    width: fit-content;
+    height: 30px;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
+/* Leaflet popups: related markers */
+.relatedPopupOptions .leaflet-popup-tip,
+.relatedPopupOptions .leaflet-popup-content-wrapper {
+    background: white;
+    opacity: 0.95;
+    color: black;
+    height: fit-content;
 }
