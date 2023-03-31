@@ -18,7 +18,7 @@ class InvalidIdException(Exception):
 class ViewBovisData:
     def __init__(self, data_path):
         self._matrix_dir = path.join(data_path, "snp_matrix")
-        db_path = path.join(data_path, "viewbovis_29032023.db")
+        db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
 
