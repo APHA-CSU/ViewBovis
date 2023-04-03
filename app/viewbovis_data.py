@@ -56,8 +56,8 @@ class ViewBovisData:
     def _get_lat_long(self, cphs: list) -> tuple:
         """
             Fetches latitude, longitude, x and y for a given a list of
-            CPHs. Returns a DataFrame with columns 'lat' and 'lon' and
-            the corresponding CPH in the index.
+            CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
+            'y' and the corresponding CPH in the index.
         """
         query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
