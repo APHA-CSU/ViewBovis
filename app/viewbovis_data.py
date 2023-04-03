@@ -149,8 +149,8 @@ class ViewBovisData:
                         "herd": herd cph,
                         "clade": clade of sample,
                         "date": date of slaughter,
-                        distance: distance to the sample of interest in
-                            miles}
+                        "distance": distance to the sample of interest
+                            in miles}
         """
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
