@@ -616,6 +616,10 @@ const popupContentSNPMap = function(data, AFnumber) {
       <table class="table table-striped">
         <tbody>
           <tr>
+            <td><strong>Herd:</strong></td>
+            <td>${data.herd}</td> 
+          </tr>
+          <tr>
             <td><strong>AF Number:</strong></td>
             <td>${AFnumber}</td> 
           </tr>
@@ -728,7 +732,7 @@ const showRelatedSamples = async function () {
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
     // console.log(response);
-    // console.log(json);
+    console.log(json);
 
 
     // TODO

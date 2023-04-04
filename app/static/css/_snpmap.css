@@ -80,6 +80,10 @@ input[type="range"]::-webkit-slider-thumb:active {
     padding-left: 16px;
 }
 
+#snpmap-content-container {
+    padding-right: 0;
+}
+
 #snpmap-sidebar-container {
     height: auto;
     overflow-y: scroll;
