@@ -7,9 +7,22 @@ import pandas as pd
 
 
 class InvalidIdException(Exception):
-    def __init__(self, message="ID does not match a valid eartag or AF-number"):
-        super().__init__(message)
-        self.message = message
+    def __init__(self, id, database):
+        meta_query = """SELECT * FROM metadata WHERE Submission=:id or
+                        Identifier=:id"""
+        meta_data = pd.read_sql_query(meta_query, database,
+                                      index_col="Submission",
+                                      params={"id": id})
+        wgs_query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
+        wgs_data = pd.read_sql_query(wgs_query, database,
+                                     index_col="Submission",
+                                     params={"id": id})
+        if not meta_data.empty:
+            self.message = f"missing wgs data for {id}"
+        elif not wgs_data.empty:
+            self.message = f"missing metadata data for {id}"
+        else:
+            self.message = f"{id} does not exist"
 
     def __str__(self):
         return self.message
@@ -47,7 +60,7 @@ class ViewBovisData:
             Fetches movement data for a given Submission. Returns an
             empty DataFrame if no data exists.
         """
-        query = """SELECT * FROM movements WHERE Submission=:submission"""
+        query = "SELECT * FROM movements WHERE Submission=:submission"
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -73,9 +86,6 @@ class ViewBovisData:
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
         df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"submission": submission})
-        if df_wgs_sub.empty:
-            # TODO: custom exception
-            raise Exception(f"No WGS data for {submission}")
         return df_wgs_sub["Sample"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
@@ -96,8 +106,7 @@ class ViewBovisData:
         # get metadata for a single id
         df_metadata_sub = self._submission_metadata([id])
         if df_metadata_sub.empty:
-            raise InvalidIdException(
-                    f"'{id}' does not match a valid eartag or AF-number")
+            raise InvalidIdException(id, database=self._db)
         df_movements = self._submission_movdata(df_metadata_sub.index[0])
         df_cph_latlon_map = self._get_lat_long(df_movements["Loc"].to_list())
         # construct dictionary of movement data
@@ -155,8 +164,7 @@ class ViewBovisData:
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
         if df_metadata_sub.empty:
-            raise \
-                Exception(f"'{id}' does not match a valid eartag or AF-number")
+            raise InvalidIdException(id, database=self._db)
         submission = df_metadata_sub.index[0]
         # retrieve sample name from submission number
         sample_name = self._submission_to_sample(submission)
