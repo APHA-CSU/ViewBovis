@@ -755,8 +755,8 @@ const showRelatedSamples = async function () {
       <p>
         <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
         <span>Location: ${json[sampleID].lat}, ${json[sampleID].lon}<br/></span>
-        <span>Clade: XXX<br/></span>
-        <span>Herd: XXX<br/></span>
+        <span>Clade: ${json[sampleID].clade}<br/></span>
+        <span>Herd: ${json[sampleID].herd}<br/></span>
       </p>
       <button id="btn-download-snptable" class="govuk-button govuk-button--secondary" onclick="downloadSNPTable()">Download CSV</button>
     `);
@@ -766,16 +766,16 @@ const showRelatedSamples = async function () {
       data: Object.values(json),
       selectable:true,
       columnDefaults:{
-          resizable:true,
+          resizable:false,
         },
-      layout: "fitColumns",
+      layout: "fitDataTable",
       movableColumns: true,
       columns: [
+          {title:"Herd", field:"herd", headerFilter:"input"},
           {title:"Animal ID", field:"animal_id", headerFilter:"input"},
-          {title:"Herd", field:"animal_id", headerFilter:"input"},
-          {title:"Miles", field:"snp_distance", headerFilter:"input"},
           {title:"Date", field:"date", headerFilter:"input"},
-          {title:"SNP Distance", field:"snp_distance", headerFilter:"input"},
+          {title:"Miles", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
+          {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
       ],
     });
 
