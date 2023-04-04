@@ -632,6 +632,10 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${parseInt(data.lat).toFixed(2)}, ${parseInt(data.lon).toFixed(2)}</td>
           </tr>
           <tr>
+            <td><strong>Miles:</strong></td>
+            <td>${parseFloat(data.distance).toFixed(2)}</td>
+          </tr>
+          <tr>
             <td><strong>SNP Distance:</strong></td>
             <td>${data.snp_distance}</td>
           </tr>
@@ -650,7 +654,7 @@ const popupContentSNPMap = function(data, AFnumber) {
 // ------------------------ //
 
 // Initiate variables
-let targetMarker, relatedMarker, markerLayer, snpTable, snpTableData;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowEarTagSelect, rowEarTagDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
@@ -661,6 +665,7 @@ const renderRelatedMarkers = function (json, target) {
 
   // Create a layer group that will contain all the cow markers
   markerLayer = L.layerGroup().addTo(map2);
+  // console.log(markerLayer);
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
@@ -672,13 +677,14 @@ const renderRelatedMarkers = function (json, target) {
   // Extract data for related sample(s)
   let relatedSample = {...json}; // deep copy json object
   delete relatedSample[target];
-  let relatedSampleArr = Object.values(relatedSample);
-  // console.log(relatedSample);
+  relatedSampleArr = Object.values(relatedSample);
+  // console.log(relatedSampleArr);
 
   // Add related sample(s) to map
   for (let i = 0; i < relatedSampleArr.length; i++) {
     relatedMarker = L.marker([relatedSampleArr[i].lat, relatedSampleArr[i].lon], {
       icon: new L.AwesomeNumberMarkers({
+        className: `awesome-number-marker marker-${relatedSampleArr[i].animal_id}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
@@ -732,11 +738,7 @@ const showRelatedSamples = async function () {
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
     // console.log(response);
-    console.log(json);
-
-
-    // TODO
-    // SEND A DIFFERENT JSON FILE FROM THE BACKEND WHEN SAMPLE & SNP DISTANCE PRODUCES NO DATA
+    // console.log(json);
     
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
@@ -744,6 +746,7 @@ const showRelatedSamples = async function () {
     // Remove time from date property
     Object.values(json).forEach((item) => {
       item.date = item.date.replace(" 00:00:00.000", "");
+      item.distance = parseFloat(item.distance).toFixed(2);
     });
 
     // Render related markers
@@ -758,13 +761,16 @@ const showRelatedSamples = async function () {
         <span>Clade: ${json[sampleID].clade}<br/></span>
         <span>Herd: ${json[sampleID].herd}<br/></span>
       </p>
-      <button id="btn-download-snptable" class="govuk-button govuk-button--secondary" onclick="downloadSNPTable()">Download CSV</button>
+      <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
+      <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
+      <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
     `);
 
     // Render table in right sidebar
     snpTable = new Tabulator("#table-content-container", {
       data: Object.values(json),
       selectable:true,
+      selectableRangeMode:"click",
       columnDefaults:{
           resizable:false,
         },
@@ -774,10 +780,25 @@ const showRelatedSamples = async function () {
           {title:"Herd", field:"herd", headerFilter:"input"},
           {title:"Animal ID", field:"animal_id", headerFilter:"input"},
           {title:"Date", field:"date", headerFilter:"input"},
-          {title:"Miles", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
+          {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
           {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
       ],
     });
+
+    // When a row is selected, change the colour of the map marker
+    snpTable.on("rowSelected", function(row){
+      // Get the row ear tag ID
+      rowEarTagSelect = row.getData().animal_id;
+      document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
+    });
+
+    // Reset marker colour to default when row is deselected
+    snpTable.on("rowDeselected", function(row){
+      // Get the row ear tag ID
+      rowEarTagDeselect = row.getData().animal_id;
+      document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
+    });
+
 
   } catch(err) {
       console.error(err)
@@ -866,18 +887,25 @@ document.getElementById("btn__hide-table").addEventListener("click", () => {
 
 // ------------------------ //
 //
-//  DOWNLOAD TABLE
+// TABLE BUTTONS
 //
 // ------------------------ //
 
 // Function to trigger download of snpTable CSV file
 const downloadSNPTable = function() {
   snpTable.download("csv", "snptable.csv");
-;}
+};
 
+// Function to select all rows
+const selectAllRows = function() {
+  snpTable.selectRow();
+};
 
-
-
-
-
-
+// Function to deselect all rows
+const deselectAllRows = function() {
+  snpTable.deselectRow();
+  const markerEl = document.querySelectorAll(".awesome-number-marker");
+  markerEl.forEach(function(el) {
+    el.firstChild.style.color = "white";
+  });
+};

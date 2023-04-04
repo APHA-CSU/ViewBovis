@@ -109,7 +109,7 @@ input[type="range"]::-webkit-slider-thumb:active {
     outline-offset: 0;
 }
 
-#btn-download-snptable {
+.btn-snptable {
     width: fit-content;
     height: 30px;
     font-size: 0.8em;
