@@ -1,8 +1,8 @@
 import sqlite3
 import glob
-import re
 from os import path
 
+import numpy as np
 import pandas as pd
 
 
@@ -55,11 +55,11 @@ class ViewBovisData:
 
     def _get_lat_long(self, cphs: list) -> tuple:
         """
-            Fetches latitude and longitude for a given a list of CPHs.
-            Returns a DataFrame with columns 'lat' and 'lon' and the
-            corresponding CPH in the index.
+            Fetches latitude, longitude, x and y for a given a list of
+            CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
+            'y' and the corresponding CPH in the index.
         """
-        query = f"""SELECT CPH,Lat,Long FROM latlon WHERE CPH IN
+        query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
         return pd.read_sql_query(query,
                                  self._db,
@@ -146,7 +146,11 @@ class ViewBovisData:
                         "lon": longitude,
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
-                        "date": date of slaughter}
+                        "herd": herd cph,
+                        "clade": clade of sample,
+                        "date": date of slaughter,
+                        "distance": distance to the sample of interest
+                            in miles}
         """
         # retrieve submission number if eartag is used
         df_metadata_sub = self._submission_metadata([id])
@@ -185,6 +189,12 @@ class ViewBovisData:
                  "animal_id": row["Identifier"],
                  "herd": row["CPHH"],
                  "clade": row["Clade"],
-                 "date": row["SlaughterDate"]}
+                 "date": row["SlaughterDate"],
+                 "distance": np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
+                                      df_cph_latlon_map["x"]
+                                      [df_metadata_sub["CPH"][0]])**2 +
+                                     (df_cph_latlon_map["y"][row["CPH"]] -
+                                      df_cph_latlon_map["y"]
+                                      [df_metadata_sub["CPH"][0]])**2) / 1609}
                 for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
