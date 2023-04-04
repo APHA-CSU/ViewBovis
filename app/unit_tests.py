@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 import pandas as pd
+import numpy as np
 
 from viewbovis_data import ViewBovisData
 
@@ -81,7 +82,8 @@ class TestViewBovisData(unittest.TestCase):
         self.data._get_lat_long = mock.Mock()
         # setup - return values for private method mocks
         self.data._submission_metadata.side_effect = \
-            [pd.DataFrame({"Clade": ["foo_clade"]}, index=["foo_sub"]),
+            [pd.DataFrame({"Clade": ["foo_clade"], "CPH": ["J"]},
+                          index=["foo_sub"]),
              pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                            "SlaughterDate": ["foo_date", "bar_date"],
                            "CPH": ["J", "O"], "Host": ["COW", "COW"],
@@ -91,16 +93,19 @@ class TestViewBovisData(unittest.TestCase):
         self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
         self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
         self.data._get_lat_long.return_value = \
-            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6]},
-                         index=["J", "O", "T"])
+            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6], "x": [1, 2, 3],
+                          "y": [4, 5, 6]}, index=["J", "O", "T"])
         # expected output
         expected = \
             {"foo_sub": {"lat": 1, "lon": 4, "snp_distance": 0,
                          "animal_id": "foo_id", "herd": "foo_herd",
-                         "clade": "foo_clade", "date": "foo_date"},
+                         "clade": "foo_clade", "date": "foo_date",
+                         "distance": 0.0},
              "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "herd": "bar_herd",
-                         "clade": "bar_clade", "date": "bar_date"}}
+                         "clade": "bar_clade", "date": "bar_date",
+                         "distance": np.sqrt(2) / 1609}}
+        self.maxDiff = 700
         # test expected output
         self.assertDictEqual(
             self.data.related_submissions_metadata("foo_sub", 3), expected)
