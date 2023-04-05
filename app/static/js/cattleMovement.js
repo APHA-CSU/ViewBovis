@@ -442,7 +442,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   if(second === true) {
     cattleMovLine2.arrowheads({
       yawn: 40,
-      size: "5%",
+      size: "2%",
       fill: true,
       fillColor: lineColour,
       // color: "black",
