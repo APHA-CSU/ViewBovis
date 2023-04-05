@@ -411,7 +411,7 @@
         <!-- SNP Distance Content -->
         <!-- ================================== -->
         <div class="container-fluid content content-3">
-            <div id="snpdistance-splash-page" class="hidden">
+            <div id="snpdistance-splash-page" class="">
                 <!-- Government ALPHA Banner -->
                 <div class="row alpha-side-margin">
                     <div class="govuk-phase-banner">
@@ -515,10 +515,10 @@
             </div>
 
             <!-- SNP MAP CONTENT (HIDDEN BY DEFAULT) -->
-            <div id="snpmap-content" class="row">
+            <div id="snpmap-content" class="row hidden">
                 <div class="col-3 collapse collapse-horizontal show" id="snpmap-content-container">
-                    <div id="snpmap-sidebar-container">
-                        <br>
+                    <div id="snpmap-sidebar-container" style="margin-top: 10px;">
+                        <!-- <br> -->
                         <div class="govuk-heading-m" id="enter-sample-container">
                             Enter Sample
                         </div>
@@ -633,6 +633,14 @@
                 <div class="col-4 collapse collapse-horizontal" id="table-sidebar-container">
                     <div id="table-sidebar-title"></div>
                     <div id="table-content-container"></div>
+                </div>
+            </div>
+
+            <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
+            <!-- TODO -->
+            <div id="snpmatrix-content" class="row hidden">
+                <div id="snpmatrix-content-container">
+                    <h1 style="margin-top: 10px;">Development in Progress</h1>
                 </div>
             </div>
 
@@ -846,6 +854,7 @@
     <script src="/static/js/L.LinearMeasurement.js"></script>
     <script src="/static/js/leaflet_awesome_number_markers.js"></script>
     <script src="/static/js/snpdistance.js"></script>
+    <script src="/static/js/snpmatrix.js"></script>
     <script src="/static/js/cattleMovement.js"></script>
     <script src="/static/js/main.js"></script>
     </body>

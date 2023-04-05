@@ -498,6 +498,7 @@ countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2
 // ==================================================================================== //
 
 
+
 // ------------------------ //
 //
 //  BACK BUTTON
@@ -737,13 +738,13 @@ const showRelatedSamples = async function () {
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
-    // console.log(response);
+    console.log(response);
     // console.log(json);
     
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
-    // Remove time from date property
+    // Remove time from date property and round miles to two decimal places
     Object.values(json).forEach((item) => {
       item.date = item.date.replace(" 00:00:00.000", "");
       item.distance = parseFloat(item.distance).toFixed(2);
@@ -909,3 +910,5 @@ const deselectAllRows = function() {
     el.firstChild.style.color = "white";
   });
 };
+
+
