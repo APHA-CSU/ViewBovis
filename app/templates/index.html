@@ -30,11 +30,11 @@
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2 active" data-tab="2">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-3 active" data-tab="3">SNP Distance</a>
+                            <a class="nav-link nav-link-3 " data-tab="3">SNP Distance</a>
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
@@ -249,7 +249,7 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2 hidden">
+        <div class="container-fluid content content-2">
             <div class="row">
                 <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <div id="map-sidebar-container">
@@ -264,6 +264,16 @@
                             </p>
                             <!-- Element: button to show main cattle movement -->
                             <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn__cattleMovement--1">Show Cattle Movement</button>
+
+                            <!-- Plot Related Isolates Spinner -->
+                            <div class="text-center" id="cattle-spinner-container">
+                                <div class="spinner-border text-secondary hidden" id="cattle-spinner" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <!-- Warning message if SNP data cannot be fetched -->
+                            <p class="hidden" id="cattle-warning-text">Warning: no data available</p>
+
                         </div>
                         <br>
                         <!-- Element: dropdown box for inputting a second cattle movement -->
@@ -283,6 +293,16 @@
                                             </p>
                                             <!-- Element: button to show second cattle movement -->
                                             <button type="button" class="govuk-button" id="btn__cattleMovement--2" disabled="disabled" data-module="govuk-button" style="margin-bottom: 10px;">Show Second Movement</button>
+                                            
+                                            <!-- Plot Related Isolates Spinner -->
+                                            <div class="text-center" id="cattle-spinner-container2">
+                                                <div class="spinner-border text-secondary hidden" id="cattle-spinner2" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                            <!-- Warning message if SNP data cannot be fetched -->
+                                            <p class="hidden" id="cattle-warning-text2">Warning: no data available</p>
+
                                             <!-- Element: toggle movement lines for second cattle movement -->
                                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                                                 <div class="govuk-checkboxes__item">
@@ -410,7 +430,7 @@
         <!-- ================================== -->
         <!-- SNP Distance Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-3">
+        <div class="container-fluid content content-3 hidden">
             <div id="snpdistance-splash-page" class="">
                 <!-- Government ALPHA Banner -->
                 <div class="row alpha-side-margin">
