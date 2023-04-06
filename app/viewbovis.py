@@ -67,15 +67,7 @@ def related_samples():
 
 @app.errorhandler(Exception)
 def exception_handler(error):
-    return (f"""
-            <html>
-                <h1>An error has occurred (500) </h1>
-                <h3> Error Summary </h3>
-                {str(error)}
-                <h3> Stack Trace </h3>
-                {traceback.format_exc()}
-            </html>
-            """, 500)
+    return jsonify({"error": f"{str(error)}"}), 500
 
 
 @app.errorhandler(InvalidIdException)
