@@ -65,9 +65,19 @@ def related_samples():
     return jsonify(g.data.related_submissions_metadata(id, snp_threshold))
 
 
+@app.route("/sample/matrix", methods=["GET"])
+def snp_matrix():
+    """
+    """
+    get_data_object()
+    id = request.args.get("sample_name")
+    snp_threshold = int(request.args.get("snp_distance"))
+    return jsonify(g.data.snp_matrix(id, snp_threshold))
+
+
 @app.errorhandler(Exception)
-def exception_handler(error):
-    return jsonify({"error": f"{str(error)}"}), 500
+def exception_handler(_):
+    return jsonify({"error": traceback.format_exc()}), 500
 
 
 @app.errorhandler(InvalidIdException)

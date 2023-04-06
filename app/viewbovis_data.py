@@ -206,3 +206,56 @@ class ViewBovisData:
                                       [df_metadata_sub["CPH"][0]])**2) / 1609}
                 for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
+
+    # TODO: not just cows TODO: DRY
+    def snp_matrix(self, id: str, snp_threshold: int) -> dict:
+        """
+        """
+        # retrieve submission number if eartag is used
+        df_metadata_sub = self._submission_metadata([id])
+        if df_metadata_sub.empty:
+            raise InvalidIdException(id, database=self._db)
+        submission = df_metadata_sub.index[0]
+        # retrieve sample name from submission number
+        sample_name = self._submission_to_sample(submission)
+        clade = df_metadata_sub["Clade"][0]
+        # load snp matrix for the required clade
+        matrix_path = glob.glob(path.join(self._matrix_dir,
+                                          f"{clade}_*_matrix.csv"))
+        df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
+        # get samples within snp_threshold
+        related_samples = df_snps.loc[df_snps[sample_name] <= snp_threshold].\
+            index.to_list()
+        df_snps_related = df_snps.loc[related_samples, related_samples].copy()
+        # TODO: below line not inplace!!!
+        df_snps_related.index.rename(None, inplace=True)
+        # map the index and columns from sample name to submission number
+        df_snps_related_processed = df_snps_related.copy().\
+            set_index(df_snps_related.index.
+                      map(lambda x: self._sample_to_submission(x))).\
+            transpose().set_index(df_snps_related.index.
+                                  map(lambda x: self._sample_to_submission(x)))
+        # restructure matrix
+        snps_related = df_snps_related_processed.copy().stack().\
+            reset_index().values.tolist()
+        # get metadata for all related samples
+        df_metadata_related = \
+            self._submission_metadata(df_snps_related_processed.index.to_list())
+        # get lat/long mappings for CPH of related samples
+        cph_set = set(df_metadata_related["CPH"].to_list())
+        df_cph_latlon_map = self._get_lat_long(list(cph_set))
+        # construct data response for client
+        return \
+            dict({index:
+                 {"animal_id": row["Identifier"],
+                  "herd": row["CPHH"],
+                  "clade": row["Clade"],
+                  "date": row["SlaughterDate"],
+                  "distance": np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
+                                       df_cph_latlon_map["x"]
+                                       [df_metadata_sub["CPH"][0]])**2 +
+                                      (df_cph_latlon_map["y"][row["CPH"]] -
+                                       df_cph_latlon_map["y"]
+                                       [df_metadata_sub["CPH"][0]])**2) / 1609}
+                  for index, row in df_metadata_related.iterrows()
+                  if row["Host"] == "COW"}, **{"matrix": snps_related})
