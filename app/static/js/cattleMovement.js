@@ -231,24 +231,24 @@ document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM
 // Object to store cow icons
 const cowIcons = {
   cowStandard: L.icon({
-    iconUrl: "/static/img/CowHead.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconUrl: "/static/img/CH_1_no_outline.svg",
+    iconSize: [75, 75],
+    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
   }),
   cowShowground: L.icon({
-    iconUrl: "/static/img/CH_Showground.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Showground_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
   cowMarket: L.icon({
-    iconUrl: "/static/img/CH_Market.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Market_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
   cowSlaughter: L.icon({
-    iconUrl: "/static/img/CH_Slaughterhouse.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Slaughterhouse_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
 }; 
 

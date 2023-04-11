@@ -595,9 +595,9 @@ snpSlider.addEventListener("input", rangeValue);
 // Object to store cow icons
 const cowIcons2 = {
   cowStandard: L.icon({
-    iconUrl: "/static/img/CowHead.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconUrl: "/static/img/CH_1_no_outline.svg",
+    iconSize: [75, 75],
+    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
   })
 };
 
