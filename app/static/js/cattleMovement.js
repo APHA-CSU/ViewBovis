@@ -288,8 +288,8 @@ const popupContent = function(data, index) {
               <td>${data.species}</td>
             </tr>
             <tr>
-              <td><strong>Lat Lon / OSM?:</strong></td>
-              <td>XXXXX</td>
+              <td><strong>Lat Lon:</strong></td>
+              <td>${parseFloat(data.move[index].lat).toFixed(3)} ${parseFloat(data.move[index].lon).toFixed(3)}</td>
             </tr>
             <tr>
               <td><strong>Clade:</strong></td>

@@ -630,7 +630,7 @@ const popupContentSNPMap = function(data, AFnumber) {
           </tr>
           <tr>
             <td><strong>Lat Lon:</strong></td>
-            <td>${parseInt(data.lat).toFixed(2)}, ${parseInt(data.lon).toFixed(2)}</td>
+            <td>${parseFloat(data.lat).toFixed(3)}, ${parseFloat(data.lon).toFixed(3)}</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
@@ -738,8 +738,8 @@ const showRelatedSamples = async function () {
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
-    console.log(response);
-    // console.log(json);
+    // console.log(response);
+    console.log(json);
     
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
@@ -758,7 +758,7 @@ const showRelatedSamples = async function () {
       <h4>${sampleID}</h4>
       <p>
         <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
-        <span>Location: ${json[sampleID].lat}, ${json[sampleID].lon}<br/></span>
+        <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
         <span>Clade: ${json[sampleID].clade}<br/></span>
         <span>Herd: ${json[sampleID].herd}<br/></span>
       </p>
