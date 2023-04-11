@@ -719,6 +719,9 @@ const showRelatedSamples = async function () {
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
     document.getElementById("snpmap-warning-text").classList.add("hidden");
+    if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
+      document.getElementById("snpmap-error-message").remove();
+    };
 
     // If table-sidebar-title is not empty then set text and table content to empty
     if(document.getElementById("table-sidebar-title") !== "") {
@@ -744,62 +747,73 @@ const showRelatedSamples = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
-    // Remove time from date property and round miles to two decimal places
-    Object.values(json).forEach((item) => {
-      item.date = item.date.replace(" 00:00:00.000", "");
-      item.distance = parseFloat(item.distance).toFixed(2);
-    });
 
-    // Render related markers
-    renderRelatedMarkers(json, sampleID);
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
 
-    // Render html table title in right sidebar
-    document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
-      <h4>${sampleID}</h4>
-      <p>
-        <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
-        <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
-        <span>Clade: ${json[sampleID].clade}<br/></span>
-        <span>Herd: ${json[sampleID].herd}<br/></span>
-      </p>
-      <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
-      <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
-      <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
-    `);
+      // Remove time from date property and round miles to two decimal places
+      Object.values(json).forEach((item) => {
+        item.date = item.date.replace(" 00:00:00.000", "");
+        item.distance = parseFloat(item.distance).toFixed(2);
+      });
 
-    // Render table in right sidebar
-    snpTable = new Tabulator("#table-content-container", {
-      data: Object.values(json),
-      selectable:true,
-      selectableRangeMode:"click",
-      columnDefaults:{
-          resizable:false,
-        },
-      layout: "fitDataTable",
-      movableColumns: true,
-      columns: [
-          {title:"Herd", field:"herd", headerFilter:"input"},
-          {title:"Animal ID", field:"animal_id", headerFilter:"input"},
-          {title:"Date", field:"date", headerFilter:"input"},
-          {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-          {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
-      ],
-    });
+      // Render related markers
+      renderRelatedMarkers(json, sampleID);
 
-    // When a row is selected, change the colour of the map marker
-    snpTable.on("rowSelected", function(row){
-      // Get the row ear tag ID
-      rowEarTagSelect = row.getData().animal_id;
-      document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
-    });
+      // Render html table title in right sidebar
+      document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
+        <h4>${sampleID}</h4>
+        <p>
+          <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
+          <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
+          <span>Clade: ${json[sampleID].clade}<br/></span>
+          <span>Herd: ${json[sampleID].herd}<br/></span>
+        </p>
+        <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
+        <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
+        <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
+      `);
 
-    // Reset marker colour to default when row is deselected
-    snpTable.on("rowDeselected", function(row){
-      // Get the row ear tag ID
-      rowEarTagDeselect = row.getData().animal_id;
-      document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
-    });
+      // Render table in right sidebar
+      snpTable = new Tabulator("#table-content-container", {
+        data: Object.values(json),
+        selectable:true,
+        selectableRangeMode:"click",
+        columnDefaults:{
+            resizable:false,
+          },
+        layout: "fitDataTable",
+        movableColumns: true,
+        columns: [
+            {title:"Herd", field:"herd", headerFilter:"input"},
+            {title:"Animal ID", field:"animal_id", headerFilter:"input"},
+            {title:"Date", field:"date", headerFilter:"input"},
+            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
+            {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
+        ],
+      });
 
+      // When a row is selected, change the colour of the map marker
+      snpTable.on("rowSelected", function(row){
+        // Get the row ear tag ID
+        rowEarTagSelect = row.getData().animal_id;
+        document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
+      });
+
+      // Reset marker colour to default when row is deselected
+      snpTable.on("rowDeselected", function(row){
+        // Get the row ear tag ID
+        rowEarTagDeselect = row.getData().animal_id;
+        document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
+      });
+    };
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="snpmap-error-message">${Object.values(json)[0]}</p>
+      `);
+    };
 
   } catch(err) {
       console.error(err)

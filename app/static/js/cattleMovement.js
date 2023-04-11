@@ -473,6 +473,9 @@ const showMovements = async function () {
     // First clear any previous cattle movements on map and warning text
     clearPreviousMovements();
     document.getElementById("cattle-warning-text").classList.add("hidden");
+    if(document.getElementById("cattle-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
+      document.getElementById("cattle-error-message").remove();
+    };
 
     // Extract the element ID number from the event listener
     // E.g. input__sampleID--1 or input__sampleID--2
@@ -484,6 +487,7 @@ const showMovements = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    // console.log(response);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     const json = await response.json();
     // console.log(json);
@@ -491,15 +495,27 @@ const showMovements = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner").classList.add("hidden");
 
-    // Render cow markers and lines
-    renderCowMarkers(json, cowIcons, "#0096FF");
 
-    // Allow user access to other elements by removing the disabled class
-    document.getElementById("cattleMovementLines--1").disabled = false;
-    document.getElementById("input__sampleID--2").disabled = false;
-    document.getElementById("btn__cattleMovement--2").disabled = false;
-    // document.getElementById("slider__snp-threshold").disabled = false;
-    // document.getElementById("btn__related-isolates").disabled = false;
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
+
+      // Render cow markers and lines
+      renderCowMarkers(json, cowIcons, "#0096FF");
+
+      // Allow user access to other elements by removing the disabled class
+      document.getElementById("cattleMovementLines--1").disabled = false;
+      document.getElementById("input__sampleID--2").disabled = false;
+      document.getElementById("btn__cattleMovement--2").disabled = false;
+      // document.getElementById("slider__snp-threshold").disabled = false;
+      // document.getElementById("btn__related-isolates").disabled = false;
+    }
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message">${Object.values(json)[0]}</p>
+      `);
+    }
 
   } catch(err) {
     console.error(err)
@@ -536,6 +552,10 @@ const showMovements2 = async function () {
 
     // First clear any previous cattle movements on map
     clearPreviousMovements(true);
+    document.getElementById("cattle-warning-text2").classList.add("hidden");
+    if(document.getElementById("cattle-error-message2") !== null && document.getElementById("cattle-error-message2") !== "undefined") {
+      document.getElementById("cattle-error-message2").remove();
+    };
 
     // Extract the element ID number from the event listener
     // E.g. input__sampleID--1 or input__sampleID--2
@@ -554,11 +574,22 @@ const showMovements2 = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner2").classList.add("hidden");
 
-    // Render cow markers and lines
-    renderCowMarkers(json, cowIcons, "#cb181d", true);
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
 
-    // Allow user access to other elements by removing the disabled class
-    document.getElementById("cattleMovementLines--2").disabled = false;
+      // Render cow markers and lines
+      renderCowMarkers(json, cowIcons, "#cb181d", true);
+
+      // Allow user access to other elements by removing the disabled class
+      document.getElementById("cattleMovementLines--2").disabled = false;
+    };
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+      document.getElementById("cattle-warning-text2").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message2">${Object.values(json)[0]}</p>
+      `);
+    }
 
   } catch(err) {
     console.error(err)

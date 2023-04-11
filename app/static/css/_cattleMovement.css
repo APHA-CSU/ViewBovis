@@ -144,7 +144,7 @@ label.govuk-label.govuk-checkboxes__label {
     padding-left: 20px;
 }
 
-#cattle-warning-text {
+.warning-text {
     color: var(--apha-orange);
     font-size: 20px;
 }
