@@ -44,9 +44,9 @@
     background-color: transparent;
     border: none;
 }
-div.tabulator-tableholder {
+/* div.tabulator-tableholder {
     overflow-x: hidden !important;
-}
+} */
 .cell-highlight {
     background-color: var(--apha-green);
     cursor:pointer;
