@@ -164,7 +164,7 @@ backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
 backBtn.setAttribute("data-bs-toggle", "tooltip");
 backBtn.setAttribute("data-bs-placement", "btn-backToSplashPage");
-backBtn.setAttribute("title", "Back to Nextstrain Splash Page");
+backBtn.setAttribute("title", "Back to Nextstrain Start Page");
 backBtn.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
