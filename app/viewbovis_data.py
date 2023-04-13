@@ -18,11 +18,11 @@ class InvalidIdException(Exception):
                                      index_col="Submission",
                                      params={"id": id})
         if not meta_data.empty:
-            self.message = f"missing wgs data for {id}"
+            self.message = f"Missing wgs data for submission: {id}"
         elif not wgs_data.empty:
-            self.message = f"missing metadata data for {id}"
+            self.message = f"Missing metadata data for submission: {id}"
         else:
-            self.message = f"{id} does not exist"
+            self.message = f"Invalid submission: {id}"
 
     def __str__(self):
         return self.message
