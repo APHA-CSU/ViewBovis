@@ -475,7 +475,7 @@ const showMovements = async function () {
 
     // First clear any previous cattle movements on map and warning text
     clearPreviousMovements();
-    document.getElementById("cattle-warning-text").classList.add("hidden");
+    document.getElementById("cattle-warning-text").textContent = "";
     if(document.getElementById("cattle-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
       document.getElementById("cattle-error-message").remove();
     };

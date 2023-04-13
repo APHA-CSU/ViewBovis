@@ -721,7 +721,7 @@ const showRelatedSamples = async function () {
 
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
-    document.getElementById("snpmap-warning-text").classList.add("hidden");
+    document.getElementById("snpmap-warning-text").textContent = "";
     if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
       document.getElementById("snpmap-error-message").remove();
     };
