@@ -822,43 +822,135 @@
         <!-- ================================== -->
         <!-- Help and Support Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-5 hidden">
-            <div class="">
-                <h1>Development in Progress</h1>
-            </div>
-            
-            <!-- <div class="row">
-                <p id="home-view-bovis-description">
-                    <font color="#00703c">Help and Support</font>
-                </p>
-            </div>
-            <div class="row">
-                <div class="col-6 home-box" style="margin-right: 10px;">
-                    <strong>Support Documents</strong>
-                    <p>
-                        <ul style="line-height: 200%;">
-                            <li><a id="ln_glossary"><font color="#0000EE">Glossary of Terms</font></a></li>
-                            <li><a><font color="#0000EE">How To Use This App</font></a></li>
-                            <li><a><font color="#0000EE">Link To SharePoint Home Page</font></a></li>                   
-                        </ul>
-                    </p>
-                    <p style="margin-top: 60px;">
-                        <img src="/static/img/FeedbackForm_Hira_v2.svg" width="40px">
-                        Click <a id="ln_glossary"><font color="#0000EE">here</font></a> to submit feedback for this app
-                    </p>
-                </div>
-                <div class="col-6 home-box" style="margin-left: 10px;">
-                    <strong>Phylogenetic Tree Interpretation Video</strong>
+        <div class="container-fluid content content-5">
+            <!-- Government ALPHA Banner -->
+            <div class="row alpha-side-margin">
+                <div class="govuk-phase-banner ">
                     <div>
-                        <iframe width="100%" height="315" style="margin-top: 15px;" src="https://www.youtube.com/embed/QasuKryesOQ" title="Module 1.3 - How to read a phylogenetic tree" frameborder="0" allowfullscreen></iframe>
+                        <strong class="govuk-tag govuk-phase-banner__content__tag">
+                            alpha
+                        </strong>
+                        <span>
+                            This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <p id="home-help-declaration">
-                    Please report any errors or issues to the <a><font color="#0000EE">ViewBovis User MS Teams Channel</font></a>.
-                </p>
-            </div> -->
+            <br>
+            <br>
+            <!-- Box Quick-Links Content -->
+            <div class="row gx-2 help-quicklink-boxes">
+                <div class="col">
+                    <!-- Support Documents box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Support Documents</p>
+                        <p>
+                            These support documents should be the first port of call:
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">How to use the app</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Glossary</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Data Dictionary</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Missing Samples Report</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">About the data</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Training Videos box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Training Videos</p>
+                        <p>
+                            These cover different aspects of learning and usability:
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Phylogeny interpretation</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise &ndash; Cattle Movement</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise &ndash; SNP</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Exercise &ndash; Phylogeny</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Other links and tools box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Other links and tools</p>
+                        <p>
+                            Other associated tools which may be of use:
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">Sam</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">SPIDA</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">CRYSTAL</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">ibTB</a>
+                        </p>
+                        <p>
+                            <a class="text-hyperlink" href="#">MAGIC</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Contact Us box -->
+                    <div class="home-box">
+                        <p class="fw-bold">Contact Us</p>
+                        <p>
+                            We would love to hear your feedback about the app, any tech issues and any questions you may have using the links below:
+                        </p>
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/feedback_form.svg" width="40px" class="d-inline-block align-text-top">
+                            </div>
+                            <div class="col" style="padding-top: 15px;">
+                                <p class="fw-bold">Feedback Form</p>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="/static/img/ms_teams.svg" width="50px" class="d-inline-block">
+                            </div>
+                            <div class="col" style="padding-top: 10px;">
+                                <p class="fw-bold">MS Teams</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <!-- Government Footer -->
+            <!-- TODO WRITE THIS AS A FUNCTION IN main.js AND RENDER IT HERE AND IN OTHER PLACES -->
+            <footer class="row footer">
+                <div class="d-flex justify-content-between">
+                    <div class="text-start footer-text">
+                        A Defra Digital, Data and Technology Service
+                    </div>
+                    <div>
+                        <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                        <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
+                    </div>
+               </div>
+            </footer>
         </div>
 
     <!-- JavaScript -->
