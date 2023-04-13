@@ -51,6 +51,7 @@ const hideContent = function(){
     navContent.forEach(content => content.classList.add("hidden"));
 };
 
+
 // Navbar Links and Content Navigation using Event Delegation
 // Purpose: hide all content when any nav-link is clicked then show content for the link clicked
 navBar.addEventListener("click", function(e){
@@ -76,7 +77,8 @@ navBar.addEventListener("click", function(e){
     map.invalidateSize();
 });
 
-// Hyperlink to Cattle Movement Map
+
+// Button to Cattle Movement Map
 // Purpose: hide all content when button is clicked then show content
 document.getElementById("btn-home-cattleLink").addEventListener("click", () => {
 
@@ -93,7 +95,8 @@ document.getElementById("btn-home-cattleLink").addEventListener("click", () => {
     map.invalidateSize();
 });
 
-// Hyperlink to Nextstrain
+
+// Button to Nextstrain
 // Purpose: hide all content when button is clicked then show content
 document.getElementById("btn-home-nextstrainLink").addEventListener("click", () => {
 
@@ -106,6 +109,38 @@ document.getElementById("btn-home-nextstrainLink").addEventListener("click", () 
     // Show content
     document.querySelector(".content-4").classList.remove("hidden");
 });
+
+
+// Button to SNP Map
+// Purpose: hide all content when button is clicked then show content
+document.getElementById("btn-home-snpMapLink").addEventListener("click", () => {
+
+    // Hide all content function
+    hideContent();
+
+    // Activate bold font (add 'active' class)
+    document.querySelector(".nav-link-3").classList.add("active");
+
+    // Show content
+    document.querySelector(".content-3").classList.remove("hidden");
+});
+
+
+// Button to SNP Matrix
+// Purpose: hide all content when button is clicked then show content
+document.getElementById("btn-home-snpMatrixLink").addEventListener("click", () => {
+
+    // Hide all content function
+    hideContent();
+
+    // Activate bold font (add 'active' class)
+    document.querySelector(".nav-link-3").classList.add("active");
+
+    // Show content
+    document.querySelector(".content-3").classList.remove("hidden");
+});
+
+
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
@@ -122,11 +157,10 @@ document.querySelector(".footer-help-link").addEventListener("click", () => {
 });
 
 
+
 // ------------------------ //
 //
-// RENDER FOOTER
+// RENDER FOOTER TODO
 //
 // ------------------------ //
-
-
 
