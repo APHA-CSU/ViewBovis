@@ -300,6 +300,10 @@ const popupContent = function(data, index) {
               <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
             </tr>
             <tr>
+              <td><strong>Out of Home Range:</strong></td>
+              <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
+            </tr>
+            <tr>
               <td><strong>CPH:</strong></td>
               <td>${data.cph}</td>
             </tr>
@@ -327,23 +331,22 @@ const popupContent = function(data, index) {
           <tbody>
             <tr>
               <td><strong>Host:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Breed:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Sex:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr> 
           </tbody>
         </table>
-        <h3>More content here?</h3>
       </div>
     </div>           
   `;
@@ -523,7 +526,7 @@ const showMovements = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner").classList.add("hidden");  
 
-    // Activate simple warning message on UI
+    // Activate generic (unknown) warning message on UI
     document.getElementById("cattle-warning-text").classList.remove("hidden");
   }
 };
@@ -597,7 +600,7 @@ const showMovements2 = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner2").classList.add("hidden");  
 
-    // Activate simple warning message on UI
+    // Activate generic (unknown) warning message on UI
     document.getElementById("cattle-warning-text2").classList.remove("hidden");
   } 
 };

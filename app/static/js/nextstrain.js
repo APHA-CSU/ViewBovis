@@ -52,7 +52,7 @@ const showTable = async function() {
     // Fetch json data from backend
     const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
     const json = await response.json();
-    // console.log(json);
+    console.log(json);
 
     // Remove spinner and activate search table when fetch is complete 
     document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
@@ -76,7 +76,7 @@ const showTable = async function() {
             {title:"CPH", field:"cph"},
             {title: "County", field:"county"},
             {title:"AF Number", field:"af"},
-            {title:"Ear tag", field:"eartag"},
+            {title:"Ear Tag", field:"eartag"},
             {title:"Clade", field:"clade"},
         ],
     });
@@ -148,6 +148,9 @@ let backBtn = document.createElement("button");
 backBtn.classList.add("btn");
 backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
+backBtn.setAttribute("data-bs-toggle", "tooltip");
+backBtn.setAttribute("data-bs-placement", "btn-backToSplashPage");
+backBtn.setAttribute("title", "Back to Nextstrain Splash Page");
 backBtn.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -183,10 +186,10 @@ const renderNextstrain = function(URL){
         </div>
     `);
 
-    // Render a back button with a 1/2 second delay
+    // Render a back button with a 1/10 second delay
     setTimeout( () => {
         document.getElementById("nextstrain-container-id").insertAdjacentElement("afterbegin", backBtn);
-    }, 500);    
+    }, 100);    
 
     // Ensure hidden class removed from back button
     backBtn.classList.remove("hidden");

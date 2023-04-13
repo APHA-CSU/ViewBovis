@@ -34,7 +34,7 @@
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-3 " data-tab="3">SNP Distance</a>
+                            <a class="nav-link nav-link-3 " data-tab="3">Relatedness</a>
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
@@ -272,7 +272,7 @@
                                 </div>
                             </div>
                             <!-- Warning message if SNP data cannot be fetched -->
-                            <p class="hidden warning-text" id="cattle-warning-text">Warning: sample not found in database</p>
+                            <p class="hidden warning-text" id="cattle-warning-text">Warning: unknown error please report to developers</p>
 
                         </div>
                         <br>
@@ -301,7 +301,7 @@
                                                 </div>
                                             </div>
                                             <!-- Warning message if SNP data cannot be fetched -->
-                                            <p class="hidden" id="cattle-warning-text2">Warning: sample not found in database</p>
+                                            <p class="hidden" id="cattle-warning-text2">Warning: unknown error please report to developers</p>
 
                                             <!-- Element: toggle movement lines for second cattle movement -->
                                             <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
@@ -577,7 +577,7 @@
                                     </div>
                                 </div>
                                 <!-- Warning message if SNP data cannot be fetched -->
-                                <p class="hidden" id="snpmap-warning-text">Warning: sample not found in database</p>
+                                <p class="hidden" id="snpmap-warning-text">Warning: unknown error please report to developers</p>
 
                             </div>
                         </div>
@@ -687,7 +687,7 @@
                 <!-- Nextstrain Logo and Description -->    
                 <div class="row  align-items-center">
                     <div class="col-3 text-center">
-                        <img src="/static/img/nextstrain-logo.svg" id="nextstrain-logo">
+                        <a href="https://nextstrain.org/" target="_blank"><img src="/static/img/nextstrain-logo.svg" id="nextstrain-logo"></a>
                     </div>
                     <div class="col-9">
                         <div class="home-description-container">
@@ -719,7 +719,7 @@
                                         <div class="col-6 ">
                                             <div class="govuk-form-group" style="margin-bottom: 10px;">
                                                 <label class="govuk-label fs-6">
-                                                    Search by AF, CPH or Ear tag
+                                                    Search by AF number or Ear tag
                                                 </label>
                                                 <div class="govuk-input__wrapper">
                                                     <input value="UK262728200982" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">

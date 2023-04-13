@@ -18,6 +18,9 @@
 let backBtn3 = document.createElement("button");
 backBtn3.classList.add("btn");
 backBtn3.setAttribute("type", "button");
+backBtn3.setAttribute("data-bs-toggle", "tooltip");
+backBtn3.setAttribute("data-bs-placement", "btn-backToSplashPage");
+backBtn3.setAttribute("title", "Back to SNP Distance Splash Page");
 backBtn3.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">

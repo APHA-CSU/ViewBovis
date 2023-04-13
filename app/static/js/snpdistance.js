@@ -510,6 +510,9 @@ let backBtn2 = document.createElement("button");
 backBtn2.classList.add("btn");
 backBtn2.setAttribute("type", "button");
 backBtn2.setAttribute("id", "btn-backToSNPSplashPage");
+backBtn2.setAttribute("data-bs-toggle", "tooltip");
+backBtn2.setAttribute("data-bs-placement", "btn-backToSplashPage");
+backBtn2.setAttribute("title", "Back to SNP Distance Splash Page");
 backBtn2.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -787,11 +790,21 @@ const showRelatedSamples = async function () {
         columns: [
             {title:"Herd", field:"herd", headerFilter:"input"},
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
-            {title:"Date", field:"date", headerFilter:"input"},
-            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
+            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
+            {title:"Date", field:"date", headerFilter:"input"},  
+        ],
+        initialSort:[
+          {column:"distance", dir:"asc"},
+          {column:"snp_distance", dir:"asc"},
         ],
       });
+
+      // Sort table by SNP then Miles
+      // snpTable.setSort([
+      //   { column: "snp_distance", dir:"asc" },
+      //   { column: "distance", dir:"asc" },
+      // ]);
 
       // When a row is selected, change the colour of the map marker
       snpTable.on("rowSelected", function(row){
@@ -821,7 +834,7 @@ const showRelatedSamples = async function () {
       // Remove spinner when fetch is complete
       document.getElementById("snpmap-spinner").classList.add("hidden");  
 
-      // Activate simple warning message on UI
+      // Activate generic (unknown) warning message on UI
       document.getElementById("snpmap-warning-text").classList.remove("hidden");
   }
   
