@@ -43,8 +43,11 @@ let tableData, table;
 // Async function that renders table
 const showTable = async function() {
 
-    // Clear any previous rendered tables
-    document.getElementById("nextstrain-search-table").classList.add("hidden");
+    // Clear any previous rendered tables or error messages
+    document.getElementById("nextstrain-search-table").textContent = "";
+    if(document.getElementById("nextstrain-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
+        document.getElementById("nextstrain-error-message").remove();
+    };
 
     // Render spinner
     document.getElementById("nextstrain-search-table-spinner").classList.remove("hidden");
@@ -58,57 +61,68 @@ const showTable = async function() {
     document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
     document.getElementById("nextstrain-search-table").classList.remove("hidden");
 
-    // Create an array containing table data
-    tableData = [
-        {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
-    ];
-    // console.log(tableData);
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
 
-    // Create table
-    table = new Tabulator("#nextstrain-search-table", {
-        data: tableData,
-        selectable:false,
-        columnDefaults:{
-            resizable:false,
-          },
-        layout: "fitColumns",
-        columns: [
-            {title:"CPH", field:"cph"},
-            {title: "County", field:"county"},
-            {title:"AF Number", field:"af"},
-            {title:"Ear Tag", field:"eartag"},
-            {title:"Clade", field:"clade"},
-        ],
-    });
+        // Create an array containing table data
+        tableData = [
+            {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
+        ];
+        // console.log(tableData);
 
-    // Event handler on each table cell when clicked
-    table.on("cellClick", function(e, cell){
-        // The click event object (e)
-        // console.log(e.target);
-        
-        // Get the cell value
-        let cellValue = cell.getValue();
-        // console.log(cellValue);
+        // Create table
+        table = new Tabulator("#nextstrain-search-table", {
+            data: tableData,
+            selectable:false,
+            columnDefaults:{
+                resizable:false,
+            },
+            layout: "fitColumns",
+            columns: [
+                {title:"AF Number", field:"af"},
+                {title:"Ear Tag", field:"eartag"},
+                {title:"CPH", field:"cph"},
+                {title: "County", field:"county"},
+                {title:"Clade", field:"clade"},
+            ],
+        });
 
-        // Get the column (field) heading
-        let cellField = cell.getField();
-        // console.log(cellField);
+        // Event handler on each table cell when clicked
+        table.on("cellClick", function(e, cell){
+            // The click event object (e)
+            // console.log(e.target);
+            
+            // Get the cell value
+            let cellValue = cell.getValue();
+            // console.log(cellValue);
 
-        // Get the clade of the row clicked
-        let clade = cell.getRow().getData().clade;
-        // console.log(clade);
+            // Get the column (field) heading
+            let cellField = cell.getField();
+            // console.log(cellField);
 
-        // Render Nextstrain for clade, county, AF, Ear tag or CPH
-        if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
-        if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
-        if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
-        if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
-        if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
-    });
+            // Get the clade of the row clicked
+            let clade = cell.getRow().getData().clade;
+            // console.log(clade);
 
-    // Add the cell mouse over and mouse out event listeners to the table
-    table.on("cellMouseOver", onCellMouseOver);
-    table.on("cellMouseOut", onCellMouseOut);
+            // Render Nextstrain for clade, county, AF, Ear tag or CPH
+            if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
+            if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
+            if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
+            if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
+            if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
+        });
+
+        // Add the cell mouse over and mouse out event listeners to the table
+        table.on("cellMouseOver", onCellMouseOver);
+        table.on("cellMouseOut", onCellMouseOut);
+    };
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+        document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
+          <p class="warning-text" id="nextstrain-error-message">${Object.values(json)[0]}</p>
+        `);
+      }
 };
 
 // Executes the async showTable() function when the "nextstrain-search-button" button is clicked
@@ -150,7 +164,7 @@ backBtn.setAttribute("type", "button");
 backBtn.setAttribute("id", "btn-backToSplashPage");
 backBtn.setAttribute("data-bs-toggle", "tooltip");
 backBtn.setAttribute("data-bs-placement", "btn-backToSplashPage");
-backBtn.setAttribute("title", "Back to Nextstrain Splash Page");
+backBtn.setAttribute("title", "Back to Nextstrain Start Page");
 backBtn.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">

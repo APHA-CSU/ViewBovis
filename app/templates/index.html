@@ -13,7 +13,7 @@
         <!-- ================================== -->
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency">
+                <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency" target="_blank">
                     <!-- Navbar Logo -->
                     <img src="/static/img/APHA_logo_svg.svg" alt="Logo" width="auto" class="d-inline-block align-text-top">
                 </a>
@@ -26,11 +26,11 @@
                     <ul class="navbar-nav">
                         <!-- Home Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-1" data-tab="1">Home</a>
+                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2 active" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
@@ -96,7 +96,7 @@
         <!-- ================================== -->
         <!-- Home Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-1 hidden">
+        <div class="container-fluid content content-1">
             <!-- Government ALPHA Banner -->
             <div class="row alpha-side-margin">
                 <div class="govuk-phase-banner ">
@@ -249,7 +249,7 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2">
+        <div class="container-fluid content content-2 hidden">
             <div class="row">
                 <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <div id="map-sidebar-container">
@@ -453,7 +453,7 @@
                     <div class="col-9">
                         <div class="home-description-container">
                             <p class="home-description fs-5">
-                                <span class="text-green fw-bold">SNP Distance</span>: SNP stands for Single Nucleotide Polymorphism. SNPs are single changes in a nucleotide at a specific point in the DNA (e.g. A -> T). SNP Distance is the number of differences between two samples; the fewer SNP differences, the more related the samples are.
+                                <span class="text-green fw-bold">SNP Distance</span>: SNP stands for Single Nucleotide Polymorphism. SNPs are single changes in a nucleotide at a specific point in the genome (e.g. A -> T). SNP Distance is the number of differences between two samples; the fewer SNP differences, the more closely related the samples are.
                             </p>
                         </div>
                     </div>
@@ -465,7 +465,7 @@
                         <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
                             <p class="fw-bold">SNP Map</p>
                             <p>
-                                This map will allow you to pick a sample of interest and view its related samples using a SNP distance threshold.
+                                This map will allow you to pick a sample of interest and view related samples using a SNP distance threshold.
                             </p>
                             <br>
                             <div class="text-center">
@@ -480,7 +480,7 @@
                         <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
                             <p class="fw-bold">SNP Matrix</p>
                             <p>
-                                Visualise a pairwise SNP matrix containing a target sample and its related samples. Each pairwise comparison displays the SNP difference between two samples.
+                                Visualise a pairwise SNP matrix containing a target sample and related samples. Each pairwise comparison displays the SNP difference between two samples.
                             </p>
                             <p class="text-center">
                                 <button type="button" id="btn-view-matrix" class="btn govuk-button custom-govuk-button-home">
@@ -707,11 +707,14 @@
                                 <div class="col-4 nextstrain-search-container">
                                     <p class="fw-bold fs-4">Search & Select Data</p>
                                     <p class="fs-6">
-                                        Use the search box to find your sample or clade of interest. Click a link in the table to view the phylogenetic tree that that sample or clade in Nextstrain.
+                                        Use the search box to find your sample of interest. Click a link in the table to view the phylogenetic tree in Nextstrain.
                                     </p>
                                     <p class="fs-6">
-                                        A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
+                                        Clicking an AF Number or Ear Tag highlights the sample of interest for that clade. CPH or County highlights all samples in the same CPH or County, respectively. Click the Clade to show the whole phylogenetic tree.
                                     </p>
+                                    <!-- <p class="fs-6">
+                                        A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
+                                    </p> -->
                                 </div>
                                 <div class="col-8 nextstrain-select-data">
                                     <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
@@ -786,34 +789,6 @@
                             <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
                             <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
                         </div>
-                        <!-- Accessibility Statement Modal -->
-                        <!-- Purpose: popup information about accessibility on click -->
-                        <!-- <div class="modal fade" id="accessibilityModal" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body fs-6">
-                                        <p>
-                                        This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
-                                        </p>
-                                        </br>
-                                        <ul class="list-group">
-                                        <li class="list-group-item">Statement 1</li>
-                                        <li class="list-group-item">Statement 2</li>
-                                        <li class="list-group-item">Statement 3</li>
-                                        <li class="list-group-item">Statement 4</li>
-                                        <li class="list-group-item">Statement 5</li>
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </footer>
             </div>
@@ -822,7 +797,7 @@
         <!-- ================================== -->
         <!-- Help and Support Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-5">
+        <div class="container-fluid content content-5 hidden">
             <!-- Government ALPHA Banner -->
             <div class="row alpha-side-margin">
                 <div class="govuk-phase-banner ">

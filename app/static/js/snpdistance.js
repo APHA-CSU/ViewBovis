@@ -250,7 +250,7 @@ const toggleLayers2 = function(layer){
      LTBACheckBox2.checked ||
      TBFACheckBox2.checked) {
       riskAreaBox2.checked = true;
-      legend2.addTo(map2);
+      riskarealegend2.addTo(map2);
     };
 };
 
@@ -298,8 +298,8 @@ const styleRiskAreaPoly2 = function(feature){
 
 // Legend for Risk Areas
 // https://leafletjs.com/examples/choropleth/
-let legend2 = L.control({position: "bottomright"});
-legend2.onAdd = function (map) {
+let riskarealegend2 = L.control({position: "bottomright"});
+riskarealegend2.onAdd = function (map) {
 
     let div = L.DomUtil.create("div", "info legend");
     const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
@@ -347,7 +347,7 @@ riskAreaBox2.addEventListener("change", function() {
   if(this.checked === true) {
 
     // Add legend to map
-    legend2.addTo(map2);
+    riskarealegend2.addTo(map2);
 
     // Tick all risk area sub-category checkboxes
     HRACheckBox2.checked = true;
@@ -370,7 +370,7 @@ riskAreaBox2.addEventListener("change", function() {
   if(this.checked === false) {
 
     // Remove legend from map
-    legend2.remove();
+    riskarealegend2.remove();
 
     // Untick all risk area sub-category checkboxes
     HRACheckBox2.checked = false;
@@ -512,7 +512,7 @@ backBtn2.setAttribute("type", "button");
 backBtn2.setAttribute("id", "btn-backToSNPSplashPage");
 backBtn2.setAttribute("data-bs-toggle", "tooltip");
 backBtn2.setAttribute("data-bs-placement", "btn-backToSplashPage");
-backBtn2.setAttribute("title", "Back to SNP Distance Splash Page");
+backBtn2.setAttribute("title", "Back to SNP Distance Start Page");
 backBtn2.innerHTML = `
     <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
         <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
@@ -586,6 +586,42 @@ const rangeValue = function(){
   displayValue.innerHTML = newValue;
 }
 snpSlider.addEventListener("input", rangeValue);
+
+
+
+// ------------------------ //
+//
+// LEGEND FOR MARKERS AND ARROWS
+//
+// ------------------------ //
+
+// Legend for markers and arrows
+let markerLegend2 = L.control({position: "topright"});
+markerLegend2.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    div.style.width = "150px";
+    div.style.background = "white";
+
+    // Build legend with HTML
+    div.insertAdjacentHTML("afterbegin", `
+    <div style="padding-top:5px;">
+        <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Sample</span>
+        </span>
+        <span style="display: flex; align-items: center; padding-bottom: 5px;">
+          <svg style="margin-left: 8px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+          </svg>
+          <span class="legend-marker-title" style="margin-left:11px;">SNP Relatedness</span>
+        </span>
+      </div>
+    `);
+
+    return div;
+};
 
 
 
@@ -711,6 +747,9 @@ const renderRelatedMarkers = function (json, target) {
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
+
+  // Add marker legend to map
+  markerLegend2.addTo(map2);
 };
 
 
@@ -721,7 +760,7 @@ const showRelatedSamples = async function () {
 
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
-    document.getElementById("snpmap-warning-text").classList.add("hidden");
+    document.getElementById("snpmap-warning-text").textContent = "";
     if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
       document.getElementById("snpmap-error-message").remove();
     };
