@@ -79,10 +79,10 @@ const showTable = async function() {
             },
             layout: "fitColumns",
             columns: [
-                {title:"CPH", field:"cph"},
-                {title: "County", field:"county"},
                 {title:"AF Number", field:"af"},
                 {title:"Ear Tag", field:"eartag"},
+                {title:"CPH", field:"cph"},
+                {title: "County", field:"county"},
                 {title:"Clade", field:"clade"},
             ],
         });
