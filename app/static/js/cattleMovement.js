@@ -353,6 +353,53 @@ const popupContent = function(data, index) {
 };
 
 
+// ------------------------ //
+//
+// LEGEND FOR MARKERS AND ARROWS
+//
+// ------------------------ //
+
+// Legend for markers and arrows
+let markerLegend = L.control({position: "topright"});
+markerLegend.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    div.style.width = "147px";
+    div.style.background = "white";
+
+    // Build legend with HTML
+    div.insertAdjacentHTML("afterbegin", `
+    <div class="legend-marker-container" style="padding-top:5px;">
+        <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Holding</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Market_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Market</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Showground_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Showgrounds</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Slaughterhouse_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Slaughterhouse</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#0096FF" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+          </svg>
+          <span class="legend-marker-title" style="padding-left:10px;">Cattle movement lines</span>
+        </span>
+      </div>
+    `);
+
+    return div;
+};
+
+
 
 // ------------------------ //
 //
@@ -366,6 +413,7 @@ const clearPreviousMovements = function (second = false) {
   if(second === false) {
     if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
     if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
+    if(typeof markerLegend !== "undefined") markerLegend.remove();
   };
   // Execute this code to clear second cattle movement
   if(second === true) {
@@ -452,6 +500,9 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
       frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
     }).addTo(map);
   };
+
+  // Add marker legend to map
+  markerLegend.addTo(map);
 };
 
 
@@ -671,7 +722,7 @@ const toggleLayers = function(layer){
      LTBACheckBox.checked ||
      TBFACheckBox.checked) {
       riskAreaBox.checked = true;
-      legend.addTo(map);
+      riskareaLegend.addTo(map);
     };
 };
 
@@ -726,8 +777,8 @@ const styleRiskAreaPoly = function(feature){
 
 // Legend for Risk Areas
 // https://leafletjs.com/examples/choropleth/
-let legend = L.control({position: "bottomright"});
-legend.onAdd = function (map) {
+let riskareaLegend = L.control({position: "bottomright"});
+riskareaLegend.onAdd = function (map) {
 
     let div = L.DomUtil.create("div", "info legend");
     const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
@@ -775,7 +826,7 @@ riskAreaBox.addEventListener("change", function() {
   if(this.checked === true) {
 
     // Add legend to map
-    legend.addTo(map);
+    riskareaLegend.addTo(map);
 
     // Tick all risk area sub-category checkboxes
     HRACheckBox.checked = true;
@@ -798,7 +849,7 @@ riskAreaBox.addEventListener("change", function() {
   if(this.checked === false) {
 
     // Remove legend from map
-    legend.remove();
+    riskareaLegend.remove();
 
     // Untick all risk area sub-category checkboxes
     HRACheckBox.checked = false;
@@ -936,13 +987,4 @@ countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 // homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
 // homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
 
-
-
-// ------------------------ //
-//
-// SNP DISTANCE SLIDER
-//
-// ------------------------ //
-
-// TODO
 
