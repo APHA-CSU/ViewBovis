@@ -381,7 +381,7 @@ markerLegend.onAdd = function (map) {
         </span>
         <span style="display: flex; align-items: center;">
           <img src="/static/img/CH_Showground_no_outline.svg" class="legend-marker-img">
-          <span class="legend-marker-title">Showgrounds</span>
+          <span class="legend-marker-title">Showground</span>
         </span>
         <span style="display: flex; align-items: center;">
           <img src="/static/img/CH_Slaughterhouse_no_outline.svg" class="legend-marker-img">
