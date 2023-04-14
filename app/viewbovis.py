@@ -65,11 +65,6 @@ def related_samples():
     return jsonify(g.data.related_submissions_metadata(id, snp_threshold))
 
 
-@app.errorhandler(Exception)
-def exception_handler(error):
-    return jsonify({"error": f"{str(error)}"}), 500
-
-
 @app.errorhandler(InvalidIdException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})
