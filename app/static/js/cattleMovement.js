@@ -364,7 +364,7 @@ let markerLegend = L.control({position: "topright"});
 markerLegend.onAdd = function (map) {
 
     let div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
-    div.style.width = "147px";
+    div.style.width = "150px";
     div.style.background = "white";
 
     // Build legend with HTML
