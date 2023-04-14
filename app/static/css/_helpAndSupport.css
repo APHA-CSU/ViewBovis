@@ -1,0 +1,16 @@
+/* ================================ */
+/*
+/* HELP AND SUPPORT CSS */
+/*
+/* ================================ */
+
+/* ------------------- */
+/* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
+/* ------------------- */
+
+/* Security modal */
+
+/* Quick-Link Boxes */
+.help-quicklink-boxes {
+    padding-top: 10px;
+}
