@@ -231,24 +231,24 @@ document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM
 // Object to store cow icons
 const cowIcons = {
   cowStandard: L.icon({
-    iconUrl: "/static/img/CowHead.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconUrl: "/static/img/CH_1_no_outline.svg",
+    iconSize: [75, 75],
+    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
   }),
   cowShowground: L.icon({
-    iconUrl: "/static/img/CH_Showground.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Showground_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
   cowMarket: L.icon({
-    iconUrl: "/static/img/CH_Market.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Market_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
   cowSlaughter: L.icon({
-    iconUrl: "/static/img/CH_Slaughterhouse.svg",
-    iconSize: [50, 50],
-    iconAnchor: [25, 35],
+    iconUrl: "/static/img/CH_Slaughterhouse_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
 }; 
 
@@ -288,8 +288,8 @@ const popupContent = function(data, index) {
               <td>${data.species}</td>
             </tr>
             <tr>
-              <td><strong>Lat Lon / OSM?:</strong></td>
-              <td>XXXXX</td>
+              <td><strong>Lat Lon:</strong></td>
+              <td>${parseFloat(data.move[index].lat).toFixed(3)} ${parseFloat(data.move[index].lon).toFixed(3)}</td>
             </tr>
             <tr>
               <td><strong>Clade:</strong></td>
@@ -298,6 +298,10 @@ const popupContent = function(data, index) {
             <tr>
               <td><strong>Slaughter Date:</strong></td>
               <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
+            </tr>
+            <tr>
+              <td><strong>Out of Home Range:</strong></td>
+              <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
             </tr>
             <tr>
               <td><strong>CPH:</strong></td>
@@ -327,26 +331,72 @@ const popupContent = function(data, index) {
           <tbody>
             <tr>
               <td><strong>Host:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Breed:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr>
             <tr>
               <td><strong>Sex:</strong></td>
-              <td>XXXXX</td>
+              <td></td>
             </tr> 
           </tbody>
         </table>
-        <h3>More content here?</h3>
       </div>
     </div>           
   `;
+};
+
+
+// ------------------------ //
+//
+// LEGEND FOR MARKERS AND ARROWS
+//
+// ------------------------ //
+
+// Legend for markers and arrows
+let markerLegend = L.control({position: "topright"});
+markerLegend.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    div.style.width = "150px";
+    div.style.background = "white";
+
+    // Build legend with HTML
+    div.insertAdjacentHTML("afterbegin", `
+    <div class="legend-marker-container" style="padding-top:5px;">
+        <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Holding</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Market_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Market</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Showground_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Showground</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <img src="/static/img/CH_Slaughterhouse_no_outline.svg" class="legend-marker-img">
+          <span class="legend-marker-title">Slaughterhouse</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+          <svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#0096FF" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+          </svg>
+          <span class="legend-marker-title" style="padding-left:10px;">Cattle movement lines</span>
+        </span>
+      </div>
+    `);
+
+    return div;
 };
 
 
@@ -363,6 +413,7 @@ const clearPreviousMovements = function (second = false) {
   if(second === false) {
     if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
     if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
+    if(typeof markerLegend !== "undefined") markerLegend.remove();
   };
   // Execute this code to clear second cattle movement
   if(second === true) {
@@ -442,13 +493,16 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   if(second === true) {
     cattleMovLine2.arrowheads({
       yawn: 40,
-      size: "5%",
+      size: "2%",
       fill: true,
       fillColor: lineColour,
       // color: "black",
       frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
     }).addTo(map);
   };
+
+  // Add marker legend to map
+  markerLegend.addTo(map);
 };
 
 
@@ -465,31 +519,67 @@ let cowMarker, cowLayer, linePts, cattleMovLine;
 // Async function that renders main cattle movement
 const showMovements = async function () {
 
-  // First clear any previous cattle movements on map
-  clearPreviousMovements();
+  try {
 
-  // Extract the element ID number from the event listener
-  // E.g. input__sampleID--1 or input__sampleID--2
-  const elementID = this.id.at(-1);
+    // Render spinner
+    document.getElementById("cattle-spinner").classList.remove("hidden");
 
-  // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
-  // This is important for when users plot cattle movement on the map for subsequent samples
-  document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
+    // First clear any previous cattle movements on map and warning text
+    clearPreviousMovements();
+    document.getElementById("cattle-warning-text").textContent = "";
+    if(document.getElementById("cattle-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
+      document.getElementById("cattle-error-message").remove();
+    };
 
-  // Fetch json data from backend
-  const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-  const json = await response.json();
-  console.log(json);
+    // Extract the element ID number from the event listener
+    // E.g. input__sampleID--1 or input__sampleID--2
+    const elementID = this.id.at(-1);
 
-  // Render cow markers and lines
-  renderCowMarkers(json, cowIcons, "#0096FF");
+    // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
+    // This is important for when users plot cattle movement on the map for subsequent samples
+    document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
-  // Allow user access to other elements by removing the disabled class
-  document.getElementById("cattleMovementLines--1").disabled = false;
-  document.getElementById("input__sampleID--2").disabled = false;
-  document.getElementById("btn__cattleMovement--2").disabled = false;
-  // document.getElementById("slider__snp-threshold").disabled = false;
-  // document.getElementById("btn__related-isolates").disabled = false;
+    // Fetch json data from backend
+    const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    // console.log(response);
+    if(!response.ok) throw new Error("Problem getting SNP data from backend");
+    const json = await response.json();
+    // console.log(json);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");
+
+
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
+
+      // Render cow markers and lines
+      renderCowMarkers(json, cowIcons, "#0096FF");
+
+      // Allow user access to other elements by removing the disabled class
+      document.getElementById("cattleMovementLines--1").disabled = false;
+      document.getElementById("input__sampleID--2").disabled = false;
+      document.getElementById("btn__cattleMovement--2").disabled = false;
+      // document.getElementById("slider__snp-threshold").disabled = false;
+      // document.getElementById("btn__related-isolates").disabled = false;
+    }
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message">${Object.values(json)[0]}</p>
+      `);
+    }
+
+  } catch(err) {
+    console.error(err)
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text").classList.remove("hidden");
+  }
 };
 
 // Executes the async showMovements() function when the main "Show Cattle Movement" button is clicked
@@ -509,27 +599,61 @@ let cowMarker2, cowLayer2, linePts2, cattleMovLine2;
 // Async function that renders main cattle movement
 const showMovements2 = async function () {
 
-  // First clear any previous cattle movements on map
-  clearPreviousMovements(true);
+  try {
 
-  // Extract the element ID number from the event listener
-  // E.g. input__sampleID--1 or input__sampleID--2
-  const elementID = this.id.at(-1);
+    // Render spinner
+    document.getElementById("cattle-spinner2").classList.remove("hidden");
 
-  // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
-  // This is important for when users plot cattle movement on the map for subsequent samples
-  document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
+    // First clear any previous cattle movements on map
+    clearPreviousMovements(true);
+    document.getElementById("cattle-warning-text2").classList.add("hidden");
+    if(document.getElementById("cattle-error-message2") !== null && document.getElementById("cattle-error-message2") !== "undefined") {
+      document.getElementById("cattle-error-message2").remove();
+    };
 
-  // Fetch json data from backend
-  const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-  const json = await response.json();
-  // console.log(json);
+    // Extract the element ID number from the event listener
+    // E.g. input__sampleID--1 or input__sampleID--2
+    const elementID = this.id.at(-1);
 
-  // Render cow markers and lines
-  renderCowMarkers(json, cowIcons, "#cb181d", true);
+    // Automatically ensure the toggle movement lines checkbox for the cattle movement is ticked
+    // This is important for when users plot cattle movement on the map for subsequent samples
+    document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
-  // Allow user access to other elements by removing the disabled class
-  document.getElementById("cattleMovementLines--2").disabled = false;
+    // Fetch json data from backend
+    const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    if(!response.ok) throw new Error("Problem getting SNP data from backend");
+    const json = await response.json();
+    // console.log(json);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner2").classList.add("hidden");
+
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
+
+      // Render cow markers and lines
+      renderCowMarkers(json, cowIcons, "#cb181d", true);
+
+      // Allow user access to other elements by removing the disabled class
+      document.getElementById("cattleMovementLines--2").disabled = false;
+    };
+
+    // If first object in JSON is an error, print the error message
+    if(Object.keys(json)[0] === "error") {
+      document.getElementById("cattle-warning-text2").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message2">${Object.values(json)[0]}</p>
+      `);
+    }
+
+  } catch(err) {
+    console.error(err)
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner2").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text2").classList.remove("hidden");
+  } 
 };
 
 // Executes the async showMovements2() function when the second "Show Second Movement" button is clicked
@@ -598,7 +722,7 @@ const toggleLayers = function(layer){
      LTBACheckBox.checked ||
      TBFACheckBox.checked) {
       riskAreaBox.checked = true;
-      legend.addTo(map);
+      riskareaLegend.addTo(map);
     };
 };
 
@@ -653,8 +777,8 @@ const styleRiskAreaPoly = function(feature){
 
 // Legend for Risk Areas
 // https://leafletjs.com/examples/choropleth/
-let legend = L.control({position: "bottomright"});
-legend.onAdd = function (map) {
+let riskareaLegend = L.control({position: "bottomright"});
+riskareaLegend.onAdd = function (map) {
 
     let div = L.DomUtil.create("div", "info legend");
     const levels = ["High Risk Area", "Edge Area", "Low Risk Area", "High TB Area", "Intermediate TB Area", "Low TB Area", "TB Free Area"];
@@ -702,7 +826,7 @@ riskAreaBox.addEventListener("change", function() {
   if(this.checked === true) {
 
     // Add legend to map
-    legend.addTo(map);
+    riskareaLegend.addTo(map);
 
     // Tick all risk area sub-category checkboxes
     HRACheckBox.checked = true;
@@ -725,7 +849,7 @@ riskAreaBox.addEventListener("change", function() {
   if(this.checked === false) {
 
     // Remove legend from map
-    legend.remove();
+    riskareaLegend.remove();
 
     // Untick all risk area sub-category checkboxes
     HRACheckBox.checked = false;
@@ -863,13 +987,4 @@ countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 // homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
 // homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
 
-
-
-// ------------------------ //
-//
-// SNP DISTANCE SLIDER
-//
-// ------------------------ //
-
-// TODO
 

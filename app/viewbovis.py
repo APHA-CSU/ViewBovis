@@ -1,4 +1,3 @@
-import traceback
 from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
@@ -73,11 +72,6 @@ def snp_matrix():
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
     return jsonify(g.data.snp_matrix(id, snp_threshold))
-
-
-@app.errorhandler(Exception)
-def exception_handler(_):
-    return jsonify({"error": traceback.format_exc()}), 500
 
 
 @app.errorhandler(InvalidIdException)
