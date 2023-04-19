@@ -9,15 +9,18 @@ app = Flask(__name__)
 ls = LiveServer(app)
 
 
-def get_data_object():
+def get_data_object(id):
     """
         Creates a Data object if one does not already exist in the
         application context. Assigns the Data object as an attribute to
         the application context. Creating the data object connects to
-        the database. This function is called before every request.
+        the database. This also loads key data for the sample of
+        interest (id) and assigns these data to attributes of the
+        application context. This function is called before every
+        request.
     """
     if not hasattr(g, "data"):
-        g.data = ViewBovisData(app.data_path)
+        g.data = ViewBovisData(app.data_path, id)
 
 
 @app.teardown_appcontext
@@ -44,8 +47,8 @@ def sample():
         with the sample_name encoded in the URL query string; e.g.
         "/sample?sample_name=AF-61-04255-17".
     """
-    get_data_object()
     id = request.args.get("sample_name")
+    get_data_object(id)
     return jsonify(g.data.submission_movement_metadata(id))
 
 
@@ -58,20 +61,20 @@ def related_samples():
         sample_name and snp_distance encoded in the URL query string;
         e.g. "/related?sample_name=AF-61-04255-17&snp_distance=5".
     """
-    get_data_object()
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    return jsonify(g.data.related_submissions_metadata(id, snp_threshold))
+    get_data_object(id)
+    return jsonify(g.data.related_submissions_metadata(snp_threshold))
 
 
 @app.route("/sample/matrix", methods=["GET"])
 def snp_matrix():
     """
     """
-    get_data_object()
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    return jsonify(g.data.snp_matrix(id, snp_threshold))
+    get_data_object(id)
+    return jsonify(g.data.snp_matrix(snp_threshold))
 
 
 @app.errorhandler(InvalidIdException)

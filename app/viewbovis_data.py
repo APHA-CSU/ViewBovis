@@ -29,11 +29,24 @@ class InvalidIdException(Exception):
 
 
 class ViewBovisData:
-    def __init__(self, data_path):
+    def __init__(self, data_path: str, id: str):
+        self._db_connect(data_path)
+        self._load_soi(id)
+
+    def _db_connect(self, data_path: str):
         self._matrix_dir = path.join(data_path, "snp_matrix")
         db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
+
+    def _load_soi(self, id: str):
+        # get metadata for a single id
+        self.df_metadata_sub = self._submission_metadata([id])
+        if self.df_metadata_sub.empty:
+            raise InvalidIdException(id, database=self._db)
+        self.submission = self.df_metadata_sub.index[0]
+        # retrieve sample name from submission number
+        self.sample_name = self._submission_to_sample(self.submission)
 
     def __del__(self):
         self._db.close()
@@ -103,11 +116,7 @@ class ViewBovisData:
         """
             Returns metadata and movement data for 'id' as a dictionary.
         """
-        # get metadata for a single id
-        df_metadata_sub = self._submission_metadata([id])
-        if df_metadata_sub.empty:
-            raise InvalidIdException(id, database=self._db)
-        df_movements = self._submission_movdata(df_metadata_sub.index[0])
+        df_movements = self._submission_movdata(self.df_metadata_sub.index[0])
         df_cph_latlon_map = self._get_lat_long(df_movements["Loc"].to_list())
         # construct dictionary of movement data
         move_dict = {str(row["Loc_Num"]):
@@ -120,24 +129,42 @@ class ViewBovisData:
                       "type": row["CPH_Type"],
                       "county": row["County"]}
                      for _, row in df_movements.iterrows()}
-        return {"submission": df_metadata_sub.index[0],
-                "clade": df_metadata_sub["Clade"][0],
-                "identifier": df_metadata_sub["Identifier"][0],
-                "species": df_metadata_sub["Host"][0],
-                "animal_type": df_metadata_sub["Animal_Type"][0],
-                "slaughter_date": df_metadata_sub["SlaughterDate"][0],
-                "cph": df_metadata_sub["CPH"][0],
-                "cphh": df_metadata_sub["CPHH"][0],
-                "cph_type": df_metadata_sub["CPH_Type"][0],
-                "county": df_metadata_sub["County"][0],
-                "risk_area": df_metadata_sub["RiskArea"][0],
-                "out_of_homerange": df_metadata_sub["OutsideHomeRange"][0],
+        return {"submission": self.df_metadata_sub.index[0],
+                "clade": self.df_metadata_sub["Clade"][0],
+                "identifier": self.df_metadata_sub["Identifier"][0],
+                "species": self.df_metadata_sub["Host"][0],
+                "animal_type": self.df_metadata_sub["Animal_Type"][0],
+                "slaughter_date": self.df_metadata_sub["SlaughterDate"][0],
+                "cph": self.df_metadata_sub["CPH"][0],
+                "cphh": self.df_metadata_sub["CPHH"][0],
+                "cph_type": self.df_metadata_sub["CPH_Type"][0],
+                "county": self.df_metadata_sub["County"][0],
+                "risk_area": self.df_metadata_sub["RiskArea"][0],
+                "out_of_homerange": self.df_metadata_sub["OutsideHomeRange"][0],
                 "move": move_dict}
 
+    def _foo(self, snp_threshold: str):
+        clade = self.df_metadata_sub["Clade"][0]
+        # load snp matrix for the required clade
+        matrix_path = glob.glob(path.join(self._matrix_dir,
+                                          f"{clade}_*_matrix.csv"))
+        df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
+        # get samples within snp_threshold
+        related_samples = df_snps.loc[df_snps[self.sample_name]
+                                      <= snp_threshold].index.to_list()
+        df_snps_related = df_snps.loc[related_samples, related_samples].copy()
+        # TODO: below line not inplace!!!
+        df_snps_related.index.rename(None, inplace=True)
+        # map the index and columns from sample name to submission number
+        df_snps_related_processed = df_snps_related.copy().\
+            set_index(df_snps_related.index.
+                      map(lambda x: self._sample_to_submission(x))).\
+            transpose().set_index(df_snps_related.index.
+                                  map(lambda x: self._sample_to_submission(x)))
+        return df_snps_related_processed
+
     # TODO: not just cows
-    def related_submissions_metadata(self,
-                                     id: str,
-                                     snp_threshold: int) -> dict:
+    def related_submissions_metadata(self, snp_threshold: int) -> dict:
         """
             Returns metadata for genetically related submissions.
 
@@ -161,30 +188,10 @@ class ViewBovisData:
                         "distance": distance to the sample of interest
                             in miles}
         """
-        # retrieve submission number if eartag is used
-        df_metadata_sub = self._submission_metadata([id])
-        if df_metadata_sub.empty:
-            raise InvalidIdException(id, database=self._db)
-        submission = df_metadata_sub.index[0]
-        # retrieve sample name from submission number
-        sample_name = self._submission_to_sample(submission)
-        clade = df_metadata_sub["Clade"][0]
-        # load snp matrix for the required clade
-        matrix_path = glob.glob(path.join(self._matrix_dir,
-                                          f"{clade}_*_matrix.csv"))
-        df_snps = pd.read_csv(matrix_path[0],
-                              usecols=["snp-dists 0.8.2", sample_name],
-                              index_col="snp-dists 0.8.2")
-        # get samples within snp_threshold
-        df_snps_related = df_snps.loc[df_snps[sample_name] <= snp_threshold]
-        # map the index from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.
-                      map(lambda x: self._sample_to_submission(x))).\
-            rename({sample_name: "snp_dist"}, axis=1)
+        df_snps_related = self._foo(snp_threshold)
         # get metadata for all related samples
         df_metadata_related = \
-            self._submission_metadata(df_snps_related_processed.index.to_list())
+            self._submission_metadata(df_snps_related.index.to_list())
         # get lat/long mappings for CPH of related samples
         cph_set = set(df_metadata_related["CPH"].to_list())
         df_cph_latlon_map = self._get_lat_long(list(cph_set))
@@ -193,54 +200,32 @@ class ViewBovisData:
                 {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
                  "lon": df_cph_latlon_map["Long"][row["CPH"]],
                  "snp_distance":
-                    int(df_snps_related_processed["snp_dist"][index]),
+                    int(df_snps_related[self.submission][index]),
                  "animal_id": row["Identifier"],
                  "herd": row["CPHH"],
                  "clade": row["Clade"],
                  "date": row["SlaughterDate"],
-                 "distance": np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
-                                      df_cph_latlon_map["x"]
-                                      [df_metadata_sub["CPH"][0]])**2 +
-                                     (df_cph_latlon_map["y"][row["CPH"]] -
-                                      df_cph_latlon_map["y"]
-                                      [df_metadata_sub["CPH"][0]])**2) / 1609}
+                 "distance":
+                    np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
+                             df_cph_latlon_map["x"]
+                             [self.df_metadata_sub["CPH"][0]])**2 +
+                            (df_cph_latlon_map["y"][row["CPH"]] -
+                             df_cph_latlon_map["y"]
+                             [self.df_metadata_sub["CPH"][0]])**2) / 1609}
                 for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
 
     # TODO: not just cows TODO: DRY
-    def snp_matrix(self, id: str, snp_threshold: int) -> dict:
+    def snp_matrix(self, snp_threshold: int) -> dict:
         """
         """
-        # retrieve submission number if eartag is used
-        df_metadata_sub = self._submission_metadata([id])
-        if df_metadata_sub.empty:
-            raise InvalidIdException(id, database=self._db)
-        submission = df_metadata_sub.index[0]
-        # retrieve sample name from submission number
-        sample_name = self._submission_to_sample(submission)
-        clade = df_metadata_sub["Clade"][0]
-        # load snp matrix for the required clade
-        matrix_path = glob.glob(path.join(self._matrix_dir,
-                                          f"{clade}_*_matrix.csv"))
-        df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
-        # get samples within snp_threshold
-        related_samples = df_snps.loc[df_snps[sample_name] <= snp_threshold].\
-            index.to_list()
-        df_snps_related = df_snps.loc[related_samples, related_samples].copy()
-        # TODO: below line not inplace!!!
-        df_snps_related.index.rename(None, inplace=True)
-        # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.
-                      map(lambda x: self._sample_to_submission(x))).\
-            transpose().set_index(df_snps_related.index.
-                                  map(lambda x: self._sample_to_submission(x)))
+        df_snps_related = self._foo(snp_threshold)
         # restructure matrix
-        snps_related = df_snps_related_processed.copy().stack().\
+        snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         # get metadata for all related samples
         df_metadata_related = \
-            self._submission_metadata(df_snps_related_processed.index.to_list())
+            self._submission_metadata(df_snps_related.index.to_list())
         # get lat/long mappings for CPH of related samples
         cph_set = set(df_metadata_related["CPH"].to_list())
         df_cph_latlon_map = self._get_lat_long(list(cph_set))
@@ -251,11 +236,12 @@ class ViewBovisData:
                   "herd": row["CPHH"],
                   "clade": row["Clade"],
                   "date": row["SlaughterDate"],
-                  "distance": np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
-                                       df_cph_latlon_map["x"]
-                                       [df_metadata_sub["CPH"][0]])**2 +
-                                      (df_cph_latlon_map["y"][row["CPH"]] -
-                                       df_cph_latlon_map["y"]
-                                       [df_metadata_sub["CPH"][0]])**2) / 1609}
+                  "distance":
+                      np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
+                               df_cph_latlon_map["x"]
+                               [self.df_metadata_sub["CPH"][0]])**2 +
+                              (df_cph_latlon_map["y"][row["CPH"]] -
+                               df_cph_latlon_map["y"]
+                               [self.df_metadata_sub["CPH"][0]])**2) / 1609}
                   for index, row in df_metadata_related.iterrows()
                   if row["Host"] == "COW"}, **{"matrix": snps_related})
