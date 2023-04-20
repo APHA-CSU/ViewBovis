@@ -10,16 +10,10 @@ from viewbovis_data import ViewBovisData
 class TestViewBovisData(unittest.TestCase):
 
     def setUp(self):
-        def mock_cursor():
-            pass
-
-        def mock_close():
-            pass
-
-        with mock.patch("viewbovis_data.sqlite3.connect") as mock_connect:
-            mock_connect.return_value.cursor.return_value = mock_cursor()
-            mock_connect.return_value.close.return_value = mock_close()
-            self.data = ViewBovisData("foo_path")
+        ViewBovisData._db_connect = mock.Mock()
+        ViewBovisData._load_soi = mock.Mock()
+        ViewBovisData.__del__ = mock.Mock()
+        self.data = ViewBovisData("foo_path", "foo_id")
 
     def tearDown(self) -> None:
         self.data.__del__()
@@ -63,11 +57,12 @@ class TestViewBovisData(unittest.TestCase):
                                "off_date": "AB", "stay_length": "X",
                                "type": "R", "county": "O"}}}
         # test expected output
-        self.assertDictEqual(self.data.submission_movement_metadata("A"),
+        self.assertDictEqual(self.data.submission_movement_metadata(),
                              expected)
         # assert mock calls
         self.data._get_lat_long.assert_called_once_with(["J", "O", "T"])
 
+    # TODO: probably this doesn't actually need testing
     @mock.patch("viewbovis_data.glob.glob")
     @mock.patch("viewbovis_data.pd.read_csv")
     def test_related_submission_metadata(self, mock_read_csv, mock_glob):
@@ -75,21 +70,27 @@ class TestViewBovisData(unittest.TestCase):
         mock_glob.return_value = "mock_matrix_path"
         mock_read_csv.return_value = \
             pd.DataFrame({"foo": [0, 3, 5]}, index=["foo", "bar", "baz"])
+        # setup - mock attributes
+        setattr(self.data, "_submission", "foo_sub")
+        setattr(self.data, "_latlon", "foo_sub")
         # setup - mock private methods
+        self.data._related_snp_matrix = mock.Mock()
         self.data._submission_metadata = mock.Mock()
-        self.data._submission_to_sample = mock.Mock()
-        self.data._sample_to_submission = mock.Mock()
         self.data._get_lat_long = mock.Mock()
+        self.data._geo_distance = mock.Mock()
         # setup - return values for private method mocks
-        self.data._submission_metadata.side_effect = \
-            [pd.DataFrame({"Clade": ["foo_clade"], "CPH": ["J"]},
-                          index=["foo_sub"]),
-             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
-                           "SlaughterDate": ["foo_date", "bar_date"],
-                           "CPH": ["J", "O"], "Host": ["COW", "COW"],
-                           "CPHH": ["foo_herd", "bar_herd"],
-                           "Clade": ["foo_clade", "bar_clade"]},
-                          index=["foo_sub", "bar_sub"])]
+        self.data._related_snp_matrix.return_value = \
+            pd.DataFrame({"foo_sub": [0, 3],
+                          "bar_sub": [3, 0]},
+                         index=["foo_sub", "bar_sub"])
+        self.data._submission_metadata.return_value = \
+            pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
+                          "SlaughterDate": ["foo_date", "bar_date"],
+                          "CPH": ["J", "O"], "Host": ["COW", "COW"],
+                          "CPHH": ["foo_herd", "bar_herd"],
+                          "Clade": ["foo_clade", "bar_clade"]},
+                         index=["foo_sub", "bar_sub"])
+        self.data._geo_distance.side_effect = [0.0, 1.1]
         self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
         self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
         self.data._get_lat_long.return_value = \
@@ -104,20 +105,13 @@ class TestViewBovisData(unittest.TestCase):
              "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "herd": "bar_herd",
                          "clade": "bar_clade", "date": "bar_date",
-                         "distance": np.sqrt(2) / 1609}}
-        self.maxDiff = 700
+                         "distance": 1.1}}
         # test expected output
         self.assertDictEqual(
-            self.data.related_submissions_metadata("foo_sub", 3), expected)
+            self.data.related_submissions_metadata(3), expected)
         # assert mock calls
-        self.data._submission_metadata.assert_has_calls([mock.call(["foo_sub"]),
-                                                         mock.call(["foo_sub",
-                                                                    "bar_sub"])])
-        self.data._submission_to_sample.assert_called_once_with("foo_sub")
-        self.data._sample_to_submission.assert_has_calls([mock.call("foo"),
-                                                          mock.call("bar")])
-        mock_glob.assert_called_once_with(
-            f"{self.data._matrix_dir}/foo_clade_*_matrix.csv")
+        self.data._submission_metadata.assert_called_once_with(["foo_sub",
+                                                                "bar_sub"])
 
 
 if __name__ == "__main__":

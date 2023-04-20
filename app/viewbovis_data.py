@@ -33,14 +33,14 @@ class ViewBovisData:
         self._db_connect(data_path)
         self._load_soi(id)
 
+    def __del__(self):
+        self._db.close()
+
     def _db_connect(self, data_path: str):
         self._matrix_dir = path.join(data_path, "snp_matrix")
         db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
-
-    def __del__(self):
-        self._db.close()
 
     def _load_soi(self, id: str):
         """
