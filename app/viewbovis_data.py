@@ -39,17 +39,23 @@ class ViewBovisData:
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
 
-    def _load_soi(self, id: str):
-        # get metadata for a single id
-        self.df_metadata_sub = self._submission_metadata([id])
-        if self.df_metadata_sub.empty:
-            raise InvalidIdException(id, database=self._db)
-        self.submission = self.df_metadata_sub.index[0]
-        # retrieve sample name from submission number
-        self.sample_name = self._submission_to_sample(self.submission)
-
     def __del__(self):
         self._db.close()
+
+    def _load_soi(self, id: str):
+        """
+            Loads generic data for the SOI from the database into
+            memory, assigning these data to class attributes. These
+            data are, full metadata, the submission number and the
+            sample name.
+        """
+        # get metadata for a single id
+        self._df_metadata_sub = self._submission_metadata([id])
+        if self._df_metadata_sub.empty:
+            raise InvalidIdException(id, database=self._db)
+        self._submission = self._df_metadata_sub.index[0]
+        # retrieve sample name from submission number
+        self._sample_name = self._submission_to_sample(self._submission)
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -66,6 +72,26 @@ class ViewBovisData:
                                  self._db,
                                  index_col="Submission",
                                  params=ids+ids)
+
+    def _submission_to_sample(self, submission: str) -> str:
+        """
+            Maps a sample name to submission number.
+        """
+        query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
+        df_wgs_sub = pd.read_sql_query(query, self._db,
+                                       params={"submission": submission})
+        return df_wgs_sub["Sample"][0]
+
+    def _sample_to_submission(self, sample: str) -> str:
+        """
+            Maps a submission number to sample name.
+        """
+        query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
+        df_wgs_sub = pd.read_sql_query(query, self._db,
+                                       params={"sample": sample})
+        if df_wgs_sub.empty:
+            return None
+        return df_wgs_sub["Submission"][0]
 
     # TODO: validate input
     def _submission_movdata(self, submission: str) -> pd.DataFrame:
@@ -92,65 +118,14 @@ class ViewBovisData:
                                  index_col="CPH",
                                  params=cphs)
 
-    def _submission_to_sample(self, submission: str) -> str:
-        """
-            Maps a sample name to submission number.
-        """
-        query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
-        df_wgs_sub = pd.read_sql_query(query, self._db,
-                                       params={"submission": submission})
-        return df_wgs_sub["Sample"][0]
-
-    def _sample_to_submission(self, sample: str) -> str:
-        """
-            Maps a submission number to sample name.
-        """
-        query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
-        df_wgs_sub = pd.read_sql_query(query, self._db,
-                                       params={"sample": sample})
-        if df_wgs_sub.empty:
-            return None
-        return df_wgs_sub["Submission"][0]
-
-    def submission_movement_metadata(self, id: str) -> dict:
-        """
-            Returns metadata and movement data for 'id' as a dictionary.
-        """
-        df_movements = self._submission_movdata(self.df_metadata_sub.index[0])
-        df_cph_latlon_map = self._get_lat_long(df_movements["Loc"].to_list())
-        # construct dictionary of movement data
-        move_dict = {str(row["Loc_Num"]):
-                     {"cph": row["Loc"][0],
-                      "lat": df_cph_latlon_map["Lat"][row["Loc"]],
-                      "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                      "on_date": row["Loc_StartDate"],
-                      "off_date": row["Loc_EndDate"],
-                      "stay_length": row["Loc_Duration"],
-                      "type": row["CPH_Type"],
-                      "county": row["County"]}
-                     for _, row in df_movements.iterrows()}
-        return {"submission": self.df_metadata_sub.index[0],
-                "clade": self.df_metadata_sub["Clade"][0],
-                "identifier": self.df_metadata_sub["Identifier"][0],
-                "species": self.df_metadata_sub["Host"][0],
-                "animal_type": self.df_metadata_sub["Animal_Type"][0],
-                "slaughter_date": self.df_metadata_sub["SlaughterDate"][0],
-                "cph": self.df_metadata_sub["CPH"][0],
-                "cphh": self.df_metadata_sub["CPHH"][0],
-                "cph_type": self.df_metadata_sub["CPH_Type"][0],
-                "county": self.df_metadata_sub["County"][0],
-                "risk_area": self.df_metadata_sub["RiskArea"][0],
-                "out_of_homerange": self.df_metadata_sub["OutsideHomeRange"][0],
-                "move": move_dict}
-
-    def _foo(self, snp_threshold: str):
-        clade = self.df_metadata_sub["Clade"][0]
+    def _related_snp_matrix(self, snp_threshold: str):
+        clade = self._df_metadata_sub["Clade"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
         df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
         # get samples within snp_threshold
-        related_samples = df_snps.loc[df_snps[self.sample_name]
+        related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
         # TODO: below line not inplace!!!
@@ -163,15 +138,45 @@ class ViewBovisData:
                                   map(lambda x: self._sample_to_submission(x)))
         return df_snps_related_processed
 
+    def submission_movement_metadata(self) -> dict:
+        """
+            Returns metadata and movement data for the SOI in dictionary
+            format.
+        """
+        df_movements = self._submission_movdata(self._df_metadata_sub.index[0])
+        df_cph_latlon_map = self._get_lat_long(df_movements["Loc"].to_list())
+        # construct dictionary of movement data
+        move_dict = {str(row["Loc_Num"]):
+                     {"cph": row["Loc"][0],
+                      "lat": df_cph_latlon_map["Lat"][row["Loc"]],
+                      "lon": df_cph_latlon_map["Long"][row["Loc"]],
+                      "on_date": row["Loc_StartDate"],
+                      "off_date": row["Loc_EndDate"],
+                      "stay_length": row["Loc_Duration"],
+                      "type": row["CPH_Type"],
+                      "county": row["County"]}
+                     for _, row in df_movements.iterrows()}
+        return {"submission": self._df_metadata_sub.index[0],
+                "clade": self._df_metadata_sub["Clade"][0],
+                "identifier": self._df_metadata_sub["Identifier"][0],
+                "species": self._df_metadata_sub["Host"][0],
+                "animal_type": self._df_metadata_sub["Animal_Type"][0],
+                "slaughter_date": self._df_metadata_sub["SlaughterDate"][0],
+                "cph": self._df_metadata_sub["CPH"][0],
+                "cphh": self._df_metadata_sub["CPHH"][0],
+                "cph_type": self._df_metadata_sub["CPH_Type"][0],
+                "county": self._df_metadata_sub["County"][0],
+                "risk_area": self._df_metadata_sub["RiskArea"][0],
+                "out_of_homerange":
+                    self._df_metadata_sub["OutsideHomeRange"][0],
+                "move": move_dict}
+
     # TODO: not just cows
     def related_submissions_metadata(self, snp_threshold: int) -> dict:
         """
             Returns metadata for genetically related submissions.
 
             Parameters:
-                id (str): eartag or submission number for sample of
-                interest.
-
                 snp_threshold (str): maximum SNP distance for genetic
                 related samples
 
@@ -188,7 +193,7 @@ class ViewBovisData:
                         "distance": distance to the sample of interest
                             in miles}
         """
-        df_snps_related = self._foo(snp_threshold)
+        df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related samples
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
@@ -200,7 +205,7 @@ class ViewBovisData:
                 {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
                  "lon": df_cph_latlon_map["Long"][row["CPH"]],
                  "snp_distance":
-                    int(df_snps_related[self.submission][index]),
+                    int(df_snps_related[self._submission][index]),
                  "animal_id": row["Identifier"],
                  "herd": row["CPHH"],
                  "clade": row["Clade"],
@@ -208,18 +213,38 @@ class ViewBovisData:
                  "distance":
                     np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
                              df_cph_latlon_map["x"]
-                             [self.df_metadata_sub["CPH"][0]])**2 +
+                             [self._df_metadata_sub["CPH"][0]])**2 +
                             (df_cph_latlon_map["y"][row["CPH"]] -
                              df_cph_latlon_map["y"]
-                             [self.df_metadata_sub["CPH"][0]])**2) / 1609}
+                             [self._df_metadata_sub["CPH"][0]])**2) / 1609}
                 for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
 
-    # TODO: not just cows TODO: DRY
+    # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
+            Returns metadata and SNP matrix data for related
+            submissions.
+
+            The SNP matrix is provided in "molten" format
+            (see https://github.com/tseemann/snp-dists#snp-dists--m-molten-output-format)
+
+            Parameters:
+                snp_threshold (str): maximum SNP distance for genetic
+                related samples
+
+            Returns:
+                metadata (dict): metadata for related samples
+                    {submission_number:
+                        "animal_id": eartag,
+                        "herd": herd cph,
+                        "clade": clade of sample,
+                        "date": date of slaughter,
+                        "distance": distance to the sample of interest
+                            in miles
+                        "matrix": SNP matrix}
         """
-        df_snps_related = self._foo(snp_threshold)
+        df_snps_related = self._related_snp_matrix(snp_threshold)
         # restructure matrix
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
@@ -239,9 +264,9 @@ class ViewBovisData:
                   "distance":
                       np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
                                df_cph_latlon_map["x"]
-                               [self.df_metadata_sub["CPH"][0]])**2 +
+                               [self._df_metadata_sub["CPH"][0]])**2 +
                               (df_cph_latlon_map["y"][row["CPH"]] -
                                df_cph_latlon_map["y"]
-                               [self.df_metadata_sub["CPH"][0]])**2) / 1609}
+                               [self._df_metadata_sub["CPH"][0]])**2) / 1609}
                   for index, row in df_metadata_related.iterrows()
                   if row["Host"] == "COW"}, **{"matrix": snps_related})
