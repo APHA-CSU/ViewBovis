@@ -49,7 +49,7 @@ def sample():
     """
     id = request.args.get("sample_name")
     get_data_object(id)
-    return jsonify(g.data.submission_movement_metadata(id))
+    return jsonify(g.data.submission_movement_metadata())
 
 
 @app.route("/sample/related", methods=["GET"])

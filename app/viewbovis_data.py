@@ -46,8 +46,8 @@ class ViewBovisData:
         """
             Loads generic data for the SOI from the database into
             memory, assigning these data to class attributes. These
-            data are, full metadata, the submission number and the
-            sample name.
+            data are, full metadata, the submission number, the sample
+            name and the lat and long for the positive test location.
         """
         # get metadata for a single id
         self._df_metadata_sub = self._submission_metadata([id])
@@ -56,6 +56,9 @@ class ViewBovisData:
         self._submission = self._df_metadata_sub.index[0]
         # retrieve sample name from submission number
         self._sample_name = self._submission_to_sample(self._submission)
+        # retrieve x and y into tuple
+        df_cph_latlon_map = self._get_lat_long(self._df_metadata_sub["CPH"])
+        self._latlon = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -117,6 +120,20 @@ class ViewBovisData:
                                  self._db,
                                  index_col="CPH",
                                  params=cphs)
+
+    def _geo_distance(self, xy: tuple) -> float:
+        """
+            Returns the geographical distance in miles from the SOI
+
+            Parameters:
+                xy (tuple): latitude and longitude of the sample for
+                which to find the distance to the SOI
+
+            Returns:
+                distance (float): the geographical distance in miles
+        """
+        return np.sqrt((xy[0] - self._latlon[0])**2 +
+                       (xy[1] - self._latlon[1])**2) / 1609
 
     def _related_snp_matrix(self, snp_threshold: str):
         clade = self._df_metadata_sub["Clade"][0]
@@ -211,12 +228,8 @@ class ViewBovisData:
                  "clade": row["Clade"],
                  "date": row["SlaughterDate"],
                  "distance":
-                    np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
-                             df_cph_latlon_map["x"]
-                             [self._df_metadata_sub["CPH"][0]])**2 +
-                            (df_cph_latlon_map["y"][row["CPH"]] -
-                             df_cph_latlon_map["y"]
-                             [self._df_metadata_sub["CPH"][0]])**2) / 1609}
+                     self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
+                                         df_cph_latlon_map["y"][row["CPH"]]))}
                 for index, row in df_metadata_related.iterrows()
                 if row["Host"] == "COW"}
 
@@ -262,11 +275,7 @@ class ViewBovisData:
                   "clade": row["Clade"],
                   "date": row["SlaughterDate"],
                   "distance":
-                      np.sqrt((df_cph_latlon_map["x"][row["CPH"]] -
-                               df_cph_latlon_map["x"]
-                               [self._df_metadata_sub["CPH"][0]])**2 +
-                              (df_cph_latlon_map["y"][row["CPH"]] -
-                               df_cph_latlon_map["y"]
-                               [self._df_metadata_sub["CPH"][0]])**2) / 1609}
+                      self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
+                                          df_cph_latlon_map["y"][row["CPH"]]))}
                   for index, row in df_metadata_related.iterrows()
                   if row["Host"] == "COW"}, **{"matrix": snps_related})
