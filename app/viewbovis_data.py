@@ -37,6 +37,10 @@ class ViewBovisData:
         self._db.close()
 
     def _db_connect(self, data_path: str):
+        """
+            Connects to the database and assigns the connection objects
+            to attributes of the ViewBovisData class
+        """
         self._matrix_dir = path.join(data_path, "snp_matrix")
         db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
@@ -47,7 +51,7 @@ class ViewBovisData:
             Loads generic data for the SOI from the database into
             memory, assigning these data to class attributes. These
             data are, full metadata, the submission number, the sample
-            name and the lat and long for the positive test location.
+            name and the lat and long for the positive test location
         """
         # get metadata for a single id
         self._df_metadata_sub = self._submission_metadata([id])
@@ -65,7 +69,7 @@ class ViewBovisData:
         """
             Fetches metadata for a given a list of ids. Returns a
             DataFrame containing metadata if it exists in both metadata
-            and wgs_metadata, otherwise returns an empty DataFrame.
+            and wgs_metadata, otherwise returns an empty DataFrame
         """
         query = f"""SELECT metadata.* FROM wgs_metadata INNER JOIN metadata
                     ON metadata.Submission=wgs_metadata.Submission WHERE
@@ -78,7 +82,7 @@ class ViewBovisData:
 
     def _submission_to_sample(self, submission: str) -> str:
         """
-            Maps a sample name to submission number.
+            Maps a sample name to submission number
         """
         query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
         df_wgs_sub = pd.read_sql_query(query, self._db,
@@ -87,7 +91,7 @@ class ViewBovisData:
 
     def _sample_to_submission(self, sample: str) -> str:
         """
-            Maps a submission number to sample name.
+            Maps a submission number to sample name
         """
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db,
@@ -99,8 +103,8 @@ class ViewBovisData:
     # TODO: validate input
     def _submission_movdata(self, submission: str) -> pd.DataFrame:
         """
-            Fetches movement data for a given Submission. Returns an
-            empty DataFrame if no data exists.
+            Fetches movement data for a given submission. Returns an
+            empty DataFrame if no data exists
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
         return pd.read_sql_query(query,
@@ -112,7 +116,7 @@ class ViewBovisData:
         """
             Fetches latitude, longitude, x and y for a given a set of
             CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
-            'y' and the corresponding CPH in the index.
+            'y' and the corresponding CPH in the index
         """
         query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
@@ -126,7 +130,7 @@ class ViewBovisData:
             Returns the geographical distance in miles from the SOI
 
             Parameters:
-                xy (tuple): latitude and longitude of the sample for
+                xy (tuple): latitude and longitude of the submission for
                 which to find the distance to the SOI
 
             Returns:
@@ -135,13 +139,29 @@ class ViewBovisData:
         return np.sqrt((xy[0] - self._latlon[0])**2 +
                        (xy[1] - self._latlon[1])**2) / 1609
 
-    def _related_snp_matrix(self, snp_threshold: str):
+    def _related_snp_matrix(self, snp_threshold: int) -> pd.DataFrame:
+        """
+            Retrieves the SNP matrix, relating the SOI and all
+            genetically isolated, i.e. the SNP matrix from the SOI clade
+            filtered to all isolates <= the snp_threshold. Sample names
+            in the row and column labels of the original SNP matrix
+            files are converted to submission numbers
+
+            Parameters:
+                snp_threshold (int): maximum SNP distance for
+                genetically related isolates
+
+            Returns:
+                df_snps_related_processed (pd.DataFrame): a SNP matrix
+                for genetically related isolates with submission numbers
+                as row and column labels
+        """
         clade = self._df_metadata_sub["Clade"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
         df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
-        # get samples within snp_threshold
+        # get isolates within snp_threshold
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
@@ -158,7 +178,7 @@ class ViewBovisData:
     def submission_movement_metadata(self) -> dict:
         """
             Returns metadata and movement data for the SOI in dictionary
-            format.
+            format
         """
         # get movement data for SOI
         df_movements = self._submission_movdata(self._df_metadata_sub.index[0])
@@ -197,7 +217,7 @@ class ViewBovisData:
 
             Parameters:
                 snp_threshold (str): maximum SNP distance for genetic
-                related samples
+                related isolates
 
             Returns:
                 metadata (dict): metadata for related samples
@@ -213,10 +233,10 @@ class ViewBovisData:
                             in miles}
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
-        # get metadata for all related samples
+        # get metadata for all related submissions
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
-        # get lat/long mappings for CPH of related samples
+        # get lat/long mappings for CPH of related submissions
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
@@ -245,8 +265,8 @@ class ViewBovisData:
             (see https://github.com/tseemann/snp-dists#snp-dists--m-molten-output-format)
 
             Parameters:
-                snp_threshold (str): maximum SNP distance for genetic
-                related samples
+                snp_threshold (str): maximum SNP distance for
+                genetically related isolates
 
             Returns:
                 metadata (dict): metadata for related samples
@@ -263,10 +283,10 @@ class ViewBovisData:
         # restructure matrix
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        # get metadata for all related samples
+        # get metadata for all related submissions
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
-        # get lat/long mappings for CPH of related samples
+        # get lat/long mappings for CPH of related submissions
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
