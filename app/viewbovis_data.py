@@ -108,9 +108,9 @@ class ViewBovisData:
                                  index_col="Submission",
                                  params={"submission": submission})
 
-    def _get_lat_long(self, cphs: list) -> tuple:
+    def _get_lat_long(self, cphs: set) -> tuple:
         """
-            Fetches latitude, longitude, x and y for a given a list of
+            Fetches latitude, longitude, x and y for a given a set of
             CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
             'y' and the corresponding CPH in the index.
         """
@@ -160,8 +160,10 @@ class ViewBovisData:
             Returns metadata and movement data for the SOI in dictionary
             format.
         """
+        # get movement data for SOI
         df_movements = self._submission_movdata(self._df_metadata_sub.index[0])
-        df_cph_latlon_map = self._get_lat_long(df_movements["Loc"].to_list())
+        df_cph_latlon_map = \
+            self._get_lat_long(set(df_movements["Loc"].to_list()))
         # construct dictionary of movement data
         move_dict = {str(row["Loc_Num"]):
                      {"cph": row["Loc"][0],
@@ -215,8 +217,8 @@ class ViewBovisData:
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
         # get lat/long mappings for CPH of related samples
-        cph_set = set(df_metadata_related["CPH"].to_list())
-        df_cph_latlon_map = self._get_lat_long(list(cph_set))
+        df_cph_latlon_map = \
+            self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
         return {index:
                 {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
@@ -265,8 +267,8 @@ class ViewBovisData:
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
         # get lat/long mappings for CPH of related samples
-        cph_set = set(df_metadata_related["CPH"].to_list())
-        df_cph_latlon_map = self._get_lat_long(list(cph_set))
+        df_cph_latlon_map = \
+            self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
         return \
             dict({index:

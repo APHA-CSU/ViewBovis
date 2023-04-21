@@ -62,17 +62,9 @@ class TestViewBovisData(unittest.TestCase):
         # assert mock calls
         self.data._get_lat_long.assert_called_once_with(["J", "O", "T"])
 
-    # TODO: probably this doesn't actually need testing
-    @mock.patch("viewbovis_data.glob.glob")
-    @mock.patch("viewbovis_data.pd.read_csv")
-    def test_related_submission_metadata(self, mock_read_csv, mock_glob):
-        # setup - return values for external mocks
-        mock_glob.return_value = "mock_matrix_path"
-        mock_read_csv.return_value = \
-            pd.DataFrame({"foo": [0, 3, 5]}, index=["foo", "bar", "baz"])
+    def test_related_submission_metadata(self):
         # setup - mock attributes
         setattr(self.data, "_submission", "foo_sub")
-        setattr(self.data, "_latlon", "foo_sub")
         # setup - mock private methods
         self.data._related_snp_matrix = mock.Mock()
         self.data._submission_metadata = mock.Mock()
@@ -90,12 +82,10 @@ class TestViewBovisData(unittest.TestCase):
                           "CPHH": ["foo_herd", "bar_herd"],
                           "Clade": ["foo_clade", "bar_clade"]},
                          index=["foo_sub", "bar_sub"])
-        self.data._geo_distance.side_effect = [0.0, 1.1]
-        self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
-        self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
         self.data._get_lat_long.return_value = \
-            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6], "x": [1, 2, 3],
-                          "y": [4, 5, 6]}, index=["J", "O", "T"])
+            pd.DataFrame({"Lat": [1, 2], "Long": [4, 5], "x": [1, 2],
+                          "y": [4, 5]}, index=["J", "O"])
+        self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
         expected = \
             {"foo_sub": {"lat": 1, "lon": 4, "snp_distance": 0,
@@ -112,7 +102,12 @@ class TestViewBovisData(unittest.TestCase):
         # assert mock calls
         self.data._submission_metadata.assert_called_once_with(["foo_sub",
                                                                 "bar_sub"])
+        self.data._get_lat_long.assert_called_once_with({"O", "J"})
+        self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
+                                                  mock.call((2, 5))])
 
+#self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
+#self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
 
 if __name__ == "__main__":
     unittest.main()
