@@ -62,7 +62,7 @@ class ViewBovisData:
         self._sample_name = self._submission_to_sample(self._submission)
         # retrieve x and y into tuple
         df_cph_latlon_map = self._get_lat_long(self._df_metadata_sub["CPH"])
-        self._latlon = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
+        self._xy = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -136,8 +136,8 @@ class ViewBovisData:
             Returns:
                 distance (float): the geographical distance in miles
         """
-        return np.sqrt((xy[0] - self._latlon[0])**2 +
-                       (xy[1] - self._latlon[1])**2) / 1609
+        return np.sqrt((xy[0] - self._xy[0])**2 +
+                       (xy[1] - self._xy[1])**2) / 1609
 
     def _related_snp_matrix(self, snp_threshold: int) -> pd.DataFrame:
         """

@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 import pandas as pd
-import numpy as np
+import numpy.testing as nptesting
 
 from viewbovis_data import ViewBovisData
 
@@ -18,6 +18,29 @@ class TestViewBovisData(unittest.TestCase):
     def tearDown(self) -> None:
         self.data.__del__()
         return super().tearDown()
+
+    @mock.patch("viewbovis_data.glob.glob")
+    @mock.patch("viewbovis_data.pd.read_csv")
+    def test_related_snp_matrix(self, mock_read_csv, mock_glob):
+        # setup - mock attributes
+        setattr(self.data, "_df_metadata_sub",
+                pd.DataFrame({"Clade": ["foo_clade"]}, index=["foo_index"]))
+        setattr(self.data, "_matrix_dir", "mock_matrix_dir")
+        setattr(self.data, "_sample_name", "foo")
+        # setup - mock private methods
+        self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
+        # setup - return values for external mocks
+        mock_read_csv.return_value = \
+            pd.DataFrame({"foo": [0, 3, 5],
+                          "bar": [3, 0, 10],
+                          "baz": [5, 10, 0]},
+                         index=["foo", "bar", "baz"])
+        mock_glob.return_value = "mock_matrix_path"
+        # expected output
+        expected = pd.DataFrame({"foo_sub": [0, 3], "bar_sub": [3, 0]},
+                                index=["foo_sub", "bar_sub"])
+        nptesting.assert_array_equal(self.data._related_snp_matrix(3),
+                                     expected)
 
     def test_submission_movement_metadata(self):
         # setup - mock attributes
