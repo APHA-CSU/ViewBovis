@@ -20,17 +20,19 @@ class TestViewBovisData(unittest.TestCase):
         return super().tearDown()
 
     def test_submission_movement_metadata(self):
+        # setup - mock attributes
+        setattr(self.data, "_df_metadata_sub",
+                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
+                              "Host": ["C"], "SlaughterDate": ["D"],
+                              "Animal_Type": ["E"], "CPH": ["F"],
+                              "CPHH": ["G"], "CPH_Type": ["H"],
+                              "County": ["I"], "RiskArea": ["J"],
+                              "Loc0": ["K"], "OutsideHomeRange": ["L"]},
+                             index=["Y"]))
         # setup - mock private methods
-        self.data._get_lat_long = mock.Mock()
-        self.data._submission_metadata = mock.Mock()
         self.data._submission_movdata = mock.Mock()
+        self.data._get_lat_long = mock.Mock()
         # setup - return values for private method mocks
-        self.data._submission_metadata.return_value = \
-            pd.DataFrame({"Clade": ["A"], "Identifier": ["B"], "Host": ["C"],
-                          "SlaughterDate": ["D"], "Animal_Type": ["E"],
-                          "CPH": ["F"], "CPHH": ["G"], "CPH_Type": ["H"],
-                          "County": ["I"], "RiskArea": ["J"], "Loc0": ["K"],
-                          "OutsideHomeRange": ["L"]}, index=["Y"])
         self.data._submission_movdata.return_value = \
             pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
                           "County": ["M", "N", "O"],
@@ -60,7 +62,7 @@ class TestViewBovisData(unittest.TestCase):
         self.assertDictEqual(self.data.submission_movement_metadata(),
                              expected)
         # assert mock calls
-        self.data._get_lat_long.assert_called_once_with(["J", "O", "T"])
+        self.data._get_lat_long.assert_called_once_with({"J", "O", "T"})
 
     def test_related_submission_metadata(self):
         # setup - mock attributes
