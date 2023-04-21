@@ -271,13 +271,13 @@ class ViewBovisData:
             Returns:
                 metadata (dict): metadata for related samples
                     {submission_number:
-                        "animal_id": eartag,
-                        "herd": herd cph,
-                        "clade": clade of sample,
-                        "date": date of slaughter,
-                        "distance": distance to the sample of interest
-                            in miles
-                        "matrix": SNP matrix}
+                        {"animal_id": eartag,
+                         "herd": herd cph,
+                         "clade": clade of sample,
+                         "date": date of slaughter,
+                         "distance": distance to the sample of interest
+                             in miles}
+                     "matrix": SNP matrix}
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # restructure matrix

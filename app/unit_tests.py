@@ -131,8 +131,51 @@ class TestViewBovisData(unittest.TestCase):
         self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                   mock.call((2, 5))])
 
-#self.data._submission_to_sample = mock.Mock(wraps=lambda x: x[:-4])
-#self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
+    def test_snp_matrix(self):
+        # setup - mock attributes
+        setattr(self.data, "_submission", "foo_sub")
+        # setup - mock private methods
+        self.data._related_snp_matrix = mock.Mock()
+        self.data._submission_metadata = mock.Mock()
+        self.data._get_lat_long = mock.Mock()
+        self.data._geo_distance = mock.Mock()
+        # setup - return values for private method mocks
+        self.data._related_snp_matrix.return_value = \
+            pd.DataFrame({"foo_sub": [0, 3],
+                          "bar_sub": [3, 0]},
+                         index=["foo_sub", "bar_sub"])
+        self.data._submission_metadata.return_value = \
+            pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
+                          "SlaughterDate": ["foo_date", "bar_date"],
+                          "CPH": ["J", "O"], "Host": ["COW", "COW"],
+                          "CPHH": ["foo_herd", "bar_herd"],
+                          "Clade": ["foo_clade", "bar_clade"]},
+                         index=["foo_sub", "bar_sub"])
+        self.data._get_lat_long.return_value = \
+            pd.DataFrame({"Lat": [1, 2], "Long": [4, 5], "x": [1, 2],
+                          "y": [4, 5]}, index=["J", "O"])
+        self.data._geo_distance.side_effect = [0.0, 1.1]
+        # expected output
+        expected = \
+            {"foo_sub": {"animal_id": "foo_id", "herd": "foo_herd",
+                         "clade": "foo_clade", "date": "foo_date",
+                         "distance": 0.0},
+             "bar_sub": {"animal_id": "bar_id", "herd": "bar_herd",
+                         "clade": "bar_clade", "date": "bar_date",
+                         "distance": 1.1},
+             "matrix": [["foo_sub", "foo_sub", 0],
+                        ["foo_sub", "bar_sub", 3],
+                        ["bar_sub", "foo_sub", 3],
+                        ["bar_sub", "bar_sub", 0]]}
+        # test expected output
+        self.assertDictEqual(self.data.snp_matrix(3), expected)
+        # assert mock calls
+        self.data._submission_metadata.assert_called_once_with(["foo_sub",
+                                                                "bar_sub"])
+        self.data._get_lat_long.assert_called_once_with({"O", "J"})
+        self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
+                                                  mock.call((2, 5))])
+
 
 if __name__ == "__main__":
     unittest.main()
