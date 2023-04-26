@@ -18,13 +18,19 @@ class InvalidIdException(Exception):
         wgs_query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
         wgs_data = pd.read_sql_query(wgs_query, database,
                                      params={"id": id})
+        # if all metadata types exist
         if not metadata.empty and not mov_data.empty and \
                 metadata["CPH"][0] is not None:
             self.message = f"Missing WGS data for submission: {id}"
+        # if wgs data exists
         elif not wgs_data.empty:
             self.message = f"Incomplete metadata data for submission: {id}"
-        else:
+        # if no data exists
+        elif wgs_data.empty and metadata.empty and mov_data.empty:
             self.message = f"Invalid submission: {id}"
+        else:
+            self.message = f"Missing WGS data and incomplete metadata data for \
+                submission: {id}"
 
     def __str__(self):
         return self.message
@@ -260,20 +266,36 @@ class ViewBovisData:
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
-        return {index:
+        response = \
+            {index:
                 {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
                  "lon": df_cph_latlon_map["Long"][row["CPH"]],
                  "snp_distance":
-                    int(df_snps_related[self._submission][index]),
+                     int(df_snps_related[self._submission][index]),
                  "animal_id": row["Identifier"],
                  "herd": row["CPHH"],
                  "clade": row["Clade"],
                  "date": row["SlaughterDate"],
                  "distance":
                      self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                         df_cph_latlon_map["y"][row["CPH"]]))}
-                for index, row in df_metadata_related.iterrows()
-                if row["Host"] == "COW"}
+                                        df_cph_latlon_map["y"][row["CPH"]]))}
+             for index, row in df_metadata_related.iterrows()}
+        # add related samples without metadata to the response
+        # dictionary
+        # TODO: test this functionality
+        no_meta_submissions = \
+            set(df_snps_related.index) - set(df_metadata_related.index)
+        no_meta_response = \
+            {subm: {"lat": None, "lon": None,
+                    "snp_distance":
+                        int(df_snps_related[self._submission][subm]),
+                    "animal_id": None,
+                    "herd": None,
+                    "clade": None,
+                    "date": None,
+                    "distance": None}
+             for subm in no_meta_submissions}
+        return {**response, **no_meta_response}
 
     # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
@@ -319,5 +341,5 @@ class ViewBovisData:
                   "distance":
                       self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                           df_cph_latlon_map["y"][row["CPH"]]))}
-                  for index, row in df_metadata_related.iterrows()
-                  if row["Host"] == "COW"}, **{"matrix": snps_related})
+                  for index, row in df_metadata_related.iterrows()},
+                 **{"matrix": snps_related})
