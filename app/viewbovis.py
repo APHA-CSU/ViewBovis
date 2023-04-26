@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData
-from viewbovis_data import InvalidIdException
+from viewbovis_data import InvalidIdException, NonBovineException
 
 app = Flask(__name__)
 
@@ -83,5 +83,6 @@ def snp_matrix():
 
 
 @app.errorhandler(InvalidIdException)
+@app.errorhandler(NonBovineException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})

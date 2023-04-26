@@ -30,10 +30,19 @@ class InvalidIdException(Exception):
         return self.message
 
 
+class NonBovineException(Exception):
+    def __init__(self, id):
+        self.message = f"Non-bovine submission: {id}"
+
+    def __str__(self):
+        return self.message
+
+
 class ViewBovisData:
     def __init__(self, data_path: str, id: str):
+        self._id = id
         self._db_connect(data_path)
-        self._load_soi(id)
+        self._load_soi()
 
     def __del__(self):
         self._db.close()
@@ -48,7 +57,7 @@ class ViewBovisData:
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
 
-    def _load_soi(self, id: str):
+    def _load_soi(self):
         """
             Loads generic data for the SOI from the database into
             memory, assigning these data to class attributes. These
@@ -56,17 +65,18 @@ class ViewBovisData:
             name and the lat and long for the positive test location
         """
         # get metadata for a single id
-        self._df_metadata_sub = self._submission_metadata([id])
+        self._df_metadata_sub = self._submission_metadata([self._id])
         if self._df_metadata_sub.empty:
-            raise InvalidIdException(id, database=self._db)
+            raise InvalidIdException(self._id, database=self._db)
         self._submission = self._df_metadata_sub.index[0]
         # retrieve sample name from submission number
         self._sample_name = self._submission_to_sample(self._submission)
-        # retrieve x and y into tuple
+        # retrieve x,y and lat,lon into tuples
         df_cph_latlon_map = self._get_lat_long(self._df_metadata_sub["CPH"])
         if df_cph_latlon_map.empty:
-            raise InvalidIdException(id, database=self._db)
+            raise InvalidIdException(self._id, database=self._db)
         self._xy = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
+        self._latlon = tuple(df_cph_latlon_map.iloc[0, :2].values.flatten())
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -185,20 +195,24 @@ class ViewBovisData:
             format
         """
         # get movement data for SOI
-        df_movements = self._submission_movdata(self._df_metadata_sub.index[0])
-        df_cph_latlon_map = \
-            self._get_lat_long(set(df_movements["Loc"].to_list()))
-        # construct dictionary of movement data
-        move_dict = {str(row["Loc_Num"]):
-                     {"cph": row["Loc"],
-                      "lat": df_cph_latlon_map["Lat"][row["Loc"]],
-                      "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                      "on_date": row["Loc_StartDate"],
-                      "off_date": row["Loc_EndDate"],
-                      "stay_length": row["Loc_Duration"],
-                      "type": row["CPH_Type"],
-                      "county": row["County"]}
-                     for _, row in df_movements.iterrows()}
+        if self._df_metadata_sub["Host"][0] == "COW":
+            df_movements = \
+                self._submission_movdata(self._df_metadata_sub.index[0])
+            df_cph_latlon_map = \
+                self._get_lat_long(set(df_movements["Loc"].to_list()))
+            # construct dictionary of movement data
+            move_dict = {str(row["Loc_Num"]):
+                         {"cph": row["Loc"],
+                          "lat": df_cph_latlon_map["Lat"][row["Loc"]],
+                          "lon": df_cph_latlon_map["Long"][row["Loc"]],
+                          "on_date": row["Loc_StartDate"],
+                          "off_date": row["Loc_EndDate"],
+                          "stay_length": row["Loc_Duration"],
+                          "type": row["CPH_Type"],
+                          "county": row["County"]}
+                         for _, row in df_movements.iterrows()}
+        else:
+            raise NonBovineException(self._id)
         return {"submission": self._df_metadata_sub.index[0],
                 "clade": self._df_metadata_sub["Clade"][0],
                 "identifier": self._df_metadata_sub["Identifier"][0],
