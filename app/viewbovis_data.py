@@ -192,7 +192,9 @@ class ViewBovisData:
     def submission_movement_metadata(self) -> dict:
         """
             Returns metadata and movement data for the SOI in dictionary
-            format
+            format.
+
+            Raises a NonBovineException if the SOI is not a cow.
         """
         # get movement data for SOI
         if self._df_metadata_sub["Host"][0] == "COW":

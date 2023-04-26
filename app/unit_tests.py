@@ -4,7 +4,7 @@ from unittest import mock
 import pandas as pd
 import numpy.testing as nptesting
 
-from viewbovis_data import ViewBovisData
+from viewbovis_data import ViewBovisData, NonBovineException
 
 
 class TestViewBovisData(unittest.TestCase):
@@ -46,7 +46,7 @@ class TestViewBovisData(unittest.TestCase):
         # setup - mock attributes
         setattr(self.data, "_df_metadata_sub",
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
-                              "Host": ["C"], "SlaughterDate": ["D"],
+                              "Host": ["COW"], "SlaughterDate": ["D"],
                               "Animal_Type": ["E"], "CPH": ["F"],
                               "CPHH": ["G"], "CPH_Type": ["H"],
                               "County": ["I"], "RiskArea": ["J"],
@@ -69,7 +69,7 @@ class TestViewBovisData(unittest.TestCase):
                          index=["J", "O", "T"])
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
-                    "species": "C", "slaughter_date": "D", "animal_type": "E",
+                    "species": "COW", "slaughter_date": "D", "animal_type": "E",
                     "cph": "F", "cphh": "G", "cph_type": "H", "county": "I",
                     "risk_area": "J", "out_of_homerange": "L", "move":
                         {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S",
@@ -86,6 +86,11 @@ class TestViewBovisData(unittest.TestCase):
                              expected)
         # assert mock calls
         self.data._get_lat_long.assert_called_once_with({"J", "O", "T"})
+        # assert exception
+        setattr(self.data, "_df_metadata_sub",
+                pd.DataFrame({"Host": ["notCOW"]}, index=["Y"]))
+        with self.assertRaises(NonBovineException):
+            self.data.submission_movement_metadata()
 
     def test_related_submission_metadata(self):
         # setup - mock attributes

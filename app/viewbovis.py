@@ -1,8 +1,7 @@
 from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
-from viewbovis_data import ViewBovisData
-from viewbovis_data import InvalidIdException, NonBovineException
+from viewbovis_data import ViewBovisData, InvalidIdException, NonBovineException
 
 app = Flask(__name__)
 
