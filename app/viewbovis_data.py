@@ -13,14 +13,18 @@ class InvalidIdException(Exception):
         meta_data = pd.read_sql_query(meta_query, database,
                                       index_col="Submission",
                                       params={"id": id})
+        mov_query = """SELECT * FROM movements WHERE Submission=:id"""
+        mov_data = pd.read_sql_query(mov_query, database,
+                                     index_col="Submission",
+                                     params={"id": id})
         wgs_query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
         wgs_data = pd.read_sql_query(wgs_query, database,
                                      index_col="Submission",
                                      params={"id": id})
-        if not meta_data.empty:
+        if not meta_data.empty and not mov_data.empty:
             self.message = f"Missing WGS data for submission: {id}"
         elif not wgs_data.empty:
-            self.message = f"Missing metadata data for submission: {id}"
+            self.message = f"Missing meta and/or movement data for submission: {id}"
         else:
             self.message = f"Invalid submission: {id}"
 
@@ -107,10 +111,10 @@ class ViewBovisData:
             empty DataFrame if no data exists
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
-        return pd.read_sql_query(query,
-                                 self._db,
-                                 index_col="Submission",
-                                 params={"submission": submission})
+        mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
+                                     params={"submission": submission})
+        if mov_data.empty:
+            raise InvalidIdException(submission, database=self._db)
 
     def _get_lat_long(self, cphs: set) -> tuple:
         """
