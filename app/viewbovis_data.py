@@ -10,21 +10,19 @@ class InvalidIdException(Exception):
     def __init__(self, id, database):
         meta_query = """SELECT * FROM metadata WHERE Submission=:id or
                         Identifier=:id"""
-        meta_data = pd.read_sql_query(meta_query, database,
-                                      index_col="Submission",
-                                      params={"id": id})
+        metadata = pd.read_sql_query(meta_query, database,
+                                     params={"id": id})
         mov_query = """SELECT * FROM movements WHERE Submission=:id"""
         mov_data = pd.read_sql_query(mov_query, database,
-                                     index_col="Submission",
                                      params={"id": id})
         wgs_query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
         wgs_data = pd.read_sql_query(wgs_query, database,
-                                     index_col="Submission",
                                      params={"id": id})
-        if not meta_data.empty and not mov_data.empty:
+        if not metadata.empty and not mov_data.empty and \
+                metadata["CPH"][0] is not None:
             self.message = f"Missing WGS data for submission: {id}"
         elif not wgs_data.empty:
-            self.message = f"Missing meta and/or movement data for submission: {id}"
+            self.message = f"Incomplete metadata data for submission: {id}"
         else:
             self.message = f"Invalid submission: {id}"
 
@@ -66,6 +64,8 @@ class ViewBovisData:
         self._sample_name = self._submission_to_sample(self._submission)
         # retrieve x and y into tuple
         df_cph_latlon_map = self._get_lat_long(self._df_metadata_sub["CPH"])
+        if df_cph_latlon_map.empty:
+            raise InvalidIdException(id, database=self._db)
         self._xy = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
 
     # TODO: validate input
