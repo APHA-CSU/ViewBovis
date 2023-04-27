@@ -131,6 +131,7 @@ class ViewBovisData:
                                      params={"submission": submission})
         if mov_data.empty:
             raise InvalidIdException(submission, database=self._db)
+        return mov_data
 
     def _get_lat_long(self, cphs: set) -> tuple:
         """
@@ -236,10 +237,11 @@ class ViewBovisData:
                     self._df_metadata_sub["OutsideHomeRange"][0],
                 "move": move_dict}
 
-    # TODO: not just cows
     def related_submissions_metadata(self, snp_threshold: int) -> dict:
         """
-            Returns metadata for genetically related submissions.
+            Returns metadata and SNP distance for genetically related
+            submissions. Submissions with missing metadata will be
+            included but contain 'None' in the metadata fields.
 
             Parameters:
                 snp_threshold (str): maximum SNP distance for genetic
@@ -265,7 +267,7 @@ class ViewBovisData:
         # get lat/long mappings for CPH of related submissions
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
-        # construct data response for client
+        # response for related samples with metadata
         response = \
             {index:
                 {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
@@ -280,9 +282,8 @@ class ViewBovisData:
                      self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                         df_cph_latlon_map["y"][row["CPH"]]))}
              for index, row in df_metadata_related.iterrows()}
-        # add related samples without metadata to the response
-        # dictionary
         # TODO: test this functionality
+        # related samples without metadata
         no_meta_submissions = \
             set(df_snps_related.index) - set(df_metadata_related.index)
         no_meta_response = \
@@ -295,13 +296,15 @@ class ViewBovisData:
                     "date": None,
                     "distance": None}
              for subm in no_meta_submissions}
+        # append no_meta_response to response to the create the full
+        # response dictionary
         return {**response, **no_meta_response}
 
-    # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
             Returns metadata and SNP matrix data for related
-            submissions.
+            submissions. There maybe submissions in the SNP matrix
+            without metadata if metadata is missing.
 
             The SNP matrix is provided in "molten" format
             (see https://github.com/tseemann/snp-dists#snp-dists--m-molten-output-format)
