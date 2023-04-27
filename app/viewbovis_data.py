@@ -70,19 +70,17 @@ class ViewBovisData:
             data are, full metadata, the submission number, the sample
             name and the lat and long for the positive test location
         """
-        # get metadata for a single id
+        # get metadata and WGS metadata for a single id
         self._df_metadata_sub = self._submission_metadata([self._id])
-        if self._df_metadata_sub.empty:
+        self._df_wgs_metadata_sub = self._submission_wgs_metadata(self._id)
+        if self._df_metadata_sub.empty and self._df_wgs_metadata_sub.empty:
             raise InvalidIdException(self._id, database=self._db)
-        self._submission = self._df_metadata_sub.index[0]
+        self._submission = self._df_wgs_metadata_sub.index[0]
         # retrieve sample name from submission number
-        self._sample_name = self._submission_to_sample(self._submission)
+        self._sample_name = self._df_wgs_metadata_sub["Sample"][0]
         # retrieve x,y and lat,lon into tuples
         df_cph_latlon_map = self._get_lat_long(self._df_metadata_sub["CPH"])
-        if df_cph_latlon_map.empty:
-            raise InvalidIdException(self._id, database=self._db)
         self._xy = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
-        self._latlon = tuple(df_cph_latlon_map.iloc[0, :2].values.flatten())
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -100,14 +98,18 @@ class ViewBovisData:
                                  index_col="Submission",
                                  params=ids+ids)
 
-    def _submission_to_sample(self, submission: str) -> str:
+    # TODO: validate input
+    def _submission_wgs_metadata(self, id: str) -> pd.DataFrame:
         """
-            Maps a sample name to submission number
+            Fetches WGS metadata for a given id. Returns a DataFrame
+            containing WGS metadata if it exists
         """
-        query = "SELECT * FROM wgs_metadata WHERE Submission=:submission"
-        df_wgs_sub = pd.read_sql_query(query, self._db,
-                                       params={"submission": submission})
-        return df_wgs_sub["Sample"][0]
+        query = """SELECT * FROM wgs_metadata WHERE Submission=:id OR
+                   Identifier=:id"""
+        return pd.read_sql_query(query,
+                                 self._db,
+                                 index_col="Submission",
+                                 params={"id": id})
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -177,7 +179,7 @@ class ViewBovisData:
                 for genetically related isolates with submission numbers
                 as row and column labels
         """
-        clade = self._df_metadata_sub["Clade"][0]
+        clade = self._df_wgs_metadata_sub["Clade"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
@@ -203,6 +205,8 @@ class ViewBovisData:
 
             Raises a NonBovineException if the SOI is not a cow.
         """
+        if self._df_metadata_sub.empty:
+            raise InvalidIdException(self._id, database=self._db)
         # get movement data for SOI
         if self._df_metadata_sub["Host"][0] == "COW":
             df_movements = \
