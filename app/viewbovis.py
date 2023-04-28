@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request, g
+from werkzeug.exceptions import BadRequest
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData, InvalidIdException, NonBovineException
@@ -44,11 +45,14 @@ def sample():
         Returns meta and movement data in json format for the SOI in
         response to a client GET request at route /sample/, with the
         sample_name encoded in the URL query string; e.g.
-        "/sample?sample_name=AF-61-04255-17".
+        "/sample?sample_name=AF-61-04255-17"
     """
     id = request.args.get("sample_name")
+    host = request.args.get("host")
+    if host and host != "cow":
+        raise BadRequest()
     get_data_object(id)
-    return jsonify(g.data.submission_movement_metadata())
+    return jsonify(g.data.submission_movement_metadata(host))
 
 
 @app.route("/sample/related", methods=["GET"])
@@ -58,7 +62,7 @@ def related_samples():
         samples within a given SNP distance of the SOI in response to a
         client GET request on route /sample/related with the
         sample_name and snp_distance encoded in the URL query string;
-        e.g. "/sample/related?sample_name=AF-61-04255-17&snp_distance=5".
+        e.g. "/sample/related?sample_name=AF-61-04255-17&snp_distance=5"
     """
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))

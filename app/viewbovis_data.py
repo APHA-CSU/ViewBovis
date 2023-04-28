@@ -72,7 +72,12 @@ class ViewBovisData:
         """
         # get metadata and WGS metadata for a single id
         self._df_metadata_sub = self._submission_metadata([self._id])
-        self._df_wgs_metadata_sub = self._submission_wgs_metadata(self._id)
+        if not self._df_metadata_sub.empty:
+            self._submission = self._df_metadata_sub.index[0]
+            self._df_wgs_metadata_sub = \
+                self._submission_wgs_metadata(self._submission)
+        else:
+            self._df_wgs_metadata_sub = self._submission_metadata(self._id)
         if self._df_metadata_sub.empty and self._df_wgs_metadata_sub.empty:
             raise InvalidIdException(self._id, database=self._db)
         self._submission = self._df_wgs_metadata_sub.index[0]
@@ -104,8 +109,7 @@ class ViewBovisData:
             Fetches WGS metadata for a given id. Returns a DataFrame
             containing WGS metadata if it exists
         """
-        query = """SELECT * FROM wgs_metadata WHERE Submission=:id OR
-                   Identifier=:id"""
+        query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -198,7 +202,7 @@ class ViewBovisData:
                                   map(lambda x: self._sample_to_submission(x)))
         return df_snps_related_processed
 
-    def submission_movement_metadata(self) -> dict:
+    def submission_movement_metadata(self, host: str) -> dict:
         """
             Returns metadata and movement data for the SOI in dictionary
             format.
@@ -207,25 +211,24 @@ class ViewBovisData:
         """
         if self._df_metadata_sub.empty:
             raise InvalidIdException(self._id, database=self._db)
-        # get movement data for SOI
-        if self._df_metadata_sub["Host"][0] == "COW":
-            df_movements = \
-                self._submission_movdata(self._df_metadata_sub.index[0])
-            df_cph_latlon_map = \
-                self._get_lat_long(set(df_movements["Loc"].to_list()))
-            # construct dictionary of movement data
-            move_dict = {str(row["Loc_Num"]):
-                         {"cph": row["Loc"],
-                          "lat": df_cph_latlon_map["Lat"][row["Loc"]],
-                          "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                          "on_date": row["Loc_StartDate"],
-                          "off_date": row["Loc_EndDate"],
-                          "stay_length": row["Loc_Duration"],
-                          "type": row["CPH_Type"],
-                          "county": row["County"]}
-                         for _, row in df_movements.iterrows()}
-        else:
+        if host == "cow" and self._df_metadata_sub["Host"][0] != "COW":
             raise NonBovineException(self._id)
+        # get movement data for SOI
+        df_movements = \
+            self._submission_movdata(self._df_metadata_sub.index[0])
+        df_cph_latlon_map = \
+            self._get_lat_long(set(df_movements["Loc"].to_list()))
+        # construct dictionary of movement data
+        move_dict = {str(row["Loc_Num"]):
+                     {"cph": row["Loc"],
+                      "lat": df_cph_latlon_map["Lat"][row["Loc"]],
+                      "lon": df_cph_latlon_map["Long"][row["Loc"]],
+                      "on_date": row["Loc_StartDate"],
+                      "off_date": row["Loc_EndDate"],
+                      "stay_length": row["Loc_Duration"],
+                      "type": row["CPH_Type"],
+                      "county": row["County"]}
+                     for _, row in df_movements.iterrows()}
         return {"submission": self._df_metadata_sub.index[0],
                 "clade": self._df_metadata_sub["Clade"][0],
                 "identifier": self._df_metadata_sub["Identifier"][0],
