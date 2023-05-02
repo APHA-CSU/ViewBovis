@@ -93,6 +93,7 @@ class ViewBovisData:
             else:
                 raise InvalidIdException(self._id, database=self._db)
         if not self._df_wgs_metadata_soi.empty:
+            print(self._df_wgs_metadata_soi)
             # retrieve sample name from submission number
             self._sample_name = self._df_wgs_metadata_soi["Sample"][0]
 
