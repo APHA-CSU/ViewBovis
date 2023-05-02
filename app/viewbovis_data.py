@@ -286,6 +286,7 @@ class ViewBovisData:
             # get lat/long mappings for CPH of related submissions
             df_cph_latlon_map = \
                 self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
+        # TODO: test this functionality
         # related samples without metadata
         no_meta_submissions = \
             set(df_snps_related.index) - set(df_metadata_related.index)
