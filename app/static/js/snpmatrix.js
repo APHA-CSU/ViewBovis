@@ -105,26 +105,35 @@ snpSlider2.addEventListener("input", rangeValue2);
 // Async function that renders target samples and its related samples on map
 const showSNPMatrix = async function () {
 
-   
-  // Select elements from DOM
-  const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
-  const matrixSNPDistance = document.getElementById("snpmatrix-distance-value").textContent;
-  console.log(matrixSampleSelected, matrixSNPDistance);
+  try {
 
-  // Render spinner
-  // document.getElementById("snpmatrix-spinner").classList.remove("hidden");
+    // Select elements from DOM
+    const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
+    const matrixSNPDistance = document.getElementById("snpmatrix-distance-value").textContent;
+    // console.log(matrixSampleSelected, matrixSNPDistance);
 
-  // Fetch json data from backend
-  const response = await fetch(`/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`);
-  // if(!response.ok) throw new Error("Problem getting SNP data from backend");
-  let json = await response.json();
-  // console.log(response);
-  console.log(json);
-  
-  // Remove spinner when fetch is complete
-  // document.getElementById("snpmatrix-spinner").classList.add("hidden");
+    // Render spinner
+    document.getElementById("snpmatrix-spinner").classList.remove("hidden");
 
-  
+    // Fetch json data from backend
+    const response = await fetch(`/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`);
+    // if(!response.ok) throw new Error("Problem getting SNP data from backend");
+    let json = await response.json();
+    // console.log(response);
+    console.log(json);
+    
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmatrix-spinner").classList.add("hidden");
+
+  } catch(err) {
+    console.error(err)
+
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmap-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmap-warning-text").classList.remove("hidden");
+  }
 };
 
 // Execute the async showSNPMatrix() function when the main "Plot SNP Matrix" button is clicked
