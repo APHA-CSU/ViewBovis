@@ -577,12 +577,12 @@ backBtn2.addEventListener("click", () => {
 // ------------------------ //
 
 // Select elements from DOM
-const snpSlider = document.querySelector('input[type="range"]');
+const snpSlider = document.querySelector("#snpmap-range");
 
 // Update display value when user moves slider
 const rangeValue = function(){
   let newValue = snpSlider.value;
-  let displayValue = document.querySelector(".display-value");
+  let displayValue = document.querySelector("#snp-distance-value");
   displayValue.innerHTML = newValue;
 }
 snpSlider.addEventListener("input", rangeValue);

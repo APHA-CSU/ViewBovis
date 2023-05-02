@@ -1,0 +1,12 @@
+/* ================================ */
+/*
+/* SNP MATRIX CSS */
+/*
+/* ================================ */
+
+#snpmatrix-spinner-container {
+    display: inline-flex;
+    margin-top: 4px;
+    padding-left: 20px;
+}
+

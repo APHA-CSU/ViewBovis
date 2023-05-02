@@ -77,3 +77,58 @@ backBtn3.addEventListener("click", () => {
 
 
 
+// ------------------------ //
+//
+// SNP DISTANCE SLIDER
+//
+// ------------------------ //
+
+// Select elements from DOM
+const snpSlider2 = document.querySelector("#snpmatrix-range");
+
+// Update display value when user moves slider
+const rangeValue2 = function(){
+  let newValue2 = snpSlider2.value;
+  let displayValue2 = document.querySelector("#snpmatrix-distance-value");
+  displayValue2.innerHTML = newValue2;
+}
+snpSlider2.addEventListener("input", rangeValue2);
+
+
+
+// ------------------------ //
+//
+// ECHARTS HEATMAP
+//
+// ------------------------ //
+
+// Async function that renders target samples and its related samples on map
+const showSNPMatrix = async function () {
+
+   
+  // Select elements from DOM
+  const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
+  const matrixSNPDistance = document.getElementById("snpmatrix-distance-value").textContent;
+  console.log(matrixSampleSelected, matrixSNPDistance);
+
+  // Render spinner
+  // document.getElementById("snpmatrix-spinner").classList.remove("hidden");
+
+  // Fetch json data from backend
+  const response = await fetch(`/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`);
+  // if(!response.ok) throw new Error("Problem getting SNP data from backend");
+  let json = await response.json();
+  // console.log(response);
+  console.log(json);
+  
+  // Remove spinner when fetch is complete
+  // document.getElementById("snpmatrix-spinner").classList.add("hidden");
+
+  
+};
+
+// Execute the async showSNPMatrix() function when the main "Plot SNP Matrix" button is clicked
+document.getElementById("btn__plot-snpmatrix").addEventListener("click", showSNPMatrix);
+
+
+
