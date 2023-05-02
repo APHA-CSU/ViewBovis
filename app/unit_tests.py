@@ -23,8 +23,8 @@ class TestViewBovisData(unittest.TestCase):
     @mock.patch("viewbovis_data.pd.read_csv")
     def test_related_snp_matrix(self, mock_read_csv, mock_glob):
         # setup - mock attributes
-        setattr(self.data, "_df_metadata_sub",
-                pd.DataFrame({"Clade": ["foo_clade"]}, index=["foo_index"]))
+        setattr(self.data, "_df_wgs_metadata_soi",
+                pd.DataFrame({"group": ["foo_clade"]}, index=["foo_index"]))
         setattr(self.data, "_matrix_dir", "mock_matrix_dir")
         setattr(self.data, "_sample_name", "foo")
         # setup - mock private methods
@@ -44,7 +44,7 @@ class TestViewBovisData(unittest.TestCase):
 
     def test_submission_movement_metadata(self):
         # setup - mock attributes
-        setattr(self.data, "_df_metadata_sub",
+        setattr(self.data, "_df_metadata_soi",
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
                               "Host": ["COW"], "SlaughterDate": ["D"],
                               "Animal_Type": ["E"], "CPH": ["F"],
@@ -82,15 +82,15 @@ class TestViewBovisData(unittest.TestCase):
                                "off_date": "AB", "stay_length": "X",
                                "type": "R", "county": "O"}}}
         # test expected output
-        self.assertDictEqual(self.data.submission_movement_metadata(),
+        self.assertDictEqual(self.data.submission_movement_metadata("cow"),
                              expected)
         # assert mock calls
         self.data._get_lat_long.assert_called_once_with({"J", "O", "T"})
         # assert exception
-        setattr(self.data, "_df_metadata_sub",
+        setattr(self.data, "_df_metadata_soi",
                 pd.DataFrame({"Host": ["notCOW"]}, index=["Y"]))
         with self.assertRaises(NonBovineException):
-            self.data.submission_movement_metadata()
+            self.data.submission_movement_metadata("cow")
 
     def test_related_submission_metadata(self):
         # setup - mock attributes
