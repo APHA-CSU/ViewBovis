@@ -874,7 +874,9 @@ const showRelatedSamples = async function () {
       document.getElementById("snpmap-spinner").classList.add("hidden");  
 
       // Activate generic (unknown) warning message on UI
-      document.getElementById("snpmap-warning-text").classList.remove("hidden");
+      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message">Server error; please report to developers (please include details on how to reproduce this error)</p>
+      `);
   }
   
 };
