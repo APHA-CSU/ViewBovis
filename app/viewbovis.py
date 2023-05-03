@@ -2,7 +2,8 @@ from flask import Flask, jsonify, render_template, request, g
 from werkzeug.exceptions import BadRequest
 from liveserver import LiveServer
 
-from viewbovis_data import ViewBovisData, InvalidIdException, NonBovineException
+from viewbovis_data import ViewBovisData, NoDataException, NoMetaDataException,\
+                           NoWgsDataException, NonBovineException
 
 app = Flask(__name__)
 
@@ -85,7 +86,9 @@ def snp_matrix():
     return jsonify(g.data.snp_matrix(snp_threshold))
 
 
-@app.errorhandler(InvalidIdException)
+@app.errorhandler(NoDataException)
+@app.errorhandler(NoMetaDataException)
+@app.errorhandler(NoWgsDataException)
 @app.errorhandler(NonBovineException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})

@@ -4,24 +4,67 @@ from unittest import mock
 import pandas as pd
 import numpy.testing as nptesting
 
-from viewbovis_data import ViewBovisData, NonBovineException
+from viewbovis_data import ViewBovisData, NoDataException, NoMetaDataException,\
+                           NoWgsDataException, NonBovineException
 
 
 class TestViewBovisData(unittest.TestCase):
 
     def setUp(self):
         ViewBovisData._db_connect = mock.Mock()
-        ViewBovisData._load_soi = mock.Mock()
         ViewBovisData.__del__ = mock.Mock()
-        self.data = ViewBovisData("foo_path", "foo_id")
 
     def tearDown(self) -> None:
         self.data.__del__()
         return super().tearDown()
 
+    @mock.patch("viewbovis_data.ViewBovisData._submission_metadata")
+    @mock.patch("viewbovis_data.ViewBovisData._submission_wgs_metadata")
+    @mock.patch("viewbovis_data.ViewBovisData._get_lat_long")
+    def test_load_soi(self,
+                      mock_get_lat_long,
+                      mock_submission_wgs_metadata,
+                      mock_submission_metadata):
+        # setup - mock attributes
+        setattr(ViewBovisData, "_db", "mock_db")
+        mock_get_lat_long.return_value = pd.DataFrame({"lat": ["foo_lat"],
+                                                       "long": ["foo_long"],
+                                                       "x": ["foo_x"],
+                                                       "y": ["foo_y"]})
+        # test missing all data
+        mock_submission_wgs_metadata.return_value = pd.DataFrame()
+        mock_submission_metadata.return_value = pd.DataFrame()
+        # assert NoDataException is raised
+        with self.assertRaises(NoDataException):
+            self.data = ViewBovisData("foo_path", "foo_id")
+        # test missing WGS data
+        mock_submission_metadata.return_value = \
+            pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
+        self.data = ViewBovisData("foo_path", "foo_id")
+        self.assertEqual(self.data._submission, "foo_index")
+        self.assertEqual(self.data._xy, ("foo_x", "foo_y"))
+        self.assertEqual(self.data._sample_name, None)
+        # testing missing metadata
+        mock_submission_metadata.return_value = pd.DataFrame()
+        mock_submission_wgs_metadata.return_value = \
+            pd.DataFrame({"Sample": ["foo_sample"]}, index=["foo_index"])
+        self.data = ViewBovisData("foo_path", "foo_id")
+        self.assertEqual(self.data._submission, "foo_index")
+        self.assertEqual(self.data._xy, None)
+        self.assertEqual(self.data._sample_name, "foo_sample")
+        # test no missing data
+        mock_submission_metadata.return_value = \
+            pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
+        self.data = ViewBovisData("foo_path", "foo_id")
+        self.assertEqual(self.data._submission, "foo_index")
+        self.assertEqual(self.data._xy, ("foo_x", "foo_y"))
+        self.assertEqual(self.data._sample_name, "foo_sample")
+
+    @mock.patch("viewbovis_data.ViewBovisData._load_soi")
     @mock.patch("viewbovis_data.glob.glob")
     @mock.patch("viewbovis_data.pd.read_csv")
-    def test_related_snp_matrix(self, mock_read_csv, mock_glob):
+    def test_related_snp_matrix(self, mock_read_csv, mock_glob, _):
+        self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_df_wgs_metadata_soi",
                 pd.DataFrame({"group": ["foo_clade"]}, index=["foo_index"]))
@@ -41,8 +84,14 @@ class TestViewBovisData(unittest.TestCase):
                                 index=["foo_sub", "bar_sub"])
         nptesting.assert_array_equal(self.data._related_snp_matrix(3),
                                      expected)
+        # assert exception
+        setattr(self.data, "_df_wgs_metadata_soi", pd.DataFrame())
+        with self.assertRaises(NoWgsDataException):
+            self.data._related_snp_matrix(1)
 
-    def test_submission_movement_metadata(self):
+    @mock.patch("viewbovis_data.ViewBovisData._load_soi")
+    def test_submission_movement_metadata(self, _):
+        self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_df_metadata_soi",
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
@@ -86,13 +135,18 @@ class TestViewBovisData(unittest.TestCase):
                              expected)
         # assert mock calls
         self.data._get_lat_long.assert_called_once_with({"J", "O", "T"})
-        # assert exception
+        # assert exceptions
+        setattr(self.data, "_df_metadata_soi", pd.DataFrame())
+        with self.assertRaises(NoMetaDataException):
+            self.data.submission_movement_metadata("cow")
         setattr(self.data, "_df_metadata_soi",
                 pd.DataFrame({"Host": ["notCOW"]}, index=["Y"]))
         with self.assertRaises(NonBovineException):
             self.data.submission_movement_metadata("cow")
 
-    def test_related_submission_metadata(self):
+    @mock.patch("viewbovis_data.ViewBovisData._load_soi")
+    def test_related_submission_metadata(self, _):
+        self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_submission", "foo_sub")
         # setup - mock private methods
@@ -102,9 +156,10 @@ class TestViewBovisData(unittest.TestCase):
         self.data._geo_distance = mock.Mock()
         # setup - return values for private method mocks
         self.data._related_snp_matrix.return_value = \
-            pd.DataFrame({"foo_sub": [0, 3],
-                          "bar_sub": [3, 0]},
-                         index=["foo_sub", "bar_sub"])
+            pd.DataFrame({"foo_sub": [0, 3, 2],
+                          "bar_sub": [3, 0, 10],
+                          "baz_sub": [2, 10, 0]},
+                         index=["foo_sub", "bar_sub", "baz_sub"])
         self.data._submission_metadata.return_value = \
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                           "SlaughterDate": ["foo_date", "bar_date"],
@@ -125,18 +180,24 @@ class TestViewBovisData(unittest.TestCase):
              "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "herd": "bar_herd",
                          "clade": "bar_clade", "date": "bar_date",
-                         "distance": 1.1}}
+                         "distance": 1.1},
+             "baz_sub": {"lat": None, "lon": None, "snp_distance": 2,
+                         "animal_id": None, "herd": None, "clade": None,
+                         "date": None, "distance": None}}
         # test expected output
         self.assertDictEqual(
             self.data.related_submissions_metadata(3), expected)
         # assert mock calls
         self.data._submission_metadata.assert_called_once_with(["foo_sub",
-                                                                "bar_sub"])
+                                                                "bar_sub",
+                                                                "baz_sub"])
         self.data._get_lat_long.assert_called_once_with({"O", "J"})
         self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                   mock.call((2, 5))])
 
-    def test_snp_matrix(self):
+    @mock.patch("viewbovis_data.ViewBovisData._load_soi")
+    def test_snp_matrix(self, _):
+        self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_submission", "foo_sub")
         # setup - mock private methods
@@ -146,9 +207,10 @@ class TestViewBovisData(unittest.TestCase):
         self.data._geo_distance = mock.Mock()
         # setup - return values for private method mocks
         self.data._related_snp_matrix.return_value = \
-            pd.DataFrame({"foo_sub": [0, 3],
-                          "bar_sub": [3, 0]},
-                         index=["foo_sub", "bar_sub"])
+            pd.DataFrame({"foo_sub": [0, 3, 2],
+                          "bar_sub": [3, 0, 10],
+                          "baz_sub": [2, 10, 0]},
+                         index=["foo_sub", "bar_sub", "baz_sub"])
         self.data._submission_metadata.return_value = \
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                           "SlaughterDate": ["foo_date", "bar_date"],
@@ -168,15 +230,23 @@ class TestViewBovisData(unittest.TestCase):
              "bar_sub": {"animal_id": "bar_id", "herd": "bar_herd",
                          "clade": "bar_clade", "date": "bar_date",
                          "distance": 1.1},
-             "matrix": [["foo_sub", "foo_sub", 0],
-                        ["foo_sub", "bar_sub", 3],
-                        ["bar_sub", "foo_sub", 3],
-                        ["bar_sub", "bar_sub", 0]]}
+             "baz_sub": {"animal_id": None, "herd": None, "clade": None,
+                         "date": None, "distance": None},
+             "matrix": [['foo_sub', 'foo_sub', 0],
+                        ['foo_sub', 'bar_sub', 3],
+                        ['foo_sub', 'baz_sub', 2],
+                        ['bar_sub', 'foo_sub', 3],
+                        ['bar_sub', 'bar_sub', 0],
+                        ['bar_sub', 'baz_sub', 10],
+                        ['baz_sub', 'foo_sub', 2],
+                        ['baz_sub', 'bar_sub', 10],
+                        ['baz_sub', 'baz_sub', 0]]}
         # test expected output
         self.assertDictEqual(self.data.snp_matrix(3), expected)
         # assert mock calls
         self.data._submission_metadata.assert_called_once_with(["foo_sub",
-                                                                "bar_sub"])
+                                                                "bar_sub",
+                                                                "baz_sub"])
         self.data._get_lat_long.assert_called_once_with({"O", "J"})
         self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                   mock.call((2, 5))])

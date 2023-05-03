@@ -6,42 +6,27 @@ import numpy as np
 import pandas as pd
 
 
-class InvalidIdException(Exception):
-    def __init__(self, id, database):
-        meta_query = """SELECT * FROM metadata WHERE Submission=:id or
-                        Identifier=:id"""
-        metadata = pd.read_sql_query(meta_query, database,
-                                     params={"id": id})
-        mov_query = """SELECT * FROM movements WHERE Submission=:id"""
-        mov_data = pd.read_sql_query(mov_query, database,
-                                     params={"id": id})
-        wgs_query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
-        wgs_data = pd.read_sql_query(wgs_query, database,
-                                     params={"id": id})
-        # if all metadata types exist
-        if not metadata.empty and not mov_data.empty and \
-                metadata["CPH"][0] is not None:
-            self.message = f"Missing WGS data for submission: {id}"
-        # if wgs data exists
-        elif not wgs_data.empty:
-            self.message = f"Incomplete metadata data for submission: {id}"
-        # if no data exists
-        elif wgs_data.empty and metadata.empty and mov_data.empty:
-            self.message = f"Invalid submission: {id}"
-        else:
-            self.message = f"Missing WGS data and incomplete metadata data for \
-                submission: {id}"
+class NoDataException(Exception):
+    def __init__(self, id):
+        self.message = f"Invalid submission: {id}"
 
     def __str__(self):
         return self.message
 
 
-class NonBovineException(Exception):
+class NoMetaDataException(NoDataException):
+    def __init__(self, id):
+        self.message = f"Incomplete or missing metadata for submission: {id}"
+
+
+class NoWgsDataException(NoDataException):
+    def __init__(self, id):
+        self.message = f"Missing WGS data for submission: {id}"
+
+
+class NonBovineException(NoDataException):
     def __init__(self, id):
         self.message = f"Non-bovine submission: {id}"
-
-    def __str__(self):
-        return self.message
 
 
 class ViewBovisData:
@@ -85,17 +70,18 @@ class ViewBovisData:
         # if missing metadata
         else:
             # get WGS metadata for the SOI
-            self._df_wgs_metadata_soi = self._submission_metadata(self._id)
+            self._df_wgs_metadata_soi = self._submission_wgs_metadata(self._id)
             self._xy = None
             if not self._df_wgs_metadata_soi.empty:
                 # get the submission number
                 self._submission = self._df_wgs_metadata_soi.index[0]
             else:
-                raise InvalidIdException(self._id, database=self._db)
+                raise NoDataException(self._id)
         if not self._df_wgs_metadata_soi.empty:
-            print(self._df_wgs_metadata_soi)
             # retrieve sample name from submission number
             self._sample_name = self._df_wgs_metadata_soi["Sample"][0]
+        else:
+            self._sample_name = None
 
     # TODO: validate input
     def _submission_metadata(self, ids: list) -> pd.DataFrame:
@@ -146,7 +132,7 @@ class ViewBovisData:
         mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
                                      params={"submission": submission})
         if mov_data.empty:
-            raise InvalidIdException(submission, database=self._db)
+            raise NoMetaDataException(submission)
         return mov_data
 
     def _get_lat_long(self, cphs: set) -> tuple:
@@ -194,7 +180,7 @@ class ViewBovisData:
                 as row and column labels
         """
         if self._df_wgs_metadata_soi.empty:
-            raise InvalidIdException(self._id, database=self._db)
+            raise NoWgsDataException(self._id)
         clade = self._df_wgs_metadata_soi["group"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
@@ -222,7 +208,7 @@ class ViewBovisData:
             Raises a NonBovineException if the SOI is not a cow.
         """
         if self._df_metadata_soi.empty:
-            raise InvalidIdException(self._id, database=self._db)
+            raise NoMetaDataException(self._id)
         if host == "cow" and self._df_metadata_soi["Host"][0] != "COW":
             raise NonBovineException(self._id)
         # get movement data for SOI
@@ -287,7 +273,6 @@ class ViewBovisData:
             # get lat/long mappings for CPH of related submissions
             df_cph_latlon_map = \
                 self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
-        # TODO: test this functionality
         # related samples without metadata
         no_meta_submissions = \
             set(df_snps_related.index) - set(df_metadata_related.index)
@@ -353,7 +338,6 @@ class ViewBovisData:
             # get lat/long mappings for CPH of related submissions
             df_cph_latlon_map = \
                 self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
-        # TODO: test this functionality
         # related samples without metadata
         no_meta_submissions = \
             set(df_snps_related.index) - set(df_metadata_related.index)
