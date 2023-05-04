@@ -52,3 +52,13 @@ a:hover {
 .govuk-button--secondary {
     background-color: #f3f2f1;;
 }
+
+.warning-text {
+    color: var(--apha-orange);
+    font-size: 20px;
+}
+
+.error-text {
+    color: var(--apha-red);
+    font-size: 20px;
+}
