@@ -26,18 +26,14 @@ backBtn3.setAttribute("data-bs-toggle", "tooltip");
 backBtn3.setAttribute("data-bs-placement", "btn-backToSplashPage");
 backBtn3.setAttribute("title", "Back to SNP Distance Splash Page");
 backBtn3.innerHTML = `
-    <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
-        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+    <span id="back-to-start-page-text">
+        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
         </svg>
         Back
     </span>
 `;
-backBtn3.style.padding = 0;
-backBtn3.style.margin = 0;
-backBtn3.style.marginTop = "-16px";
-backBtn3.style.border = "none";
-backBtn3.style.position = "absolute";
+backBtn3.classList.add("back-to-start-page-bttn");
 
 
 // ------------------------ //
@@ -55,7 +51,7 @@ document.getElementById("btn-view-matrix").addEventListener("click", () => {
   map2.invalidateSize();
 
   // Render a back button
-  document.getElementById("snpmatrix-content-container").insertAdjacentElement("afterbegin", backBtn3);
+  document.getElementById("snpmatrix-sidebar-container").insertAdjacentElement("afterbegin", backBtn3);
 
   // Ensure hidden class removed from back button
   backBtn3.classList.remove("hidden");
@@ -420,6 +416,12 @@ const plotHeatmap = function(matrix, identifier, af, sampleNames, minValue, maxV
 const showSNPMatrix = async function () {
 
   try {
+
+    // First clear any error and warning text
+    // document.getElementById("snpmap-warning-text").textContent = "";
+    // if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
+    //   document.getElementById("snpmap-error-message").remove();
+    // };
 
     // Select elements from DOM
     const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
