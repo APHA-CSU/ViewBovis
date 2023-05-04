@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, render_template, request, g
-from werkzeug.exceptions import BadRequest
 from liveserver import LiveServer
 
 from viewbovis_data import ViewBovisData, NoDataException, NoMetaDataException,\
@@ -43,17 +42,27 @@ def home():
 @app.route("/sample", methods=["GET"])
 def sample():
     """
-        Returns meta and movement data in json format for the SOI in
-        response to a client GET request at route /sample/, with the
-        sample_name encoded in the URL query string; e.g.
+        Returns metadata in json format for the SOI in response to a
+        client GET request at route /sample/, with the sample_name
+        encoded in the URL query string; e.g.
         "/sample?sample_name=AF-61-04255-17"
     """
     id = request.args.get("sample_name")
-    host = request.args.get("host")
-    if host and host != "cow":
-        raise BadRequest()
     get_data_object(id)
-    return jsonify(g.data.submission_movement_metadata(host))
+    return jsonify(g.data.soi_metadata())
+
+
+@app.route("/sample/movements", methods=["GET"])
+def movements():
+    """
+        Returns meta and movement data in json format for the SOI in
+        response to a client GET request at route /sample/movements,
+        with the sample_name encoded in the URL query string; e.g.
+        "/sample?sample_name=AF-61-04255-17"
+    """
+    id = request.args.get("sample_name")
+    get_data_object(id)
+    return jsonify(g.data.soi_movement_metadata())
 
 
 @app.route("/sample/related", methods=["GET"])
