@@ -578,8 +578,8 @@ const showMovements = async function () {
     document.getElementById("cattle-spinner").classList.add("hidden");  
 
     // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-      <p class="warning-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
   }
 };
@@ -654,9 +654,10 @@ const showMovements2 = async function () {
     document.getElementById("cattle-spinner2").classList.add("hidden");  
 
     // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-      <p class="warning-text" id="cattle-error-message">Server error; please report to developers (please include details on how to reproduce this error)</p>
+    document.getElementById("cattle-warning-text2").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message2">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
+    
   } 
 };
 

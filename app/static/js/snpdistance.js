@@ -868,15 +868,15 @@ const showRelatedSamples = async function () {
     };
 
   } catch(err) {
-      console.error(err)
+    console.error(err)
 
-      // Remove spinner when fetch is complete
-      document.getElementById("snpmap-spinner").classList.add("hidden");  
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmap-spinner").classList.add("hidden");  
 
-      // Activate generic (unknown) warning message on UI
-      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message">Server error; please report to developers (please include details on how to reproduce this error)</p>
-      `);
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmap-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
   }
   
 };

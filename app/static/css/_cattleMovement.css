@@ -159,11 +159,6 @@ label.govuk-label.govuk-checkboxes__label {
     padding-left: 20px;
 }
 
-.warning-text {
-    color: var(--apha-orange);
-    font-size: 20px;
-}
-
 #cattle-spinner-container2 {
     display: inline-flex;
     margin-top: 4px;
