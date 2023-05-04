@@ -437,6 +437,7 @@ const showSNPMatrix = async function () {
     console.log(json);
 
     // Capture whether the user input an identifier or AF number into the search box
+    // BUG this may not work for all samples because not all submissions at AF numbers
     const sampleType = matrixSampleSelected.startsWith("AF") ? "AFnumber" : "Identifier";
     // console.log(sampleType);
 
@@ -487,10 +488,10 @@ const showSNPMatrix = async function () {
     console.error(err)
 
     // Remove spinner when fetch is complete
-    document.getElementById("snpmap-spinner").classList.add("hidden");  
+    document.getElementById("snpmatrix-spinner").classList.add("hidden");  
 
     // Activate generic (unknown) warning message on UI
-    document.getElementById("snpmap-warning-text").classList.remove("hidden");
+    document.getElementById("snpmatrix-warning-text").classList.remove("hidden");
   }
 };
 
