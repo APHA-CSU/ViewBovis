@@ -10,3 +10,9 @@
     padding-left: 20px;
 }
 
+#snpmatrix-sidebar-container {
+    height: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+}

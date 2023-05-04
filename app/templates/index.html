@@ -431,7 +431,7 @@
         <!-- SNP Distance Content -->
         <!-- ================================== -->
         <div class="container-fluid content content-3">
-            <div id="snpdistance-splash-page" class="">
+            <div id="snpdistance-splash-page" class="hidden">
                 <!-- Government ALPHA Banner -->
                 <div class="row alpha-side-margin">
                     <div class="govuk-phase-banner">
@@ -661,7 +661,7 @@
             <!-- ================================== -->
             <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
             <!-- ================================== -->
-            <div id="snpmatrix-content" class="row hidden">
+            <div id="snpmatrix-content" class="row">
                 <div class="col-3" id="snpmatrix-content-container">
                     <div id="snpmatrix-sidebar-container" style="margin-top: 10px;">
                         <!-- <br> -->
@@ -671,7 +671,7 @@
                         <div>
                             <p>
                                 <!-- Identifier or AF number -->
-                                <input value="AF-61-04255-17" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or AF Number">
+                                <input value="UK262728200982" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or AF Number">
                             </p>
                         </div>
                         <div id="snpmatrix-distance-container">
@@ -704,12 +704,12 @@
                             </div>
                         </div>
                         <hr>
+                        <div id="snp-distribution-plot" style="height: 200px; width: 100%;"></div>
                     </div>
                 </div>
                 <!-- SNP Matrix     -->
-                <div class="col">
+                <div class="col-9" id="snpmatrix-container">
                     <div id="snpmatrix" style="margin-top: 10px;"></div>
-                    PLOT
                 </div>
             </div>
 
@@ -991,7 +991,7 @@
     <script src="/static/js/L.LinearMeasurement.js"></script>
     <script src="/static/js/leaflet_awesome_number_markers.js"></script>
     <script src="/static/js/snpdistance.js"></script>
-    <script src="/static/js/snpmatrix.js"></script>
+    <script type="module" src="/static/js/snpmatrix.js"></script>
     <script src="/static/js/cattleMovement.js"></script>
     <script src="/static/js/main.js"></script>
     </body>

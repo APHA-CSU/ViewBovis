@@ -7,6 +7,10 @@
 
 "use strict";
 
+// Viridis colour palette
+// https://github.com/d3/d3-scale-chromatic
+import {interpolateViridis} from "https://cdn.skypack.dev/d3-scale-chromatic@3";
+
 
 // ------------------------ //
 //
@@ -73,7 +77,7 @@ backBtn3.addEventListener("click", () => {
     
     // Hide back button
     backBtn3.classList.add("hidden");
-  });
+});
 
 
 
@@ -98,7 +102,277 @@ snpSlider2.addEventListener("input", rangeValue2);
 
 // ------------------------ //
 //
-// ECHARTS HEATMAP
+// SNP NUMBER SIZE
+//
+// ------------------------ //
+
+// Function to change the size of the SNP distance number within squares
+const snpFontSize = function (numComparisons) {
+  switch (true) {
+    case (numComparisons <= 100): return 25;
+    case (numComparisons > 100 && numComparisons <= 150): return 20;
+    case (numComparisons > 150 && numComparisons <= 200): return 17.5;
+    case (numComparisons > 200 && numComparisons <= 250): return 15;
+    case (numComparisons > 250 && numComparisons <= 1000): return 10;
+    case (numComparisons > 1000): return 8;
+  };
+};
+
+
+
+// ------------------------ //
+//
+// SNP DISTRIBUTION PLOT
+//
+// ------------------------ //
+
+// Function to render SNP distribution chart
+const renderSNPDistribution = function(matrix, minValue, maxValue) {
+
+  // Subset all non-identical pairwise comparisons and extract their SNP distance values
+  const uniqSNPComparisons = matrix
+      .filter( i => i[0] !== i[1])
+      .map( i => i[2])
+  // console.log(uniqSNPComparisons);
+
+  // Count the number of unique SNP distances (e.g. how many 0s, 1s, 2s, etc.)
+  // Note: acc = accumulator, curr = current value
+  // Returns object in the format {"0": 10, "1": 10, "3": 10}
+  const snpCounts = uniqSNPComparisons.reduce((acc, curr) => {
+    if (acc[curr]) {
+      acc[curr]++;
+    } else {
+      acc[curr] = 1;
+    }
+    return acc;
+  }, {});
+  // console.log(snpCounts);
+
+  // Create object in the format up to the maxValue {"0": 0, "1": 0, "n": 0}
+  // All object values are zero by default and will be replaced by the actual counts below
+  let snpCountsAll = {};
+  for (let i = 0; i <= maxValue; i++) {
+    snpCountsAll[i] = 0;
+  }
+  // console.log(snpCountsAll);
+
+  // Replace zero in object property for which there the real counts for each SNP distance
+  // Returns e.g. {"0": 2, "1": 3, "2": 0, "n": n} (format required for bar chart)
+  for (let prop in snpCounts) {
+    if (snpCountsAll.hasOwnProperty(prop)) {
+      snpCountsAll[prop] = snpCounts[prop];
+    };
+  };
+  // console.log(snpCountsAll);
+
+  // Select element from DOM
+  const snpDistributionDOM = document.getElementById("snp-distribution-plot");
+
+  // Initiate echarts instance
+  const snpDistributionInstance = echarts.init(snpDistributionDOM);
+
+  // Generate an array of colors using d3.interpolateViridis
+  const viridis =  Object.keys(snpCountsAll).map((d) => interpolateViridis(d / (maxValue)));
+  // console.log(viridis);
+
+  // Bar chart configuration
+  const option = {
+
+    tooltip: {
+      position: "top",
+    },
+
+    grid: {
+      top: "20%",
+      left: "15%" 
+    },
+
+    title: {
+      text: `SNP Distance Distribution`,
+      textStyle: {
+        fontSize: 15,
+        // color: "#00A33B"
+      },
+    },
+    
+    xAxis: {
+      type: "category",
+      data: Object.keys(snpCountsAll),
+    },
+
+    yAxis: {
+      type: "value",
+      minInterval: 1
+      // interval: 1, // Only show integers on the y-axis
+      // axisLabel: {
+      //   interval: 2 // Only show integers on the y-axis
+      // },
+      // axisTick: {
+      //   interval: 2 // Show ticks at every other label
+      // },
+    },
+
+    series: [{
+      type: "bar",
+      name: "SNP Count",
+      data: Object.values(snpCountsAll),
+      colorBy: "data",
+      color: maxValue === 0 ? "#440154" : viridis.reverse(),
+    }],
+
+  };
+
+  // Set configuration options
+  snpDistributionInstance.setOption(option);
+};
+
+
+// ------------------------ //
+//
+// SNP MATRIX HEATMAP
+//
+// ------------------------ //
+
+// Function to plot a heatmap with echarts.js using SNP matrix data
+const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
+
+  // Select element from DOM
+  const chartDom = document.getElementById("snpmatrix");
+
+  // Initiate echarts instance
+  const echartInstance = echarts.init(chartDom);
+
+  // Generate an array of colors using d3.interpolateViridis
+  const viridis =  [...Array(maxValue+1).keys()].map((d) => interpolateViridis(d / (maxValue)));
+  
+  // Configure chart options
+  const option = {
+
+    tooltip: {
+      position: "top",
+      formatter: function(params){
+        return(
+          `
+          Sample 1: <strong>${params.value[0]}</strong><br/>
+          Sample 2: <strong>${params.value[1]}</strong><br/>
+          SNP Distance: <strong>${params.value[2]}</strong> 
+        `)
+      }
+    },
+
+    grid: {
+      bottom: "27%",
+      left: "15%"      
+    },
+
+    title: {
+      text: `SNP Matrix: ${sampleNames[0]}`,
+      textStyle: {
+        fontSize: 20,
+        // color: "#00A33B"
+      },
+    },
+
+    xAxis: {
+      type: "category",
+      data: sampleNames,
+      splitArea: {
+        show: true
+      },
+      // position: "top",
+      axisLabel: {
+        interval: 0,
+        rotate: 90,
+        fontWeight: "bold",
+        fontSize: 15,
+      },
+    },
+
+    yAxis: {
+      type: "category",
+      data: sampleNames,
+      splitArea: {
+        show: true
+      },
+      axisLabel: {
+        fontWeight: "bold",
+        fontSize: 15,
+      }
+    },
+
+    visualMap: {
+      type: "piecewise",
+      // min: minValue,
+      // max: maxValue,
+      categories: [...Array(maxValue+1).keys()].map(String),
+      right: "2.5%",
+      top: "middle",
+      inRange: {
+        color: maxValue === 0 ? "#440154" : viridis.reverse(),
+      },
+      itemWidth: 30,
+      itemHeight: 20,
+      textStyle: {
+        fontSize: 16
+      },
+    },
+
+    animationDurationUpdate: 0,
+
+    series: [
+      {
+        type: "heatmap",
+        data: matrix,
+        // markPoint: {
+        //   data: [
+        //     { type: 'max', name: 'Max' },
+        //     { type: 'min', name: 'Min' }
+        //   ]
+        // },
+        label: {
+          show: true,
+          fontSize: snpFontSize(matrix.length),
+          offset: [0, 3]
+        },
+        itemStyle: {
+          borderColor: "white",
+        },
+        emphasis: {
+          focus: "none",
+          itemStyle: {
+            opacity: 0.75,
+            borderWidth: 5,
+            borderColor: "white"
+          }
+        }
+      }
+    ],
+
+    toolbox: {
+      show: true,
+      itemSize: 25,
+      right: "2.5%",
+      feature: {
+        dataZoom: {},
+        saveAsImage: {
+          type: "png",
+          name: "snpmatrix",
+          title: "Save as Image",
+          pixelRatio: 5,
+        }
+      }
+    }
+  };
+
+  // Set configuration options
+  echartInstance.setOption(option);
+};
+
+
+
+// ------------------------ //
+//
+// ASYNC FUNCTION TO RENDER SNP MATRIX
 //
 // ------------------------ //
 
@@ -120,8 +394,27 @@ const showSNPMatrix = async function () {
     // if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
     // console.log(response);
-    console.log(json);
+    // console.log(json);
     
+    // Extract all sample names as array and remove matrix from end of array
+    const sampleIDs = Object.keys(json);
+    sampleIDs.pop();
+
+    // Extract matrix array
+    const matrix = json.matrix;
+    // console.log(matrix);  
+
+    // Extract minimum and maximum SNP distance
+    const minValue = Math.min(...matrix.map( i => i[2]));
+    const maxValue = Math.max(...matrix.map( i => i[2]));
+    // console.log(minValue, maxValue);
+
+    // Render SNP distribution plot
+    renderSNPDistribution(matrix, minValue, maxValue); 
+
+    // Render SNP matrix
+    plotHeatmap(matrix, sampleIDs.reverse(), minValue, maxValue);
+
     // Remove spinner when fetch is complete
     document.getElementById("snpmatrix-spinner").classList.add("hidden");
 
@@ -141,3 +434,26 @@ document.getElementById("btn__plot-snpmatrix").addEventListener("click", showSNP
 
 
 
+// ------------------------ //
+//
+// DYNAMICALLY SET HEIGHT OF MAP
+//
+// ------------------------ //
+
+// Calculate maximum height of the container where the map will render based on the users screen height
+const navbarHeight4 = document.querySelector(".navbar").offsetHeight;
+const navbarHeightMargin4 = parseInt(window.getComputedStyle(document.querySelector(".navbar")).getPropertyValue("margin-bottom"));
+const snpmatrix = window.innerHeight - navbarHeight4 - navbarHeightMargin4;
+
+// Set the height of map and sidebar containers
+document.getElementById("snpmatrix").style.height = `${snpmatrix-10}px`;
+document.getElementById("snpmatrix-sidebar-container").style.height = `${snpmatrix}px`;
+
+// Change the height of the map when the window is resized BUG
+// For example, when the user drags the browser from a laptop screen to a desktop screen (or vice versa)
+// window.addEventListener("resize", () => {
+//   document.getElementById("map2").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
+//   document.getElementById("snpmap-sidebar-container").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
+//   document.getElementById("table-sidebar-container").style.height = `${window.innerHeight - navbarHeight3 - navbarHeightMargin3}px`;
+//   map2.invalidateSize();
+// });
