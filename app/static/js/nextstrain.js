@@ -43,86 +43,100 @@ let tableData, table;
 // Async function that renders table
 const showTable = async function() {
 
-    // Clear any previous rendered tables or error messages
-    document.getElementById("nextstrain-search-table").textContent = "";
-    if(document.getElementById("nextstrain-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
-        document.getElementById("nextstrain-error-message").remove();
-    };
+    try {
 
-    // Render spinner
-    document.getElementById("nextstrain-search-table-spinner").classList.remove("hidden");
+        // Clear any previous rendered tables or error messages
+        document.getElementById("nextstrain-search-table").textContent = "";
+        if(document.getElementById("nextstrain-error-message") !== null && document.getElementById("cattle-error-message") !== "undefined") {
+            document.getElementById("nextstrain-error-message").remove();
+        };
 
-    // Fetch json data from backend
-    const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
-    const json = await response.json();
-    // console.log(json);
+        // Render spinner
+        document.getElementById("nextstrain-search-table-spinner").classList.remove("hidden");
 
-    // Remove spinner and activate search table when fetch is complete 
-    document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
-    document.getElementById("nextstrain-search-table").classList.remove("hidden");
+        // Fetch json data from backend
+        const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
+        const json = await response.json();
+        console.log(json);
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+        // Remove spinner and activate search table when fetch is complete 
+        document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
+        document.getElementById("nextstrain-search-table").classList.remove("hidden");
 
-        // Create an array containing table data
-        tableData = [
-            {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
-        ];
-        // console.log(tableData);
+        // If first object in JSON is not an error, proceed with main function
+        if(Object.keys(json)[0] !== "error") {
 
-        // Create table
-        table = new Tabulator("#nextstrain-search-table", {
-            data: tableData,
-            selectable:false,
-            columnDefaults:{
-                resizable:false,
-            },
-            layout: "fitColumns",
-            columns: [
-                {title:"AF Number", field:"af"},
-                {title:"Ear Tag", field:"eartag"},
-                {title:"CPH", field:"cph"},
-                {title: "County", field:"county"},
-                {title:"Clade", field:"clade"},
-            ],
-        });
+            // Create an array containing table data
+            tableData = [
+                {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
+            ];
+            // console.log(tableData);
 
-        // Event handler on each table cell when clicked
-        table.on("cellClick", function(e, cell){
-            // The click event object (e)
-            // console.log(e.target);
-            
-            // Get the cell value
-            let cellValue = cell.getValue();
-            // console.log(cellValue);
+            // Create table
+            table = new Tabulator("#nextstrain-search-table", {
+                data: tableData,
+                selectable:false,
+                columnDefaults:{
+                    resizable:false,
+                },
+                layout: "fitColumns",
+                columns: [
+                    {title:"AF Number", field:"af"},
+                    {title:"Ear Tag", field:"eartag"},
+                    {title:"CPH", field:"cph"},
+                    {title: "County", field:"county"},
+                    {title:"Clade", field:"clade"},
+                ],
+            });
 
-            // Get the column (field) heading
-            let cellField = cell.getField();
-            // console.log(cellField);
+            // Event handler on each table cell when clicked
+            table.on("cellClick", function(e, cell){
+                // The click event object (e)
+                // console.log(e.target);
+                
+                // Get the cell value
+                let cellValue = cell.getValue();
+                // console.log(cellValue);
 
-            // Get the clade of the row clicked
-            let clade = cell.getRow().getData().clade;
-            // console.log(clade);
+                // Get the column (field) heading
+                let cellField = cell.getField();
+                // console.log(cellField);
 
-            // Render Nextstrain for clade, county, AF, Ear tag or CPH
-            if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
-            if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
-            if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
-            if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
-            if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
-        });
+                // Get the clade of the row clicked
+                let clade = cell.getRow().getData().clade;
+                // console.log(clade);
 
-        // Add the cell mouse over and mouse out event listeners to the table
-        table.on("cellMouseOver", onCellMouseOver);
-        table.on("cellMouseOut", onCellMouseOut);
-    };
+                // Render Nextstrain for clade, county, AF, Ear tag or CPH
+                if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
+                if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
+                if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
+                if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
+                if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
+            });
 
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
+            // Add the cell mouse over and mouse out event listeners to the table
+            table.on("cellMouseOver", onCellMouseOver);
+            table.on("cellMouseOut", onCellMouseOut);
+        };
+
+        // If first object in JSON is an error, print the error message
+        if(Object.keys(json)[0] === "error") {
+            document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
+            <p class="warning-text" id="nextstrain-error-message">${Object.values(json)[0]}</p>
+            `);
+        };
+    
+    } catch(err) {
+        console.error(err)
+    
+        // Remove spinner when fetch is complete
+        document.getElementById("nextstrain-search-table-spinner").classList.add("hidden"); 
+    
+        // Activate generic (unknown) warning message on UI
         document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
-          <p class="warning-text" id="nextstrain-error-message">${Object.values(json)[0]}</p>
+          <p class="error-text" id="nextstrain-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
         `);
-      }
+    }
 };
 
 // Executes the async showTable() function when the "nextstrain-search-button" button is clicked
