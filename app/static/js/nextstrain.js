@@ -55,7 +55,7 @@ const showTable = async function() {
     // Fetch json data from backend
     const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
 
     // Remove spinner and activate search table when fetch is complete 
     document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");

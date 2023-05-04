@@ -138,7 +138,7 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
   // Count the number of unique SNP distances (e.g. how many 0s, 1s, 2s, etc.)
   // Note: acc = accumulator, curr = current value
   // Returns object in the format {"0": 10, "1": 10, "3": 10}
-  const snpCounts = uniqSNPComparisons.reduce((acc, curr) => {
+  let snpCounts = uniqSNPComparisons.reduce((acc, curr) => {
     if (acc[curr]) {
       acc[curr]++;
     } else {
@@ -146,6 +146,15 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
     }
     return acc;
   }, {});
+  // console.log(snpCounts);
+
+  // Divide each property by two
+  // Return half as many because each pairwise comparison is repeated twice
+  snpCounts = Object.fromEntries(
+    Object.entries(snpCounts).map(([key, value]) =>
+      [key, typeof value === 'number' ? value / 2 : value]
+    )
+  );
   // console.log(snpCounts);
 
   // Create object in the format up to the maxValue {"0": 0, "1": 0, "n": 0}
@@ -183,7 +192,7 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
     },
 
     grid: {
-      top: "20%",
+      top: "25%",
       left: "15%" 
     },
 
@@ -198,18 +207,17 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
     xAxis: {
       type: "category",
       data: Object.keys(snpCountsAll),
+      name: "SNP distance",
+      nameLocation: "center",
+      nameGap: 30,
     },
 
     yAxis: {
       type: "value",
-      minInterval: 1
-      // interval: 1, // Only show integers on the y-axis
-      // axisLabel: {
-      //   interval: 2 // Only show integers on the y-axis
-      // },
-      // axisTick: {
-      //   interval: 2 // Show ticks at every other label
-      // },
+      minInterval: 1,
+      name: "Count",
+      nameLocation: "center",
+      nameGap: 35,
     },
 
     series: [{
@@ -219,6 +227,20 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
       colorBy: "data",
       color: maxValue === 0 ? "#440154" : viridis.reverse(),
     }],
+
+    toolbox: {
+      show: true,
+      itemSize: 15,
+      right: "2.5%",
+      feature: {
+        saveAsImage: {
+          type: "png",
+          name: "snpdistribution",
+          title: "",
+          pixelRatio: 5,
+        }
+      }
+    }
 
   };
 
@@ -234,7 +256,7 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
 // ------------------------ //
 
 // Function to plot a heatmap with echarts.js using SNP matrix data
-const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
+const plotHeatmap = function(matrix, identifier, af, sampleNames, minValue, maxValue) {
 
   // Select element from DOM
   const chartDom = document.getElementById("snpmatrix");
@@ -266,7 +288,7 @@ const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
     },
 
     title: {
-      text: `SNP Matrix: ${sampleNames[0]}`,
+      text: `SNP Matrix: ${identifier} (${af})`,
       textStyle: {
         fontSize: 20,
         // color: "#00A33B"
@@ -285,6 +307,15 @@ const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
         rotate: 90,
         fontWeight: "bold",
         fontSize: 15,
+        // Colour selected sample green and everything else X
+        color: function(_, index) {
+          if (index === 0) {
+              return "#00A33B";
+          }
+          else {
+              return "#333333";
+          }
+        },
       },
     },
 
@@ -297,6 +328,15 @@ const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
       axisLabel: {
         fontWeight: "bold",
         fontSize: 15,
+        // Colour selected sample green and everything else X
+        color: function(_, index) {
+          if (index === 0) {
+              return "#00A33B";
+          }
+          else {
+              return "#333333";
+          }
+        },
       }
     },
 
@@ -332,7 +372,7 @@ const plotHeatmap = function(matrix, sampleNames, minValue, maxValue) {
         label: {
           show: true,
           fontSize: snpFontSize(matrix.length),
-          offset: [0, 3]
+          offset: [0, 2]
         },
         itemStyle: {
           borderColor: "white",
@@ -394,16 +434,41 @@ const showSNPMatrix = async function () {
     // if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
     // console.log(response);
-    // console.log(json);
+    console.log(json);
+
+    // Capture whether the user input an identifier or AF number into the search box
+    const sampleType = matrixSampleSelected.startsWith("AF") ? "AFnumber" : "Identifier";
+    // console.log(sampleType);
+
+    // Extract the selected sample AF number (required for when the user searches using an identifier instead of an AF number)
+    const selectedSampleAF = sampleType === "AFnumber" ? matrixSampleSelected : Object.keys(json)[Object.values(json).map( i => i.animal_id ).indexOf(matrixSampleSelected)];
+    // console.log(selectedSampleAF);
+
+    // Extract the selected sample Identifier
+    const selectedSampleIdentifier = json[selectedSampleAF].animal_id;
+    // console.log(selectedSampleIdentifier);
+
+    // Extract matrix from json array
+    const matrix = json.matrix;
+    // console.log(matrix);
     
     // Extract all sample names as array and remove matrix from end of array
     const sampleIDs = Object.keys(json);
     sampleIDs.pop();
+    // console.log(sampleIDs);
 
-    // Extract matrix array
-    const matrix = json.matrix;
-    // console.log(matrix);  
+    // Reorder array so that selected sample is at the beginning
+    const index = sampleIDs.indexOf(selectedSampleAF); // Get the index of the element
+    if (index !== -1) { // Check if the element is found in the array
+      sampleIDs.splice(index, 1); // Remove the element from the array
+      sampleIDs.unshift(selectedSampleAF); // Add the element to the beginning of the array
+    }
+    console.log(sampleIDs);
 
+    //================
+    // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
+    //================
+    
     // Extract minimum and maximum SNP distance
     const minValue = Math.min(...matrix.map( i => i[2]));
     const maxValue = Math.max(...matrix.map( i => i[2]));
@@ -413,7 +478,7 @@ const showSNPMatrix = async function () {
     renderSNPDistribution(matrix, minValue, maxValue); 
 
     // Render SNP matrix
-    plotHeatmap(matrix, sampleIDs.reverse(), minValue, maxValue);
+    plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleAF, sampleIDs, minValue, maxValue);
 
     // Remove spinner when fetch is complete
     document.getElementById("snpmatrix-spinner").classList.add("hidden");
