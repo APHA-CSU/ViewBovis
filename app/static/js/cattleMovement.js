@@ -292,36 +292,32 @@ const popupContent = function(data, movArr, index) {
               <td>${parseFloat(data.move[index].lat).toFixed(3)} ${parseFloat(data.move[index].lon).toFixed(3)}</td>
             </tr>
             <tr>
-              <td><strong>Clade:</strong></td>
-              <td>${data.clade}</td>
+              <td><strong>CPH:</strong></td>
+              <td>${movArr[index].cph}</td>
             </tr>
             <tr>
-              <td><strong>Slaughter Date:</strong></td>
-              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
+              <td><strong>CPH Type:</strong></td>
+              <td>${movArr[index].type}</td>
+            </tr>
+            <tr>
+              <td><strong>County:</strong></td>
+              <td>${movArr[index].county}</td>
+            </tr>
+            <tr>
+              <td><strong>Clade:</strong></td>
+              <td>${data.clade}</td>
             </tr>
             <tr>
               <td><strong>Out of Home Range:</strong></td>
               <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
             </tr>
             <tr>
-              <td><strong>CPH:</strong></td>
-              <td>${data.cph}</td>
-            </tr>
-            <tr>
-              <td><strong>CPH Type:</strong></td>
-              <td>${data.cph_type}</td>
-            </tr>
-            <tr>
-              <td><strong>CPHH:</strong></td>
-              <td>${data.cphh}</td>
-            </tr>
-            <tr>
-              <td><strong>County:</strong></td>
-              <td>${data.county}</td>
-            </tr>
-            <tr>
               <td><strong>Risk Area:</strong></td>
               <td>${data.risk_area}</td>
+            </tr>
+            <tr>
+              <td><strong>Slaughter Date:</strong></td>
+              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
             </tr>
           </tbody>
         </table>
@@ -445,7 +441,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Extract movement data from json object into an array
   const moveArr = Object.values(json.move);
-  console.log(moveArr, moveArr[0]);
+  console.log(moveArr);
 
   // Array for latitude and longitude
   const moveLat = moveArr.map(arr => arr.lat);
@@ -544,7 +540,7 @@ const showMovements = async function () {
     // console.log(response);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     const json = await response.json();
-    // console.log(json);
+    console.log(json);
 
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner").classList.add("hidden");
