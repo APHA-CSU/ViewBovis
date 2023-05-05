@@ -261,6 +261,16 @@ const cowheadPopupOptions = {
   closeOnClick: false,
 };
 
+// Function to format the date
+function formatDate (input) {
+  const datePart = input.match(/\d+/g),
+  year = datePart[0],
+  month = datePart[1],
+  day = datePart[2];
+
+  return `${day}-${month}-${year}`;
+};
+
 // Function to create HTML popup content using template literal
 const popupContent = function(data, movArr, index) {
 
@@ -290,11 +300,11 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Date of Arrival:</strong></td>
-              <td>${movArr[index].on_date}</td> 
+              <td>${formatDate(movArr[index].on_date)}</td> 
             </tr>
             <tr>
               <td><strong>Date of Departure:</strong></td>
-              <td>${movArr[index].off_date}</td> 
+              <td>${formatDate(movArr[index].off_date)}</td> 
             </tr>
             <tr>
               <td><strong>AF Number:</strong></td>
@@ -344,7 +354,7 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Slaughter Date:</strong></td>
-              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
+              <td>${formatDate(data.slaughter_date.replace(" 00:00:00.000", ""))}</td>
             </tr>
             <tr>
               <td><strong>Age:</strong></td>

@@ -809,7 +809,7 @@ const showRelatedSamples = async function () {
 
       // Remove time from date property and round miles to two decimal places
       Object.values(json).forEach((item) => {
-        item.date = item.date.replace(" 00:00:00.000", "");
+        item.date = formatDate(item.date.replace(" 00:00:00.000", ""));
         item.distance = parseFloat(item.distance).toFixed(2);
       });
 
