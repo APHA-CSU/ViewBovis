@@ -640,7 +640,9 @@ const cowIcons2 = {
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions2 = {
   maxWidth: 400, // in pixels
-  className: "relatedPopupOptions" // must match a css class in _cattleMovement.css
+  className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
+  autoClose: false,
+  closeOnClick: false,
 };
 
 // Function to create HTML popup content using template literal
