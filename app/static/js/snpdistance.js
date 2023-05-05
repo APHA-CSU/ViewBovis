@@ -664,8 +664,8 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.date}</td>
           </tr>
           <tr>
-            <td><strong>Lat Lon:</strong></td>
-            <td>${parseFloat(data.lat).toFixed(3)}, ${parseFloat(data.lon).toFixed(3)}</td>
+            <td><strong>Grid Reference:</strong></td>
+            <td>TBC</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
