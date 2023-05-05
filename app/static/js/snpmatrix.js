@@ -353,7 +353,7 @@ const plotHeatmap = function(matrix, identifier, af, sampleNames, minValue, maxV
       },
     },
 
-    animationDurationUpdate: 0,
+    animationDurationUpdate: 300,
 
     series: [
       {
