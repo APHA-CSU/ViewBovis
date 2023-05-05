@@ -280,6 +280,13 @@ const popupContent = function(data, movArr, index) {
               <td>${`${index+1} of ${movArr.length}`}</td>
             </tr>
             <tr>
+              <td><strong>Duration of Stay:</strong></td>
+              <td>${movArr[index].stay_length <= 30 ? `${movArr[index].stay_length} days` :
+                    movArr[index].stay_length > 30 && movArr[index].stay_length <= 365 ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks` :
+                    `${(movArr[index].stay_length / 365).toFixed(1)} years`}
+              </td> 
+            </tr>
+            <tr>
               <td><strong>AF Number:</strong></td>
               <td>${data.submission}</td> 
             </tr>
@@ -315,10 +322,6 @@ const popupContent = function(data, movArr, index) {
               <td><strong>Risk Area:</strong></td>
               <td>${data.risk_area}</td>
             </tr>
-            <tr>
-              <td><strong>Slaughter Date:</strong></td>
-              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -332,6 +335,10 @@ const popupContent = function(data, movArr, index) {
             <tr>
               <td><strong>Date of Birth:</strong></td>
               <td>TBC</td>
+            </tr>
+            <tr>
+              <td><strong>Slaughter Date:</strong></td>
+              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
             </tr>
             <tr>
               <td><strong>Age:</strong></td>
