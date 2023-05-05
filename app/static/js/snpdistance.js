@@ -652,10 +652,6 @@ const popupContentSNPMap = function(data, AFnumber) {
       <table class="table table-striped">
         <tbody>
           <tr>
-            <td><strong>Herd:</strong></td>
-            <td>${data.herd}</td> 
-          </tr>
-          <tr>
             <td><strong>AF Number:</strong></td>
             <td>${AFnumber}</td> 
           </tr>
@@ -664,16 +660,24 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.date}</td>
           </tr>
           <tr>
-            <td><strong>Grid Reference:</strong></td>
-            <td>TBC</td>
-          </tr>
-          <tr>
             <td><strong>Miles:</strong></td>
             <td>${parseFloat(data.distance).toFixed(2)}</td>
           </tr>
           <tr>
             <td><strong>SNP Distance:</strong></td>
             <td>${data.snp_distance}</td>
+          </tr>
+          <tr>
+            <td><strong>Herd:</strong></td>
+            <td>${data.herd}</td> 
+          </tr>
+          <tr>
+            <td><strong>CPH:</strong></td>
+            <td>${data.cph}</td> 
+          </tr>
+          <tr>
+            <td><strong>Grid Reference:</strong></td>
+            <td>TBC</td>
           </tr>
           <tr>
             <td><strong>Date of Birth:</strong></td>
