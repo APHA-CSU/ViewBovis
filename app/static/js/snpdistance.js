@@ -675,6 +675,18 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td><strong>SNP Distance:</strong></td>
             <td>${data.snp_distance}</td>
           </tr>
+          <tr>
+            <td><strong>Date of Birth:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Age:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Sex:</strong></td>
+            <td>TBC</td>
+          </tr> 
         </tbody>
       </table>
     </div>
