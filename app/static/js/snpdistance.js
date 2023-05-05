@@ -514,18 +514,14 @@ backBtn2.setAttribute("data-bs-toggle", "tooltip");
 backBtn2.setAttribute("data-bs-placement", "btn-backToSplashPage");
 backBtn2.setAttribute("title", "Back to SNP Distance Start Page");
 backBtn2.innerHTML = `
-    <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
-        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+    <span id="back-to-start-page-text">
+        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
         </svg>
         Back
     </span>
 `;
-backBtn2.style.padding = 0;
-backBtn2.style.margin = 0;
-backBtn2.style.marginTop = "-16px";
-backBtn2.style.border = "none";
-backBtn2.style.position = "absolute";
+backBtn2.classList.add("back-to-start-page-bttn");
 
 
 // ------------------------ //
@@ -543,7 +539,7 @@ document.getElementById("btn-view-snpmap").addEventListener("click", () => {
   map2.invalidateSize();
 
   // Render a back button
-  document.getElementById("snpmap-content-container").insertAdjacentElement("afterbegin", backBtn2);
+  document.getElementById("snpmap-sidebar-container").insertAdjacentElement("afterbegin", backBtn2);
 
   // Ensure hidden class removed from back button
   backBtn2.classList.remove("hidden");
@@ -577,12 +573,12 @@ backBtn2.addEventListener("click", () => {
 // ------------------------ //
 
 // Select elements from DOM
-const snpSlider = document.querySelector('input[type="range"]');
+const snpSlider = document.querySelector("#snpmap-range");
 
 // Update display value when user moves slider
 const rangeValue = function(){
   let newValue = snpSlider.value;
-  let displayValue = document.querySelector(".display-value");
+  let displayValue = document.querySelector("#snp-distance-value");
   displayValue.innerHTML = newValue;
 }
 snpSlider.addEventListener("input", rangeValue);
