@@ -113,11 +113,11 @@ class TestViewBovisData(unittest.TestCase):
         self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
         expected = \
-            {"foo_sub": {"lat": 1, "lon": 4, "snp_distance": 0,
+            {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
                          "animal_id": "foo_id", "herd": "foo_herd",
                          "clade": "foo_clade", "date": "foo_date",
                          "distance": 0.0},
-             "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
+             "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "herd": "bar_herd",
                          "clade": "bar_clade", "date": "bar_date",
                          "distance": 1.1}}
