@@ -500,7 +500,7 @@
                             A Defra Digital, Data and Technology Service
                         </div>
                         <div>
-                            <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
                             <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
                         </div>
                         <!-- Accessibility Statement Modal -->
@@ -535,10 +535,12 @@
                 </footer>
             </div>
 
+            <!-- ================================== -->
             <!-- SNP MAP CONTENT (HIDDEN BY DEFAULT) -->
+            <!-- ================================== -->
             <div id="snpmap-content" class="row hidden">
                 <div class="col-3 collapse collapse-horizontal show" id="snpmap-content-container">
-                    <div id="snpmap-sidebar-container" style="margin-top: 10px;">
+                    <div id="snpmap-sidebar-container">
                         <!-- <br> -->
                         <div class="govuk-heading-m" id="enter-sample-container">
                             Enter Sample
@@ -560,7 +562,7 @@
                                 <!-- <div class="slider-container"> -->
                                     <p class="display-value-fixed" style="float: left;">0</p>
                                     <p class="display-value-fixed" style="float: right;">10</p>
-                                    <input type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                    <input id="snpmap-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
                                     <br>
                                     <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snp-distance-value">1</p></span>
                                 <!-- </div> -->
@@ -636,7 +638,7 @@
                                     </label>
                                 </div>
 
-                                <div class="govuk-checkboxes__item">
+                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
                                     <input class="govuk-checkboxes__input" id="countyBox2" type="checkbox">
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox2">Counties</label>
                                 </div>
@@ -657,11 +659,58 @@
                 </div>
             </div>
 
+            <!-- ================================== -->
             <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
-            <!-- TODO -->
+            <!-- ================================== -->
             <div id="snpmatrix-content" class="row hidden">
-                <div id="snpmatrix-content-container">
-                    <h1 style="margin-top: 10px;">Development in Progress</h1>
+                <div class="col-3" id="snpmatrix-content-container">
+                    <div id="snpmatrix-sidebar-container">
+                        <!-- <br> -->
+                        <div class="govuk-heading-m" id="enter-sample-container">
+                            Enter Sample
+                        </div>
+                        <div>
+                            <p>
+                                <!-- Identifier or AF number -->
+                                <input value="UK262728200982" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or AF Number">
+                            </p>
+                        </div>
+                        <div id="snpmatrix-distance-container">
+                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
+                                Select SNP Distance
+                            </div>
+                            <div>
+
+                                <!-- Custom slider -->
+                                <p class="display-value-fixed" style="float: left;">0</p>
+                                <p class="display-value-fixed" style="float: right;">10</p>
+                                <input id="snpmatrix-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                <br>
+                                <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snpmatrix-distance-value">1</p></span>
+
+                                <br>
+                                <br>
+                                <button class="govuk-button" id="btn__plot-snpmatrix" aria-disabled="true"  data-module="govuk-button">
+                                    Plot SNP Matrix
+                                </button>
+                                <!-- Plot SNP Matrix Spinner -->
+                                <div class="text-center" id="snpmatrix-spinner-container">
+                                    <div class="spinner-border text-secondary hidden" id="snpmatrix-spinner" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <!-- Warning message if SNP data cannot be fetched -->
+                                <p class="hidden" id="snpmatrix-warning-text">Warning: unknown error please report to developers</p>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="snp-distribution-plot" style="height: 200px; width: 100%;"></div>
+                    </div>
+                </div>
+                <!-- SNP Matrix     -->
+                <div class="col-9" id="snpmatrix-container">
+                    <div id="snpmatrix" style="margin-top: 10px;"></div>
                 </div>
             </div>
 
@@ -934,6 +983,7 @@
     <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js"></script>
     <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js"></script>
     <script src="/static/libraries/tabulator/tabulator.min.js"></script>
+    <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js"></script>
     <script src="/static/js/nextstrain.js"></script>
     <script src="/static/js/leaflet.shpfile.js"></script>
     <script src="/static/js/shp.js"></script>
@@ -942,7 +992,7 @@
     <script src="/static/js/L.LinearMeasurement.js"></script>
     <script src="/static/js/leaflet_awesome_number_markers.js"></script>
     <script src="/static/js/snpdistance.js"></script>
-    <script src="/static/js/snpmatrix.js"></script>
+    <script type="module" src="/static/js/snpmatrix.js"></script>
     <script src="/static/js/cattleMovement.js"></script>
     <script src="/static/js/main.js"></script>
     </body>
