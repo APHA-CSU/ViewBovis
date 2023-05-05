@@ -287,6 +287,14 @@ const popupContent = function(data, movArr, index) {
               </td> 
             </tr>
             <tr>
+              <td><strong>Date of Arrival:</strong></td>
+              <td>${movArr[index].on_date}</td> 
+            </tr>
+            <tr>
+              <td><strong>Date of Departure:</strong></td>
+              <td>${movArr[index].off_date}</td> 
+            </tr>
+            <tr>
               <td><strong>AF Number:</strong></td>
               <td>${data.submission}</td> 
             </tr>
@@ -317,10 +325,6 @@ const popupContent = function(data, movArr, index) {
             <tr>
               <td><strong>Out of Home Range:</strong></td>
               <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
-            </tr>
-            <tr>
-              <td><strong>Risk Area:</strong></td>
-              <td>${data.risk_area}</td>
             </tr>
           </tbody>
         </table>
