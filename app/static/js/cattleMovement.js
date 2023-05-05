@@ -260,7 +260,7 @@ const cowheadPopupOptions = {
 };
 
 // Function to create HTML popup content using template literal
-const popupContent = function(data, index) {
+const popupContent = function(data, movArr, index) {
 
   return `
   <div class="fs-5 fw-bold">${data.identifier}</div><br>
@@ -277,7 +277,7 @@ const popupContent = function(data, index) {
           <tbody>
             <tr>
               <td><strong>Movement:</strong></td>
-              <td>${`${index+1} of ${Object.entries(data.move).length}`}</td>
+              <td>${`${index+1} of ${movArr.length}`}</td>
             </tr>
             <tr>
               <td><strong>AF Number:</strong></td>
@@ -285,7 +285,7 @@ const popupContent = function(data, index) {
             </tr>
             <tr>
               <td><strong>Species:</strong></td>
-              <td>${data.species}</td>
+              <td>${data.species === "COW" ? "Bovine" : data.species}</td>
             </tr>
             <tr>
               <td><strong>Lat Lon:</strong></td>
@@ -445,7 +445,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Extract movement data from json object into an array
   const moveArr = Object.values(json.move);
-  // console.log(moveArr);
+  console.log(moveArr, moveArr[0]);
 
   // Array for latitude and longitude
   const moveLat = moveArr.map(arr => arr.lat);
@@ -461,7 +461,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, i), cowheadPopupOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
