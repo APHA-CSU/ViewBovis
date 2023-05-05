@@ -241,7 +241,8 @@ class ViewBovisData:
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
         return {index:
-                {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                {"cph": row["CPH"],
+                 "lat": df_cph_latlon_map["Lat"][row["CPH"]],
                  "lon": df_cph_latlon_map["Long"][row["CPH"]],
                  "snp_distance":
                     int(df_snps_related[self._submission][index]),
