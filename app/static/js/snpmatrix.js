@@ -433,58 +433,65 @@ const showSNPMatrix = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`);
-    // if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    let json = await response.json();
     // console.log(response);
+    if(!response.ok) throw new Error("Problem getting SNP data from backend");
+    const json = await response.json();
     console.log(json);
-
-    // Capture whether the user input an identifier or AF number into the search box
-    // BUG this may not work for all samples because not all submissions at AF numbers
-    const sampleType = matrixSampleSelected.startsWith("AF") ? "AFnumber" : "Identifier";
-    // console.log(sampleType);
-
-    // Extract the selected sample AF number (required for when the user searches using an identifier instead of an AF number)
-    const selectedSampleAF = sampleType === "AFnumber" ? matrixSampleSelected : Object.keys(json)[Object.values(json).map( i => i.animal_id ).indexOf(matrixSampleSelected)];
-    // console.log(selectedSampleAF);
-
-    // Extract the selected sample Identifier
-    const selectedSampleIdentifier = json[selectedSampleAF].animal_id;
-    // console.log(selectedSampleIdentifier);
-
-    // Extract matrix from json array
-    const matrix = json.matrix;
-    // console.log(matrix);
-    
-    // Extract all sample names as array and remove matrix from end of array
-    const sampleIDs = Object.keys(json);
-    sampleIDs.pop();
-    // console.log(sampleIDs);
-
-    // Reorder array so that selected sample is at the beginning
-    const index = sampleIDs.indexOf(selectedSampleAF); // Get the index of the element
-    if (index !== -1) { // Check if the element is found in the array
-      sampleIDs.splice(index, 1); // Remove the element from the array
-      sampleIDs.unshift(selectedSampleAF); // Add the element to the beginning of the array
-    }
-    console.log(sampleIDs);
-
-    //================
-    // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
-    //================
-    
-    // Extract minimum and maximum SNP distance
-    const minValue = Math.min(...matrix.map( i => i[2]));
-    const maxValue = Math.max(...matrix.map( i => i[2]));
-    // console.log(minValue, maxValue);
-
-    // Render SNP distribution plot
-    renderSNPDistribution(matrix, minValue, maxValue); 
-
-    // Render SNP matrix
-    plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleAF, sampleIDs, minValue, maxValue);
 
     // Remove spinner when fetch is complete
     document.getElementById("snpmatrix-spinner").classList.add("hidden");
+
+    // If first object in JSON is not an error, proceed with main function
+    if(Object.keys(json)[0] !== "error") {
+      // Capture whether the user input an identifier or AF number into the search box
+      // BUG this may not work for all samples because not all submissions at AF numbers
+      const sampleType = matrixSampleSelected.startsWith("AF") ? "AFnumber" : "Identifier";
+      // console.log(sampleType);
+
+      // Extract the selected sample AF number (required for when the user searches using an identifier instead of an AF number)
+      const selectedSampleAF = sampleType === "AFnumber" ? matrixSampleSelected : Object.keys(json)[Object.values(json).map( i => i.animal_id ).indexOf(matrixSampleSelected)];
+      // console.log(selectedSampleAF);
+
+      // Extract the selected sample Identifier
+      const selectedSampleIdentifier = json[selectedSampleAF].animal_id;
+      // console.log(selectedSampleIdentifier);
+
+      // Extract matrix from json array
+      const matrix = json.matrix;
+      // console.log(matrix);
+      
+      // Extract all sample names as array and remove matrix from end of array
+      const sampleIDs = Object.keys(json);
+      sampleIDs.pop();
+      // console.log(sampleIDs);
+
+      // Reorder array so that selected sample is at the beginning
+      const index = sampleIDs.indexOf(selectedSampleAF); // Get the index of the element
+      if (index !== -1) { // Check if the element is found in the array
+        sampleIDs.splice(index, 1); // Remove the element from the array
+        sampleIDs.unshift(selectedSampleAF); // Add the element to the beginning of the array
+      }
+      console.log(sampleIDs);
+
+      //================
+      // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
+      //================
+      
+      // Extract minimum and maximum SNP distance
+      const minValue = Math.min(...matrix.map( i => i[2]));
+      const maxValue = Math.max(...matrix.map( i => i[2]));
+      // console.log(minValue, maxValue);
+
+      // Render SNP distribution plot
+      renderSNPDistribution(matrix, minValue, maxValue); 
+
+      // Render SNP matrix
+      plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleAF, sampleIDs, minValue, maxValue);
+    }else{
+      document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
+      <p class="warning-text" id="snpmatrix-error-message">${Object.values(json)[0]}</p>
+    `);
+    }
 
   } catch(err) {
     console.error(err)
@@ -493,7 +500,7 @@ const showSNPMatrix = async function () {
     document.getElementById("snpmatrix-spinner").classList.add("hidden");  
 
     // Activate generic (unknown) warning message on UI
-    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
+    document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
       <p class="error-text" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
   }
