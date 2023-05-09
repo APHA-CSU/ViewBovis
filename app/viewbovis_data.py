@@ -1,5 +1,6 @@
 import sqlite3
 import glob
+from datetime import datetime
 from os import path
 
 import numpy as np
@@ -78,6 +79,7 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
+                                 dtype={"SlaughterDate": str},
                                  params=ids+ids)
 
     def _submission_to_sample(self, submission: str) -> str:
@@ -107,10 +109,16 @@ class ViewBovisData:
             empty DataFrame if no data exists
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
-        return pd.read_sql_query(query,
-                                 self._db,
-                                 index_col="Submission",
-                                 params={"submission": submission})
+        foo = pd.read_sql_query(query,
+                                self._db,
+                                index_col="Submission",
+                                parse_dates={"Loc_StartDate":
+                                             {"infer_datetime_format": True, "format": "%d%m%Y"},
+                                             "Loc_EndDate":
+                                             {"infer_datetime_format": True, "format": "%d%m%Y"}},
+                                params={"submission": submission})
+        print(foo)
+        return foo
 
     def _get_lat_long(self, cphs: set) -> tuple:
         """
@@ -195,6 +203,7 @@ class ViewBovisData:
                       "type": row["CPH_Type"],
                       "county": row["County"]}
                      for _, row in df_movements.iterrows()}
+        print(move_dict)
         return {"submission": self._df_metadata_sub.index[0],
                 "clade": self._df_metadata_sub["Clade"][0],
                 "identifier": self._df_metadata_sub["Identifier"][0],
