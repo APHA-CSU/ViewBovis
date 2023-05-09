@@ -661,7 +661,7 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${AFnumber}</td> 
           </tr>
           <tr>
-            <td><strong>Date:</strong></td>
+            <td><strong>Slaughter Date:</strong></td>
             <td>${data.date}</td>
           </tr>
           <tr>
