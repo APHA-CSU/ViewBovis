@@ -81,10 +81,10 @@ const showTable = async function() {
                 },
                 layout: "fitColumns",
                 columns: [
-                    {title:"AF Number", field:"af"},
-                    {title:"Ear Tag", field:"eartag"},
-                    {title:"CPH", field:"cph"},
-                    {title: "County", field:"county"},
+                    {title:"Identifier", field:"eartag"},
+                    {title:"Submission", field:"af"},
+                    {title:"Location", field:"cph"},
+                    {title:"County", field:"county"},
                     {title:"Clade", field:"clade"},
                 ],
             });
@@ -219,6 +219,12 @@ const renderNextstrain = function(URL){
 };
 
 
+// Render Nextstrain for B1-11
+document.getElementById("clade-B111").addEventListener("click", (e) => {
+    e.preventDefault();
+    renderNextstrain("B1-11");
+});
+
 // Render Nextstrain for B6-13
 document.getElementById("clade-B613").addEventListener("click", (e) => {
     e.preventDefault();
@@ -230,6 +236,14 @@ document.getElementById("clade-B671").addEventListener("click", (e) => {
     e.preventDefault();
     renderNextstrain("B6-71");
 });
+
+// Render Nextstrain for B6-71
+document.getElementById("clade-B691").addEventListener("click", (e) => {
+    e.preventDefault();
+    renderNextstrain("B6-91");
+});
+
+
 
 
 

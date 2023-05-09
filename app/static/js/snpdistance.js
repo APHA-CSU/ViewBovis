@@ -388,6 +388,9 @@ riskAreaBox2.addEventListener("change", function() {
     TBFACheckBox2.checked = false;
     map2.removeLayer(TBFAPoly2);
   }; 
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly2.bringToFront();
 });
 
 // Toggle risk area polygons
@@ -490,7 +493,7 @@ const stylePoly2 = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("royalblue"), onEachFeature: onEachFeature2});
+countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("grey"), onEachFeature: onEachFeature2});
 countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2));
 
 
@@ -640,7 +643,9 @@ const cowIcons2 = {
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions2 = {
   maxWidth: 400, // in pixels
-  className: "relatedPopupOptions" // must match a css class in _cattleMovement.css
+  className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
+  autoClose: false,
+  closeOnClick: false,
 };
 
 // Function to create HTML popup content using template literal
@@ -652,20 +657,12 @@ const popupContentSNPMap = function(data, AFnumber) {
       <table class="table table-striped">
         <tbody>
           <tr>
-            <td><strong>Herd:</strong></td>
-            <td>${data.herd}</td> 
-          </tr>
-          <tr>
-            <td><strong>AF Number:</strong></td>
+            <td><strong>Submission:</strong></td>
             <td>${AFnumber}</td> 
           </tr>
           <tr>
-            <td><strong>Date:</strong></td>
+            <td><strong>Slaughter Date:</strong></td>
             <td>${data.date}</td>
-          </tr>
-          <tr>
-            <td><strong>Lat Lon:</strong></td>
-            <td>${parseFloat(data.lat).toFixed(3)}, ${parseFloat(data.lon).toFixed(3)}</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
@@ -675,6 +672,26 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td><strong>SNP Distance:</strong></td>
             <td>${data.snp_distance}</td>
           </tr>
+          <tr>
+            <td><strong>Location:</strong></td>
+            <td>${data.cph}</td> 
+          </tr>
+          <tr>
+            <td><strong>Grid Reference:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Date of Birth:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Age:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Sex:</strong></td>
+            <td>TBC</td>
+          </tr> 
         </tbody>
       </table>
     </div>
@@ -791,7 +808,7 @@ const showRelatedSamples = async function () {
 
       // Remove time from date property and round miles to two decimal places
       Object.values(json).forEach((item) => {
-        item.date = item.date.replace(" 00:00:00.000", "");
+        item.date = formatDate(item.date.replace(" 00:00:00.000", ""));
         item.distance = parseFloat(item.distance).toFixed(2);
       });
 
@@ -802,10 +819,10 @@ const showRelatedSamples = async function () {
       document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
         <h4>${sampleID}</h4>
         <p>
-          <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
-          <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
+          <span>Identifier: ${json[sampleID].animal_id}<br/></span>
+          <span>Location: ${json[sampleID].cph}<br/></span>
+          <span>Grid Reference: TBC<br/></span>
           <span>Clade: ${json[sampleID].clade}<br/></span>
-          <span>Herd: ${json[sampleID].herd}<br/></span>
         </p>
         <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
@@ -823,7 +840,7 @@ const showRelatedSamples = async function () {
         layout: "fitDataTable",
         movableColumns: true,
         columns: [
-            {title:"Herd", field:"herd", headerFilter:"input"},
+            {title:"Location", field:"cph", headerFilter:"input"},
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},

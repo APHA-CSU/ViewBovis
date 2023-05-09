@@ -62,3 +62,8 @@ a:hover {
     color: var(--apha-red);
     font-size: 20px;
 }
+
+.govuk-warning-text__icon {
+    color: white;
+    background: red;
+}

@@ -256,11 +256,23 @@ const cowIcons = {
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions = {
   maxWidth: 400, // in pixels
-  className: "cowheadPopupOptions" // must match a css class in _cattleMovement.css
+  className: "cowheadPopupOptions", // must match a css class in _cattleMovement.css
+  autoClose: false,
+  closeOnClick: false,
+};
+
+// Function to format the date
+function formatDate (input) {
+  const datePart = input.match(/\d+/g),
+  year = datePart[0],
+  month = datePart[1],
+  day = datePart[2];
+
+  return `${day}-${month}-${year}`;
 };
 
 // Function to create HTML popup content using template literal
-const popupContent = function(data, index) {
+const popupContent = function(data, movArr, index) {
 
   return `
   <div class="fs-5 fw-bold">${data.identifier}</div><br>
@@ -277,51 +289,54 @@ const popupContent = function(data, index) {
           <tbody>
             <tr>
               <td><strong>Movement:</strong></td>
-              <td>${`${index+1} of ${Object.entries(data.move).length}`}</td>
+              <td>${`${index+1} of ${movArr.length}`}</td>
             </tr>
             <tr>
-              <td><strong>AF Number:</strong></td>
-              <td>${data.submission}</td> 
+              <td><strong>Duration of Stay:</strong></td>
+              <td>${movArr[index].stay_length <= 30 ? `${movArr[index].stay_length} days` :
+                    movArr[index].stay_length > 30 && movArr[index].stay_length <= 365 ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks` :
+                    `${(movArr[index].stay_length / 365).toFixed(1)} years`}
+              </td> 
+            </tr>
+            <tr>
+              <td><strong>Date of Arrival:</strong></td>
+              <td>${formatDate(movArr[index].on_date)}</td> 
+            </tr>
+            <tr>
+              <td><strong>Date of Departure:</strong></td>
+              <td>${formatDate(movArr[index].off_date)}</td> 
             </tr>
             <tr>
               <td><strong>Species:</strong></td>
-              <td>${data.species}</td>
+              <td>${data.species === "COW" ? "Bovine" : data.species}</td>
             </tr>
             <tr>
-              <td><strong>Lat Lon:</strong></td>
-              <td>${parseFloat(data.move[index].lat).toFixed(3)} ${parseFloat(data.move[index].lon).toFixed(3)}</td>
+              <td><strong>Location:</strong></td>
+              <td>${movArr[index].cph}</td>
+            </tr>
+            <tr>
+              <td><strong>Location Type:</strong></td>
+              <td>${movArr[index].type}</td>
+            </tr>
+            <tr>
+              <td><strong>Grid Reference:</strong></td>
+              <td>TBC</td>
+            </tr>
+            <tr>
+              <td><strong>Submission:</strong></td>
+              <td>${data.submission}</td> 
+            </tr>
+            <tr>
+              <td><strong>County:</strong></td>
+              <td>${movArr[index].county}</td>
             </tr>
             <tr>
               <td><strong>Clade:</strong></td>
               <td>${data.clade}</td>
             </tr>
             <tr>
-              <td><strong>Slaughter Date:</strong></td>
-              <td>${data.slaughter_date.replace(" 00:00:00.000", "")}</td>
-            </tr>
-            <tr>
               <td><strong>Out of Home Range:</strong></td>
               <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
-            </tr>
-            <tr>
-              <td><strong>CPH:</strong></td>
-              <td>${data.cph}</td>
-            </tr>
-            <tr>
-              <td><strong>CPH Type:</strong></td>
-              <td>${data.cph_type}</td>
-            </tr>
-            <tr>
-              <td><strong>CPHH:</strong></td>
-              <td>${data.cphh}</td>
-            </tr>
-            <tr>
-              <td><strong>County:</strong></td>
-              <td>${data.county}</td>
-            </tr>
-            <tr>
-              <td><strong>Risk Area:</strong></td>
-              <td>${data.risk_area}</td>
             </tr>
           </tbody>
         </table>
@@ -330,20 +345,24 @@ const popupContent = function(data, index) {
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td><strong>Host:</strong></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><strong>Breed:</strong></td>
-              <td></td>
+              <td><strong>Birth CPH:</strong></td>
+              <td>${movArr[0].cph}</td>
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td></td>
+              <td>TBC</td>
+            </tr>
+            <tr>
+              <td><strong>Slaughter Date:</strong></td>
+              <td>${formatDate(data.slaughter_date.replace(" 00:00:00.000", ""))}</td>
+            </tr>
+            <tr>
+              <td><strong>Age:</strong></td>
+              <td>TBC</td>
             </tr>
             <tr>
               <td><strong>Sex:</strong></td>
-              <td></td>
+              <td>TBC</td>
             </tr> 
           </tbody>
         </table>
@@ -445,7 +464,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Extract movement data from json object into an array
   const moveArr = Object.values(json.move);
-  // console.log(moveArr);
+  console.log(moveArr);
 
   // Array for latitude and longitude
   const moveLat = moveArr.map(arr => arr.lat);
@@ -461,7 +480,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, i), cowheadPopupOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -544,7 +563,7 @@ const showMovements = async function () {
     // console.log(response);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     const json = await response.json();
-    // console.log(json);
+    console.log(json);
 
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner").classList.add("hidden");
@@ -872,6 +891,14 @@ riskAreaBox.addEventListener("change", function() {
     TBFACheckBox.checked = false;
     map.removeLayer(TBFAPoly);
   }; 
+
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly.bringToFront();
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
 });
 
 // Toggle risk area polygons
@@ -940,6 +967,10 @@ const highlightCounty = function(e) {
     .openPopup();
 
   poly.bringToFront();
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
 };
 
 // Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
@@ -969,14 +1000,19 @@ const stylePoly = function(color = "blue"){
     opacity: 1,
     color: "white",
     dashArray: "3",
-    fillOpacity: 0.50,
+    fillOpacity: 0.30,
   };
 };
 
-// Toggle county polygons when checkbox is ticked or unticked
-countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
-countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
+// Welsh border TODO
+// const welshBorder = new L.Shapefile("/static/data/Welsh_Boundary.zip");
 
+// Scotland border TODO
+// const scotlandBorder = new L.Shapefile("/static/data/Scotland_Boundary.zip");
+
+// Toggle county polygons when checkbox is ticked or unticked
+countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("grey"), onEachFeature: onEachFeature});
+countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 
 
 // ------------------------ //
