@@ -144,17 +144,17 @@ document.getElementById("btn-home-snpMatrixLink").addEventListener("click", () =
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
-document.querySelector(".footer-help-link").addEventListener("click", () => {
+// document.querySelector(".footer-help-link").addEventListener("click", () => {
 
-    // Hide all content function
-    hideContent();
+//     // Hide all content function
+//     hideContent();
 
-    // Activate bold font (add 'active' class)
-    document.querySelector(".nav-link-5").classList.add("active");
+//     // Activate bold font (add 'active' class)
+//     document.querySelector(".nav-link-5").classList.add("active");
 
-    // Show content
-    document.querySelector(".content-5").classList.remove("hidden");
-});
+//     // Show content
+//     document.querySelector(".content-5").classList.remove("hidden");
+// });
 
 
 

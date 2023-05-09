@@ -418,10 +418,10 @@ const showSNPMatrix = async function () {
   try {
 
     // First clear any error and warning text
-    // document.getElementById("snpmap-warning-text").textContent = "";
-    // if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
-    //   document.getElementById("snpmap-error-message").remove();
-    // };
+    document.getElementById("snpmatrix-warning-text").textContent = "";
+    if(document.getElementById("snpmatrix-error-message") !== null && document.getElementById("snpmatrix-error-message") !== "undefined") {
+      document.getElementById("snpmatrix-error-message").remove();
+    };
 
     // Select elements from DOM
     const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
@@ -493,7 +493,9 @@ const showSNPMatrix = async function () {
     document.getElementById("snpmatrix-spinner").classList.add("hidden");  
 
     // Activate generic (unknown) warning message on UI
-    document.getElementById("snpmatrix-warning-text").classList.remove("hidden");
+    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
   }
 };
 
