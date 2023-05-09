@@ -769,9 +769,11 @@
                                     <p class="fs-6">
                                         Use the search box to find your sample of interest. Click a link in the table to view the phylogenetic tree in Nextstrain.
                                     </p>
-                                    <p class="fs-6">
-                                        Clicking an Identifier or Submission number highlights the sample of interest for that clade. CPH or County highlights all samples in the same CPH or County, respectively. Click the Clade to show the whole phylogenetic tree.
-                                    </p>
+                                    <ul class="fs-6" style="height: 150px; overflow-y: scroll;">
+                                        <li>Clicking an Identifier (e.g. Ear Tag) or Submission (e.g. AF number) highlights the sample of interest for that clade.</li>
+                                        <li>Clicking on CPH or County highlights all samples in the same CPH or County, respectively.</li>
+                                        <li>Clicking on the Clade or the link to the 'Commonly Viewed Clades' shows the whole phylogenetic tree.</li>
+                                    </ul>
                                     <!-- <p class="fs-6">
                                         A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
                                     </p> -->
@@ -779,11 +781,14 @@
                                 <div class="col-8 nextstrain-select-data">
                                     <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
                                         <!-- Input text -->
-                                        <div class="col-6 ">
-                                            <div class="govuk-form-group" style="margin-bottom: 10px;">
+                                        <div class="col-8" style="border-right: 15px solid #f2f2f2;">
+                                            <div class="govuk-form-group" style="margin-bottom: 10px; margin-top: 10px;">
                                                 <label class="govuk-label fs-6">
-                                                    Search by Identifier or Submission number
+                                                    <strong>Search Below:</strong></br>
                                                 </label>
+                                                <p>
+                                                    For example: Identifier (Ear Tag: <em>UK262728200982</em>) OR Submission (AF number: <em>AF-21-08014-22</em>).
+                                                </p>
                                                 <div class="govuk-input__wrapper">
                                                     <input value="UK262728200982" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
                                                     <div class="govuk-input__suffix" aria-hidden="true" id="nextstrain-search-button" style="cursor: pointer;">
@@ -798,12 +803,17 @@
                                             </div>
                                         </div>
                                         <!-- Popular clades shortcut -->
-                                        <div class="col-6 ">
-                                            <span>Commonly Viewed Clades</span>
+                                        <div class="col-4">
+                                            <label class="govuk-label fs-6" style="margin-bottom: 10px; margin-top: 10px;">
+                                                <strong>Commonly Viewed Clades:</strong></br>
+                                            </label>
                                             <p>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B111">B1-11</a></span>
                                                 <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B613">B6-13</a></span>
+                                            </br>
                                                 <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B671">B6-71</a></span>
-                                                <!-- <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B6XX">B6-XX</a></span> -->
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B691">B6-91</a></span>
+                                               
                                             </p>
                                         </div>
                                     </div>
