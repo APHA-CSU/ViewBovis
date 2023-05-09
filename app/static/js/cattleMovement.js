@@ -307,24 +307,24 @@ const popupContent = function(data, movArr, index) {
               <td>${formatDate(movArr[index].off_date)}</td> 
             </tr>
             <tr>
-              <td><strong>AF Number:</strong></td>
-              <td>${data.submission}</td> 
-            </tr>
-            <tr>
               <td><strong>Species:</strong></td>
               <td>${data.species === "COW" ? "Bovine" : data.species}</td>
+            </tr>
+            <tr>
+              <td><strong>Location:</strong></td>
+              <td>${movArr[index].cph}</td>
+            </tr>
+            <tr>
+              <td><strong>Location Type:</strong></td>
+              <td>${movArr[index].type}</td>
             </tr>
             <tr>
               <td><strong>Grid Reference:</strong></td>
               <td>TBC</td>
             </tr>
             <tr>
-              <td><strong>CPH:</strong></td>
-              <td>${movArr[index].cph}</td>
-            </tr>
-            <tr>
-              <td><strong>CPH Type:</strong></td>
-              <td>${movArr[index].type}</td>
+              <td><strong>Submission:</strong></td>
+              <td>${data.submission}</td> 
             </tr>
             <tr>
               <td><strong>County:</strong></td>

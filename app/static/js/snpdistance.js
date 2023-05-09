@@ -657,7 +657,7 @@ const popupContentSNPMap = function(data, AFnumber) {
       <table class="table table-striped">
         <tbody>
           <tr>
-            <td><strong>AF Number:</strong></td>
+            <td><strong>Submission:</strong></td>
             <td>${AFnumber}</td> 
           </tr>
           <tr>
@@ -673,11 +673,7 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.snp_distance}</td>
           </tr>
           <tr>
-            <td><strong>Herd:</strong></td>
-            <td>${data.herd}</td> 
-          </tr>
-          <tr>
-            <td><strong>CPH:</strong></td>
+            <td><strong>Location:</strong></td>
             <td>${data.cph}</td> 
           </tr>
           <tr>
@@ -823,10 +819,10 @@ const showRelatedSamples = async function () {
       document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
         <h4>${sampleID}</h4>
         <p>
-          <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
-          <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
+          <span>Identifier: ${json[sampleID].animal_id}<br/></span>
+          <span>Location: ${json[sampleID].cph}<br/></span>
+          <span>Grid Reference: TBC<br/></span>
           <span>Clade: ${json[sampleID].clade}<br/></span>
-          <span>Herd: ${json[sampleID].herd}<br/></span>
         </p>
         <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
@@ -844,7 +840,7 @@ const showRelatedSamples = async function () {
         layout: "fitDataTable",
         movableColumns: true,
         columns: [
-            {title:"Herd", field:"herd", headerFilter:"input"},
+            {title:"Location", field:"cph", headerFilter:"input"},
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
