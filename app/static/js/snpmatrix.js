@@ -189,7 +189,7 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
 
     grid: {
       top: "25%",
-      left: "15%" 
+      left: "20%" 
     },
 
     title: {

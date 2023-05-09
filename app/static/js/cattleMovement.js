@@ -895,6 +895,10 @@ riskAreaBox.addEventListener("change", function() {
 
   // Ensure county layer is always on top by re-executing bringToFront() method
   countyPoly.bringToFront();
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
 });
 
 // Toggle risk area polygons
@@ -963,6 +967,10 @@ const highlightCounty = function(e) {
     .openPopup();
 
   poly.bringToFront();
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
 };
 
 // Function to reset border to original style on mouseout (when mouse is not hovering over a polygon)
