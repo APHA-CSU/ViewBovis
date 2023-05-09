@@ -891,6 +891,10 @@ riskAreaBox.addEventListener("change", function() {
     TBFACheckBox.checked = false;
     map.removeLayer(TBFAPoly);
   }; 
+
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly.bringToFront();
 });
 
 // Toggle risk area polygons
@@ -988,12 +992,12 @@ const stylePoly = function(color = "blue"){
     opacity: 1,
     color: "white",
     dashArray: "3",
-    fillOpacity: 0.50,
+    fillOpacity: 0.30,
   };
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("royalblue"), onEachFeature: onEachFeature});
+countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("grey"), onEachFeature: onEachFeature});
 countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 
 
