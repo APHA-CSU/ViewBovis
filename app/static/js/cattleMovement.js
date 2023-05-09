@@ -996,10 +996,15 @@ const stylePoly = function(color = "blue"){
   };
 };
 
+// Welsh border TODO
+// const welshBorder = new L.Shapefile("/static/data/Welsh_Boundary.zip");
+
+// Scotland border TODO
+// const scotlandBorder = new L.Shapefile("/static/data/Scotland_Boundary.zip");
+
 // Toggle county polygons when checkbox is ticked or unticked
 countyPoly = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly("grey"), onEachFeature: onEachFeature});
 countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
-
 
 
 // ------------------------ //
