@@ -19,21 +19,21 @@ const navContent = document.querySelectorAll(".content");
 //
 // ------------------------ //
 
-// // Launch modal immediately after DOM contents have been loaded
-// // Modal will not disappear when user clicks background or when escape on the keyboard is pressed
-// let securityModal;
-// document.addEventListener("DOMContentLoaded", function() {
-//     securityModal = new bootstrap.Modal(document.getElementById("modal--security"), {backdrop: "static", keyboard: false});
-//     securityModal.show();
-// });
+// Launch modal immediately after DOM contents have been loaded
+// Modal will not disappear when user clicks background or when escape on the keyboard is pressed
+let securityModal;
+document.addEventListener("DOMContentLoaded", function() {
+    securityModal = new bootstrap.Modal(document.getElementById("modal--security"), {backdrop: "static", keyboard: false});
+    securityModal.show();
+});
 
-// // Hide modal after user agrees to security message
-// document.getElementById("checkbox--agree").addEventListener("change", function(){
-//     // Add half a second delay to allow user to see the box being ticked
-//     setTimeout(function(){
-//         securityModal.hide();
-//     }, 500);    
-// });
+// Hide modal after user agrees to security message
+document.getElementById("checkbox--agree").addEventListener("change", function(){
+    // Add half a second delay to allow user to see the box being ticked
+    setTimeout(function(){
+        securityModal.hide();
+    }, 500);    
+});
 
 
 // ------------------------ //
@@ -144,17 +144,17 @@ document.getElementById("btn-home-snpMatrixLink").addEventListener("click", () =
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
-document.querySelector(".footer-help-link").addEventListener("click", () => {
+// document.querySelector(".footer-help-link").addEventListener("click", () => {
 
-    // Hide all content function
-    hideContent();
+//     // Hide all content function
+//     hideContent();
 
-    // Activate bold font (add 'active' class)
-    document.querySelector(".nav-link-5").classList.add("active");
+//     // Activate bold font (add 'active' class)
+//     document.querySelector(".nav-link-5").classList.add("active");
 
-    // Show content
-    document.querySelector(".content-5").classList.remove("hidden");
-});
+//     // Show content
+//     document.querySelector(".content-5").classList.remove("hidden");
+// });
 
 
 
