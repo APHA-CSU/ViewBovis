@@ -109,16 +109,16 @@ class ViewBovisData:
             empty DataFrame if no data exists
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
-        foo = pd.read_sql_query(query,
-                                self._db,
-                                index_col="Submission",
-                                parse_dates={"Loc_StartDate":
-                                             {"infer_datetime_format": True, "format": "%d%m%Y"},
-                                             "Loc_EndDate":
-                                             {"infer_datetime_format": True, "format": "%d%m%Y"}},
-                                params={"submission": submission})
-        print(foo)
-        return foo
+        return pd.read_sql_query(query,
+                                 self._db,
+                                 index_col="Submission",
+                                 params={"submission": submission})
+
+    # TODO: unit test?
+    def _transform_dateformat(self, date):
+        """
+        """
+        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_lat_long(self, cphs: set) -> tuple:
         """
@@ -197,19 +197,22 @@ class ViewBovisData:
                      {"cph": row["Loc"],
                       "lat": df_cph_latlon_map["Lat"][row["Loc"]],
                       "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                      "on_date": row["Loc_StartDate"],
-                      "off_date": row["Loc_EndDate"],
+                      "on_date":
+                          self._transform_dateformat(row["Loc_StartDate"]),
+                      "off_date":
+                          self._transform_dateformat(row["Loc_EndDate"]),
                       "stay_length": row["Loc_Duration"],
                       "type": row["CPH_Type"],
                       "county": row["County"]}
                      for _, row in df_movements.iterrows()}
-        print(move_dict)
         return {"submission": self._df_metadata_sub.index[0],
                 "clade": self._df_metadata_sub["Clade"][0],
                 "identifier": self._df_metadata_sub["Identifier"][0],
                 "species": self._df_metadata_sub["Host"][0],
                 "animal_type": self._df_metadata_sub["Animal_Type"][0],
-                "slaughter_date": self._df_metadata_sub["SlaughterDate"][0],
+                "slaughter_date":
+                    self._transform_dateformat(self._df_metadata_sub
+                                               ["SlaughterDate"][0]),
                 "cph": self._df_metadata_sub["CPH"][0],
                 "cphh": self._df_metadata_sub["CPHH"][0],
                 "cph_type": self._df_metadata_sub["CPH_Type"][0],
@@ -258,7 +261,7 @@ class ViewBovisData:
                  "animal_id": row["Identifier"],
                  "herd": row["CPHH"],
                  "clade": row["Clade"],
-                 "date": row["SlaughterDate"],
+                 "date": self._transform_dateformat(row["SlaughterDate"]),
                  "distance":
                      self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                          df_cph_latlon_map["y"][row["CPH"]]))}
