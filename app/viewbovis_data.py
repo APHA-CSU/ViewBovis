@@ -309,7 +309,7 @@ class ViewBovisData:
                  {"animal_id": row["Identifier"],
                   "herd": row["CPHH"],
                   "clade": row["Clade"],
-                  "date": row["SlaughterDate"],
+                  "date": self._transform_dateformat(row["SlaughterDate"]),
                   "distance":
                       self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                           df_cph_latlon_map["y"][row["CPH"]]))}
