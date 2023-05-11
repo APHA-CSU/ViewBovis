@@ -117,7 +117,7 @@ class ViewBovisData:
     # TODO: unit test?
     def _transform_dateformat(self, date: str) -> str:
         """
-            Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy 
+            Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
         """
         return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
 
