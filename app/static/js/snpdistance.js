@@ -806,6 +806,7 @@ const showRelatedSamples = async function () {
     // If first object in JSON is not an error, proceed with main function
     if(Object.keys(json)[0] !== "error") {
 
+      // TODO: better solution to this - massive hack in Tom's absence 
       var soi = json.SOI;
       delete json.SOI;
 
