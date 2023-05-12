@@ -120,7 +120,8 @@ class TestViewBovisData(unittest.TestCase):
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "herd": "bar_herd",
                          "clade": "bar_clade", "date": "bar_date",
-                         "distance": 1.1}}
+                         "distance": 1.1},
+             "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(
             self.data.related_submissions_metadata(3), expected)

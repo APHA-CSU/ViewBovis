@@ -240,21 +240,21 @@ class ViewBovisData:
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
-        return {index:
-                {"cph": row["CPH"],
-                 "lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                 "lon": df_cph_latlon_map["Long"][row["CPH"]],
-                 "snp_distance":
-                    int(df_snps_related[self._submission][index]),
-                 "animal_id": row["Identifier"],
-                 "herd": row["CPHH"],
-                 "clade": row["Clade"],
-                 "date": row["SlaughterDate"],
-                 "distance":
-                     self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                         df_cph_latlon_map["y"][row["CPH"]]))}
-                for index, row in df_metadata_related.iterrows()
-                if row["Host"] == "COW"}
+        return dict({index:
+                     {"cph": row["CPH"],
+                      "lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                      "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                      "snp_distance":
+                          int(df_snps_related[self._submission][index]),
+                      "animal_id": row["Identifier"],
+                      "herd": row["CPHH"],
+                      "clade": row["Clade"],
+                      "date": row["SlaughterDate"],
+                      "distance":
+                          self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
+                                              df_cph_latlon_map["y"][row["CPH"]]))}
+                     for index, row in df_metadata_related.iterrows()
+                     if row["Host"] == "COW"}, **{"SOI": self._submission})
 
     # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
