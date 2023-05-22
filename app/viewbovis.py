@@ -82,6 +82,11 @@ def snp_matrix():
     return jsonify(g.data.snp_matrix(snp_threshold))
 
 
+@app.route("/timeout", methods=["GET"])
+def timeout():
+    return ls.render_template("timeout.html")
+
+
 @app.errorhandler(InvalidIdException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})
