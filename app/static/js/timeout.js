@@ -14,7 +14,7 @@ var inactivityTime = function () {
                     <meta name="viewport" content="width=device-width, initial-scale=1">
                     <title>ViewBovis</title>
                     <!-- CSS -->
-                    <link rel="stylesheet" href=` + url + `/static/css/main.css">
+                    <link rel="stylesheet" href="/static/css/main.css">
                 </head>
                 <body>
                     <div class="container-fluid content content-1">
@@ -40,8 +40,7 @@ var inactivityTime = function () {
     function resetTimer() {
         clearTimeout(time);
         // 1000 milliseconds = 1 second
-        //time = setTimeout(logout, 3600000)
-        time = setTimeout(logout, 1000)
+        time = setTimeout(logout, 3600000)
     }
 };
 window.onload = function() {
