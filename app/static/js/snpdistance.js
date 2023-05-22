@@ -806,23 +806,26 @@ const showRelatedSamples = async function () {
     // If first object in JSON is not an error, proceed with main function
     if(Object.keys(json)[0] !== "error") {
 
+      // TODO: better solution to this - massive hack in Tom's absence 
+      var soi = json.SOI;
+      delete json.SOI;
+
       // Remove time from date property and round miles to two decimal places
       Object.values(json).forEach((item) => {
-        item.date = formatDate(item.date.replace(" 00:00:00.000", ""));
         item.distance = parseFloat(item.distance).toFixed(2);
       });
 
       // Render related markers
-      renderRelatedMarkers(json, sampleID);
+      renderRelatedMarkers(json, soi);
 
       // Render html table title in right sidebar
       document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
-        <h4>${sampleID}</h4>
+        <h4>${soi}</h4>
         <p>
-          <span>Identifier: ${json[sampleID].animal_id}<br/></span>
-          <span>Location: ${json[sampleID].cph}<br/></span>
+          <span>Identifier: ${json[soi].animal_id}<br/></span>
+          <span>Location: ${json[soi].cph}<br/></span>
           <span>Grid Reference: TBC<br/></span>
-          <span>Clade: ${json[sampleID].clade}<br/></span>
+          <span>Clade: ${json[soi].clade}<br/></span>
         </p>
         <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>

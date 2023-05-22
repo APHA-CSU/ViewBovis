@@ -1,5 +1,6 @@
 import sqlite3
 import glob
+from datetime import datetime
 from os import path
 
 import numpy as np
@@ -78,6 +79,7 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
+                                 dtype={"SlaughterDate": str},
                                  params=ids+ids)
 
     def _submission_to_sample(self, submission: str) -> str:
@@ -111,6 +113,13 @@ class ViewBovisData:
                                  self._db,
                                  index_col="Submission",
                                  params={"submission": submission})
+
+    # TODO: unit test?
+    def _transform_dateformat(self, date: str) -> str:
+        """
+            Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
+        """
+        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_lat_long(self, cphs: set) -> tuple:
         """
@@ -189,8 +198,10 @@ class ViewBovisData:
                      {"cph": row["Loc"],
                       "lat": df_cph_latlon_map["Lat"][row["Loc"]],
                       "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                      "on_date": row["Loc_StartDate"],
-                      "off_date": row["Loc_EndDate"],
+                      "on_date":
+                          self._transform_dateformat(row["Loc_StartDate"]),
+                      "off_date":
+                          self._transform_dateformat(row["Loc_EndDate"]),
                       "stay_length": row["Loc_Duration"],
                       "type": row["CPH_Type"],
                       "county": row["County"]}
@@ -200,7 +211,9 @@ class ViewBovisData:
                 "identifier": self._df_metadata_sub["Identifier"][0],
                 "species": self._df_metadata_sub["Host"][0],
                 "animal_type": self._df_metadata_sub["Animal_Type"][0],
-                "slaughter_date": self._df_metadata_sub["SlaughterDate"][0],
+                "slaughter_date":
+                    self._transform_dateformat(self._df_metadata_sub
+                                               ["SlaughterDate"][0]),
                 "cph": self._df_metadata_sub["CPH"][0],
                 "cphh": self._df_metadata_sub["CPHH"][0],
                 "cph_type": self._df_metadata_sub["CPH_Type"][0],
@@ -240,21 +253,21 @@ class ViewBovisData:
         df_cph_latlon_map = \
             self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
-        return {index:
-                {"cph": row["CPH"],
-                 "lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                 "lon": df_cph_latlon_map["Long"][row["CPH"]],
-                 "snp_distance":
-                    int(df_snps_related[self._submission][index]),
-                 "animal_id": row["Identifier"],
-                 "herd": row["CPHH"],
-                 "clade": row["Clade"],
-                 "date": row["SlaughterDate"],
-                 "distance":
-                     self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                         df_cph_latlon_map["y"][row["CPH"]]))}
-                for index, row in df_metadata_related.iterrows()
-                if row["Host"] == "COW"}
+        return dict({index:
+                     {"cph": row["CPH"],
+                      "lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                      "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                      "snp_distance":
+                          int(df_snps_related[self._submission][index]),
+                      "animal_id": row["Identifier"],
+                      "herd": row["CPHH"],
+                      "clade": row["Clade"],
+                      "date": self._transform_dateformat(row["SlaughterDate"]),
+                      "distance":
+                          self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
+                                              df_cph_latlon_map["y"][row["CPH"]]))}
+                     for index, row in df_metadata_related.iterrows()
+                     if row["Host"] == "COW"}, **{"SOI": self._submission})
 
     # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
@@ -296,7 +309,7 @@ class ViewBovisData:
                  {"animal_id": row["Identifier"],
                   "herd": row["CPHH"],
                   "clade": row["Clade"],
-                  "date": row["SlaughterDate"],
+                  "date": self._transform_dateformat(row["SlaughterDate"]),
                   "distance":
                       self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                           df_cph_latlon_map["y"][row["CPH"]]))}
