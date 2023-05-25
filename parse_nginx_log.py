@@ -29,7 +29,7 @@ if __name__ == "__main__":
                         default=DEFAULT_ACCESS_LOG_PATH,
                         help="path to nginx access log file")
     parser.add_argument("--out_dir", dest="out_dir",
-                        default=DEFAULT_ACCESS_LOG_PATH,
+                        default=DEFAULT_OUTPUT_PATH,
                         help="path to output directory")
     args = parser.parse_args()
     run(args.access_log_path, args.out_dir)
