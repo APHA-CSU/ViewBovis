@@ -443,33 +443,22 @@ const showSNPMatrix = async function () {
 
     // If first object in JSON is not an error, proceed with main function
     if(Object.keys(json)[0] !== "error") {
-      // Capture whether the user input an identifier or AF number into the search box
-      // BUG this may not work for all samples because not all submissions at AF numbers
-      const sampleType = matrixSampleSelected.startsWith("AF") ? "AFnumber" : "Identifier";
-      // console.log(sampleType);
-
-      // Extract the selected sample AF number (required for when the user searches using an identifier instead of an AF number)
-      const selectedSampleAF = sampleType === "AFnumber" ? matrixSampleSelected : Object.keys(json)[Object.values(json).map( i => i.animal_id ).indexOf(matrixSampleSelected)];
-      // console.log(selectedSampleAF);
-
-      // Extract the selected sample Identifier
-      const selectedSampleIdentifier = json[selectedSampleAF].animal_id;
+      // Extract the selected sample Submission number and Identifier
+      const selectedSampleSubmission = json.soi;
+      const selectedSampleIdentifier = json.identifier;
       // console.log(selectedSampleIdentifier);
 
       // Extract matrix from json array
       const matrix = json.matrix;
       // console.log(matrix);
-      
-      // Extract all sample names as array and remove matrix from end of array
-      const sampleIDs = Object.keys(json);
-      sampleIDs.pop();
-      // console.log(sampleIDs);
-
-      // Reorder array so that selected sample is at the beginning
-      const index = sampleIDs.indexOf(selectedSampleAF); // Get the index of the element
-      if (index !== -1) { // Check if the element is found in the array
-        sampleIDs.splice(index, 1); // Remove the element from the array
-        sampleIDs.unshift(selectedSampleAF); // Add the element to the beginning of the array
+      // TODO: sampleIDs seems to be some kind of list that contains all the sample IDs
+      // to use in the heatmap. This is probably where the original bug was coming in because
+      // it only had samples for which there were metadata. 
+      // wondering if i could create a similar list with all the samples by converting
+      // samples in the SNP matrix to a set (e.g. unique values) ...
+      if (selectedSampleSubmission !== -1) { // Check if the element is found in the array
+        sampleIDs.splice(selectedSampleSubmission, 1); // Remove the element from the array
+        sampleIDs.unshift(selectedSampleSubmission); // Add the element to the beginning of the array
       }
       console.log(sampleIDs);
 
@@ -486,7 +475,7 @@ const showSNPMatrix = async function () {
       renderSNPDistribution(matrix, minValue, maxValue); 
 
       // Render SNP matrix
-      plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleAF, sampleIDs, minValue, maxValue);
+      plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleSubmission, sampleIDs, minValue, maxValue);
     }else{
       document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
       <p class="warning-text" id="snpmatrix-error-message">${Object.values(json)[0]}</p>
