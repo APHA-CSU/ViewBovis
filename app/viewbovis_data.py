@@ -288,4 +288,4 @@ class ViewBovisData:
         # restructure matrix
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        return {"matrix": snps_related}
+        return {"soi": self._submission, "matrix": snps_related}
