@@ -282,10 +282,14 @@ class ViewBovisData:
                 genetically related isolates
 
             Returns:
-                SNP matrix in "molten"/stacked format. (dict)
+                A dictionary containing the submission number of the
+                sample of interest and the SNP matrix in "molten"
+                format
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # restructure matrix
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        return {"soi": self._submission, "matrix": snps_related}
+        return {"soi": self._submission,
+                "identifier": self._df_metadata_sub["Identifier"][0],
+                "matrix": snps_related}
