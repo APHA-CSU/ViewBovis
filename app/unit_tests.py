@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 import pandas as pd
+import pandas.testing as pdtesting
 import numpy.testing as nptesting
 
 from viewbovis_data import ViewBovisData
@@ -47,6 +48,20 @@ class TestViewBovisData(unittest.TestCase):
                                 index=["foo_sub", "bar_sub"])
         nptesting.assert_array_equal(self.data._related_snp_matrix(3),
                                      expected)
+
+    def test_sort_matrix(self):
+        # setup - mock attributes
+        setattr(self.data, "_submission", "foo")
+        # expected output
+        expected = pd.DataFrame({"foo": [0, 3, 5],
+                                 "bar": [3, 0, 10],
+                                 "baz": [5, 10, 0]},
+                                index=["foo", "bar", "baz"])
+        pdtesting.assert_frame_equal(self.data._sort_matrix(
+            pd.DataFrame({"bar": [0, 3, 10],
+                          "foo": [3, 0, 5],
+                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])),
+            expected)
 
     def test_submission_movement_metadata(self):
         # setup - mock attributes
