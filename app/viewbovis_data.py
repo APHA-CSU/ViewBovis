@@ -151,10 +151,12 @@ class ViewBovisData:
     def _related_snp_matrix(self, snp_threshold: int) -> pd.DataFrame:
         """
             Retrieves the SNP matrix, relating the SOI and all
-            genetically isolated, i.e. the SNP matrix from the SOI clade
-            filtered to all isolates <= the snp_threshold. Sample names
-            in the row and column labels of the original SNP matrix
-            files are converted to submission numbers
+            genetically related isolates, i.e. the SNP matrix from the
+            SOI clade filtered to all isolates <= the snp_threshold.
+            Sample names in the row and column labels of the original
+            SNP matrix files are converted to submission numbers and the
+            matrix is reordered to ensure the SOI appears first in row
+            and column
 
             Parameters:
                 snp_threshold (int): maximum SNP distance for
@@ -182,7 +184,14 @@ class ViewBovisData:
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
                                   map(lambda x: self._sample_to_submission(x)))
-        return df_snps_related_processed
+        # rearrange the row and column order to ensure SOI is first
+        submission_list = \
+            [self._submission] + [x for x in
+                                  df_snps_related_processed.index.to_list()
+                                  if x != self._submission]
+        df_snps_related_rearranged = df_snps_related_processed[submission_list]\
+            .reindex(submission_list)
+        return df_snps_related_rearranged
 
     def submission_movement_metadata(self) -> dict:
         """
@@ -287,9 +296,11 @@ class ViewBovisData:
                 format
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
+        submissions = df_snps_related.index.to_list()
         # restructure matrix
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         return {"soi": self._submission,
                 "identifier": self._df_metadata_sub["Identifier"][0],
+                "sampleIDs": submissions,
                 "matrix": snps_related}
