@@ -184,14 +184,17 @@ class ViewBovisData:
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
                                   map(lambda x: self._sample_to_submission(x)))
-        # rearrange the row and column order to ensure SOI is first
+        return self._sort_matrix(df_snps_related_processed)
+
+    def _sort_matrix(self, df_matrix):
+        """
+            Sorts the rows and columns of df_matrix to ensure that the
+            SOI appears first in both row and column
+        """
         submission_list = \
-            [self._submission] + [x for x in
-                                  df_snps_related_processed.index.to_list()
+            [self._submission] + [x for x in df_matrix.index.to_list()
                                   if x != self._submission]
-        df_snps_related_rearranged = df_snps_related_processed[submission_list]\
-            .reindex(submission_list)
-        return df_snps_related_rearranged
+        return df_matrix[submission_list].reindex(submission_list)
 
     def submission_movement_metadata(self) -> dict:
         """
