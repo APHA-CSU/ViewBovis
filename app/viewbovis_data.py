@@ -292,12 +292,13 @@ class ViewBovisData:
 
             Returns:
                 A dictionary containing the submission number of the
-                sample of interest and the SNP matrix in "molten"
-                format
+                SOI, the identifier of the SOI, a list of sampleIDs in
+                the order they appear in the matrix (SOI first) and the
+                SNP matrix in "molten" format
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         submissions = df_snps_related.index.to_list()
-        # restructure matrix
+        # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         return {"soi": self._submission,
