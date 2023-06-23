@@ -34,6 +34,7 @@ class TestViewBovisData(unittest.TestCase):
         setattr(self.data, "_submission", "foo_sub")
         # setup - mock private methods
         self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
+        self.data._sort_matrix = mock.Mock(wraps=lambda x: x)
         # setup - return values for external mocks
         mock_read_csv.return_value = \
             pd.DataFrame({"foo": [0, 3, 5],
