@@ -451,15 +451,8 @@ const showSNPMatrix = async function () {
       // Extract matrix from json array
       const matrix = json.matrix;
       // console.log(matrix);
-      // TODO: sampleIDs seems to be some kind of list that contains all the sample IDs
-      // to use in the heatmap. This is probably where the original bug was coming in because
-      // it only had samples for which there were metadata. 
-      // wondering if i could create a similar list with all the samples by converting
-      // samples in the SNP matrix to a set (e.g. unique values) ...
-      if (selectedSampleSubmission !== -1) { // Check if the element is found in the array
-        sampleIDs.splice(selectedSampleSubmission, 1); // Remove the element from the array
-        sampleIDs.unshift(selectedSampleSubmission); // Add the element to the beginning of the array
-      }
+
+      const sampleIDs = json.sampleIDs
       console.log(sampleIDs);
 
       //================
