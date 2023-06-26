@@ -151,10 +151,12 @@ class ViewBovisData:
     def _related_snp_matrix(self, snp_threshold: int) -> pd.DataFrame:
         """
             Retrieves the SNP matrix, relating the SOI and all
-            genetically isolated, i.e. the SNP matrix from the SOI clade
-            filtered to all isolates <= the snp_threshold. Sample names
-            in the row and column labels of the original SNP matrix
-            files are converted to submission numbers
+            genetically related isolates, i.e. the SNP matrix from the
+            SOI clade filtered to all isolates <= the snp_threshold.
+            Sample names in the row and column labels of the original
+            SNP matrix files are converted to submission numbers and the
+            matrix is reordered to ensure the SOI appears first in row
+            and column
 
             Parameters:
                 snp_threshold (int): maximum SNP distance for
@@ -182,7 +184,17 @@ class ViewBovisData:
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
                                   map(lambda x: self._sample_to_submission(x)))
-        return df_snps_related_processed
+        return self._sort_matrix(df_snps_related_processed)
+
+    def _sort_matrix(self, df_matrix):
+        """
+            Sorts the rows and columns of df_matrix to ensure that the
+            SOI appears first in both row and column
+        """
+        submission_list = \
+            [self._submission] + [x for x in df_matrix.index.to_list()
+                                  if x != self._submission]
+        return df_matrix[submission_list].reindex(submission_list)
 
     def submission_movement_metadata(self) -> dict:
         """
@@ -272,8 +284,7 @@ class ViewBovisData:
     # TODO: not just cows
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
-            Returns metadata and SNP matrix data for related
-            submissions.
+            Returns a SNP matrix data for related submissions.
 
             The SNP matrix is provided in "molten" format
             (see https://github.com/tseemann/snp-dists#snp-dists--m-molten-output-format)
@@ -283,35 +294,17 @@ class ViewBovisData:
                 genetically related isolates
 
             Returns:
-                metadata (dict): metadata for related samples
-                    {submission_number:
-                        {"animal_id": eartag,
-                         "herd": herd cph,
-                         "clade": clade of sample,
-                         "date": date of slaughter,
-                         "distance": distance to the sample of interest
-                             in miles}
-                     "matrix": SNP matrix}
+                A dictionary containing the submission number of the
+                SOI, the identifier of the SOI, a list of sampleIDs in
+                the order they appear in the matrix (SOI first) and the
+                SNP matrix in "molten" format
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
-        # restructure matrix
+        submissions = df_snps_related.index.to_list()
+        # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        # get metadata for all related submissions
-        df_metadata_related = \
-            self._submission_metadata(df_snps_related.index.to_list())
-        # get lat/long mappings for CPH of related submissions
-        df_cph_latlon_map = \
-            self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
-        # construct data response for client
-        return \
-            dict({index:
-                 {"animal_id": row["Identifier"],
-                  "herd": row["CPHH"],
-                  "clade": row["Clade"],
-                  "date": self._transform_dateformat(row["SlaughterDate"]),
-                  "distance":
-                      self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                          df_cph_latlon_map["y"][row["CPH"]]))}
-                  for index, row in df_metadata_related.iterrows()
-                  if row["Host"] == "COW"}, **{"matrix": snps_related})
+        return {"soi": self._submission,
+                "identifier": self._df_metadata_sub["Identifier"][0],
+                "sampleIDs": submissions,
+                "matrix": snps_related}
