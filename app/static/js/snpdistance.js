@@ -662,7 +662,7 @@ const popupContentSNPMap = function(data, AFnumber) {
           </tr>
           <tr>
             <td><strong>Slaughter Date:</strong></td>
-            <td>${data.date}</td>
+            <td>${data.slaughter_date}</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
@@ -847,7 +847,7 @@ const showRelatedSamples = async function () {
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Date", field:"date", headerFilter:"input"},  
+            {title:"Slaughter_Date", field:"slaughter_date", headerFilter:"input"},  
         ],
         initialSort:[
           {column:"distance", dir:"asc"},
