@@ -83,7 +83,7 @@ const showTable = async function() {
                 columns: [
                     {title:"Identifier", field:"eartag"},
                     {title:"Submission", field:"af"},
-                    {title:"Location", field:"cph"},
+                    {title:"Precise Location", field:"cph"},
                     {title:"County", field:"county"},
                     {title:"Clade", field:"clade"},
                 ],
@@ -109,9 +109,9 @@ const showTable = async function() {
                 // Render Nextstrain for clade, county, AF, Ear tag or CPH
                 if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
                 if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
-                if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
+                if (cellField === "af") renderNextstrain(`${clade}?f_Submission=${cellValue}&p=grid`);
                 if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
-                if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
+                if (cellField === "cph") renderNextstrain(`${clade}?f_PreciseLocation=${cellValue}&p=grid&tl=Identifier`);
             });
 
             // Add the cell mouse over and mouse out event listeners to the table
