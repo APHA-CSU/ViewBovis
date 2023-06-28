@@ -301,11 +301,11 @@ const popupContent = function(data, movArr, index) {
               <td>${data.species === "COW" ? "Bovine" : data.species}</td>
             </tr>
             <tr>
-              <td><strong>Location:</strong></td>
+              <td><strong>Precise Location:</strong></td>
               <td>${movArr[index].cph}</td>
             </tr>
             <tr>
-              <td><strong>Location Type:</strong></td>
+              <td><strong>Precise Location Type:</strong></td>
               <td>${movArr[index].type}</td>
             </tr>
             <tr>
