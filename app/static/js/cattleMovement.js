@@ -714,7 +714,7 @@ document.getElementById("cattleMovementLines--2").addEventListener("change", tog
 // ------------------------ //
 
 // Initiate variables to store shapefile data
-let countyPoly, riskAreaPoly, HRAPoly, LRAPoly, EdgePoly, HTBAPoly, ITBAPoly, LTBAPoly, TBFAPoly;
+let countyPoly, riskAreaPoly, HRAPoly, LRAPoly, EdgePoly, HTBAPoly, ITBAPoly, LTBAPoly, TBFAPoly, hotspotPoly;
 
 // Function to toggle layers on or off
 const toggleLayers = function(layer){
@@ -885,6 +885,7 @@ riskAreaBox.addEventListener("change", function() {
 
   // Ensure county layer is always on top by re-executing bringToFront() method
   countyPoly.bringToFront();
+  // hotspotPoly.bringToFront(); // example from Tom
 
   // Ensure movement lines are always on top
   if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
@@ -1007,15 +1008,37 @@ countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 
 // ------------------------ //
 //
-// HOME RANGES LAYER
+// HOTSPOT LAYER
 //
 // ------------------------ //
 
 // ELement ID from DOM
-// const homeRangeBox = document.getElementById("homeRangesBox");
+const hotspotBox = document.getElementById("hotspotBox");
 
-// Toggle home range polygons when checkbox is ticked or unticked
-// homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
-// homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
+// Function to set polygon colours for Hotspot
+const hotspotCols = function(area) {
+  switch (area) {
+    case "HS 28": return "red";
+    case "HS 27": return "blue";
+    case "HS 26": return "orange";
+    case "HS 23": return "yellow";
+    case "HS 21" : return "pink";
+    case "HS 29": return "purple";
+  };
+};
 
+// Function to set custom styles for Hotspot polygons
+const stylehotspotPoly = function(feature){
+    return {
+      fillColor: hotspotCols(feature.properties.Name),
+      weight: 1.5,  
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.50,
+  };
+};
 
+// Toggle county polygons when checkbox is ticked or unticked
+hotspotPoly = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylehotspotPoly});
+hotspotBox.addEventListener("change", toggleLayers.bind(hotspotBox, hotspotPoly));
