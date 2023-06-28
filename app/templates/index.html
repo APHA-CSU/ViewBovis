@@ -26,11 +26,11 @@
                     <ul class="navbar-nav">
                         <!-- Home Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-1 active" data-tab="1">Home</a>
+                            <a class="nav-link nav-link-1" data-tab="1">Home</a>
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2 active" data-tab="2">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
@@ -96,7 +96,7 @@
         <!-- ================================== -->
         <!-- Home Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-1">
+        <div class="container-fluid content content-1 hidden">
             <!-- Government ALPHA Banner -->
             <div class="row alpha-side-margin">
                 <div class="govuk-phase-banner ">
@@ -253,7 +253,7 @@
         <!-- ================================== -->
         <!-- Cattle Movement Content -->
         <!-- ================================== -->
-        <div class="container-fluid content content-2 hidden">
+        <div class="container-fluid content content-2">
             <div class="row">
                 <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <div id="map-sidebar-container">
@@ -383,31 +383,7 @@
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
                                 </div>
 
-                                <!-- Home Ranges checkbox and accordion -->
-                                <!-- <div class="govuk-checkboxes__item" style="width: 100%;">
-                                    <input class="govuk-checkboxes__input" id="homeRangesBox" type="checkbox">
-                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__homeRanges" for="homeRangesBox" style="width: 100%; padding: 0; border: none;">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__homeRanges" aria-expanded="false" aria-controls="body__homeRanges" style="padding: 10px;">
-                                            <span class="govuk-label" style="margin: 0;">Home Ranges</span>
-                                        </button>
-                                        <div id="body__homeRanges" class="accordion-collapse collapse" data-bs-parent="#accordion__homeRanges">
-                                            <div class="accordion-body" style="padding-top: 0;">
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B6-11" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B6-11</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B6-85" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B6-85</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B3-11" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B3-11</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div> -->
+                                
                                 
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="cattleMovementLines--1" type="checkbox" disabled="disabled" checked>
