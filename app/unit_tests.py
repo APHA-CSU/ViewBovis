@@ -139,7 +139,7 @@ class TestViewBovisData(unittest.TestCase):
         expected = \
             {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
                          "animal_id": "foo_id", "clade": "foo_clade",
-                         "date": "foo_date_transformed", "distance": 0.0},
+                         "slaughter_date": "foo_date_transformed", "distance": 0.0},
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "clade": "bar_clade",
                          "slaughter_date": "bar_date_transformed", "distance": 1.1},
