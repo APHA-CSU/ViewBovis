@@ -142,7 +142,7 @@ class TestViewBovisData(unittest.TestCase):
                          "date": "foo_date_transformed", "distance": 0.0},
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "clade": "bar_clade",
-                         "date": "bar_date_transformed", "distance": 1.1},
+                         "slaughter_date": "bar_date_transformed", "distance": 1.1},
              "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(

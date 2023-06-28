@@ -251,7 +251,7 @@ class ViewBovisData:
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
                         "clade": clade of sample,
-                        "date": date of slaughter,
+                        "slaughter_date": date of slaughter,
                         "distance": distance to the sample of interest
                             in miles}
         """
@@ -271,7 +271,8 @@ class ViewBovisData:
                           int(df_snps_related[self._submission][index]),
                       "animal_id": row["Identifier"],
                       "clade": row["Clade"],
-                      "date": self._transform_dateformat(row["SlaughterDate"]),
+                      "slaughter_date":
+                          self._transform_dateformat(row["SlaughterDate"]),
                       "distance":
                           self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                               df_cph_latlon_map["y"][row["CPH"]]))}
