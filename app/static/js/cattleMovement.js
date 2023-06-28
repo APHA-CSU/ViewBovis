@@ -1042,3 +1042,48 @@ const stylehotspotPoly = function(feature){
 // Toggle county polygons when checkbox is ticked or unticked
 hotspotPoly = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylehotspotPoly});
 hotspotBox.addEventListener("change", toggleLayers.bind(hotspotBox, hotspotPoly));
+
+// Legend for Hotspots
+// https://leafletjs.com/examples/choropleth/
+let hotspotLegend = L.control({position: "bottomright"});
+hotspotLegend.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "info legend");
+    const category = ["HS 28", "HS 27", "HS 26", "HS 23", "HS 21", "HS 29"];
+    const colours = ["red","blue","orange","yellow","pink","purple"];
+
+    // Build legend: loop through levels and generate a label with a colored square
+
+    // Add each category to legend
+    div.insertAdjacentHTML("afterbegin", "<strong>Hotspots</strong><br>");
+    for (let i = 0; i < category.length; i++) 
+      div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${category[i]} <br>`);
+
+    return div;
+};
+
+// Toggle legend  when Hotspot layer is (un)ticked
+hotspotBox.addEventListener("change", function() {
+
+  // When checkbox is ticked
+  if(this.checked === true) {
+
+    // Add legend to map
+    hotspotLegend.addTo(map);
+  }
+
+  // When checkbox is unticked
+  if(this.checked === false) {
+
+    // Remove legend from map
+    hotspotLegend.remove();
+  }
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly.bringToFront();
+  // hotspotPoly.bringToFront(); // example from Tom
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
+});
