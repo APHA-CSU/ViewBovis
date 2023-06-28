@@ -69,9 +69,9 @@ class TestViewBovisData(unittest.TestCase):
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
                               "Host": ["C"], "SlaughterDate": ["D"],
                               "Animal_Type": ["E"], "CPH": ["F"],
-                              "CPHH": ["G"], "CPH_Type": ["H"],
-                              "County": ["I"], "RiskArea": ["J"],
-                              "Loc0": ["K"], "OutsideHomeRange": ["L"]},
+                              "CPH_Type": ["H"], "County": ["I"],
+                              "RiskArea": ["J"], "Loc0": ["K"],
+                              "OutsideHomeRange": ["L"]},
                              index=["Y"]))
         # setup - mock private methods
         self.data._submission_movdata = mock.Mock()
@@ -93,7 +93,7 @@ class TestViewBovisData(unittest.TestCase):
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "C", "slaughter_date": "D_transformed", "animal_type": "E",
-                    "cph": "F", "cphh": "G", "cph_type": "H", "county": "I",
+                    "cph": "F", "cph_type": "H", "county": "I",
                     "risk_area": "J", "out_of_homerange": "L", "move":
                         {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S_transformed",
                                "off_date": "Z_transformed", "stay_length": "V",
@@ -129,7 +129,6 @@ class TestViewBovisData(unittest.TestCase):
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                           "SlaughterDate": ["foo_date", "bar_date"],
                           "CPH": ["J", "O"], "Host": ["COW", "COW"],
-                          "CPHH": ["foo_herd", "bar_herd"],
                           "Clade": ["foo_clade", "bar_clade"]},
                          index=["foo_sub", "bar_sub"])
         self.data._get_lat_long.return_value = \
@@ -139,15 +138,11 @@ class TestViewBovisData(unittest.TestCase):
         # expected output
         expected = \
             {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
-                         "animal_id": "foo_id", "herd": "foo_herd",
-                         "clade": "foo_clade",
-                         "slaughter_date": "foo_date_transformed",
-                         "distance": 0.0},
+                         "animal_id": "foo_id", "clade": "foo_clade",
+                         "slaughter_date": "foo_date_transformed", "distance": 0.0},
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
-                         "animal_id": "bar_id", "herd": "bar_herd",
-                         "clade": "bar_clade",
-                         "slaughter_date": "bar_date_transformed",
-                         "distance": 1.1},
+                         "animal_id": "bar_id", "clade": "bar_clade",
+                         "slaughter_date": "bar_date_transformed", "distance": 1.1},
              "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(

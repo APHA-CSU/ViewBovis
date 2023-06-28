@@ -227,7 +227,6 @@ class ViewBovisData:
                     self._transform_dateformat(self._df_metadata_sub
                                                ["SlaughterDate"][0]),
                 "cph": self._df_metadata_sub["CPH"][0],
-                "cphh": self._df_metadata_sub["CPHH"][0],
                 "cph_type": self._df_metadata_sub["CPH_Type"][0],
                 "county": self._df_metadata_sub["County"][0],
                 "risk_area": self._df_metadata_sub["RiskArea"][0],
@@ -251,7 +250,6 @@ class ViewBovisData:
                         "lon": longitude,
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
-                        "herd": herd cph,
                         "clade": clade of sample,
                         "slaughter_date": date of slaughter,
                         "distance": distance to the sample of interest
@@ -272,7 +270,6 @@ class ViewBovisData:
                       "snp_distance":
                           int(df_snps_related[self._submission][index]),
                       "animal_id": row["Identifier"],
-                      "herd": row["CPHH"],
                       "clade": row["Clade"],
                       "slaughter_date":
                           self._transform_dateformat(row["SlaughterDate"]),
