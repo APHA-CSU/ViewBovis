@@ -22,7 +22,7 @@ class ViewBovisData:
             to attributes of the ViewBovisData class
         """
         self._matrix_dir = path.join(data_path, "snp_matrix")
-        db_path = path.join(data_path, "viewbovis_v3.db")
+        db_path = path.join(data_path, "viewbovis.db")
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
 
@@ -74,7 +74,7 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
-                                 dtype={"SlaughterDate": str},
+                                 #dtype={"SlaughterDate": str},
                                  params=ids+ids)
 
     # TODO: validate input
@@ -313,7 +313,8 @@ class ViewBovisData:
                      "animal_id": row["Identifier"],
                      "clade": row["Clade"],
                      "slaughter_date":
-                         self._transform_dateformat(row["SlaughterDate"]),
+                         (None if not row["SlaughterDate"] else
+                          self._transform_dateformat(row["SlaughterDate"])),
                      "distance":
                          self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                              df_cph_latlon_map["y"]
@@ -329,6 +330,7 @@ class ViewBovisData:
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 
+    # TODO: make so SOI can be a submission without metadata.
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
             Returns SNP matrix data for related submissions
@@ -352,7 +354,7 @@ class ViewBovisData:
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         return {"soi": self._submission,
-                "identifier": self._df_metadata_sub["Identifier"][0],
+                "identifier": self._df_metadata_soi["Identifier"][0],
                 "sampleIDs": submissions,
                 "matrix": snps_related}
 
