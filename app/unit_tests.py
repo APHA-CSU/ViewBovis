@@ -223,7 +223,7 @@ class TestViewBovisData(unittest.TestCase):
         self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_submission", "foo_sub")
-        setattr(self.data, "_df_metadata_sub",
+        setattr(self.data, "_df_metadata_soi",
                 pd.DataFrame({"Identifier": ["foo_id"]}))
         # setup - mock private methods
         self.data._related_snp_matrix = mock.Mock()
