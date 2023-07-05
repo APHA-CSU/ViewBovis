@@ -560,7 +560,7 @@ hotspotBox2.addEventListener("change", function() {
   if(this.checked === true) {
 
     // Add legend to map
-    hotspotLegend2.addTo(map);
+    hotspotLegend2.addTo(map2);
   }
 
   // When checkbox is unticked
