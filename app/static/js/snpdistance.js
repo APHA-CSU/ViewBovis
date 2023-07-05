@@ -534,6 +534,46 @@ const stylehotspotPoly2 = function(feature){
 hotspotPoly2 = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylehotspotPoly2});
 hotspotBox2.addEventListener("change", toggleLayers2.bind(hotspotBox2, hotspotPoly2));
 
+// Legend for Hotspots
+// https://leafletjs.com/examples/choropleth/
+let hotspotLegend2 = L.control({position: "bottomright"});
+hotspotLegend2.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "info legend");
+    const category = ["HS 28", "HS 27", "HS 26", "HS 23", "HS 21", "HS 29"];
+    const colours = ["red","blue","orange","yellow","pink","purple"];
+
+    // Build legend: loop through levels and generate a label with a colored square
+
+    // Add each category to legend
+    div.insertAdjacentHTML("afterbegin", "<strong>Hotspots</strong><br>");
+    for (let i = 0; i < category.length; i++) 
+      div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${category[i]} <br>`);
+
+    return div;
+};
+
+// Toggle legend  when Hotspot layer is (un)ticked
+hotspotBox2.addEventListener("change", function() {
+
+  // When checkbox is ticked
+  if(this.checked === true) {
+
+    // Add legend to map
+    hotspotLegend2.addTo(map);
+  }
+
+  // When checkbox is unticked
+  if(this.checked === false) {
+
+    // Remove legend from map
+    hotspotLegend2.remove();
+  }
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly2.bringToFront();
+});
+
 // ==================================================================================== //
 
 
