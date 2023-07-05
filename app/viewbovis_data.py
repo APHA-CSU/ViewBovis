@@ -258,8 +258,10 @@ class ViewBovisData:
                             {"cph": row["Loc"],
                              "lat": df_cph_latlon_map["Lat"][row["Loc"]],
                              "lon": df_cph_latlon_map["Long"][row["Loc"]],
-                             "on_date": row["Loc_StartDate"],
-                             "off_date": row["Loc_EndDate"],
+                             "on_date":
+                                self._transform_dateformat(row["Loc_StartDate"]),
+                             "off_date":
+                                self._transform_dateformat(row["Loc_EndDate"]),
                              "stay_length": row["Loc_Duration"],
                              "type": row["CPH_Type"],
                              "county": row["County"]}
@@ -278,6 +280,7 @@ class ViewBovisData:
             Returns:
                 metadata (dict): metadata for related samples
                     {submission_number:
+                        "cph": CPH location of positive test
                         "lat": latitude,
                         "lon": longitude,
                         "snp_distance": SNPs to sample of interest,
@@ -302,7 +305,8 @@ class ViewBovisData:
         # response dictionary
         return \
             dict(**{index:
-                    {"lat": df_cph_latlon_map["Lat"][row["CPH"]],
+                    {"cph": row["CPH"],
+                     "lat": df_cph_latlon_map["Lat"][row["CPH"]],
                      "lon": df_cph_latlon_map["Long"][row["CPH"]],
                      "snp_distance":
                         int(df_snps_related[self._submission][index]),
@@ -315,14 +319,15 @@ class ViewBovisData:
                                              df_cph_latlon_map["y"]
                                              [row["CPH"]]))}
                     for index, row in df_metadata_related.iterrows()},
-                 **{subm: {"lat": None, "lon": None,
+                 **{subm: {"cph": None, "lat": None, "lon": None,
                            "snp_distance":
                                int(df_snps_related[self._submission][subm]),
                            "animal_id": None,
                            "clade": None,
                            "slaughter_date": None,
                            "distance": None}
-                    for subm in no_meta_submissions})
+                    for subm in no_meta_submissions},
+                 **{"SOI": self._submission})
 
     def snp_matrix(self, snp_threshold: int) -> dict:
         """

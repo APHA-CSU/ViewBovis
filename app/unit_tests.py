@@ -99,16 +99,20 @@ class TestViewBovisData(unittest.TestCase):
     @mock.patch("viewbovis_data.ViewBovisData._load_soi")
     def test_soi_movement_metadata(self, _):
         self.data = ViewBovisData("foo_path", "foo_id")
+        # setup - mock attributes
+        setattr(self.data, "_df_metadata_soi",
+                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
+                              "Host": ["COW"], "SlaughterDate": ["D"],
+                              "Animal_Type": ["E"], "CPH": ["F"],
+                              "CPH_Type": ["H"], "County": ["I"],
+                              "RiskArea": ["J"], "Loc0": ["K"],
+                              "OutsideHomeRange": ["L"]}, index=["Y"]))
         # setup - mock public & private methods
-        self.data.soi_metadata = mock.Mock()
         self.data._query_movdata = mock.Mock()
         self.data._get_lat_long = mock.Mock()
+        self.data._transform_dateformat = \
+            mock.Mock(side_effect=transform_dateformat_side_effect_func)
         # setup - return values for public & private method mocks
-        self.data.soi_metadata.return_value = \
-            {"submission": "Y", "clade": "A", "identifier": "B",
-             "species": "COW", "slaughter_date": "D", "animal_type": "E",
-             "cph": "F", "cphh": "G", "cph_type": "H", "county": "I",
-             "risk_area": "J", "out_of_homerange": "L"}
         self.data._query_movdata.return_value = \
             pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
                           "County": ["M", "N", "O"],
@@ -147,7 +151,9 @@ class TestViewBovisData(unittest.TestCase):
         with self.assertRaises(NonBovineException):
             self.data.soi_movement_metadata()
 
-    def test_sort_matrix(self):
+    @mock.patch("viewbovis_data.ViewBovisData._load_soi")
+    def test_sort_matrix(self, _):
+        self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_submission", "foo")
         # expected output
@@ -175,9 +181,9 @@ class TestViewBovisData(unittest.TestCase):
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
         # setup - return values for private method mocks
         self.data._related_snp_matrix.return_value = \
-            pd.DataFrame({"foo_sub": [0, 3, 2],
-                          "bar_sub": [3, 0, 10],
-                          "baz_sub": [2, 10, 0]},
+            pd.DataFrame({"foo_sub": [0, 3, 1],
+                          "bar_sub": [3, 0, 2],
+                          "baz_sub": [1, 2, 0]},
                          index=["foo_sub", "bar_sub", "baz_sub"])
         self.data._query_metadata.return_value = \
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
@@ -197,6 +203,9 @@ class TestViewBovisData(unittest.TestCase):
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "clade": "bar_clade",
                          "slaughter_date": "bar_date_transformed", "distance": 1.1},
+             "baz_sub": {"cph": None, "lat": None, "lon": None, "snp_distance": 1,
+                         "animal_id": None, "clade": None,
+                         "slaughter_date": None, "distance": None},
              "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(
