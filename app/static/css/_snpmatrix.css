@@ -1,0 +1,24 @@
+/* ================================ */
+/*
+/* SNP MATRIX CSS */
+/*
+/* ================================ */
+
+#snpmatrix-spinner-container {
+    display: inline-flex;
+    margin-top: 4px;
+    padding-left: 20px;
+}
+
+#snpmatrix-sidebar-container {
+    height: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+/* Note: change all warning text to class not ID */
+#snpmatrix-warning-text {
+    color: var(--apha-orange);
+    font-size: 20px;
+}

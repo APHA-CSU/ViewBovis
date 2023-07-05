@@ -388,6 +388,9 @@ riskAreaBox2.addEventListener("change", function() {
     TBFACheckBox2.checked = false;
     map2.removeLayer(TBFAPoly2);
   }; 
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly2.bringToFront();
 });
 
 // Toggle risk area polygons
@@ -490,7 +493,7 @@ const stylePoly2 = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("royalblue"), onEachFeature: onEachFeature2});
+countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("grey"), onEachFeature: onEachFeature2});
 countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2));
 
 
@@ -514,18 +517,14 @@ backBtn2.setAttribute("data-bs-toggle", "tooltip");
 backBtn2.setAttribute("data-bs-placement", "btn-backToSplashPage");
 backBtn2.setAttribute("title", "Back to SNP Distance Start Page");
 backBtn2.innerHTML = `
-    <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
-        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+    <span id="back-to-start-page-text">
+        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
         </svg>
         Back
     </span>
 `;
-backBtn2.style.padding = 0;
-backBtn2.style.margin = 0;
-backBtn2.style.marginTop = "-16px";
-backBtn2.style.border = "none";
-backBtn2.style.position = "absolute";
+backBtn2.classList.add("back-to-start-page-bttn");
 
 
 // ------------------------ //
@@ -543,7 +542,7 @@ document.getElementById("btn-view-snpmap").addEventListener("click", () => {
   map2.invalidateSize();
 
   // Render a back button
-  document.getElementById("snpmap-content-container").insertAdjacentElement("afterbegin", backBtn2);
+  document.getElementById("snpmap-sidebar-container").insertAdjacentElement("afterbegin", backBtn2);
 
   // Ensure hidden class removed from back button
   backBtn2.classList.remove("hidden");
@@ -577,12 +576,12 @@ backBtn2.addEventListener("click", () => {
 // ------------------------ //
 
 // Select elements from DOM
-const snpSlider = document.querySelector('input[type="range"]');
+const snpSlider = document.querySelector("#snpmap-range");
 
 // Update display value when user moves slider
 const rangeValue = function(){
   let newValue = snpSlider.value;
-  let displayValue = document.querySelector(".display-value");
+  let displayValue = document.querySelector("#snp-distance-value");
   displayValue.innerHTML = newValue;
 }
 snpSlider.addEventListener("input", rangeValue);
@@ -644,7 +643,9 @@ const cowIcons2 = {
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions2 = {
   maxWidth: 400, // in pixels
-  className: "relatedPopupOptions" // must match a css class in _cattleMovement.css
+  className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
+  autoClose: false,
+  closeOnClick: false,
 };
 
 // Function to create HTML popup content using template literal
@@ -656,20 +657,12 @@ const popupContentSNPMap = function(data, AFnumber) {
       <table class="table table-striped">
         <tbody>
           <tr>
-            <td><strong>Herd:</strong></td>
-            <td>${data.herd}</td> 
-          </tr>
-          <tr>
-            <td><strong>AF Number:</strong></td>
+            <td><strong>Submission:</strong></td>
             <td>${AFnumber}</td> 
           </tr>
           <tr>
-            <td><strong>Date:</strong></td>
-            <td>${data.date}</td>
-          </tr>
-          <tr>
-            <td><strong>Lat Lon:</strong></td>
-            <td>${parseFloat(data.lat).toFixed(3)}, ${parseFloat(data.lon).toFixed(3)}</td>
+            <td><strong>Slaughter Date:</strong></td>
+            <td>${data.slaughter_date}</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
@@ -679,6 +672,26 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td><strong>SNP Distance:</strong></td>
             <td>${data.snp_distance}</td>
           </tr>
+          <tr>
+            <td><strong>Precise Location:</strong></td>
+            <td>${data.cph}</td> 
+          </tr>
+          <tr>
+            <td><strong>Grid Reference:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Date of Birth:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Age:</strong></td>
+            <td>TBC</td>
+          </tr>
+          <tr>
+            <td><strong>Sex:</strong></td>
+            <td>TBC</td>
+          </tr> 
         </tbody>
       </table>
     </div>
@@ -793,23 +806,26 @@ const showRelatedSamples = async function () {
     // If first object in JSON is not an error, proceed with main function
     if(Object.keys(json)[0] !== "error") {
 
+      // TODO: better solution to this - massive hack in Tom's absence 
+      var soi = json.SOI;
+      delete json.SOI;
+
       // Remove time from date property and round miles to two decimal places
       Object.values(json).forEach((item) => {
-        item.date = item.date.replace(" 00:00:00.000", "");
         item.distance = parseFloat(item.distance).toFixed(2);
       });
 
       // Render related markers
-      renderRelatedMarkers(json, sampleID);
+      renderRelatedMarkers(json, soi);
 
       // Render html table title in right sidebar
       document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
-        <h4>${sampleID}</h4>
+        <h4>${soi}</h4>
         <p>
-          <span>Ear Tag: ${json[sampleID].animal_id}<br/></span>
-          <span>Location: ${parseFloat(json[sampleID].lat).toFixed(3)}, ${parseFloat(json[sampleID].lon).toFixed(3)}<br/></span>
-          <span>Clade: ${json[sampleID].clade}<br/></span>
-          <span>Herd: ${json[sampleID].herd}<br/></span>
+          <span>Identifier: ${json[soi].animal_id}<br/></span>
+          <span>Precise Location: ${json[soi].cph}<br/></span>
+          <span>Grid Reference: TBC<br/></span>
+          <span>Clade: ${json[soi].clade}<br/></span>
         </p>
         <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
@@ -827,11 +843,11 @@ const showRelatedSamples = async function () {
         layout: "fitDataTable",
         movableColumns: true,
         columns: [
-            {title:"Herd", field:"herd", headerFilter:"input"},
+            {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Date", field:"date", headerFilter:"input"},  
+            {title:"Slaughter_Date", field:"slaughter_date", headerFilter:"input"},  
         ],
         initialSort:[
           {column:"distance", dir:"asc"},

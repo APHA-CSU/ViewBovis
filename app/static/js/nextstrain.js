@@ -81,10 +81,10 @@ const showTable = async function() {
                 },
                 layout: "fitColumns",
                 columns: [
-                    {title:"AF Number", field:"af"},
-                    {title:"Ear Tag", field:"eartag"},
-                    {title:"CPH", field:"cph"},
-                    {title: "County", field:"county"},
+                    {title:"Identifier", field:"eartag"},
+                    {title:"Submission", field:"af"},
+                    {title:"Precise Location", field:"cph"},
+                    {title:"County", field:"county"},
                     {title:"Clade", field:"clade"},
                 ],
             });
@@ -109,9 +109,9 @@ const showTable = async function() {
                 // Render Nextstrain for clade, county, AF, Ear tag or CPH
                 if (cellField === "clade") renderNextstrain(`${cellValue}?p=grid&tl=Identifier`);
                 if (cellField === "county") renderNextstrain(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
-                if (cellField === "af") renderNextstrain(`${clade}?s=${cellValue}&p=grid`);
+                if (cellField === "af") renderNextstrain(`${clade}?f_Submission=${cellValue}&p=grid`);
                 if (cellField === "eartag") renderNextstrain(`${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`);
-                if (cellField === "cph") renderNextstrain(`${clade}?f_CPH=${cellValue}&p=grid&tl=Identifier`);
+                if (cellField === "cph") renderNextstrain(`${clade}?f_PreciseLocation=${cellValue}&p=grid&tl=Identifier`);
             });
 
             // Add the cell mouse over and mouse out event listeners to the table
@@ -180,20 +180,15 @@ backBtn.setAttribute("data-bs-toggle", "tooltip");
 backBtn.setAttribute("data-bs-placement", "btn-backToSplashPage");
 backBtn.setAttribute("title", "Back to Nextstrain Start Page");
 backBtn.innerHTML = `
-    <span style="font-size:10px; font-weight: bold; background-color: var(--apha-green); color: white; padding-right: 5px;">
-        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
+    <span id="back-to-start-page-text">
+        <svg style="margin-bottom: 3px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-caret-left-fill" viewBox="0 0 16 16">
             <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
         </svg>
         Back
     </span>
 `;
-
-backBtn.style.padding = 0;
-backBtn.style.margin = 0;
-backBtn.style.marginTop = "-16px";
-backBtn.style.border = "none";
+backBtn.classList.add("back-to-start-page-bttn");
 backBtn.style.position = "absolute";
-// backBtn.style.backgroundColor = "var(--apha-green)";
 
 
 // Function to render nextstrain app when a clade is clicked
@@ -224,6 +219,12 @@ const renderNextstrain = function(URL){
 };
 
 
+// Render Nextstrain for B1-11
+document.getElementById("clade-B111").addEventListener("click", (e) => {
+    e.preventDefault();
+    renderNextstrain("B1-11");
+});
+
 // Render Nextstrain for B6-13
 document.getElementById("clade-B613").addEventListener("click", (e) => {
     e.preventDefault();
@@ -235,6 +236,14 @@ document.getElementById("clade-B671").addEventListener("click", (e) => {
     e.preventDefault();
     renderNextstrain("B6-71");
 });
+
+// Render Nextstrain for B6-71
+document.getElementById("clade-B691").addEventListener("click", (e) => {
+    e.preventDefault();
+    renderNextstrain("B6-91");
+});
+
+
 
 
 

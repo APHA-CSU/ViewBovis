@@ -97,21 +97,21 @@
         <!-- Home Content -->
         <!-- ================================== -->
         <div class="container-fluid content content-1">
-            <!-- Government ALPHA Banner -->
+            <!-- Government BETA Banner -->
             <div class="row alpha-side-margin">
                 <div class="govuk-phase-banner ">
                     <div>
                         <strong class="govuk-tag govuk-phase-banner__content__tag">
-                            alpha
+                            beta
                         </strong>
                         <span>
-                            This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                            This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
                         </span>
                     </div>
                 </div>
             </div>
             <!-- ViewBovis Logo and Description -->
-            <div class="row  align-items-center">
+            <div class="row align-items-center">
                 <!-- Column: logo -->
                 <div class="col-1">
                     <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo">
@@ -120,7 +120,7 @@
                 <div class="col-8">
                     <div class="home-description-container">
                         <p class="home-description fs-5">
-                            <span class="text-green fw-bold">ViewBovis</span> is a web application for exploring whole genome sequencing (WGS) data from <em>Mycobacterium bovis</em>. By linking genetic relatedness with geographical neighbourhood, you will be able to understand the transmission of this disease in both bovine and non-bovine animals.
+                            <span class="text-green fw-bold">ViewBovis</span> is a web application for exploring whole genome sequencing (WGS) data from <em>Mycobacterium bovis</em>. By linking genetic relatedness with geographical neighbourhood, you will be able to understand the transmission of this disease in both bovine and non-bovine animals.<b> Please note the scheduled downtime for ViewBovis is from 10pm-8am daily</b>.
                         </p>
                     </div>
                 </div>
@@ -130,6 +130,11 @@
                         <div class="govuk-notification-banner__header">
                             <h2 class="govuk-notification-banner__title fs-6" id="govuk-notification-banner-title">
                                 Service Last Updated:
+                                <span class="float-end">
+                                    <svg id="service-help-icon" type="button" xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="white" color="var(--apha-blue)" class="bi bi-question-circle-fill" viewBox="0 0 16 24">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+                                    </svg>
+                                </span>
                             </h2>
                         </div>
                         <div class="govuk-notification-banner__content home-banner-content">
@@ -146,7 +151,7 @@
                 </div>
             </div>
             <!-- Box Quick-Links Content -->
-            <div class="row gx-2 ">
+            <div class="row gx-6">
                 <div class="col">
                     <!-- Cattle movement box -->
                     <div class="home-box">
@@ -196,8 +201,7 @@
                         <p class="text-center">
                             <button type="button" id="btn-home-helpLink1" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">About The Data & Data Dictionary</button><br>
                             <button type="button" id="btn-home-helpLink2" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">Training Resources</button><br>
-                            <button type="button" id="btn-home-helpLink3" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">Missing Samples Report</button><br>
-                            <button type="button" id="btn-home-helpLink4" class="btn govuk-button custom-govuk-button-home">Technical Support</button>
+                            <button type="button" id="btn-home-helpLink3" class="btn govuk-button custom-govuk-button-home" style="margin-bottom: 10px;">Missing Samples Report</button>
                         </p>
                     </div>
                 </div>
@@ -211,7 +215,7 @@
                         A Defra Digital, Data and Technology Service
                     </div>
                     <div>
-                        <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                        <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
                         <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal">Accessibility Statement</a>
                     </div>
                     <!-- Accessibility Statement Modal -->
@@ -254,13 +258,13 @@
                 <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
                     <div id="map-sidebar-container">
                         <div class="govuk-heading-m " id="enter-sample-container">
-                            Enter Sample
+                            Enter Identifier or Submission
                         </div>
                         <div>
                             <!-- Element: input sample box for main cattle movement -->
                             <p>
                                 <!-- Ear-Tag or AF number -->
-                                <input value="AF-61-04255-17" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="AF Number or Ear Tag">
+                                <input value="" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
                             </p>
                             <!-- Element: button to show main cattle movement -->
                             <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn__cattleMovement--1">Show Cattle Movement</button>
@@ -290,7 +294,7 @@
                                         <div>
                                             <!-- Element: input sample box for second cattle movement -->
                                             <p>
-                                                <input value="UK262728200982" type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Eartag or AF Number">
+                                                <input value="" type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
                                             </p>
                                             <!-- Element: button to show second cattle movement -->
                                             <button type="button" class="govuk-button" id="btn__cattleMovement--2" disabled="disabled" data-module="govuk-button" style="margin-bottom: 10px;">Show Second Movement</button>
@@ -338,6 +342,7 @@
                                         </button>
                                         <div id="body__riskAreas" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas">
                                             <div class="accordion-body" style="padding-top: 0;">
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__HRA" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA">HRA</label>
@@ -350,6 +355,7 @@
                                                     <input class="govuk-checkboxes__input" id="checkbox__Edge" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge">Edge</label>
                                                 </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__HTBA" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA">HTBA</label>
@@ -362,6 +368,7 @@
                                                     <input class="govuk-checkboxes__input" id="checkbox__LTBA" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA">LTBA</label>
                                                 </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__TBFA" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA">TBFA</label>
@@ -433,15 +440,15 @@
         <!-- ================================== -->
         <div class="container-fluid content content-3 hidden">
             <div id="snpdistance-splash-page" class="">
-                <!-- Government ALPHA Banner -->
+                <!-- Government BETA Banner -->
                 <div class="row alpha-side-margin">
                     <div class="govuk-phase-banner">
                         <div>
                             <strong class="govuk-tag govuk-phase-banner__content__tag">
-                                alpha
+                                beta
                             </strong>
                             <span>
-                                This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
                             </span>
                         </div>
                     </div>
@@ -460,7 +467,7 @@
                     </div>
                 </div>
                 <!-- SNP Distance Boxes -->
-                <div class="row gx-2">
+                <div class="row gx-6">
                     <div class="col">
                         <!-- SNP Map box -->
                         <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
@@ -500,7 +507,8 @@
                             A Defra Digital, Data and Technology Service
                         </div>
                         <div>
-                            <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
                             <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
                         </div>
                         <!-- Accessibility Statement Modal -->
@@ -535,19 +543,21 @@
                 </footer>
             </div>
 
+            <!-- ================================== -->
             <!-- SNP MAP CONTENT (HIDDEN BY DEFAULT) -->
+            <!-- ================================== -->
             <div id="snpmap-content" class="row hidden">
                 <div class="col-3 collapse collapse-horizontal show" id="snpmap-content-container">
-                    <div id="snpmap-sidebar-container" style="margin-top: 10px;">
+                    <div id="snpmap-sidebar-container">
                         <!-- <br> -->
                         <div class="govuk-heading-m" id="enter-sample-container">
-                            Enter Sample
+                            Enter Identifier or Submission
                         </div>
                         <div>
                             <!-- Element: input sample box for main cattle movement -->
                             <p>
                                 <!-- Ear-Tag or AF number -->
-                                <input value="AF-61-04255-17" type="text" class="input__sampleID" id="input__sampleID_temp--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="AF Number or Ear Tag">
+                                <input value="" type="text" class="input__sampleID" id="input__sampleID_temp--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
                             </p>
                         </div>
                         <div id="snpmap-distance-container">
@@ -560,7 +570,7 @@
                                 <!-- <div class="slider-container"> -->
                                     <p class="display-value-fixed" style="float: left;">0</p>
                                     <p class="display-value-fixed" style="float: right;">10</p>
-                                    <input type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                    <input id="snpmap-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
                                     <br>
                                     <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snp-distance-value">1</p></span>
                                 <!-- </div> -->
@@ -603,6 +613,7 @@
                                         </button>
                                         <div id="body__riskAreas2" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas2">
                                             <div class="accordion-body" style="padding-top: 0;">
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__HRA2" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA2">HRA</label>
@@ -615,6 +626,7 @@
                                                     <input class="govuk-checkboxes__input" id="checkbox__Edge2" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge2">Edge</label>
                                                 </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__HTBA2" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA2">HTBA</label>
@@ -627,6 +639,7 @@
                                                     <input class="govuk-checkboxes__input" id="checkbox__LTBA2" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA2">LTBA</label>
                                                 </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
                                                 <div class="govuk-checkboxes__item">
                                                     <input class="govuk-checkboxes__input" id="checkbox__TBFA2" type="checkbox">
                                                     <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA2">TBFA</label>
@@ -636,7 +649,7 @@
                                     </label>
                                 </div>
 
-                                <div class="govuk-checkboxes__item">
+                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
                                     <input class="govuk-checkboxes__input" id="countyBox2" type="checkbox">
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox2">Counties</label>
                                 </div>
@@ -657,11 +670,58 @@
                 </div>
             </div>
 
+            <!-- ================================== -->
             <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
-            <!-- TODO -->
+            <!-- ================================== -->
             <div id="snpmatrix-content" class="row hidden">
-                <div id="snpmatrix-content-container">
-                    <h1 style="margin-top: 10px;">Development in Progress</h1>
+                <div class="col-3" id="snpmatrix-content-container">
+                    <div id="snpmatrix-sidebar-container">
+                        <!-- <br> -->
+                        <div class="govuk-heading-m" id="enter-sample-container">
+                            Enter Identifier or Submission
+                        </div>
+                        <div>
+                            <p>
+                                <!-- Identifier or AF number -->
+                                <input value="" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
+                            </p>
+                        </div>
+                        <div id="snpmatrix-distance-container">
+                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
+                                Select SNP Distance
+                            </div>
+                            <div>
+
+                                <!-- Custom slider -->
+                                <p class="display-value-fixed" style="float: left;">0</p>
+                                <p class="display-value-fixed" style="float: right;">10</p>
+                                <input id="snpmatrix-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                <br>
+                                <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snpmatrix-distance-value">1</p></span>
+
+                                <br>
+                                <br>
+                                <button class="govuk-button" id="btn__plot-snpmatrix" aria-disabled="true"  data-module="govuk-button">
+                                    Plot SNP Matrix
+                                </button>
+                                <!-- Plot SNP Matrix Spinner -->
+                                <div class="text-center" id="snpmatrix-spinner-container">
+                                    <div class="spinner-border text-secondary hidden" id="snpmatrix-spinner" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                 <!-- Warning message if SNP data cannot be fetched -->
+                                 <div id="snpmatrix-warning-text"></div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="snp-distribution-plot" style="height: 200px; width: 100%;"></div>
+                    </div>
+                </div>
+                <!-- SNP Matrix     -->
+                <div class="col-9" id="snpmatrix-container">
+                    <div id="snpmatrix" style="margin-top: 10px;"></div>
                 </div>
             </div>
 
@@ -672,15 +732,15 @@
         <!-- ================================== -->
         <div class="container-fluid content content-4 hidden" id="nextstrain-container-id">
             <div id="nextstrain-splash-page">
-                <!-- Government ALPHA Banner -->
+                <!-- Government BETA Banner -->
                 <div class="row alpha-side-margin">
                     <div class="govuk-phase-banner">
                         <div>
                             <strong class="govuk-tag govuk-phase-banner__content__tag">
-                                alpha
+                                beta
                             </strong>
                             <span>
-                                This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
                             </span>
                         </div>
                     </div>
@@ -699,7 +759,7 @@
                     </div>
                 </div>
                 <!-- Box Content -->
-                <div class="row gx-2 ">
+                <div class="row gx-6">
                     <div class="col-9">
                         <!-- Search box -->
                         <div class="nextstrain-box">
@@ -710,9 +770,11 @@
                                     <p class="fs-6">
                                         Use the search box to find your sample of interest. Click a link in the table to view the phylogenetic tree in Nextstrain.
                                     </p>
-                                    <p class="fs-6">
-                                        Clicking an AF Number or Ear Tag highlights the sample of interest for that clade. CPH or County highlights all samples in the same CPH or County, respectively. Click the Clade to show the whole phylogenetic tree.
-                                    </p>
+                                    <ul class="fs-6" style="height: 150px; overflow-y: scroll;">
+                                        <li>Clicking an Identifier (e.g. Ear Tag) or Submission (e.g. AF number) highlights the sample of interest for that clade.</li>
+                                        <li>Clicking on CPH or County highlights all samples in the same CPH or County, respectively.</li>
+                                        <li>Clicking on the Clade or the link to the 'Commonly Viewed Clades' shows the whole phylogenetic tree.</li>
+                                    </ul>
                                     <!-- <p class="fs-6">
                                         A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
                                     </p> -->
@@ -720,13 +782,16 @@
                                 <div class="col-8 nextstrain-select-data">
                                     <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
                                         <!-- Input text -->
-                                        <div class="col-6 ">
-                                            <div class="govuk-form-group" style="margin-bottom: 10px;">
+                                        <div class="col-8" style="border-right: 15px solid #f2f2f2;">
+                                            <div class="govuk-form-group" style="margin-bottom: 10px; margin-top: 10px;">
                                                 <label class="govuk-label fs-6">
-                                                    Search by AF number or Ear tag
+                                                    <strong>Search Below:</strong></br>
                                                 </label>
+                                                <p>
+                                                    For example: Identifier (Ear Tag: <em>UK262728200982</em>) OR Submission (AF number: <em>AF-21-08014-22</em>).
+                                                </p>
                                                 <div class="govuk-input__wrapper">
-                                                    <input value="UK262728200982" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
+                                                    <input value="" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
                                                     <div class="govuk-input__suffix" aria-hidden="true" id="nextstrain-search-button" style="cursor: pointer;">
                                                         <a>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -739,12 +804,17 @@
                                             </div>
                                         </div>
                                         <!-- Popular clades shortcut -->
-                                        <div class="col-6 ">
-                                            <span>Commonly Viewed Clades</span>
+                                        <div class="col-4">
+                                            <label class="govuk-label fs-6" style="margin-bottom: 10px; margin-top: 10px;">
+                                                <strong>Commonly Viewed Clades:</strong></br>
+                                            </label>
                                             <p>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B111">B1-11</a></span>
                                                 <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B613">B6-13</a></span>
+                                            </br>
                                                 <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B671">B6-71</a></span>
-                                                <!-- <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B6XX">B6-XX</a></span> -->
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B691">B6-91</a></span>
+                                               
                                             </p>
                                         </div>
                                     </div>
@@ -787,7 +857,8 @@
                             A Defra Digital, Data and Technology Service
                         </div>
                         <div>
-                            <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
                             <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
                         </div>
                     </div>
@@ -799,15 +870,15 @@
         <!-- Help and Support Content -->
         <!-- ================================== -->
         <div class="container-fluid content content-5 hidden">
-            <!-- Government ALPHA Banner -->
+            <!-- Government BETA Banner -->
             <div class="row alpha-side-margin">
                 <div class="govuk-phase-banner ">
                     <div>
                         <strong class="govuk-tag govuk-phase-banner__content__tag">
-                            alpha
+                            beta
                         </strong>
                         <span>
-                            This is a new service &ndash; your <a class="text-hyperlink" href="#">feedback</a> will help us to improve it.
+                            This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
                         </span>
                     </div>
                 </div>
@@ -815,7 +886,7 @@
             <br>
             <br>
             <!-- Box Quick-Links Content -->
-            <div class="row gx-2 help-quicklink-boxes">
+            <div class="row gx-6 help-quicklink-boxes">
                 <div class="col">
                     <!-- Support Documents box -->
                     <div class="home-box">
@@ -922,18 +993,22 @@
                         A Defra Digital, Data and Technology Service
                     </div>
                     <div>
-                        <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a>
+                        <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                        <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
                         <a class="text-end text-decoration-underline text-hyperlink">Accessibility Statement</a>
                     </div>
                </div>
             </footer>
         </div>
 
+
     <!-- JavaScript -->
     <script src="/static/libraries/leaflet-1.9.3/leaflet.js"></script>
     <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js"></script>
     <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js"></script>
     <script src="/static/libraries/tabulator/tabulator.min.js"></script>
+    <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js"></script>
+    <script src="/static/js/timeout.js"></script>
     <script src="/static/js/nextstrain.js"></script>
     <script src="/static/js/leaflet.shpfile.js"></script>
     <script src="/static/js/shp.js"></script>
@@ -942,7 +1017,7 @@
     <script src="/static/js/L.LinearMeasurement.js"></script>
     <script src="/static/js/leaflet_awesome_number_markers.js"></script>
     <script src="/static/js/snpdistance.js"></script>
-    <script src="/static/js/snpmatrix.js"></script>
+    <script type="module" src="/static/js/snpmatrix.js"></script>
     <script src="/static/js/cattleMovement.js"></script>
     <script src="/static/js/main.js"></script>
     </body>

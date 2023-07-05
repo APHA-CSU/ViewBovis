@@ -2,10 +2,15 @@ import unittest
 from unittest import mock
 
 import pandas as pd
+import pandas.testing as pdtesting
 import numpy.testing as nptesting
 
 from viewbovis_data import ViewBovisData, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException
+
+
+def transform_dateformat_side_effect_func(value):
+    return f"{value}_transformed"
 
 
 class TestViewBovisData(unittest.TestCase):
@@ -70,8 +75,10 @@ class TestViewBovisData(unittest.TestCase):
                 pd.DataFrame({"group": ["foo_clade"]}, index=["foo_index"]))
         setattr(self.data, "_matrix_dir", "mock_matrix_dir")
         setattr(self.data, "_sample_name", "foo")
+        setattr(self.data, "_submission", "foo_sub")
         # setup - mock private methods
         self.data._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
+        self.data._sort_matrix = mock.Mock(wraps=lambda x: x)
         # setup - return values for external mocks
         mock_read_csv.return_value = \
             pd.DataFrame({"foo": [0, 3, 5],
@@ -115,17 +122,17 @@ class TestViewBovisData(unittest.TestCase):
                          index=["J", "O", "T"])
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
-                    "species": "COW", "slaughter_date": "D", "animal_type": "E",
-                    "cph": "F", "cphh": "G", "cph_type": "H", "county": "I",
+                    "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
+                    "cph": "F", "cph_type": "H", "county": "I",
                     "risk_area": "J", "out_of_homerange": "L", "move":
-                        {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S",
-                               "off_date": "Z", "stay_length": "V",
+                        {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S_transformed",
+                               "off_date": "Z_transformed", "stay_length": "V",
                                "type": "P", "county": "M"},
-                         "1": {"cph": "O", "lat": 2, "lon": 5, "on_date": "T",
-                               "off_date": "AA", "stay_length": "W",
+                         "1": {"cph": "O", "lat": 2, "lon": 5, "on_date": "T_transformed",
+                               "off_date": "AA_transformed", "stay_length": "W",
                                "type": "Q", "county": "N"},
-                         "2": {"cph": "T", "lat": 3, "lon": 6, "on_date": "U",
-                               "off_date": "AB", "stay_length": "X",
+                         "2": {"cph": "T", "lat": 3, "lon": 6, "on_date": "U_transformed",
+                               "off_date": "AB_transformed", "stay_length": "X",
                                "type": "R", "county": "O"}}}
         # test expected output
         self.assertDictEqual(self.data.soi_movement_metadata(), expected)
@@ -140,6 +147,20 @@ class TestViewBovisData(unittest.TestCase):
         with self.assertRaises(NonBovineException):
             self.data.soi_movement_metadata()
 
+    def test_sort_matrix(self):
+        # setup - mock attributes
+        setattr(self.data, "_submission", "foo")
+        # expected output
+        expected = pd.DataFrame({"foo": [0, 3, 5],
+                                 "bar": [3, 0, 10],
+                                 "baz": [5, 10, 0]},
+                                index=["foo", "bar", "baz"])
+        pdtesting.assert_frame_equal(self.data._sort_matrix(
+            pd.DataFrame({"bar": [0, 3, 10],
+                          "foo": [3, 0, 5],
+                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])),
+            expected)
+
     @mock.patch("viewbovis_data.ViewBovisData._load_soi")
     def test_related_submissions_metadata(self, _):
         self.data = ViewBovisData("foo_path", "foo_id")
@@ -150,6 +171,8 @@ class TestViewBovisData(unittest.TestCase):
         self.data._query_metadata = mock.Mock()
         self.data._get_lat_long = mock.Mock()
         self.data._geo_distance = mock.Mock()
+        self.data._transform_dateformat = \
+            mock.Mock(side_effect=transform_dateformat_side_effect_func)
         # setup - return values for private method mocks
         self.data._related_snp_matrix.return_value = \
             pd.DataFrame({"foo_sub": [0, 3, 2],
@@ -160,7 +183,6 @@ class TestViewBovisData(unittest.TestCase):
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                           "SlaughterDate": ["foo_date", "bar_date"],
                           "CPH": ["J", "O"], "Host": ["COW", "COW"],
-                          "CPHH": ["foo_herd", "bar_herd"],
                           "Clade": ["foo_clade", "bar_clade"]},
                          index=["foo_sub", "bar_sub"])
         self.data._get_lat_long.return_value = \
@@ -169,17 +191,13 @@ class TestViewBovisData(unittest.TestCase):
         self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
         expected = \
-            {"foo_sub": {"lat": 1, "lon": 4, "snp_distance": 0,
-                         "animal_id": "foo_id", "herd": "foo_herd",
-                         "clade": "foo_clade", "date": "foo_date",
-                         "distance": 0.0},
-             "bar_sub": {"lat": 2, "lon": 5, "snp_distance": 3,
-                         "animal_id": "bar_id", "herd": "bar_herd",
-                         "clade": "bar_clade", "date": "bar_date",
-                         "distance": 1.1},
-             "baz_sub": {"lat": None, "lon": None, "snp_distance": 2,
-                         "animal_id": None, "herd": None, "clade": None,
-                         "date": None, "distance": None}}
+            {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
+                         "animal_id": "foo_id", "clade": "foo_clade",
+                         "slaughter_date": "foo_date_transformed", "distance": 0.0},
+             "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
+                         "animal_id": "bar_id", "clade": "bar_clade",
+                         "slaughter_date": "bar_date_transformed", "distance": 1.1},
+             "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(
             self.data.related_submissions_metadata(3), expected)
@@ -196,56 +214,26 @@ class TestViewBovisData(unittest.TestCase):
         self.data = ViewBovisData("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.data, "_submission", "foo_sub")
+        setattr(self.data, "_df_metadata_sub",
+                pd.DataFrame({"Identifier": ["foo_id"]}))
         # setup - mock private methods
         self.data._related_snp_matrix = mock.Mock()
-        self.data._query_metadata = mock.Mock()
-        self.data._get_lat_long = mock.Mock()
-        self.data._geo_distance = mock.Mock()
         # setup - return values for private method mocks
         self.data._related_snp_matrix.return_value = \
-            pd.DataFrame({"foo_sub": [0, 3, 2],
-                          "bar_sub": [3, 0, 10],
-                          "baz_sub": [2, 10, 0]},
-                         index=["foo_sub", "bar_sub", "baz_sub"])
-        self.data._query_metadata.return_value = \
-            pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
-                          "SlaughterDate": ["foo_date", "bar_date"],
-                          "CPH": ["J", "O"], "Host": ["COW", "COW"],
-                          "CPHH": ["foo_herd", "bar_herd"],
-                          "Clade": ["foo_clade", "bar_clade"]},
+            pd.DataFrame({"foo_sub": [0, 3],
+                          "bar_sub": [3, 0]},
                          index=["foo_sub", "bar_sub"])
-        self.data._get_lat_long.return_value = \
-            pd.DataFrame({"Lat": [1, 2], "Long": [4, 5], "x": [1, 2],
-                          "y": [4, 5]}, index=["J", "O"])
-        self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
-        expected = \
-            {"foo_sub": {"animal_id": "foo_id", "herd": "foo_herd",
-                         "clade": "foo_clade", "date": "foo_date",
-                         "distance": 0.0},
-             "bar_sub": {"animal_id": "bar_id", "herd": "bar_herd",
-                         "clade": "bar_clade", "date": "bar_date",
-                         "distance": 1.1},
-             "baz_sub": {"animal_id": None, "herd": None, "clade": None,
-                         "date": None, "distance": None},
-             "matrix": [['foo_sub', 'foo_sub', 0],
-                        ['foo_sub', 'bar_sub', 3],
-                        ['foo_sub', 'baz_sub', 2],
-                        ['bar_sub', 'foo_sub', 3],
-                        ['bar_sub', 'bar_sub', 0],
-                        ['bar_sub', 'baz_sub', 10],
-                        ['baz_sub', 'foo_sub', 2],
-                        ['baz_sub', 'bar_sub', 10],
-                        ['baz_sub', 'baz_sub', 0]]}
+        expected = {"soi": "foo_sub",
+                    "identifier": "foo_id",
+                    "sampleIDs": ["foo_sub", "bar_sub"],
+                    "matrix": [["foo_sub", "foo_sub", 0],
+                               ["foo_sub", "bar_sub", 3],
+                               ["bar_sub", "foo_sub", 3],
+                               ["bar_sub", "bar_sub", 0]]}
         # test expected output
         self.assertDictEqual(self.data.snp_matrix(3), expected)
         # assert mock calls
-        self.data._query_metadata.assert_called_once_with(["foo_sub",
-                                                           "bar_sub",
-                                                           "baz_sub"])
-        self.data._get_lat_long.assert_called_once_with({"O", "J"})
-        self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
-                                                  mock.call((2, 5))])
 
 
 if __name__ == "__main__":

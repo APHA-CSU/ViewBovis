@@ -1,5 +1,6 @@
 import sqlite3
 import glob
+from datetime import datetime
 from os import path
 
 import numpy as np
@@ -73,6 +74,7 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
+                                 dtype={"SlaughterDate": str},
                                  params=ids+ids)
 
     # TODO: validate input
@@ -112,6 +114,13 @@ class ViewBovisData:
             raise NoMetaDataException(submission)
         return mov_data
 
+    # TODO: unit test?
+    def _transform_dateformat(self, date: str) -> str:
+        """
+            Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
+        """
+        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
+
     def _get_lat_long(self, cphs: set) -> tuple:
         """
             Fetches latitude, longitude, x and y for a given a set of
@@ -145,7 +154,9 @@ class ViewBovisData:
             genetically related isolates, i.e. the SNP matrix from the
             SOI clade filtered to all isolates <= the snp_threshold.
             Sample names in the row and column labels of the original
-            SNP matrix files are converted to submission numbers
+            SNP matrix files are converted to submission numbers and the
+            matrix is reordered to ensure the SOI appears first in row
+            and column
 
             Parameters:
                 snp_threshold (int): maximum SNP distance for
@@ -175,7 +186,17 @@ class ViewBovisData:
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
                                   map(lambda x: self._sample_to_submission(x)))
-        return df_snps_related_processed
+        return self._sort_matrix(df_snps_related_processed)
+
+    def _sort_matrix(self, df_matrix):
+        """
+            Sorts the rows and columns of df_matrix to ensure that the
+            SOI appears first in both row and column
+        """
+        submission_list = \
+            [self._submission] + [x for x in df_matrix.index.to_list()
+                                  if x != self._submission]
+        return df_matrix[submission_list].reindex(submission_list)
 
     def soi_metadata(self) -> dict:
         """
@@ -192,7 +213,6 @@ class ViewBovisData:
                     "animal_type": None,
                     "slaughter_date": None,
                     "cph": None,
-                    "cphh": None,
                     "cph_type": None,
                     "county": None,
                     "risk_area": None,
@@ -203,9 +223,10 @@ class ViewBovisData:
                     "identifier": self._df_metadata_soi["Identifier"][0],
                     "species": self._df_metadata_soi["Host"][0],
                     "animal_type": self._df_metadata_soi["Animal_Type"][0],
-                    "slaughter_date": self._df_metadata_soi["SlaughterDate"][0],
+                    "slaughter_date":
+                        self._transform_dateformat(
+                            self._df_metadata_soi["SlaughterDate"][0]),
                     "cph": self._df_metadata_soi["CPH"][0],
-                    "cphh": self._df_metadata_soi["CPHH"][0],
                     "cph_type": self._df_metadata_soi["CPH_Type"][0],
                     "county": self._df_metadata_soi["County"][0],
                     "risk_area": self._df_metadata_soi["RiskArea"][0],
@@ -261,9 +282,8 @@ class ViewBovisData:
                         "lon": longitude,
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
-                        "herd": herd cph,
                         "clade": clade of sample,
-                        "date": date of slaughter,
+                        "slaughter_date": date of slaughter,
                         "distance": distance to the sample of interest
                             in miles}
         """
@@ -287,9 +307,9 @@ class ViewBovisData:
                      "snp_distance":
                         int(df_snps_related[self._submission][index]),
                      "animal_id": row["Identifier"],
-                     "herd": row["CPHH"],
                      "clade": row["Clade"],
-                     "date": row["SlaughterDate"],
+                     "slaughter_date":
+                         self._transform_dateformat(row["SlaughterDate"]),
                      "distance":
                          self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
                                              df_cph_latlon_map["y"]
@@ -299,17 +319,14 @@ class ViewBovisData:
                            "snp_distance":
                                int(df_snps_related[self._submission][subm]),
                            "animal_id": None,
-                           "herd": None,
                            "clade": None,
-                           "date": None,
+                           "slaughter_date": None,
                            "distance": None}
                     for subm in no_meta_submissions})
 
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
-            Returns metadata and SNP matrix data for related
-            submissions. There maybe submissions in the SNP matrix
-            without metadata if metadata is missing.
+            Returns SNP matrix data for related submissions
 
             The SNP matrix is provided in "molten" format
             (see https://github.com/tseemann/snp-dists#snp-dists--m-molten-output-format)
@@ -319,49 +336,20 @@ class ViewBovisData:
                 genetically related isolates
 
             Returns:
-                metadata (dict): metadata for related samples
-                    {submission_number:
-                        {"animal_id": eartag,
-                         "herd": herd cph,
-                         "clade": clade of sample,
-                         "date": date of slaughter,
-                         "distance": distance to the sample of interest
-                             in miles}
-                     "matrix": SNP matrix}
+                A dictionary containing the submission number of the
+                SOI, the identifier of the SOI, a list of sampleIDs in
+                the order they appear in the matrix (SOI first) and the
+                SNP matrix in "molten" format
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
-        # restructure matrix
+        submissions = df_snps_related.index.to_list()
+        # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        # get metadata for all related submissions
-        df_metadata_related = \
-            self._query_metadata(df_snps_related.index.to_list())
-        if not df_metadata_related.empty:
-            # get lat/long mappings for CPH of related submissions
-            df_cph_latlon_map = \
-                self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
-        # related samples without metadata
-        no_meta_submissions = \
-            set(df_snps_related.index) - set(df_metadata_related.index)
-        # construct data response for client
-        return \
-            dict(**{index:
-                    {"animal_id": row["Identifier"],
-                     "herd": row["CPHH"],
-                     "clade": row["Clade"],
-                     "date": row["SlaughterDate"],
-                     "distance":
-                         self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                             df_cph_latlon_map["y"]
-                                             [row["CPH"]]))}
-                    for index, row in df_metadata_related.iterrows()},
-                 **{subm: {"animal_id": None,
-                           "herd": None,
-                           "clade": None,
-                           "date": None,
-                           "distance": None}
-                    for subm in no_meta_submissions},
-                 **{"matrix": snps_related})
+        return {"soi": self._submission,
+                "identifier": self._df_metadata_sub["Identifier"][0],
+                "sampleIDs": submissions,
+                "matrix": snps_related}
 
 
 class NoDataException(Exception):
