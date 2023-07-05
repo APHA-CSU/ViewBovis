@@ -505,8 +505,33 @@ countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2
 // ELement ID from DOM
 const hotspotBox2 = document.getElementById("hotspotBox2");
 
-// Toggle county polygons when checkbox is ticked or unticked
-hotspotPoly2 = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylePoly2("red"), });
+// Function to set polygon colours for Hotspot
+const hotspotCols2 = function(area) {
+  switch (area) {
+    case "HS 28": return "red";
+    case "HS 27": return "blue";
+    case "HS 26": return "orange";
+    case "HS 23": return "yellow";
+    case "HS 21" : return "pink";
+    case "HS 29": return "purple";
+  };
+};
+
+// Function to set custom styles for Hotspot polygons
+const stylehotspotPoly2 = function(feature){
+    return {
+      fillColor: hotspotCols2(feature.properties.Name),
+      weight: 1.5,  
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.50,
+  };
+};
+
+
+// Toggle hotspot polygons when checkbox is ticked or unticked
+hotspotPoly2 = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylehotspotPoly2});
 hotspotBox2.addEventListener("change", toggleLayers2.bind(hotspotBox2, hotspotPoly2));
 
 // ==================================================================================== //
