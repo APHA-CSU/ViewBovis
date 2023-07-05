@@ -738,7 +738,7 @@ const popupContentSNPMap = function(data, AFnumber) {
           </tr>
           <tr>
             <td><strong>Slaughter Date:</strong></td>
-            <td>${data.date}</td>
+            <td>${data.slaughter_date}</td>
           </tr>
           <tr>
             <td><strong>Miles:</strong></td>
@@ -749,7 +749,7 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.snp_distance}</td>
           </tr>
           <tr>
-            <td><strong>Location:</strong></td>
+            <td><strong>Precise Location:</strong></td>
             <td>${data.cph}</td> 
           </tr>
           <tr>
@@ -899,7 +899,7 @@ const showRelatedSamples = async function () {
         <h4>${soi}</h4>
         <p>
           <span>Identifier: ${json[soi].animal_id}<br/></span>
-          <span>Location: ${json[soi].cph}<br/></span>
+          <span>Precise Location: ${json[soi].cph}<br/></span>
           <span>Grid Reference: TBC<br/></span>
           <span>Clade: ${json[soi].clade}<br/></span>
         </p>
@@ -919,11 +919,11 @@ const showRelatedSamples = async function () {
         layout: "fitDataTable",
         movableColumns: true,
         columns: [
-            {title:"Location", field:"cph", headerFilter:"input"},
+            {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Animal ID", field:"animal_id", headerFilter:"input"},
             {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Date", field:"date", headerFilter:"input"},  
+            {title:"Slaughter_Date", field:"slaughter_date", headerFilter:"input"},  
         ],
         initialSort:[
           {column:"distance", dir:"asc"},
