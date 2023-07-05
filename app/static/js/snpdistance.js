@@ -228,7 +228,7 @@ document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM
 // ------------------------ //
 
 // Initiate variables to store shapefile data
-let countyPoly2, riskAreaPoly2, HRAPoly2, LRAPoly2, EdgePoly2, HTBAPoly2, ITBAPoly2, LTBAPoly2, TBFAPoly2;
+let countyPoly2, riskAreaPoly2, HRAPoly2, LRAPoly2, EdgePoly2, HTBAPoly2, ITBAPoly2, LTBAPoly2, TBFAPoly2, hotspotPoly2;
 
 // Function to toggle layers on or off
 const toggleLayers2 = function(layer){
@@ -496,7 +496,18 @@ const stylePoly2 = function(color = "blue"){
 countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("grey"), onEachFeature: onEachFeature2});
 countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2));
 
+// ------------------------ //
+//
+// HOTSPOT LAYER
+//
+// ------------------------ //
 
+// ELement ID from DOM
+const hotspotBox2 = document.getElementById("hotspotBox2");
+
+// Toggle county polygons when checkbox is ticked or unticked
+hotspotPoly2 = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylePoly2("red"), });
+hotspotBox2.addEventListener("change", toggleLayers2.bind(hotspotBox2, hotspotPoly2));
 
 // ==================================================================================== //
 
