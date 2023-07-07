@@ -885,7 +885,6 @@ riskAreaBox.addEventListener("change", function() {
 
   // Ensure county layer is always on top by re-executing bringToFront() method
   countyPoly.bringToFront();
-  // hotspotPoly.bringToFront(); // example from Tom
 
   // Ensure movement lines are always on top
   if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
@@ -1081,7 +1080,7 @@ hotspotBox.addEventListener("change", function() {
 
   // Ensure county layer is always on top by re-executing bringToFront() method
   countyPoly.bringToFront();
-  // hotspotPoly.bringToFront(); // example from Tom
+  
 
   // Ensure movement lines are always on top
   if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
