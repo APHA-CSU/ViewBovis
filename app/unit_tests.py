@@ -126,16 +126,20 @@ class TestViewBovisData(unittest.TestCase):
                          index=["J", "O", "T"])
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
-                    "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
-                    "cph": "F", "cph_type": "H", "county": "I",
-                    "risk_area": "J", "out_of_homerange": "L", "move":
-                        {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S_transformed",
+                    "species": "COW", "slaughter_date": "D_transformed",
+                    "animal_type": "E", "cph": "F", "cph_type": "H",
+                    "county": "I", "risk_area": "J", "out_of_homerange": "L",
+                    "move":
+                        {"0": {"cph": "J", "lat": 1, "lon": 4,
+                               "on_date": "S_transformed",
                                "off_date": "Z_transformed", "stay_length": "V",
                                "type": "P", "county": "M"},
-                         "1": {"cph": "O", "lat": 2, "lon": 5, "on_date": "T_transformed",
+                         "1": {"cph": "O", "lat": 2, "lon": 5,
+                               "on_date": "T_transformed",
                                "off_date": "AA_transformed", "stay_length": "W",
                                "type": "Q", "county": "N"},
-                         "2": {"cph": "T", "lat": 3, "lon": 6, "on_date": "U_transformed",
+                         "2": {"cph": "T", "lat": 3, "lon": 6,
+                               "on_date": "U_transformed",
                                "off_date": "AB_transformed", "stay_length": "X",
                                "type": "R", "county": "O"}}}
         # test expected output
@@ -199,12 +203,14 @@ class TestViewBovisData(unittest.TestCase):
         expected = \
             {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
                          "animal_id": "foo_id", "clade": "foo_clade",
-                         "slaughter_date": "foo_date_transformed", "distance": 0.0},
+                         "slaughter_date": "foo_date_transformed",
+                         "distance": 0.0},
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
                          "animal_id": "bar_id", "clade": "bar_clade",
-                         "slaughter_date": "bar_date_transformed", "distance": 1.1},
-             "baz_sub": {"cph": None, "lat": None, "lon": None, "snp_distance": 1,
-                         "animal_id": None, "clade": None,
+                         "slaughter_date": "bar_date_transformed",
+                         "distance": 1.1},
+             "baz_sub": {"cph": None, "lat": None, "lon": None,
+                         "snp_distance": 1, "animal_id": None, "clade": None,
                          "slaughter_date": None, "distance": None},
              "SOI": "foo_sub"}
         # test expected output
