@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
-from viewbovis_data import ViewBovisData, NoDataException, NoMetaDataException,\
+from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException
 
 app = Flask(__name__)
@@ -9,18 +9,18 @@ app = Flask(__name__)
 ls = LiveServer(app)
 
 
-def get_data_object(id):
+def get_request_object(id):
     """
-        Creates a Data object if one does not already exist in the
-        application context. Assigns the Data object as an attribute to
-        the application context. Creating the data object connects to
-        the database. This also loads key data for the sample of
+        Creates a Request object if one does not already exist in the
+        application context. Assigns the Request object as an attribute
+        of the application context. Creating the request object connects
+        to the database. This also loads key data for the sample of
         interest (SOI) (id) and assigns these data to attributes of the
         application context. This function is called before every
         request.
     """
     if not hasattr(g, "data"):
-        g.data = ViewBovisData(app.data_path, id)
+        g.request = Request(app.data_path, id)
 
 
 @app.teardown_appcontext
@@ -29,9 +29,9 @@ def disconnect_db(exception):
         Closes the database connection and delete the database object.
         Called automatically when the application context ends.
     """
-    if hasattr(g, 'data'):
-        g.data.__del__()
-        del g.data
+    if hasattr(g, 'request'):
+        g.request.__del__()
+        del g.request
 
 
 @app.route("/")
@@ -48,8 +48,8 @@ def sample():
         "/sample?sample_name=AF-61-04255-17"
     """
     id = request.args.get("sample_name")
-    get_data_object(id)
-    return jsonify(g.data.soi_metadata())
+    get_request_object(id)
+    return jsonify(g.request.soi_metadata())
 
 
 @app.route("/sample/movements", methods=["GET"])
@@ -61,8 +61,8 @@ def movements():
         "/sample?sample_name=AF-61-04255-17"
     """
     id = request.args.get("sample_name")
-    get_data_object(id)
-    return jsonify(g.data.soi_movement_metadata())
+    get_request_object(id)
+    return jsonify(g.request.soi_movement_metadata())
 
 
 @app.route("/sample/related", methods=["GET"])
@@ -76,8 +76,8 @@ def related_samples():
     """
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    get_data_object(id)
-    return jsonify(g.data.related_submissions_metadata(snp_threshold))
+    get_request_object(id)
+    return jsonify(g.request.related_submissions_metadata(snp_threshold))
 
 
 @app.route("/sample/matrix", methods=["GET"])
@@ -91,8 +91,8 @@ def snp_matrix():
     """
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    get_data_object(id)
-    return jsonify(g.data.snp_matrix(snp_threshold))
+    get_request_object(id)
+    return jsonify(g.request.snp_matrix(snp_threshold))
 
 
 @app.errorhandler(NoDataException)

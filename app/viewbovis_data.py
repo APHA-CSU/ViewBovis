@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-class ViewBovisData:
+class Request:
     def __init__(self, data_path: str, id: str):
         self._id = id
         self._db_connect(data_path)
@@ -200,9 +200,9 @@ class ViewBovisData:
     def soi_metadata(self) -> dict:
         """
             Returns metadata for the SOI in dictionary format. For
-            submissions with missing metadata for the, only "submission"
-            and "clade" fields will have valid values, all others will
-            be "None"
+            submissions with missing metadata, only "submission" and
+            "clade" fields will have valid values, all others will be
+            "None"
         """
         if self._df_metadata_soi.empty:
             return {"submission": self._df_wgs_metadata_soi.index[0],
