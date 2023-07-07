@@ -74,7 +74,6 @@ class ViewBovisData:
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
-                                 #dtype={"SlaughterDate": str},
                                  params=ids+ids)
 
     # TODO: validate input
