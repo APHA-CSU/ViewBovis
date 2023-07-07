@@ -714,7 +714,7 @@ document.getElementById("cattleMovementLines--2").addEventListener("change", tog
 // ------------------------ //
 
 // Initiate variables to store shapefile data
-let countyPoly, riskAreaPoly, HRAPoly, LRAPoly, EdgePoly, HTBAPoly, ITBAPoly, LTBAPoly, TBFAPoly;
+let countyPoly, riskAreaPoly, HRAPoly, LRAPoly, EdgePoly, HTBAPoly, ITBAPoly, LTBAPoly, TBFAPoly, hotspotPoly;
 
 // Function to toggle layers on or off
 const toggleLayers = function(layer){
@@ -1007,15 +1007,82 @@ countyBox.addEventListener("change", toggleLayers.bind(countyBox, countyPoly));
 
 // ------------------------ //
 //
-// HOME RANGES LAYER
+// HOTSPOT LAYER
 //
 // ------------------------ //
 
 // ELement ID from DOM
-// const homeRangeBox = document.getElementById("homeRangesBox");
+const hotspotBox = document.getElementById("hotspotBox");
 
-// Toggle home range polygons when checkbox is ticked or unticked
-// homeRangePoly = new L.Shapefile("/static/data/HomeRanges.zip", stylePoly("purple"));
-// homeRangeBox.addEventListener("change", toggleLayers.bind(homeRangeBox, homeRangePoly));
+// Function to set polygon colours for Hotspot
+const hotspotCols = function(area) {
+  switch (area) {
+    case "HS 28": return "red";
+    case "HS 27": return "blue";
+    case "HS 26": return "orange";
+    case "HS 23": return "yellow";
+    case "HS 21" : return "pink";
+    case "HS 29": return "purple";
+  };
+};
 
+// Function to set custom styles for Hotspot polygons
+const stylehotspotPoly = function(feature){
+    return {
+      fillColor: hotspotCols(feature.properties.Name),
+      weight: 1.5,  
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.50,
+  };
+};
 
+// Toggle county polygons when checkbox is ticked or unticked
+hotspotPoly = new L.Shapefile("/static/data/TBHotspots22062030.zip", {style: stylehotspotPoly});
+hotspotBox.addEventListener("change", toggleLayers.bind(hotspotBox, hotspotPoly));
+
+// Legend for Hotspots
+// https://leafletjs.com/examples/choropleth/
+let hotspotLegend = L.control({position: "bottomright"});
+hotspotLegend.onAdd = function (map) {
+
+    let div = L.DomUtil.create("div", "info legend");
+    const category = ["HS 28", "HS 27", "HS 26", "HS 23", "HS 21", "HS 29"];
+    const colours = ["red","blue","orange","yellow","pink","purple"];
+
+    // Build legend: loop through levels and generate a label with a colored square
+
+    // Add each category to legend
+    div.insertAdjacentHTML("afterbegin", "<strong>Hotspots</strong><br>");
+    for (let i = 0; i < category.length; i++) 
+      div.insertAdjacentHTML("beforeend", `<i style="background: ${colours[i]};"></i> ${category[i]} <br>`);
+
+    return div;
+};
+
+// Toggle legend  when Hotspot layer is (un)ticked
+hotspotBox.addEventListener("change", function() {
+
+  // When checkbox is ticked
+  if(this.checked === true) {
+
+    // Add legend to map
+    hotspotLegend.addTo(map);
+  }
+
+  // When checkbox is unticked
+  if(this.checked === false) {
+
+    // Remove legend from map
+    hotspotLegend.remove();
+  }
+
+  // Ensure county layer is always on top by re-executing bringToFront() method
+  countyPoly.bringToFront();
+  
+
+  // Ensure movement lines are always on top
+  if(typeof cattleMovLine !== "undefined") cattleMovLine.bringToFront();
+  if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.bringToFront();
+});
