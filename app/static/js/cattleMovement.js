@@ -549,7 +549,7 @@ const showMovements = async function () {
     document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
     // Fetch json data from backend
-    const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
     // console.log(response);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     const json = await response.json();
@@ -631,7 +631,7 @@ const showMovements2 = async function () {
     document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
     // Fetch json data from backend
-    const response = await fetch(`/sample?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     const json = await response.json();
     // console.log(json);
