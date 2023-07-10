@@ -45,9 +45,12 @@
                             <a class="nav-link nav-link-5" data-tab="5">Help and Support</a>
                         </li>
                     </ul>
-                </div>
+                </div> 
+                <!-- Navbar signout -->
+                <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://hosting.int.sce.network/global-protect/logout.esp?code=0" target="_blank">Log out</a>
             </div>
         </nav>
+        
         <!-- ================================== -->
         <!-- Security modal -->
         <!-- ================================== -->
@@ -383,31 +386,10 @@
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
                                 </div>
 
-                                <!-- Home Ranges checkbox and accordion -->
-                                <!-- <div class="govuk-checkboxes__item" style="width: 100%;">
-                                    <input class="govuk-checkboxes__input" id="homeRangesBox" type="checkbox">
-                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__homeRanges" for="homeRangesBox" style="width: 100%; padding: 0; border: none;">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__homeRanges" aria-expanded="false" aria-controls="body__homeRanges" style="padding: 10px;">
-                                            <span class="govuk-label" style="margin: 0;">Home Ranges</span>
-                                        </button>
-                                        <div id="body__homeRanges" class="accordion-collapse collapse" data-bs-parent="#accordion__homeRanges">
-                                            <div class="accordion-body" style="padding-top: 0;">
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B6-11" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B6-11</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B6-85" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B6-85</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__B3-11" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">B3-11</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div> -->
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="hotspotBox" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox">TB Hotspots</label>
+                                </div>
                                 
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="cattleMovementLines--1" type="checkbox" disabled="disabled" checked>
@@ -649,9 +631,16 @@
                                     </label>
                                 </div>
 
-                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
+                                <!-- Counties checkbox -->
+                                <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="countyBox2" type="checkbox">
                                     <label class="govuk-label govuk-checkboxes__label" for="countyBox2">Counties</label>
+                                </div>
+                                
+                                <!-- Hotspot checkbox -->
+                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
+                                    <input class="govuk-checkboxes__input" id="hotspotBox2" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox2">TB Hotspots</label>
                                 </div>
                             </div>
                         </div>
