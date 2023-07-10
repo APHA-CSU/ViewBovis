@@ -88,22 +88,23 @@ class TestViewBovisData(unittest.TestCase):
                           "Loc_EndDate": ["Z", "AA", "AB"]},
                          index=["Y", "Y", "Y"])
         self.data._get_os_map_ref.return_value = \
-            pd.DataFrame({"OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
+            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
+                          "OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
                          index=["J", "O", "T"])
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "C", "slaughter_date": "D_transformed", "animal_type": "E",
                     "cph": "F", "cph_type": "H", "county": "I",
                     "risk_area": "J", "out_of_homerange": "L", "move":
-                        {"0": {"cph": "J", "os_map_ref": "foo_ref", "on_date": "S_transformed",
-                               "off_date": "Z_transformed", "stay_length": "V",
-                               "type": "P", "county": "M"},
-                         "1": {"cph": "O", "os_map_ref": "bar_ref", "on_date": "T_transformed",
-                               "off_date": "AA_transformed", "stay_length": "W",
-                               "type": "Q", "county": "N"},
-                         "2": {"cph": "T", "os_map_ref": "baz_ref", "on_date": "U_transformed",
-                               "off_date": "AB_transformed", "stay_length": "X",
-                               "type": "R", "county": "O"}}}
+                        {"0": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
+                               "on_date": "S_transformed", "off_date": "Z_transformed",
+                               "stay_length": "V", "type": "P", "county": "M"},
+                         "1": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
+                               "on_date": "T_transformed", "off_date": "AA_transformed",
+                               "stay_length": "W", "type": "Q", "county": "N"},
+                         "2": {"cph": "T", "lat": 3, "lon": 6, "os_map_ref": "baz_ref",
+                               "on_date": "U_transformed", "off_date": "AB_transformed",
+                               "stay_length": "X", "type": "R", "county": "O"}}}
         # test expected output
         self.assertDictEqual(self.data.submission_movement_metadata(),
                              expected)
@@ -132,17 +133,22 @@ class TestViewBovisData(unittest.TestCase):
                           "Clade": ["foo_clade", "bar_clade"]},
                          index=["foo_sub", "bar_sub"])
         self.data._get_os_map_ref.return_value = \
-            pd.DataFrame({"x": [1, 2], "y": [4, 5],
-                          "OSMapRef": ["foo_ref", "bar_ref"]}, index=["J", "O"])
+            pd.DataFrame({"x": [1, 2], "y": [4, 5], "Lat": [1, 2],
+                          "Long": [4, 5], "OSMapRef": ["foo_ref", "bar_ref"]},
+                         index=["J", "O"])
         self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
         expected = \
-            {"foo_sub": {"cph": "J", "os_map_ref": "foo_ref", "snp_distance": 0,
-                         "animal_id": "foo_id", "clade": "foo_clade",
-                         "slaughter_date": "foo_date_transformed", "distance": 0.0},
-             "bar_sub": {"cph": "O", "os_map_ref": "bar_ref", "snp_distance": 3,
-                         "animal_id": "bar_id", "clade": "bar_clade",
-                         "slaughter_date": "bar_date_transformed", "distance": 1.1},
+            {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
+                         "snp_distance": 0, "animal_id": "foo_id",
+                         "clade": "foo_clade",
+                         "slaughter_date": "foo_date_transformed",
+                         "distance": 0.0},
+             "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
+                         "snp_distance": 3, "animal_id": "bar_id",
+                         "clade": "bar_clade",
+                         "slaughter_date": "bar_date_transformed",
+                         "distance": 1.1},
              "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(

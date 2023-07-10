@@ -209,6 +209,8 @@ class ViewBovisData:
         move_dict = {str(row["Loc_Num"]):
                      {"cph": row["Loc"],
                       "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["Loc"]],
+                      "lat": df_cph_2_osmapref["Lat"][row["Loc"]],
+                      "lon": df_cph_2_osmapref["Long"][row["Loc"]],
                       "on_date":
                           self._transform_dateformat(row["Loc_StartDate"]),
                       "off_date":
@@ -265,6 +267,8 @@ class ViewBovisData:
         return dict({index:
                      {"cph": row["CPH"],
                       "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                      "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
+                      "lon": df_cph_2_osmapref["Long"][row["CPH"]],
                       "snp_distance":
                           int(df_snps_related[self._submission][index]),
                       "animal_id": row["Identifier"],
