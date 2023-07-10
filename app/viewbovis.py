@@ -1,26 +1,26 @@
 from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
-from viewbovis_data import ViewBovisData
-from viewbovis_data import InvalidIdException
+from viewbovis_data import Request, NoDataException, NoMetaDataException,\
+                           NoWgsDataException, NonBovineException
 
 app = Flask(__name__)
 
 ls = LiveServer(app)
 
 
-def get_data_object(id):
+def get_request_object(id):
     """
-        Creates a Data object if one does not already exist in the
-        application context. Assigns the Data object as an attribute to
-        the application context. Creating the data object connects to
-        the database. This also loads key data for the sample of
+        Creates a Request object if one does not already exist in the
+        application context. Assigns the Request object as an attribute
+        of the application context. Creating the request object connects
+        to the database. This also loads key data for the sample of
         interest (SOI) (id) and assigns these data to attributes of the
         application context. This function is called before every
         request.
     """
     if not hasattr(g, "data"):
-        g.data = ViewBovisData(app.data_path, id)
+        g.request = Request(app.data_path, id)
 
 
 @app.teardown_appcontext
@@ -29,9 +29,9 @@ def disconnect_db(exception):
         Closes the database connection and delete the database object.
         Called automatically when the application context ends.
     """
-    if hasattr(g, 'data'):
-        g.data.__del__()
-        del g.data
+    if hasattr(g, 'request'):
+        g.request.__del__()
+        del g.request
 
 
 @app.route("/")
@@ -42,14 +42,27 @@ def home():
 @app.route("/sample", methods=["GET"])
 def sample():
     """
-        Returns meta and movement data in json format for the SOI in
-        response to a client GET request at route /sample/, with the
-        sample_name encoded in the URL query string; e.g.
-        "/sample?sample_name=AF-61-04255-17".
+        Returns metadata in json format for the SOI in response to a
+        client GET request at route /sample/, with the sample_name
+        encoded in the URL query string; e.g.
+        "/sample?sample_name=AF-61-04255-17"
     """
     id = request.args.get("sample_name")
-    get_data_object(id)
-    return jsonify(g.data.submission_movement_metadata())
+    get_request_object(id)
+    return jsonify(g.request.soi_metadata())
+
+
+@app.route("/sample/movements", methods=["GET"])
+def movements():
+    """
+        Returns meta and movement data in json format for the SOI in
+        response to a client GET request at route /sample/movements,
+        with the sample_name encoded in the URL query string; e.g.
+        "/sample?sample_name=AF-61-04255-17"
+    """
+    id = request.args.get("sample_name")
+    get_request_object(id)
+    return jsonify(g.request.soi_movement_metadata())
 
 
 @app.route("/sample/related", methods=["GET"])
@@ -59,12 +72,12 @@ def related_samples():
         samples within a given SNP distance of the SOI in response to a
         client GET request on route /sample/related with the
         sample_name and snp_distance encoded in the URL query string;
-        e.g. "/sample/related?sample_name=AF-61-04255-17&snp_distance=5".
+        e.g. "/sample/related?sample_name=AF-61-04255-17&snp_distance=5"
     """
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    get_data_object(id)
-    return jsonify(g.data.related_submissions_metadata(snp_threshold))
+    get_request_object(id)
+    return jsonify(g.request.related_submissions_metadata(snp_threshold))
 
 
 @app.route("/sample/matrix", methods=["GET"])
@@ -78,10 +91,13 @@ def snp_matrix():
     """
     id = request.args.get("sample_name")
     snp_threshold = int(request.args.get("snp_distance"))
-    get_data_object(id)
-    return jsonify(g.data.snp_matrix(snp_threshold))
+    get_request_object(id)
+    return jsonify(g.request.snp_matrix(snp_threshold))
 
 
-@app.errorhandler(InvalidIdException)
+@app.errorhandler(NoDataException)
+@app.errorhandler(NoMetaDataException)
+@app.errorhandler(NoWgsDataException)
+@app.errorhandler(NonBovineException)
 def custom_exception_handler(error):
     return jsonify({"error": f"{str(error)}"})
