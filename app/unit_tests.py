@@ -75,7 +75,7 @@ class TestViewBovisData(unittest.TestCase):
                              index=["Y"]))
         # setup - mock private methods
         self.data._submission_movdata = mock.Mock()
-        self.data._get_lat_long = mock.Mock()
+        self.data._get_os_map_ref = mock.Mock()
         self.data._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
         # setup - return values for private method mocks
@@ -87,28 +87,28 @@ class TestViewBovisData(unittest.TestCase):
                           "Loc_Duration": ["V", "W", "X"],
                           "Loc_EndDate": ["Z", "AA", "AB"]},
                          index=["Y", "Y", "Y"])
-        self.data._get_lat_long.return_value = \
-            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6]},
+        self.data._get_os_map_ref.return_value = \
+            pd.DataFrame({"OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
                          index=["J", "O", "T"])
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "C", "slaughter_date": "D_transformed", "animal_type": "E",
                     "cph": "F", "cph_type": "H", "county": "I",
                     "risk_area": "J", "out_of_homerange": "L", "move":
-                        {"0": {"cph": "J", "lat": 1, "lon": 4, "on_date": "S_transformed",
+                        {"0": {"cph": "J", "os_map_ref": "foo_ref", "on_date": "S_transformed",
                                "off_date": "Z_transformed", "stay_length": "V",
                                "type": "P", "county": "M"},
-                         "1": {"cph": "O", "lat": 2, "lon": 5, "on_date": "T_transformed",
+                         "1": {"cph": "O", "os_map_ref": "bar_ref", "on_date": "T_transformed",
                                "off_date": "AA_transformed", "stay_length": "W",
                                "type": "Q", "county": "N"},
-                         "2": {"cph": "T", "lat": 3, "lon": 6, "on_date": "U_transformed",
+                         "2": {"cph": "T", "os_map_ref": "baz_ref", "on_date": "U_transformed",
                                "off_date": "AB_transformed", "stay_length": "X",
                                "type": "R", "county": "O"}}}
         # test expected output
         self.assertDictEqual(self.data.submission_movement_metadata(),
                              expected)
         # assert mock calls
-        self.data._get_lat_long.assert_called_once_with({"J", "O", "T"})
+        self.data._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
 
     def test_related_submission_metadata(self):
         # setup - mock attributes
@@ -116,7 +116,7 @@ class TestViewBovisData(unittest.TestCase):
         # setup - mock private methods
         self.data._related_snp_matrix = mock.Mock()
         self.data._submission_metadata = mock.Mock()
-        self.data._get_lat_long = mock.Mock()
+        self.data._get_os_map_ref = mock.Mock()
         self.data._geo_distance = mock.Mock()
         self.data._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
@@ -131,16 +131,16 @@ class TestViewBovisData(unittest.TestCase):
                           "CPH": ["J", "O"], "Host": ["COW", "COW"],
                           "Clade": ["foo_clade", "bar_clade"]},
                          index=["foo_sub", "bar_sub"])
-        self.data._get_lat_long.return_value = \
-            pd.DataFrame({"Lat": [1, 2], "Long": [4, 5], "x": [1, 2],
-                          "y": [4, 5]}, index=["J", "O"])
+        self.data._get_os_map_ref.return_value = \
+            pd.DataFrame({"x": [1, 2], "y": [4, 5],
+                          "OSMapRef": ["foo_ref", "bar_ref"]}, index=["J", "O"])
         self.data._geo_distance.side_effect = [0.0, 1.1]
         # expected output
         expected = \
-            {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "snp_distance": 0,
+            {"foo_sub": {"cph": "J", "os_map_ref": "foo_ref", "snp_distance": 0,
                          "animal_id": "foo_id", "clade": "foo_clade",
                          "slaughter_date": "foo_date_transformed", "distance": 0.0},
-             "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "snp_distance": 3,
+             "bar_sub": {"cph": "O", "os_map_ref": "bar_ref", "snp_distance": 3,
                          "animal_id": "bar_id", "clade": "bar_clade",
                          "slaughter_date": "bar_date_transformed", "distance": 1.1},
              "SOI": "foo_sub"}
@@ -150,7 +150,7 @@ class TestViewBovisData(unittest.TestCase):
         # assert mock calls
         self.data._submission_metadata.assert_called_once_with(["foo_sub",
                                                                 "bar_sub"])
-        self.data._get_lat_long.assert_called_once_with({"O", "J"})
+        self.data._get_os_map_ref.assert_called_once_with({"O", "J"})
         self.data._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                   mock.call((2, 5))])
 

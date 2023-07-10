@@ -121,11 +121,11 @@ class ViewBovisData:
         """
         return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
 
-    def _get_lat_long(self, cphs: set) -> tuple:
+    def _get_os_map_ref(self, cphs: set) -> tuple:
         """
-            Fetches latitude, longitude, x and y for a given a set of
-            CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
-            'y' and the corresponding CPH in the index
+            Fetches x, y and OSMapRef for a given set of CPHs. Returns
+            a DataFrame with columns 'x', 'y', 'OSMapRef' and the
+            corresponding CPH in the index
         """
         query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
@@ -203,13 +203,12 @@ class ViewBovisData:
         """
         # get movement data for SOI
         df_movements = self._submission_movdata(self._df_metadata_sub.index[0])
-        df_cph_latlon_map = \
-            self._get_lat_long(set(df_movements["Loc"].to_list()))
+        df_cph_2_osmapref = \
+            self._get_os_map_ref(set(df_movements["Loc"].to_list()))
         # construct dictionary of movement data
         move_dict = {str(row["Loc_Num"]):
                      {"cph": row["Loc"],
-                      "lat": df_cph_latlon_map["Lat"][row["Loc"]],
-                      "lon": df_cph_latlon_map["Long"][row["Loc"]],
+                      "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["Loc"]],
                       "on_date":
                           self._transform_dateformat(row["Loc_StartDate"]),
                       "off_date":
@@ -260,13 +259,12 @@ class ViewBovisData:
         df_metadata_related = \
             self._submission_metadata(df_snps_related.index.to_list())
         # get lat/long mappings for CPH of related submissions
-        df_cph_latlon_map = \
-            self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
+        df_cph_2_osmapref = \
+            self._get_os_map_ref(set(df_metadata_related["CPH"].to_list()))
         # construct data response for client
         return dict({index:
                      {"cph": row["CPH"],
-                      "lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                      "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                      "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
                       "snp_distance":
                           int(df_snps_related[self._submission][index]),
                       "animal_id": row["Identifier"],
@@ -274,8 +272,8 @@ class ViewBovisData:
                       "slaughter_date":
                           self._transform_dateformat(row["SlaughterDate"]),
                       "distance":
-                          self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                              df_cph_latlon_map["y"][row["CPH"]]))}
+                          self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
+                                              df_cph_2_osmapref["y"][row["CPH"]]))}
                      for index, row in df_metadata_related.iterrows()
                      if row["Host"] == "COW"}, **{"SOI": self._submission})
 
