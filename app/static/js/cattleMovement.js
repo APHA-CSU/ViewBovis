@@ -335,7 +335,7 @@ const popupContent = function(data, movArr, index) {
         <table class="table table-striped">
           <tbody>
             <tr>
-              <td><strong>Birth CPH:</strong></td>
+              <td><strong>Birth Location:</strong></td>
               <td>${movArr[0].cph}</td>
             </tr>
             <tr>
