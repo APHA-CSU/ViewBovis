@@ -309,8 +309,8 @@ const popupContent = function(data, movArr, index) {
               <td>${movArr[index].type}</td>
             </tr>
             <tr>
-              <td><strong>Grid Reference:</strong></td>
-              <td>TBC</td>
+              <td><strong>OS Map Reference:</strong></td>
+              <td>${moveArr[index].os_map_ref}</td>
             </tr>
             <tr>
               <td><strong>Submission:</strong></td>

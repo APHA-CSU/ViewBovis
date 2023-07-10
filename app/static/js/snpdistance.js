@@ -677,8 +677,8 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.cph}</td> 
           </tr>
           <tr>
-            <td><strong>Grid Reference:</strong></td>
-            <td>TBC</td>
+            <td><strong>OS Map Reference:</strong></td>
+            <td>${data.os_map_ref}</td>
           </tr>
           <tr>
             <td><strong>Date of Birth:</strong></td>
