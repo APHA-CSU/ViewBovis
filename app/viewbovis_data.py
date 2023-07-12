@@ -43,8 +43,9 @@ class Request:
             self._df_wgs_metadata_soi = \
                 self._query_wgs_metadata(self._submission)
             # retrieve x,y and lat,lon into tuples
-            df_cph_latlon_map = self._get_lat_long(self._df_metadata_soi["CPH"])
-            self._xy = tuple(df_cph_latlon_map.iloc[0, 2:].values.flatten())
+            df_cph_2_osmapref = \
+                self._get_os_map_ref(self._df_metadata_soi["CPH"])
+            self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
         # if missing metadata
         else:
             # get WGS metadata for the SOI
@@ -120,11 +121,11 @@ class Request:
         """
         return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
 
-    def _get_lat_long(self, cphs: set) -> tuple:
+    def _get_os_map_ref(self, cphs: set) -> tuple:
         """
-            Fetches latitude, longitude, x and y for a given a set of
-            CPHs. Returns a DataFrame with columns 'lat', 'lon', 'x',
-            'y' and the corresponding CPH in the index
+            Fetches x, y and OSMapRef for a given set of CPHs. Returns
+            a DataFrame with columns 'x', 'y', 'OSMapRef' and the
+            corresponding CPH in the index
         """
         query = f"""SELECT * FROM latlon WHERE CPH IN
                    ({','.join('?' * len(cphs))})"""
@@ -248,15 +249,16 @@ class Request:
         # get movement data for SOI
         df_movements = \
             self._query_movdata(self._df_metadata_soi.index[0])
-        df_cph_latlon_map = \
-            self._get_lat_long(set(df_movements["Loc"].to_list()))
+        df_cph_2_osmapref = \
+            self._get_os_map_ref(set(df_movements["Loc"].to_list()))
         # construct dictionary of movement data
         return dict(self.soi_metadata(),
                     **{"move":
                         {str(row["Loc_Num"]):
                             {"cph": row["Loc"],
-                             "lat": df_cph_latlon_map["Lat"][row["Loc"]],
-                             "lon": df_cph_latlon_map["Long"][row["Loc"]],
+                             "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["Loc"]],
+                             "lat": df_cph_2_osmapref["Lat"][row["Loc"]],
+                             "lon": df_cph_2_osmapref["Long"][row["Loc"]],
                              "on_date":
                                 self._transform_dateformat(row["Loc_StartDate"]),
                              "off_date":
@@ -295,8 +297,8 @@ class Request:
             self._query_metadata(df_snps_related.index.to_list())
         if not df_metadata_related.empty:
             # get lat/long mappings for CPH of related submissions
-            df_cph_latlon_map = \
-                self._get_lat_long(set(df_metadata_related["CPH"].to_list()))
+            df_cph_2_osmapref = \
+                self._get_os_map_ref(set(df_metadata_related["CPH"].to_list()))
         # related samples without metadata
         no_meta_submissions = \
             set(df_snps_related.index) - set(df_metadata_related.index)
@@ -305,8 +307,9 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "lat": df_cph_latlon_map["Lat"][row["CPH"]],
-                     "lon": df_cph_latlon_map["Long"][row["CPH"]],
+                     "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": df_cph_2_osmapref["Long"][row["CPH"]],
                      "snp_distance":
                         int(df_snps_related[self._submission][index]),
                      "animal_id": row["Identifier"],
@@ -315,17 +318,16 @@ class Request:
                          (None if not row["SlaughterDate"] else
                           self._transform_dateformat(row["SlaughterDate"])),
                      "distance":
-                         self._geo_distance((df_cph_latlon_map["x"][row["CPH"]],
-                                             df_cph_latlon_map["y"]
-                                             [row["CPH"]]))}
+                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
+                                             df_cph_2_osmapref["y"][row["CPH"]]
+                                             ))}
                     for index, row in df_metadata_related.iterrows()},
-                 **{subm: {"cph": None, "lat": None, "lon": None,
+                 **{subm: {"cph": None, "os_map_ref": None, "lat": None,
+                           "lon": None,
                            "snp_distance":
                                int(df_snps_related[self._submission][subm]),
-                           "animal_id": None,
-                           "clade": None,
-                           "slaughter_date": None,
-                           "distance": None}
+                           "animal_id": None, "clade": None,
+                           "slaughter_date": None, "distance": None}
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 

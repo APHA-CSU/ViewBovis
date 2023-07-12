@@ -309,8 +309,8 @@ const popupContent = function(data, movArr, index) {
               <td>${movArr[index].type}</td>
             </tr>
             <tr>
-              <td><strong>Grid Reference:</strong></td>
-              <td>TBC</td>
+              <td><strong>OS Map Reference:</strong></td>
+              <td>${movArr[index].os_map_ref}</td>
             </tr>
             <tr>
               <td><strong>Submission:</strong></td>
@@ -453,12 +453,12 @@ const renderCowIcon = function (movementArr, cowIconObj) {
 const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Extract movement data from json object into an array
-  const moveArr = Object.values(json.move);
-  console.log(moveArr);
+  const movArr = Object.values(json.move);
+  console.log(movArr);
 
   // Array for latitude and longitude
-  const moveLat = moveArr.map(arr => arr.lat);
-  const moveLon = moveArr.map(arr => arr.lon);
+  const moveLat = movArr.map(arr => arr.lat);
+  const moveLon = movArr.map(arr => arr.lon);
 
   // Create a layer group that will contain all the cow markers
   second === false ? cowLayer = L.layerGroup().addTo(map) : cowLayer2 = L.layerGroup().addTo(map);
@@ -466,11 +466,11 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   // Add cow head markers to map
   for (let i = 0; i < moveLat.length; i++) {
     // Render markers and the correct cow icons
-    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(moveArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(moveArr[i], cowIcon)});
+    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)});
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, moveArr, i), cowheadPopupOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
