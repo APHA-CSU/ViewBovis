@@ -900,7 +900,7 @@ const showRelatedSamples = async function () {
         <p>
           <span>Identifier: ${json[soi].animal_id}<br/></span>
           <span>Precise Location: ${json[soi].cph}<br/></span>
-          <span>Grid Reference: TBC<br/></span>
+          <span>OS Map Reference: ${json[soi].os_map_ref}<br/></span>
           <span>Clade: ${json[soi].clade}<br/></span>
         </p>
         <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
