@@ -920,10 +920,10 @@ const showRelatedSamples = async function () {
         movableColumns: true,
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
-            {title:"Animal ID", field:"animal_id", headerFilter:"input"},
-            {title:"SNP", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
+            {title:"Identifier", field:"animal_id", headerFilter:"input"},
+            {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Slaughter_Date", field:"slaughter_date", headerFilter:"input"},  
+            {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
         ],
         initialSort:[
           {column:"distance", dir:"asc"},
