@@ -8,7 +8,60 @@
 /* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
 /* ------------------- */
 
-/* Security modal */
+/* Initialise the mouse to be disabled, whilst page loads */
+body {
+  pointer-events: none;
+}
+
+/* Overlay of transparent grey, whilst the page loads */
+#overlay {
+  z-index: 1;
+  position: fixed; /* Sit on top of the page content */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  cursor: pointer; /* Add a pointer on hover */
+}
+
+/* Define a loading spinner, only present whilst the page loads */
+#spinner {
+    z-index: 2;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height:80px;
+    width:80px;
+    margin:0px auto;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border-left:10px solid rgba(0,163,59,.15);
+    border-right:10px solid rgba(0,163,59,.15);
+    border-bottom:10px solid rgba(0,163,59,.15);
+    border-top:10px solid rgb(1, 141, 52);
+    border-radius:100%;
+}
+@-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(359deg);}
+}
+@-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(359deg);}
+}
+@-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(359deg);}
+}
+@keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}
 
 /* Government ALPHA Banner */
 .alpha-side-margin {
