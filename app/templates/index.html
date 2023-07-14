@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="/static/css/main.css">
     </head>
     <body>
+        <div id="overlay"></div>
+        <div id="spinner"></div>
         <!-- ================================== -->
         <!-- Navbar -->
         <!-- ================================== -->
@@ -992,6 +994,23 @@
 
 
     <!-- JavaScript -->
+    <script>
+        //clickHandler = function(e){
+        // if(e.target.className!=="govuk-checkboxes__input") {
+        //    e.stopPropagation()
+        //    }
+        //}
+        //document.addEventListener("click", clickHandler, true);
+        window.addEventListener("load", function() {
+            document.getElementById("spinner").style.visibility="hidden";
+        //    document.getElementById("overlay").style.visibility="hidden";
+            //document.removeEventListener("click", securityClickHandler)
+            document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
+            document.getElementById("checkbox--agree").addEventListener("click", function(){
+                document.getElementById("overlay").style.visibility="hidden";
+            });
+        });
+    </script>
     <script src="/static/libraries/leaflet-1.9.3/leaflet.js"></script>
     <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js"></script>
     <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js"></script>
