@@ -12,6 +12,22 @@ const navBar = document.querySelector(".navbar-nav");
 const navLinks = document.querySelectorAll(".nav-link");
 const navContent = document.querySelectorAll(".content");
 
+// ------------------------ //
+//
+//  LOADING DISPLAY
+//
+// ------------------------ //
+
+// Waits until the page is fully loaded. Then removes the loading
+// spinner, removes the grey overlay div and re-enables "pointerEvents"
+// (the mouse)
+window.addEventListener("load", function() {
+    document.getElementById("spinner").style.visibility="hidden";
+    document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
+    document.getElementById("checkbox--agree").addEventListener("click", function(){
+        document.getElementById("overlay").style.visibility="hidden";
+    });
+});
 
 // ------------------------ //
 //
