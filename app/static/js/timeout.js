@@ -35,12 +35,14 @@ var inactivityTime = function () {
                         </div>
                 </body>
             </html>`)
+        document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
         }
 
     function resetTimer() {
         clearTimeout(time);
         // 1000 milliseconds = 1 second
-        time = setTimeout(logout, 3600000)
+        // time = setTimeout(logout, 3600000)
+        time = setTimeout(logout, 5000)
     }
 };
 window.onload = function() {
