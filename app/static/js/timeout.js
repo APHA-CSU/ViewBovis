@@ -35,6 +35,7 @@ var inactivityTime = function () {
                         </div>
                 </body>
             </html>`)
+        document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
         }
 
     function resetTimer() {
