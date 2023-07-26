@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, jsonify, render_template, request, g
 from liveserver import LiveServer
 
@@ -100,4 +102,5 @@ def snp_matrix():
 @app.errorhandler(NoWgsDataException)
 @app.errorhandler(NonBovineException)
 def custom_exception_handler(error):
+    app.logger.info(error)
     return jsonify({"error": f"{str(error)}"})
