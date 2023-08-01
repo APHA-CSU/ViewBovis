@@ -4,8 +4,6 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-#User=richardellis
-#Group=www-data
 WorkingDirectory=/home/richardellis/
 Type=simple
 ExecStart=/home/richardellis/.npm-global/bin/auspice view --datasetDir /home/richardellis/NextstrainData/jsonExport
