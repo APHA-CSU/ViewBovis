@@ -61,6 +61,7 @@ class Request:
             self._sample_name = self._df_wgs_metadata_soi["Sample"][0]
         else:
             self._sample_name = None
+            self._exclusion = self._query_exclusion()
 
     # TODO: validate input
     def _query_metadata(self, ids: list) -> pd.DataFrame:
@@ -89,6 +90,18 @@ class Request:
                                  self._db,
                                  index_col="Submission",
                                  params={"id": id})
+
+    def _query_exclusion(self) -> pd.DataFrame:
+        """
+            Returns the exclusion reason for the SOI. If the SOI is not
+            in the list of excluded samples an empty DataFrame is
+            returned
+        """
+        query = """SELECT Exclusion FROM excluded WHERE
+                   Submission=:submission"""
+        df_exclusion = pd.read_sql_query(query, self._db,
+                                         params=self._submission)
+        return df_exclusion["Exclusion"]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -168,7 +181,10 @@ class Request:
                 as row and column labels
         """
         if self._df_wgs_metadata_soi.empty:
-            raise NoWgsDataException(self._id)
+            if self._exclusion is None:
+                raise NoWgsDataException(self._id)
+            else:
+                raise ExcludedSubmissionException(self._id, self._exclusion)
         clade = self._df_wgs_metadata_soi["group"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
@@ -376,6 +392,16 @@ class NoMetaDataException(NoDataException):
 class NoWgsDataException(NoDataException):
     def __init__(self, id):
         self.message = f"Missing WGS data for submission: {id}"
+
+
+class ExcludedSubmissionException(NoDataException):
+    def __init__(self, id, exclusion):
+        reasons = {"notMbovis": "not M. bovis",
+                   "impureCulture": "contaminated sample",
+                   "lowQualityData": "low quality data",
+                   "identifiedOutlier": "identified outlier"}
+        self.message = \
+            f"Excluded submission: {id}\nReason: {reasons[exclusion]}"
 
 
 class NonBovineException(NoDataException):
