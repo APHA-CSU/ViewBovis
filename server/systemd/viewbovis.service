@@ -1,5 +1,5 @@
 [Unit]
-Description=Start viewbovis (ALPHA)
+Description=Start viewbovis (BETA)
 Requires=network-online.target
 After=network-online.target
 
