@@ -87,7 +87,7 @@ When the server is booted, systemd will automatically run services to:
 
 1. Pull the production data from `s3-csu-003` and save to `/ViewBovis` (TODO).
 1. Start the nginx proxy server. - The nginx installation deals with this service, we just need to ensure that [nginx is installed on the server and the proxy server is configured correctly](#nginx). 
-1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/deploy.sh). This runs the container.
+1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/deploy.sh). `deploy.sh` will first update the local docker image of the production version of ViewBovis before running the container.
 1. [`server/systemd/nextstrain.service`](https://github.com/aphascience/ViewBovis/blob/main/server/nextstrain.service) starts the Nextstrain auspice server. 
 
 These services ensure that the app is automatically made available to users as soon as the server starts.
@@ -190,4 +190,8 @@ This json file is saved daily to `/var/log/viewbovis_requests_YYYY-mm-dd` on the
 
 ## <a name="deploy"></a> Deployment
 
-TODO
+To deploy a new version of the software to the server simply, push to the production branch of this repository. In practice this means publishing a new release of the software. For instruction on this, follow the [release procedure document](#).
+
+Releasing a new version of the software, which means pushing to the production branch, will automatically trigger a build and push of the Docker image to [dockerhub](https://hub.docker.com/r/aphacsubot/viewbovis/).
+
+When the server is booted at 8am each day, a system service, [`viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service), will automatically check for updates to the production image on dockerhub and pull the image as required. Thus, any new release published on GitHub will be automatically deployed the following day.
