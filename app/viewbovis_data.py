@@ -269,11 +269,13 @@ class Request:
                     **{"move":
                         {str(row["Loc_Num"]):
                             {"cph": row["Loc"],
-                             "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["Loc"]],
+                             "os_map_ref": df_cph_2_osmapref["OSMapRef"]
+                                [row["Loc"]],
                              "lat": df_cph_2_osmapref["Lat"][row["Loc"]],
                              "lon": df_cph_2_osmapref["Long"][row["Loc"]],
                              "on_date":
-                                self._transform_dateformat(row["Loc_StartDate"]),
+                                self._transform_dateformat(
+                                    row["Loc_StartDate"]),
                              "off_date":
                                 self._transform_dateformat(row["Loc_EndDate"]),
                              "stay_length": row["Loc_Duration"],
@@ -343,6 +345,9 @@ class Request:
                           self._transform_dateformat(row["SlaughterDate"])),
                      "sex": row["Gender"],
                      "disclosing_test": row["Disclosing_Test"],
+                     "dob":
+                         self._transform_dateformat(
+                            row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
                      "distance":
                          self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
