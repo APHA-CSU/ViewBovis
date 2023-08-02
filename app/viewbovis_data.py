@@ -173,7 +173,7 @@ class Request:
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
-        df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
+        df_snps = pd.read_csv(matrix_path[0], index_col=0)
         # get isolates within snp_threshold
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
@@ -216,7 +216,10 @@ class Request:
                     "cph_type": None,
                     "county": None,
                     "risk_area": None,
-                    "out_of_homerange": None}
+                    "out_of_homerange": None,
+                    "sex": None,
+                    "disclosing_test": None,
+                    "import_country": None}
         else:
             return {"submission": self._df_metadata_soi.index[0],
                     "clade": self._df_metadata_soi["Clade"][0],
@@ -231,7 +234,12 @@ class Request:
                     "county": self._df_metadata_soi["County"][0],
                     "risk_area": self._df_metadata_soi["RiskArea"][0],
                     "out_of_homerange":
-                        self._df_metadata_soi["OutsideHomeRange"][0]}
+                        self._df_metadata_soi["OutsideHomeRange"][0],
+                    "sex": self._df_metadata_soi["Gender"][0],
+                    "disclosing_test":
+                        self._df_metadata_soi["Disclosing_Test"][0],
+                    "import_country":
+                        self._df_metadata_soi["Import_Country"][0]}
 
     def soi_movement_metadata(self) -> dict:
         """
@@ -265,7 +273,9 @@ class Request:
                                 self._transform_dateformat(row["Loc_EndDate"]),
                              "stay_length": row["Loc_Duration"],
                              "type": row["CPH_Type"],
-                             "county": row["County"]}
+                             "county": row["County"],
+                             "risk_area_at_move": row["Area_At_Movement"],
+                             "risk_area_current": row["Current_Area"]}
                          for _, row in df_movements.iterrows()}})
 
     def related_submissions_metadata(self, snp_threshold: int) -> dict:
@@ -284,10 +294,17 @@ class Request:
                         "cph": CPH location of positive test
                         "lat": latitude,
                         "lon": longitude,
+                        "species": species of the host animal,
+                        "animal_type": e.g. farmed, pet, wild etc.
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
                         "clade": clade of sample,
                         "slaughter_date": date of slaughter,
+                        "sex": sex of the host species, e.g. M/F,
+                        "disclosing_test": the disclosing test type,
+                            e.g. VE-WHT
+                        "import_country": the country the host was
+                            imported from,
                         "distance": distance to the sample of interest
                             in miles}
         """
@@ -310,6 +327,8 @@ class Request:
                      "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
                      "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
                      "lon": df_cph_2_osmapref["Long"][row["CPH"]],
+                     "species": row["Host"],
+                     "animal_type": row["Animal_Type"],
                      "snp_distance":
                         int(df_snps_related[self._submission][index]),
                      "animal_id": row["Identifier"],
@@ -317,17 +336,22 @@ class Request:
                      "slaughter_date":
                          (None if not row["SlaughterDate"] else
                           self._transform_dateformat(row["SlaughterDate"])),
+                     "sex": row["Gender"],
+                     "disclosing_test": row["Disclosing_Test"],
+                     "import_country": row["Import_Country"],
                      "distance":
                          self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
                                              df_cph_2_osmapref["y"][row["CPH"]]
                                              ))}
                     for index, row in df_metadata_related.iterrows()},
                  **{subm: {"cph": None, "os_map_ref": None, "lat": None,
-                           "lon": None,
+                           "lon": None, "species": None, "animal_type": None,
                            "snp_distance":
                                int(df_snps_related[self._submission][subm]),
                            "animal_id": None, "clade": None,
-                           "slaughter_date": None, "distance": None}
+                           "slaughter_date": None, "sex": None,
+                           "disclosing_test": None, "import_country": None,
+                           "distance": None}
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 
