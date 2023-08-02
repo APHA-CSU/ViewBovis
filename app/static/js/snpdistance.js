@@ -761,6 +761,14 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.os_map_ref}</td>
           </tr>
           <tr>
+            <td><strong>Species:</strong></td>
+            <td>${data.species}</td> 
+          </tr>
+          <tr>
+            <td><strong>Animal Type:</strong></td>
+            <td>${data.animal_type}</td> 
+          </tr>
+          <tr>
             <td><strong>Sex:</strong></td>
             <td>${data.sex == `F` ? `Female`: data.sex == `M` ? `Male`: `Unknown`}</td>
           </tr> 
