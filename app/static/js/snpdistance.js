@@ -737,6 +737,10 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${AFnumber}</td> 
           </tr>
           <tr>
+            <td><strong>Date of Birth:</strong></td>
+            <td>${data.dob}</td>
+          </tr>
+          <tr>
             <td><strong>Slaughter Date:</strong></td>
             <td>${data.slaughter_date}</td>
           </tr>
@@ -757,16 +761,16 @@ const popupContentSNPMap = function(data, AFnumber) {
             <td>${data.os_map_ref}</td>
           </tr>
           <tr>
-            <td><strong>Date of Birth:</strong></td>
-            <td>TBC</td>
-          </tr>
-          <tr>
-            <td><strong>Age:</strong></td>
-            <td>TBC</td>
-          </tr>
-          <tr>
             <td><strong>Sex:</strong></td>
-            <td>TBC</td>
+            <td>${data.sex}</td>
+          </tr> 
+          <tr>
+            <td><strong>Disclosing Test Type:</strong></td>
+            <td>${data.disclosing_test}</td>
+          </tr> 
+          <tr>
+            <td><strong>Import Country:</strong></td>
+            <td>${data.import_country == null ? `British`: `${data.import_country}`}</td>
           </tr> 
         </tbody>
       </table>
