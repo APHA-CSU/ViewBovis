@@ -358,6 +358,10 @@ const popupContent = function(data, movArr, index) {
               <td><strong>Disclosing Test Type:</strong></td>
               <td>${data.disclosing_test}</td>
             </tr> 
+            <tr>
+              <td><strong>Import Country:</strong></td>
+              <td>${data.import_country == null ? `British`: `${data.import_country}`}</td>
+            </tr> 
           </tbody>
         </table>
       </div>
