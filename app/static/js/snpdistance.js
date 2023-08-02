@@ -762,7 +762,7 @@ const popupContentSNPMap = function(data, AFnumber) {
           </tr>
           <tr>
             <td><strong>Sex:</strong></td>
-            <td>${data.sex}</td>
+            <td>${data.sex == `F` ? `Female`: data.sex == `M` ? `Male`: `Unknown`}</td>
           </tr> 
           <tr>
             <td><strong>Disclosing Test Type:</strong></td>
