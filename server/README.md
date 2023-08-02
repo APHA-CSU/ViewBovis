@@ -190,7 +190,7 @@ This json file is saved daily to `/var/log/viewbovis_requests_YYYY-mm-dd` on the
 
 ## <a name="deploy"></a> Deployment
 
-To deploy a new version of the software to the server simply, push to the production branch of this repository. In practice this means publishing a new release of the software. For instruction on this, follow the [release procedure document](#).
+To deploy a new version of the software to the server simply, push to the production branch of this repository. In practice this means publishing a new release of the software. For instruction on this, follow the [release process document](https://github.com/aphascience/ViewBovis/blob/main/release_process.md).
 
 Releasing a new version of the software, which means pushing to the production branch, will automatically trigger a build and push of the Docker image to [dockerhub](https://hub.docker.com/r/aphacsubot/viewbovis/).
 
