@@ -237,7 +237,8 @@ class Request:
                     "out_of_homerange":
                         self._df_metadata_soi["OutsideHomeRange"][0],
                     "dob":
-                        self._transform_dateformat(
+                        None if not self._df_metadata_soi["wsdBirthDate"][0]
+                        else self._transform_dateformat(
                             self._df_metadata_soi["wsdBirthDate"][0].split()[0]
                             ),
                     "sex": self._df_metadata_soi["Gender"][0],
@@ -341,11 +342,12 @@ class Request:
                      "animal_id": row["Identifier"],
                      "clade": row["Clade"],
                      "slaughter_date":
-                         (None if not row["SlaughterDate"] else
-                          self._transform_dateformat(row["SlaughterDate"])),
+                         None if not row["SlaughterDate"] else
+                         self._transform_dateformat(row["SlaughterDate"]),
                      "sex": row["Gender"],
                      "disclosing_test": row["Disclosing_Test"],
                      "dob":
+                         None if not row["wsdBirthDate"] else
                          self._transform_dateformat(
                             row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
