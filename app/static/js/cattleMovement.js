@@ -328,6 +328,10 @@ const popupContent = function(data, movArr, index) {
               <td><strong>Out of Home Range:</strong></td>
               <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
             </tr>
+            <tr>
+              <td><strong>Risk Area:</strong></td>
+              <td>${movArr[index].risk_area_current}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -340,19 +344,19 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td>TBC</td>
+              <td>${data.dob}</td>
             </tr>
             <tr>
               <td><strong>Slaughter Date:</strong></td>
               <td>${data.slaughter_date}</td>
             </tr>
             <tr>
-              <td><strong>Age:</strong></td>
-              <td>TBC</td>
-            </tr>
-            <tr>
               <td><strong>Sex:</strong></td>
-              <td>TBC</td>
+              <td>${data.sex}</td>
+            </tr> 
+            <tr>
+              <td><strong>Disclosing Test Type:</strong></td>
+              <td>${data.disclosing_test}</td>
             </tr> 
           </tbody>
         </table>
