@@ -217,6 +217,7 @@ class Request:
                     "county": None,
                     "risk_area": None,
                     "out_of_homerange": None,
+                    "dob": None,
                     "sex": None,
                     "disclosing_test": None,
                     "import_country": None}
@@ -235,6 +236,10 @@ class Request:
                     "risk_area": self._df_metadata_soi["RiskArea"][0],
                     "out_of_homerange":
                         self._df_metadata_soi["OutsideHomeRange"][0],
+                    "dob":
+                        self._transform_dateformat(
+                            self._df_metadata_soi["wsdBirthDate"][0].split()[0]
+                            ),
                     "sex": self._df_metadata_soi["Gender"][0],
                     "disclosing_test":
                         self._df_metadata_soi["Disclosing_Test"][0],
