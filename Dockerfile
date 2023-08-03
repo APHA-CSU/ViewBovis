@@ -32,6 +32,6 @@ RUN python3.10 -m pip install -r requirements.txt
 ################### ENTRY ##############################
 
 WORKDIR "/ViewBovis/app"
-CMD ["gunicorn", "-b", "127.0.0.1:5000", "-w", "4", "deploy:app", \
+CMD ["gunicorn", "-b", "127.0.0.1:3000", "-w", "4", "deploy:app", \
     "--log-level=info", "--access-logfile", "/ViewBovis/access.log", \
     "--error-logfile", "/ViewBovis/error.log"]
