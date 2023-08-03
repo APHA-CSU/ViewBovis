@@ -106,7 +106,9 @@ class TestRequest(unittest.TestCase):
                               "Animal_Type": ["E"], "CPH": ["F"],
                               "CPH_Type": ["H"], "County": ["I"],
                               "RiskArea": ["J"], "Loc0": ["K"],
-                              "OutsideHomeRange": ["L"]},
+                              "OutsideHomeRange": ["L"], "wsdBirthDate": ["M"],
+                              "Gender": ["N"], "Disclosing_Test": ["O"],
+                              "Import_Country": ["P"]},
                              index=["Y"]))
         # setup - mock private methods
         self.request._query_movdata = mock.Mock()
@@ -120,7 +122,9 @@ class TestRequest(unittest.TestCase):
                           "CPH_Type": ["P", "Q", "R"],
                           "Loc_StartDate": ["S", "T", "U"],
                           "Loc_Duration": ["V", "W", "X"],
-                          "Loc_EndDate": ["Z", "AA", "AB"]},
+                          "Loc_EndDate": ["Z", "AA", "AB"],
+                          "Area_At_Movement": ["AC", "AD", "AE"],
+                          "Current_Area": ["AF", "AG", "AH"]},
                          index=["Y", "Y", "Y"])
         self.request._get_os_map_ref.return_value = \
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
@@ -131,16 +135,20 @@ class TestRequest(unittest.TestCase):
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
                     "cph": "F", "cph_type": "H", "county": "I",
-                    "risk_area": "J", "out_of_homerange": "L", "move":
+                    "risk_area": "J", "out_of_homerange": "L", "dob": "M_transformed",
+                    "sex": "N", "disclosing_test": "O", "import_country": "P", "move":
                         {"0": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
                                "on_date": "S_transformed", "off_date": "Z_transformed",
-                               "stay_length": "V", "type": "P", "county": "M"},
+                               "stay_length": "V", "type": "P", "county": "M",
+                               "risk_area_at_move": "AC", "risk_area_current": "AF"},
                          "1": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
                                "on_date": "T_transformed", "off_date": "AA_transformed",
-                               "stay_length": "W", "type": "Q", "county": "N"},
+                               "stay_length": "W", "type": "Q", "county": "N",
+                               "risk_area_at_move": "AD", "risk_area_current": "AG"},
                          "2": {"cph": "T", "lat": 3, "lon": 6, "os_map_ref": "baz_ref",
                                "on_date": "U_transformed", "off_date": "AB_transformed",
-                               "stay_length": "X", "type": "R", "county": "O"}}}
+                               "stay_length": "X", "type": "R", "county": "O",
+                               "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
         # test expected output
         self.assertDictEqual(self.request.soi_movement_metadata(), expected)
         # assert mock calls
@@ -192,7 +200,12 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
                           "SlaughterDate": ["foo_date", "bar_date"],
                           "CPH": ["J", "O"], "Host": ["COW", "COW"],
-                          "Clade": ["foo_clade", "bar_clade"]},
+                          "Clade": ["foo_clade", "bar_clade"],
+                          "Animal_Type": ["J", "K"],
+                          "OutsideHomeRange": ["L", "M"],
+                          "wsdBirthDate": ["N", "O"],
+                          "Gender": ["P", "Q"], "Disclosing_Test": ["R", "S"],
+                          "Import_Country": ["T", "U"]},
                          index=["foo_sub", "bar_sub"])
         self.request._get_os_map_ref.return_value = \
             pd.DataFrame({"x": [1, 2], "y": [4, 5], "Lat": [1, 2],
@@ -203,17 +216,21 @@ class TestRequest(unittest.TestCase):
         expected = \
             {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
                          "snp_distance": 0, "animal_id": "foo_id",
-                         "clade": "foo_clade",
-                         "slaughter_date": "foo_date_transformed",
-                         "distance": 0.0},
+                         "species": "COW", "animal_type": "J", "clade": "foo_clade",
+                         "slaughter_date": "foo_date_transformed", "sex": "P",
+                         "disclosing_test": "R", "dob": "N_transformed",
+                         "import_country": "T", "distance": 0.0},
              "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
                          "snp_distance": 3, "animal_id": "bar_id",
-                         "clade": "bar_clade",
-                         "slaughter_date": "bar_date_transformed",
-                         "distance": 1.1},
+                         "species": "COW", "animal_type": "K", "clade": "bar_clade",
+                         "slaughter_date": "bar_date_transformed", "sex": "Q",
+                         "disclosing_test": "S", "dob": "O_transformed",
+                         "import_country": "U", "distance": 1.1},
              "baz_sub": {"cph": None, "lat": None, "lon": None, "os_map_ref": None,
-                         "snp_distance": 1, "animal_id": None, "clade": None,
-                         "slaughter_date": None, "distance": None},
+                         "snp_distance": 1, "animal_id": None, "species": None,
+                         "animal_type": None, "clade": None, "slaughter_date": None,
+                         "sex": None, "disclosing_test": None, "dob": None,
+                         "import_country": None, "distance": None},
              "SOI": "foo_sub"}
         # test expected output
         self.assertDictEqual(
