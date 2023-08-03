@@ -362,8 +362,8 @@ class Request:
                                int(df_snps_related[self._submission][subm]),
                            "animal_id": None, "clade": None,
                            "slaughter_date": None, "sex": None,
-                           "disclosing_test": None, "import_country": None,
-                           "distance": None}
+                           "disclosing_test": None, "dob": None,
+                           "import_country": None, "distance": None}
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 
