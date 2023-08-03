@@ -1,0 +1,12 @@
+[Unit]
+Description=Start viewbovis (BETA)
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/nickpestell/apha-csu/repos/ViewBovis/
+Type=simple
+ExecStart=bash deploy.sh /home/nickpestell/apha-csu/repos/data/
+
+[Install]
+WantedBy=multi-user.target
