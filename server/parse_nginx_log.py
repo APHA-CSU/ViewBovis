@@ -1,3 +1,8 @@
+"""
+    Script for extracting access data from the nginx log. Designed to be
+    run as a system service prior to shutdown of the server.
+"""
+
 import argparse
 import json
 import os
@@ -8,6 +13,11 @@ DEFAULT_OUTPUT_PATH = "/var/log/viewbovis/"
 
 
 def run(access_log_path, out_dir):
+    """
+        Parses the nginx access log and extracts data on the number of
+        visits to each page within app from remote connections when run
+        in production. Saves a json file with statistic to 'out_dir'.
+    """
     requests = {"/ ": 0,
                 "/sample": 0,
                 "/sample/related": 0,
