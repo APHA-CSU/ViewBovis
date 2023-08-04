@@ -204,18 +204,18 @@ const renderNextstrain = function(URL){
 
     // Render Nextstrain on page using a template literal containing the correct URL for the sample or clade selected
     // TODO: uncomment below for production mode
-    //document.getElementById("nextstrain-container-id").insertAdjacentHTML("afterbegin", `
-    //    <div id="nextstrain-div">
-    //        <iframe src="https://hosting.int.sce.network/http/nextstrain-beta.int.sce.network/${URL}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
-    //    </div>
-    //`);
-
-    // TODO: comment 214-218 for production mode
     document.getElementById("nextstrain-container-id").insertAdjacentHTML("afterbegin", `
         <div id="nextstrain-div">
-            <iframe src="http://127.0.0.1:4001/${URL}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
+            <iframe src="https://hosting.int.sce.network/http/nextstrain-beta.int.sce.network/${URL}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
         </div>
     `);
+
+    // TODO: comment 214-218 for production mode
+    //document.getElementById("nextstrain-container-id").insertAdjacentHTML("afterbegin", `
+        //<div id="nextstrain-div">
+            //<iframe src="http://127.0.0.1:4001/${URL}" id="nextstrain-iframe" frameborder="0" height="${iframeHeight}px" width="100%"></iframe>
+        //</div>
+    //`);
 
     // Render a back button with a 1/10 second delay
     setTimeout( () => {
