@@ -1,14 +1,9 @@
-import logging
-
 from flask import Flask, jsonify, render_template, request, g
-from liveserver import LiveServer
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException
 
 app = Flask(__name__)
-
-ls = LiveServer(app)
 
 
 def get_request_object(id):
@@ -38,7 +33,7 @@ def disconnect_db(exception):
 
 @app.route("/")
 def home():
-    return ls.render_template("index.html")
+    return render_template("index.html")
 
 
 @app.route("/sample", methods=["GET"])
