@@ -100,7 +100,9 @@ When building the server, or after making changes to these systemd service files
 
 ```
 sudo cp /GITHUB_REPO/server/systemd/* /etc/systemd/system/
-sudo systemctl start viewbovis.service nextstrain.service viewbovis_analytics.service
+sudo systemctl daemon-reload
+sudo systemctl enable viewbovis.service nextstrain.service viewbovis_analytics.service
+sudo systemctl start viewbovis.service nextstrain.service vewbovis_analytics.service
 ```
 
 ## <a name="nginx"></a> nginx proxy server
