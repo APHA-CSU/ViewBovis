@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 WorkingDirectory=/home/ranch-159/
 Type=simple
-ExecStart=/home/ranch-159/.npm-global/bin/auspice view --datasetDir /home/ranch-159/NextstrainData/jsonExport
+ExecStart=/home/ranch-159/.nvm/versions/node/v18.17.0/bin/auspice view --datasetDir /home/ranch-159/NextstrainData/jsonExport
 
 [Install]
 WantedBy=multi-user.target
