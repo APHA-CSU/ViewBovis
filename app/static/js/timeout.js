@@ -14,25 +14,27 @@ var inactivityTime = function () {
                     <meta name="viewport" content="width=device-width, initial-scale=1">
                     <title>ViewBovis</title>
                     <!-- CSS -->
-                    <link rel="stylesheet" href="/static/css/main.css">
+                    <style>
+                        html {
+                            font-family: Arial;
+                            font-size:30px;
+                            color: black;
+                        }
+                        #bold {
+                            font-weight: bold;
+                        }
+                    </style>
                 </head>
                 <body>
-                    <div class="container-fluid content content-1">
-                        <!-- ViewBovis Logo and Description -->
-                        <div class="row align-items-center">
-                            <!-- Column: logo -->
-                            <div class="col-1">
-                                <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo">
-                            </div>
-                            <!-- Column: description -->
-                            <div class="col-8">
-                                <div class="home-description-container">
-                                    <p class="home-description fs-5">
-                                        <span class="fw-bold">Session timeout:</span> your ViewBovis session has expired, please <a class="text-hyperlink" href="https://hosting.int.sce.network/global-protect/login.esp" target="_blank">login again</a>.
-                                    </p>
-                                </div>
-                            </div>
+                    <!-- ViewBovis Logo and Description -->
+                    <div style="width: 100%; overflow: hidden;">
+                        <div style="width: 10%; float: left;">
+                            <img src="/static/img/VBIcon16_APHAGreen.svg" width=80px>
                         </div>
+                        <div style="width: 80%; padding-top: 20px;">
+                            <span id="bold">Session timeout:</span> your ViewBovis session has expired, please <a class="text-hyperlink" href="https://hosting.int.sce.network/global-protect/login.esp" target="_blank">login again</a>.
+                        </div>
+                    </div>
                 </body>
             </html>`)
         document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
@@ -41,7 +43,8 @@ var inactivityTime = function () {
     function resetTimer() {
         clearTimeout(time);
         // 1000 milliseconds = 1 second
-        time = setTimeout(logout, 3600000)
+        //time = setTimeout(logout, 3600000)
+        time = setTimeout(logout, 5000)
     }
 };
 window.onload = function() {
