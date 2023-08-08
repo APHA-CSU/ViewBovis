@@ -332,9 +332,12 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
-                     "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": df_cph_2_osmapref["Long"][row["CPH"]],
+                     "os_map_ref": None if not row["CPH"] else
+                        df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": None if not row["CPH"] else
+                        df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": None if not row["CPH"] else 
+                        df_cph_2_osmapref["Long"][row["CPH"]],
                      "species": row["Host"],
                      "animal_type": row["Animal_Type"],
                      "snp_distance":
@@ -351,10 +354,10 @@ class Request:
                          self._transform_dateformat(
                             row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
-                     "distance":
-                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
-                                             df_cph_2_osmapref["y"][row["CPH"]]
-                                             ))}
+                     "distance": None if not row["CPH"] else
+                        self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
+                                            df_cph_2_osmapref["y"][row["CPH"]]
+                                            ))}
                     for index, row in df_metadata_related.iterrows()},
                  **{subm: {"cph": None, "os_map_ref": None, "lat": None,
                            "lon": None, "species": None, "animal_type": None,
