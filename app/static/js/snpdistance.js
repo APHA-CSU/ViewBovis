@@ -819,17 +819,33 @@ const renderRelatedMarkers = function (json, target) {
   let relatedSample = {...json}; // deep copy json object
   delete relatedSample[target];
   relatedSampleArr = Object.values(relatedSample);
-  // console.log(relatedSampleArr);
+
+  // function to find the indexes where cph is null : https://stackoverflow.com/questions/24241462/how-to-search-for-multiple-indexes-of-same-values-in-javascript-array
+  Array.prototype.multiIndexOf = function (el) { 
+    var idxs = [];
+    for (var i = this.length - 1; i >= 0; i--) {
+        if (this[i].cph === el) {
+            idxs.unshift(i);
+        }
+    }
+    return idxs;
+  };
+
+  // delete the Submissions where the CPH is null
+  delete relatedSampleArr[relatedSampleArr.multiIndexOf(null)];
+
+  // I think this is basically resetting the index : https://stackoverflow.com/questions/11413887/need-to-reset-just-the-indexes-of-a-javascript-array
+  const reset = relatedSampleArr.filter(function(){return true;});
 
   // Add related sample(s) to map
-  for (let i = 0; i < relatedSampleArr.length; i++) {
-    relatedMarker = L.marker([relatedSampleArr[i].lat, relatedSampleArr[i].lon], {
+  for (let i = 0; i < reset.length; i++) {
+    relatedMarker = L.marker([reset[i].lat, reset[i].lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${relatedSampleArr[i].animal_id}`,
+        className: `awesome-number-marker marker-${reset[i].animal_id}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: relatedSampleArr[i].snp_distance,
+        number: reset[i].snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
