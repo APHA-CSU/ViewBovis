@@ -314,7 +314,8 @@ class Request:
                         "import_country": the country the host was
                             imported from,
                         "distance": distance to the sample of interest
-                            in miles}
+                            in miles
+                     "SOI": the submission number of the SOI}
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
