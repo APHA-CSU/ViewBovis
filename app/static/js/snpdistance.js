@@ -944,13 +944,11 @@ const showRelatedSamples = async function () {
       // Render table in right sidebar
       snpTable = new Tabulator("#table-content-container", {
         data: tabledata,
-        
         selectable:true,
         selectableRangeMode:"click",
         columnDefaults:{
             resizable:false,
           },
-        layout: "fitDataTable",
         movableColumns: true,
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
