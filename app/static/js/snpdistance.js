@@ -706,15 +706,6 @@ markerLegend2.onAdd = function (map) {
 //
 // ------------------------ //
 
-// Object to store cow icons
-const cowIcons2 = {
-  cowStandard: L.icon({
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
-  })
-};
-
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions2 = {
@@ -795,7 +786,7 @@ const popupContentSNPMap = function(data, AFnumber) {
 // ------------------------ //
 
 // Initiate variables
-let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowEarTagSelect, rowEarTagDeselect;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
@@ -808,8 +799,16 @@ const renderRelatedMarkers = function (json, target) {
   markerLayer = L.layerGroup().addTo(map2);
   // console.log(markerLayer);
 
+  // Object to store cow icons
+  var cowStandardIcon = L.icon({
+    className: `awesome-number-marker marker-${target}`,
+    iconUrl: "/static/img/CH_1_no_outline.svg",
+    iconSize: [75, 75],
+    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+  });
+
   // Add target sample to map
-  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
+  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowStandardIcon});
   markerLayer.addLayer(targetMarker);
 
   // Add popup to target sample
@@ -831,15 +830,19 @@ const renderRelatedMarkers = function (json, target) {
   delete relatedSampleArr[idxs];
   delete relatedSample[idxs]
 
+  // add submission number to relatedSampleArr
+  for (let i = 0; i < relatedSampleArr.length; i++) {
+    relatedSampleArr[i].submission = Object.keys(relatedSample)[i]
+  }
+
   // I think this is basically resetting the index : https://stackoverflow.com/questions/11413887/need-to-reset-just-the-indexes-of-a-javascript-array
   const relatedSampleArr_reset = relatedSampleArr.filter(function(){return true;});
-  console.log(relatedSampleArr_reset)
 
   // Add related sample(s) to map
   for (let i = 0; i < relatedSampleArr_reset.length; i++) {
     relatedMarker = L.marker([relatedSampleArr_reset[i].lat, relatedSampleArr_reset[i].lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${relatedSampleArr_reset[i].animal_id}`,
+        className: `awesome-number-marker marker-${relatedSampleArr_reset[i].submission}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
@@ -936,7 +939,7 @@ const showRelatedSamples = async function () {
 
       // Tabulator requires array of json objects
       var tabledata = Object.values(json)
-      // Add the submission to tabledata
+      // Add submission number to tabledata
       for (let i = 0; i < tabledata.length; i++) {
         tabledata[i].submission = Object.keys(json)[i]
       }
@@ -972,16 +975,16 @@ const showRelatedSamples = async function () {
 
       // When a row is selected, change the colour of the map marker
       snpTable.on("rowSelected", function(row){
-        // Get the row ear tag ID
-        rowEarTagSelect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
+        // Get the row submission
+        rowSubmissionSelect = row.getData().submission;
+        document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "yellow";
       });
 
       // Reset marker colour to default when row is deselected
       snpTable.on("rowDeselected", function(row){
-        // Get the row ear tag ID
-        rowEarTagDeselect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
+        // Get the row submission
+        rowSubmissionDeselect = row.getData().submission;
+        document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
       });
     };
 
