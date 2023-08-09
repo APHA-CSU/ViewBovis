@@ -820,32 +820,30 @@ const renderRelatedMarkers = function (json, target) {
   delete relatedSample[target];
   relatedSampleArr = Object.values(relatedSample);
 
-  // function to find the indexes where cph is null : https://stackoverflow.com/questions/24241462/how-to-search-for-multiple-indexes-of-same-values-in-javascript-array
-  Array.prototype.multiIndexOf = function (el) { 
-    var idxs = [];
-    for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i].cph === el) {
-            idxs.unshift(i);
-        }
-    }
-    return idxs;
-  };
-
+  // find the indexes where cph is null
+  var idxs = [];
+  for (var i = relatedSampleArr.length - 1; i >= 0; i--) {
+      if (relatedSampleArr[i].cph === null) {
+          idxs.unshift(i);
+      }
+  }
   // delete the Submissions where the CPH is null
-  delete relatedSampleArr[relatedSampleArr.multiIndexOf(null)];
+  delete relatedSampleArr[idxs];
+  delete relatedSample[idxs]
 
   // I think this is basically resetting the index : https://stackoverflow.com/questions/11413887/need-to-reset-just-the-indexes-of-a-javascript-array
-  const reset = relatedSampleArr.filter(function(){return true;});
+  const relatedSampleArr_reset = relatedSampleArr.filter(function(){return true;});
+  console.log(relatedSampleArr_reset)
 
   // Add related sample(s) to map
-  for (let i = 0; i < reset.length; i++) {
-    relatedMarker = L.marker([reset[i].lat, reset[i].lon], {
+  for (let i = 0; i < relatedSampleArr_reset.length; i++) {
+    relatedMarker = L.marker([relatedSampleArr_reset[i].lat, relatedSampleArr_reset[i].lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${reset[i].animal_id}`,
+        className: `awesome-number-marker marker-${relatedSampleArr_reset[i].animal_id}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: reset[i].snp_distance,
+        number: relatedSampleArr_reset[i].snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
@@ -853,7 +851,7 @@ const renderRelatedMarkers = function (json, target) {
   markerLayer.addLayer(relatedMarker);
 
   // Add popup to related sample(s)
-  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
+  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr_reset[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -936,9 +934,17 @@ const showRelatedSamples = async function () {
         <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
       `);
 
+      // Tabulator requires array of json objects
+      var tabledata = Object.values(json)
+      // Add the submission to tabledata
+      for (let i = 0; i < tabledata.length; i++) {
+        tabledata[i].submission = Object.keys(json)[i]
+      }
+
       // Render table in right sidebar
       snpTable = new Tabulator("#table-content-container", {
-        data: Object.values(json),
+        data: tabledata,
+        
         selectable:true,
         selectableRangeMode:"click",
         columnDefaults:{
@@ -949,6 +955,7 @@ const showRelatedSamples = async function () {
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Identifier", field:"animal_id", headerFilter:"input"},
+            {title:"Submission", field:"submission", headerFilter:"input"},
             {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
             {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
