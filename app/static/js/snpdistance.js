@@ -946,12 +946,15 @@ const showRelatedSamples = async function () {
       // Render table in right sidebar
       snpTable = new Tabulator("#table-content-container", {
         data: tabledata,
-        selectable:true,
-        selectableRangeMode:"click",
         columnDefaults:{
             resizable:false,
           },
         movableColumns: true,
+        selectable:true,
+        selectableRangeMode:"click",
+        selectableCheck:function(row){
+          return row.getData().submission != soi; //disallow selection of soi row
+        },
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Identifier", field:"animal_id", headerFilter:"input"},
@@ -961,6 +964,10 @@ const showRelatedSamples = async function () {
                 if (cellValue == soi){
                   cell.getRow().getElement().style.backgroundColor = "#ffbe33"
                 }
+                //else {
+                  //cell.getRow().getElement().style.backgroundColor = "transparent"
+                //}
+                return cellValue;
               }},
             {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
