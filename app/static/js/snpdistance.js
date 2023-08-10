@@ -706,6 +706,15 @@ markerLegend2.onAdd = function (map) {
 //
 // ------------------------ //
 
+// Object to store cow icons
+const cowIcons2 = {
+  cowStandard: L.icon({
+    iconUrl: "/static/img/CH_1_no_outline.svg",
+    iconSize: [75, 75],
+    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+  })
+};
+
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
 const cowheadPopupOptions2 = {
@@ -799,16 +808,8 @@ const renderRelatedMarkers = function (json, target) {
   markerLayer = L.layerGroup().addTo(map2);
   // console.log(markerLayer);
 
-  // Object to store cow icons
-  var cowStandardIcon = L.icon({
-    className: `awesome-number-marker marker-${target}`,
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
-  });
-
   // Add target sample to map
-  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowStandardIcon});
+  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
   markerLayer.addLayer(targetMarker);
 
   // Add popup to target sample
@@ -901,8 +902,6 @@ const showRelatedSamples = async function () {
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
-    // console.log(response);
-    console.log(json);
     
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
@@ -956,7 +955,13 @@ const showRelatedSamples = async function () {
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Identifier", field:"animal_id", headerFilter:"input"},
-            {title:"Submission", field:"submission", headerFilter:"input"},
+            {title:"Submission", field:"submission", headerFilter:"input",
+              formatter: function(cell) {
+                var cellValue = cell.getValue();
+                if (cellValue == soi){
+                  cell.getRow().getElement().style.backgroundColor = "#ffbe33"
+                }
+              }},
             {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
             {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
