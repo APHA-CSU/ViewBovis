@@ -854,8 +854,8 @@ const renderRelatedMarkers = function (json, target) {
   });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
-  const allLat = relatedSampleArr_reset.map( arr => arr.lat ); 
-  const allLon = relatedSampleArr_reset.map( arr => arr.lon ); 
+  const allLat = relatedSampleArr.map( arr => arr.lat ); 
+  const allLon = relatedSampleArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
   // console.log(allPts);
 
@@ -973,12 +973,6 @@ const showRelatedSamples = async function () {
           {column:"snp_distance", dir:"asc"},
         ],
       });
-
-      // Sort table by SNP then Miles
-      // snpTable.setSort([
-      //   { column: "snp_distance", dir:"asc" },
-      //   { column: "distance", dir:"asc" },
-      // ]);
 
       // When a row is selected, change the colour of the map marker
       snpTable.on("rowSelected", function(row){
