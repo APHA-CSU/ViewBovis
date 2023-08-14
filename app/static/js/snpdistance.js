@@ -820,6 +820,11 @@ const renderRelatedMarkers = function (json, target) {
   delete relatedSample[target];
   relatedSampleArr = Object.values(relatedSample);
 
+  // add submission number to relatedSampleArr
+  for (let i = 0; i < relatedSampleArr.length; i++) {
+    relatedSampleArr[i].submission = Object.keys(relatedSample)[i]
+  }
+
   // find the indexes where cph is null
   var idxs = [];
   for (var i = relatedSampleArr.length - 1; i >= 0; i--) {
@@ -829,13 +834,6 @@ const renderRelatedMarkers = function (json, target) {
   }
   // delete the Submissions where the CPH is null
   delete relatedSampleArr[idxs];
-  delete relatedSample[idxs]
-
-  // add submission number to relatedSampleArr
-  for (let i = 0; i < relatedSampleArr.length; i++) {
-    relatedSampleArr[i].submission = Object.keys(relatedSample)[i]
-  }
-
   // I think this is basically resetting the index : https://stackoverflow.com/questions/11413887/need-to-reset-just-the-indexes-of-a-javascript-array
   const relatedSampleArr_reset = relatedSampleArr.filter(function(){return true;});
 
@@ -852,10 +850,9 @@ const renderRelatedMarkers = function (json, target) {
         numberColor: "white"
       })
     });
-  markerLayer.addLayer(relatedMarker);
-
-  // Add popup to related sample(s)
-  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr_reset[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
+    markerLayer.addLayer(relatedMarker);
+    // Add popup to related samples
+    relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr_reset[i], relatedSampleArr_reset[i].submission), cowheadPopupOptions2);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
