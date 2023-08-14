@@ -856,8 +856,8 @@ const renderRelatedMarkers = function (json, target) {
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
-  const allLat = Object.values(json).map( arr => arr.lat ); 
-  const allLon = Object.values(json).map( arr => arr.lon ); 
+  const allLat = relatedSampleArr_reset.map( arr => arr.lat ); 
+  const allLon = relatedSampleArr_reset.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
   // console.log(allPts);
 
