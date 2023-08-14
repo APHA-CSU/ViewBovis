@@ -337,7 +337,7 @@ class Request:
                         df_cph_2_osmapref["OSMapRef"][row["CPH"]],
                      "lat": None if not row["CPH"] else
                         df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": None if not row["CPH"] else 
+                     "lon": None if not row["CPH"] else
                         df_cph_2_osmapref["Long"][row["CPH"]],
                      "species": row["Host"],
                      "animal_type": row["Animal_Type"],
