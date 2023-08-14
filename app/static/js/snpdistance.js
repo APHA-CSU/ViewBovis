@@ -959,9 +959,6 @@ const showRelatedSamples = async function () {
                 if (cellValue == soi){
                   cell.getRow().getElement().style.backgroundColor = "#ffbe33"
                 }
-                //else {
-                  //cell.getRow().getElement().style.backgroundColor = "transparent"
-                //}
                 return cellValue;
               }},
             {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
@@ -976,16 +973,20 @@ const showRelatedSamples = async function () {
 
       // When a row is selected, change the colour of the map marker
       snpTable.on("rowSelected", function(row){
-        // Get the row submission
-        rowSubmissionSelect = row.getData().submission;
-        document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "#ffbe33";
+        if (row.getData().cph != null){
+          // Get the row submission
+          rowSubmissionSelect = row.getData().submission;
+          document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "#ffbe33";
+        }
       });
 
       // Reset marker colour to default when row is deselected
       snpTable.on("rowDeselected", function(row){
-        // Get the row submission
-        rowSubmissionDeselect = row.getData().submission;
-        document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
+        if (row.getData().cph != null){
+          // Get the row submission
+          rowSubmissionDeselect = row.getData().submission;
+          document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
+        }
       });
     };
 
