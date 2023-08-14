@@ -978,7 +978,7 @@ const showRelatedSamples = async function () {
       snpTable.on("rowSelected", function(row){
         // Get the row submission
         rowSubmissionSelect = row.getData().submission;
-        document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "yellow";
+        document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "#ffbe33";
       });
 
       // Reset marker colour to default when row is deselected
