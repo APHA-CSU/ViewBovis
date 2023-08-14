@@ -834,26 +834,24 @@ const renderRelatedMarkers = function (json, target) {
   }
   // delete the Submissions where the CPH is null
   delete relatedSampleArr[idxs];
-  // I think this is basically resetting the index : https://stackoverflow.com/questions/11413887/need-to-reset-just-the-indexes-of-a-javascript-array
-  const relatedSampleArr_reset = relatedSampleArr.filter(function(){return true;});
 
   // Add related sample(s) to map
-  for (let i = 0; i < relatedSampleArr_reset.length; i++) {
-    relatedMarker = L.marker([relatedSampleArr_reset[i].lat, relatedSampleArr_reset[i].lon], {
+  relatedSampleArr.forEach(function (item) {
+    relatedMarker = L.marker([item.lat, item.lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${relatedSampleArr_reset[i].submission}`,
+        className: `awesome-number-marker marker-${item.submission}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: relatedSampleArr_reset[i].snp_distance,
+        number: item.snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
     });
     markerLayer.addLayer(relatedMarker);
     // Add popup to related samples
-    relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr_reset[i], relatedSampleArr_reset[i].submission), cowheadPopupOptions2);
-  };
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+  });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
   const allLat = relatedSampleArr_reset.map( arr => arr.lat ); 
