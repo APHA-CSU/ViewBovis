@@ -441,8 +441,12 @@ const showSNPMatrix = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("snpmatrix-spinner").classList.add("hidden");
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="snpmatrix-error-message">${json["warning"]}</p>
+      `);
+    } else {
       // Extract the selected sample Submission number and Identifier
       const selectedSampleSubmission = json.soi;
       const selectedSampleIdentifier = json.identifier;
@@ -469,10 +473,6 @@ const showSNPMatrix = async function () {
 
       // Render SNP matrix
       plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleSubmission, sampleIDs, minValue, maxValue);
-    }else{
-      document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
-      <p class="warning-text" id="snpmatrix-error-message">${Object.values(json)[0]}</p>
-    `);
     }
 
   } catch(err) {

@@ -902,8 +902,13 @@ const showRelatedSamples = async function () {
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+    console.log(json)
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
+      `);
+    } else {
 
       // TODO: better solution to this - massive hack in Tom's absence 
       var soi = json.SOI;
@@ -988,13 +993,6 @@ const showRelatedSamples = async function () {
           document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
         }
       });
-    };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="snpmap-error-message">${Object.values(json)[0]}</p>
-      `);
     };
 
   } catch(err) {
