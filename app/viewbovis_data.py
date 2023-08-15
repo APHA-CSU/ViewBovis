@@ -221,6 +221,8 @@ class Request:
                     "sex": None,
                     "disclosing_test": None,
                     "import_country": None}
+        elif self._df_wgs_metadata_soi.empty:
+            raise NoWgsDataException(self._id)
         else:
             return {"submission": self._df_metadata_soi.index[0],
                     "clade": self._df_metadata_soi["Clade"][0],
