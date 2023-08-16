@@ -801,12 +801,10 @@ let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTab
 const renderRelatedMarkers = function (json, target) {
   
   // Extract data for target sample
-  const targetSample = json[target];
-  // console.log(targetSample);
+  let targetSample = json[target];
 
   // Create a layer group that will contain all the cow markers
   markerLayer = L.layerGroup().addTo(map2);
-  // console.log(markerLayer);
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
@@ -827,7 +825,7 @@ const renderRelatedMarkers = function (json, target) {
 
   // find the indexes where cph is null
   var idxs = [];
-  for (var i = relatedSampleArr.length - 1; i >= 0; i--) {
+  for (let i = relatedSampleArr.length - 1; i >= 0; i--) {
       if (relatedSampleArr[i].cph === null) {
           idxs.unshift(i);
       }
@@ -857,7 +855,6 @@ const renderRelatedMarkers = function (json, target) {
   const allLat = relatedSampleArr.map( arr => arr.lat ); 
   const allLon = relatedSampleArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
-  // console.log(allPts);
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
@@ -911,7 +908,7 @@ const showRelatedSamples = async function () {
     } else {
 
       // TODO: better solution to this - massive hack in Tom's absence 
-      var soi = json.SOI;
+      let soi = json.SOI;
       delete json.SOI;
 
       // Remove time from date property and round miles to two decimal places
@@ -937,7 +934,7 @@ const showRelatedSamples = async function () {
       `);
 
       // Tabulator requires array of json objects
-      var tabledata = Object.values(json)
+      let tabledata = Object.values(json)
       // Add submission number to tabledata
       for (let i = 0; i < tabledata.length; i++) {
         tabledata[i].submission = Object.keys(json)[i]
