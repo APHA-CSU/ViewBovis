@@ -801,7 +801,7 @@ let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTab
 const renderRelatedMarkers = function (json, target) {
   
   // Extract data for target sample
-  const targetSample = json[target];
+  let targetSample = json[target];
   // console.log(targetSample);
 
   // Create a layer group that will contain all the cow markers
@@ -827,13 +827,14 @@ const renderRelatedMarkers = function (json, target) {
 
   // find the indexes where cph is null
   var idxs = [];
-  for (var i = relatedSampleArr.length - 1; i >= 0; i--) {
+  for (let i = relatedSampleArr.length - 1; i >= 0; i--) {
       if (relatedSampleArr[i].cph === null) {
           idxs.unshift(i);
       }
   }
   // delete the Submissions where the CPH is null
-  delete relatedSampleArr[idxs];
+  for (var i = idxs.length -1; i >= 0; i--)
+    relatedSampleArr.splice(idxs[i],1);
 
   // Add related sample(s) to map
   relatedSampleArr.forEach(function (item) {
@@ -906,7 +907,7 @@ const showRelatedSamples = async function () {
     if(Object.keys(json)[0] !== "error") {
 
       // TODO: better solution to this - massive hack in Tom's absence 
-      var soi = json.SOI;
+      let soi = json.SOI;
       delete json.SOI;
 
       // Remove time from date property and round miles to two decimal places
@@ -932,7 +933,7 @@ const showRelatedSamples = async function () {
       `);
 
       // Tabulator requires array of json objects
-      var tabledata = Object.values(json)
+      let tabledata = Object.values(json)
       // Add submission number to tabledata
       for (let i = 0; i < tabledata.length; i++) {
         tabledata[i].submission = Object.keys(json)[i]
