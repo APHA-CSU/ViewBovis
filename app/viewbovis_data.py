@@ -1,5 +1,7 @@
 import sqlite3
 import glob
+import calendar
+import re
 from datetime import datetime
 from os import path
 
@@ -114,12 +116,20 @@ class Request:
             raise NoMetaDataException(submission)
         return mov_data
 
-    # TODO: unit test?
+    # TODO: unit test? - yes definitely!
     def _transform_dateformat(self, date: str) -> str:
         """
             Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
         """
-        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
+        # TODO: map in btb-forestry, where the sqlite db is built?
+        month_mapper = {month: f"{index:02}" for index, month in
+                        enumerate(calendar.month_abbr) if month}
+        # transform the occasional month from abbreviated name to
+        # numbers, e.g. "Jan" -> "01"
+        date_transformed, _ = \
+            re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
+                    lambda x: month_mapper[x.group()], date)
+        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
