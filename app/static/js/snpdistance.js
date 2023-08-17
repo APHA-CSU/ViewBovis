@@ -899,8 +899,6 @@ const showRelatedSamples = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
-
-    console.log(json)
     // If response contains a warning
     if (json["warnings"]) {
       document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
