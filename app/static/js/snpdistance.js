@@ -831,7 +831,8 @@ const renderRelatedMarkers = function (json, target) {
       }
   }
   // delete the Submissions where the CPH is null
-  delete relatedSampleArr[idxs];
+  for (let i = idxs.length -1; i >= 0; i--)
+    relatedSampleArr.splice(idxs[i],1);
 
   // Add related sample(s) to map
   relatedSampleArr.forEach(function (item) {
