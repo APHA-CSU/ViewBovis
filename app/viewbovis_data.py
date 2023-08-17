@@ -319,6 +319,9 @@ class Request:
                             in miles
                      "SOI": the submission number of the SOI}
         """
+        # TODO: workout how to include SOI without metadata
+        if self._df_metadata_soi.empty:
+            raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
         df_metadata_related = \
