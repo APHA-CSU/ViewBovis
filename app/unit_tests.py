@@ -110,6 +110,8 @@ class TestRequest(unittest.TestCase):
                               "Gender": ["N"], "Disclosing_Test": ["O"],
                               "Import_Country": ["P"]},
                              index=["Y"]))
+        setattr(self.request, "_df_wgs_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
         # setup - mock private methods
         self.request._query_movdata = mock.Mock()
         self.request._get_os_map_ref = mock.Mock()
@@ -183,6 +185,8 @@ class TestRequest(unittest.TestCase):
         self.request = Request("foo_path", "foo_id")
         # setup - mock attributes
         setattr(self.request, "_submission", "foo_sub")
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
         # setup - mock private methods
         self.request._related_snp_matrix = mock.Mock()
         self.request._query_metadata = mock.Mock()
