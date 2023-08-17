@@ -98,4 +98,5 @@ def snp_matrix():
 @app.errorhandler(NonBovineException)
 def custom_exception_handler(error):
     app.logger.info(error)
-    return jsonify({"error": f"{str(error)}"})
+    return jsonify({"warnings": True,
+                    "warning": f"{str(error)}"})

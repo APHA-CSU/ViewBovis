@@ -802,11 +802,9 @@ const renderRelatedMarkers = function (json, target) {
   
   // Extract data for target sample
   let targetSample = json[target];
-  // console.log(targetSample);
 
   // Create a layer group that will contain all the cow markers
   markerLayer = L.layerGroup().addTo(map2);
-  // console.log(markerLayer);
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
@@ -833,7 +831,7 @@ const renderRelatedMarkers = function (json, target) {
       }
   }
   // delete the Submissions where the CPH is null
-  for (var i = idxs.length -1; i >= 0; i--)
+  for (let i = idxs.length -1; i >= 0; i--)
     relatedSampleArr.splice(idxs[i],1);
 
   // Add related sample(s) to map
@@ -858,7 +856,6 @@ const renderRelatedMarkers = function (json, target) {
   const allLat = relatedSampleArr.map( arr => arr.lat ); 
   const allLon = relatedSampleArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
-  // console.log(allPts);
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
@@ -902,9 +899,12 @@ const showRelatedSamples = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
-
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
+      `);
+    } else {
 
       // TODO: better solution to this - massive hack in Tom's absence 
       let soi = json.SOI;
@@ -989,13 +989,6 @@ const showRelatedSamples = async function () {
           document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
         }
       });
-    };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="snpmap-error-message">${Object.values(json)[0]}</p>
-      `);
     };
 
   } catch(err) {
