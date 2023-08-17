@@ -567,9 +567,12 @@ const showMovements = async function () {
     document.getElementById("cattle-spinner").classList.add("hidden");
 
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
-
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+      `);
+    } else {
       // Render cow markers and lines
       renderCowMarkers(json, cowIcons, "#0096FF");
 
@@ -579,13 +582,6 @@ const showMovements = async function () {
       document.getElementById("btn__cattleMovement--2").disabled = false;
       // document.getElementById("slider__snp-threshold").disabled = false;
       // document.getElementById("btn__related-isolates").disabled = false;
-    }
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message">${Object.values(json)[0]}</p>
-      `);
     }
 
   } catch(err) {
@@ -647,22 +643,17 @@ const showMovements2 = async function () {
     // Remove spinner when fetch is complete
     document.getElementById("cattle-spinner2").classList.add("hidden");
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
-
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+      `);
+    } else {
       // Render cow markers and lines
       renderCowMarkers(json, cowIcons, "#cb181d", true);
-
       // Allow user access to other elements by removing the disabled class
       document.getElementById("cattleMovementLines--2").disabled = false;
     };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("cattle-warning-text2").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message2">${Object.values(json)[0]}</p>
-      `);
-    }
 
   } catch(err) {
     console.error(err)
