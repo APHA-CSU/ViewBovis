@@ -795,18 +795,16 @@ const popupContentSNPMap = function(data, AFnumber) {
 // ------------------------ //
 
 // Initiate variables
-let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowEarTagSelect, rowEarTagDeselect;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
   
   // Extract data for target sample
-  const targetSample = json[target];
-  // console.log(targetSample);
+  let targetSample = json[target];
 
   // Create a layer group that will contain all the cow markers
   markerLayer = L.layerGroup().addTo(map2);
-  // console.log(markerLayer);
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
@@ -819,32 +817,45 @@ const renderRelatedMarkers = function (json, target) {
   let relatedSample = {...json}; // deep copy json object
   delete relatedSample[target];
   relatedSampleArr = Object.values(relatedSample);
-  // console.log(relatedSampleArr);
+
+  // add submission number to relatedSampleArr
+  for (let i = 0; i < relatedSampleArr.length; i++) {
+    relatedSampleArr[i].submission = Object.keys(relatedSample)[i]
+  }
+
+  // find the indexes where cph is null
+  var idxs = [];
+  for (let i = relatedSampleArr.length - 1; i >= 0; i--) {
+      if (relatedSampleArr[i].cph === null) {
+          idxs.unshift(i);
+      }
+  }
+  // delete the Submissions where the CPH is null
+  for (let i = idxs.length -1; i >= 0; i--)
+    relatedSampleArr.splice(idxs[i],1);
 
   // Add related sample(s) to map
-  for (let i = 0; i < relatedSampleArr.length; i++) {
-    relatedMarker = L.marker([relatedSampleArr[i].lat, relatedSampleArr[i].lon], {
+  relatedSampleArr.forEach(function (item) {
+    relatedMarker = L.marker([item.lat, item.lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${relatedSampleArr[i].animal_id}`,
+        className: `awesome-number-marker marker-${item.submission}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: relatedSampleArr[i].snp_distance,
+        number: item.snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
     });
-  markerLayer.addLayer(relatedMarker);
-
-  // Add popup to related sample(s)
-  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
-  };
+    markerLayer.addLayer(relatedMarker);
+    // Add popup to related samples
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+  });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
-  const allLat = Object.values(json).map( arr => arr.lat ); 
-  const allLon = Object.values(json).map( arr => arr.lon ); 
+  const allLat = relatedSampleArr.map( arr => arr.lat ); 
+  const allLon = relatedSampleArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
-  // console.log(allPts);
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
@@ -884,18 +895,19 @@ const showRelatedSamples = async function () {
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
-    // console.log(response);
-    console.log(json);
     
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
-
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+    // If response contains a warning
+    if (json["warnings"]) {
+      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
+        <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
+      `);
+    } else {
 
       // TODO: better solution to this - massive hack in Tom's absence 
-      var soi = json.SOI;
+      let soi = json.SOI;
       delete json.SOI;
 
       // Remove time from date property and round miles to two decimal places
@@ -920,19 +932,36 @@ const showRelatedSamples = async function () {
         <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
       `);
 
+      // Tabulator requires array of json objects
+      let tabledata = Object.values(json)
+      // Add submission number to tabledata
+      for (let i = 0; i < tabledata.length; i++) {
+        tabledata[i].submission = Object.keys(json)[i]
+      }
+
       // Render table in right sidebar
       snpTable = new Tabulator("#table-content-container", {
-        data: Object.values(json),
-        selectable:true,
-        selectableRangeMode:"click",
+        data: tabledata,
         columnDefaults:{
             resizable:false,
           },
-        layout: "fitDataTable",
         movableColumns: true,
+        selectable:true,
+        selectableRangeMode:"click",
+        selectableCheck:function(row){
+          return row.getData().submission != soi; //disallow selection of soi row
+        },
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
             {title:"Identifier", field:"animal_id", headerFilter:"input"},
+            {title:"Submission", field:"submission", headerFilter:"input",
+              formatter: function(cell) {
+                var cellValue = cell.getValue();
+                if (cellValue == soi){
+                  cell.getRow().getElement().style.backgroundColor = "#ffbe33"
+                }
+                return cellValue;
+              }},
             {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
             {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
             {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
@@ -943,32 +972,23 @@ const showRelatedSamples = async function () {
         ],
       });
 
-      // Sort table by SNP then Miles
-      // snpTable.setSort([
-      //   { column: "snp_distance", dir:"asc" },
-      //   { column: "distance", dir:"asc" },
-      // ]);
-
       // When a row is selected, change the colour of the map marker
       snpTable.on("rowSelected", function(row){
-        // Get the row ear tag ID
-        rowEarTagSelect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
+        if (row.getData().cph != null){
+          // Get the row submission
+          rowSubmissionSelect = row.getData().submission;
+          document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "#ffbe33";
+        }
       });
 
       // Reset marker colour to default when row is deselected
       snpTable.on("rowDeselected", function(row){
-        // Get the row ear tag ID
-        rowEarTagDeselect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
+        if (row.getData().cph != null){
+          // Get the row submission
+          rowSubmissionDeselect = row.getData().submission;
+          document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
+        }
       });
-    };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="snpmap-error-message">${Object.values(json)[0]}</p>
-      `);
     };
 
   } catch(err) {

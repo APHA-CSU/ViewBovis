@@ -1,5 +1,7 @@
 import sqlite3
 import glob
+import calendar
+import re
 from datetime import datetime
 from os import path
 
@@ -114,12 +116,20 @@ class Request:
             raise NoMetaDataException(submission)
         return mov_data
 
-    # TODO: unit test?
+    # TODO: unit test? - yes definitely!
     def _transform_dateformat(self, date: str) -> str:
         """
             Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
         """
-        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
+        # TODO: map in btb-forestry, where the sqlite db is built?
+        month_mapper = {month: f"{index:02}" for index, month in
+                        enumerate(calendar.month_abbr) if month}
+        # transform the occasional month from abbreviated name to
+        # numbers, e.g. "Jan" -> "01"
+        date_transformed, _ = \
+            re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
+                    lambda x: month_mapper[x.group()], date)
+        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
@@ -221,6 +231,8 @@ class Request:
                     "sex": None,
                     "disclosing_test": None,
                     "import_country": None}
+        elif self._df_wgs_metadata_soi.empty:
+            raise NoWgsDataException(self._id)
         else:
             return {"submission": self._df_metadata_soi.index[0],
                     "clade": self._df_metadata_soi["Clade"][0],
@@ -314,8 +326,12 @@ class Request:
                         "import_country": the country the host was
                             imported from,
                         "distance": distance to the sample of interest
-                            in miles}
+                            in miles
+                     "SOI": the submission number of the SOI}
         """
+        # TODO: workout how to include SOI without metadata
+        if self._df_metadata_soi.empty:
+            raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
         df_metadata_related = \
@@ -332,9 +348,12 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
-                     "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": df_cph_2_osmapref["Long"][row["CPH"]],
+                     "os_map_ref": None if not row["CPH"] else
+                        df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": None if not row["CPH"] else
+                        df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": None if not row["CPH"] else
+                        df_cph_2_osmapref["Long"][row["CPH"]],
                      "species": row["Host"],
                      "animal_type": row["Animal_Type"],
                      "snp_distance":
@@ -351,10 +370,10 @@ class Request:
                          self._transform_dateformat(
                             row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
-                     "distance":
-                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
-                                             df_cph_2_osmapref["y"][row["CPH"]]
-                                             ))}
+                     "distance": None if not row["CPH"] else
+                        self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
+                                            df_cph_2_osmapref["y"][row["CPH"]]
+                                            ))}
                     for index, row in df_metadata_related.iterrows()},
                  **{subm: {"cph": None, "os_map_ref": None, "lat": None,
                            "lon": None, "species": None, "animal_type": None,

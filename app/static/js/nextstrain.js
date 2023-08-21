@@ -63,9 +63,12 @@ const showTable = async function() {
         document.getElementById("nextstrain-search-table-spinner").classList.add("hidden");
         document.getElementById("nextstrain-search-table").classList.remove("hidden");
 
-        // If first object in JSON is not an error, proceed with main function
-        if(Object.keys(json)[0] !== "error") {
-
+        // If response contains a warning
+        if (json["warnings"]) {
+            document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
+            <p class="warning-text" id="nextstrain-error-message">${json["warning"]}</p>
+            `);
+        } else {
             // Create an array containing table data
             tableData = [
                 {cph: `${json.cph}`, county: `${json.county}`, af: `${json.submission}`, eartag: `${json.identifier}`, clade: `${json.clade}`}
@@ -117,13 +120,6 @@ const showTable = async function() {
             // Add the cell mouse over and mouse out event listeners to the table
             table.on("cellMouseOver", onCellMouseOver);
             table.on("cellMouseOut", onCellMouseOut);
-        };
-
-        // If first object in JSON is an error, print the error message
-        if(Object.keys(json)[0] === "error") {
-            document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
-            <p class="warning-text" id="nextstrain-error-message">${Object.values(json)[0]}</p>
-            `);
         };
     
     } catch(err) {
