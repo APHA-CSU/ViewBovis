@@ -40,11 +40,20 @@ class E2ETests(unittest.TestCase):
             self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
         wait = WebDriverWait(self.driver, 10)
-        soi_icon = \
+        related_icon = \
             wait.until(EC.visibility_of_any_elements_located((By.XPATH,
                        "//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-b_submission leaflet-zoom-animated leaflet-interactive']")))
-        self.assertEquals(soi_icon[0].get_attribute("style"),
-                          "margin-left: -17px; margin-top: -42px; width: 35px; height: 45px; transform: translate3d(780px, 456px, 0px); z-index: 456; outline: none;")
+        # this doesn't actually match what's in the browser
+        self.assertEqual(related_icon[0].get_attribute("style"),
+                         "margin-left: -17px; margin-top: -42px; width: 35px; height: 45px; transform: translate3d(698px, 730px, 0px); z-index: 730;")
+        related_icon_number = self.driver.find_element(By.XPATH, "//*[@id='map2']/div[1]/div[4]/div/i")
+        self.assertEqual(related_icon_number.get_attribute("style"), "color: white;")
+        show_table_btn = self.driver.find_element(By.ID, "show-table")
+        show_table_btn.click()
+        row = self.driver.find_element(By.XPATH, "//*[@id='table-content-container']/div[2]/div/div[2]")
+        row.click()
+        related_icon_number = self.driver.find_element(By.XPATH, "//*[@id='map2']/div[1]/div[4]/div/i")
+        self.assertEqual(related_icon_number.get_attribute("style"), "color: rgb(255, 190, 51);")
 
 
 if __name__ == "__main__":
