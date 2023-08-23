@@ -36,13 +36,16 @@ class E2ETests(unittest.TestCase):
         snp_distance = self.driver.find_element(By.ID, "snp-distance-value")
         self.driver.execute_script("arguments[0].textContent = arguments[1];",
                                    snp_distance, "10")
-        plot_isolates_btn = self.driver.find_element(By.ID,
-                                                     "btn__plot-related-isolates")
+        plot_isolates_btn = \
+            self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
         wait = WebDriverWait(self.driver, 10)
-        soi_icon = wait.until(EC.visibility_of_any_elements_located((By.XPATH,
-                              "//img[@src='/static/img/CH_1_no_outline.svg' and @class='leaflet-marker-icon leaflet-zoom-animated leaflet-interactive']")))
-        print(soi_icon[0].get_attribute("width"))
+        soi_icon = \
+            wait.until(EC.visibility_of_any_elements_located((By.XPATH,
+                       "//img[@src='/static/img/CH_1_no_outline.svg' \
+                        and @class='leaflet-marker-icon leaflet-zoom-animated leaflet-interactive']")))
+        self.assertEquals(soi_icon[0].get_attribute("style"),
+                          "margin-left: -35px; margin-top: -55px; width: 75px; height: 75px; transform: translate3d(364px, 870px, 0px); z-index: 870;")
 
 
 if __name__ == "__main__":
