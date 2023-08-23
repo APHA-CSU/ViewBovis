@@ -853,8 +853,9 @@ const renderRelatedMarkers = function (json, target) {
   });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
-  const allLat = relatedSampleArr.map( arr => arr.lat ); 
-  const allLon = relatedSampleArr.map( arr => arr.lon ); 
+  let allSamplesArr = Object.values({...json})
+  const allLat = allSamplesArr.map( arr => arr.lat ); 
+  const allLon = allSamplesArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
@@ -896,6 +897,7 @@ const showRelatedSamples = async function () {
     if(!response.ok) throw new Error("Problem getting SNP data from backend");
     let json = await response.json();
     
+    console.log(json)
     // Remove spinner when fetch is complete
     document.getElementById("snpmap-spinner").classList.add("hidden");
 
