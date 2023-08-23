@@ -1,0 +1,3 @@
+Submission,Clade,Identifier,Host,Animal_Type,SlaughterDate,CPH,CPH_Type,County,RiskArea,Loc0,OutsideHomeRange,Gender,wsdBirthDate,Disclosing_Test,Import_Country
+a_submission,B6-11,a_id,COW,FARMED,2023-01-01,01/012/0152,Agricultural Holding,a_county,LRA,01/006/0045,N,F,2021-01-01 00:00.00.000,a_test_type,NULL
+b_submission,B6-11,b_id,COW,FARMED,2023-01-02,01/075/0012,Agricultural Holding,b_county,LRA,01/045/0065,N,F,2021-01-02 00:00.00.000,a_test_type,NULL
