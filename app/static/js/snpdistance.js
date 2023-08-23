@@ -1031,7 +1031,7 @@ const btnShowTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__show-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" href="#table-sidebar-container">Show Table</a>
+      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" id="show-table" href="#table-sidebar-container">Show Table</a>
     `);
     return divContainer;
   }
