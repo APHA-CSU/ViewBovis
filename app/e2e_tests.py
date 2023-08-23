@@ -32,20 +32,19 @@ class E2ETests(unittest.TestCase):
         snp_map_btn = self.driver.find_element(By.ID, "btn-view-snpmap")
         snp_map_btn.click()
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
-        search_box.send_keys("UK262728200982")
+        search_box.send_keys("a_id")
         snp_distance = self.driver.find_element(By.ID, "snp-distance-value")
         self.driver.execute_script("arguments[0].textContent = arguments[1];",
-                                   snp_distance, "10")
+                                   snp_distance, "1")
         plot_isolates_btn = \
             self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
         wait = WebDriverWait(self.driver, 10)
         soi_icon = \
             wait.until(EC.visibility_of_any_elements_located((By.XPATH,
-                       "//img[@src='/static/img/CH_1_no_outline.svg' \
-                        and @class='leaflet-marker-icon leaflet-zoom-animated leaflet-interactive']")))
+                       "//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-b_submission leaflet-zoom-animated leaflet-interactive']")))
         self.assertEquals(soi_icon[0].get_attribute("style"),
-                          "margin-left: -35px; margin-top: -55px; width: 75px; height: 75px; transform: translate3d(364px, 870px, 0px); z-index: 870;")
+                          "margin-left: -17px; margin-top: -42px; width: 35px; height: 45px; transform: translate3d(780px, 456px, 0px); z-index: 456; outline: none;")
 
 
 if __name__ == "__main__":
