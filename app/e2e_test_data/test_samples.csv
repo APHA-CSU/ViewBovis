@@ -3,5 +3,5 @@ a_submission,B6-11,a_id,COW,FARMED,2023-01-01,01/012/0152,Agricultural Holding,a
 b_submission,B6-11,b_id,COW,FARMED,2023-01-02,01/075/0012,Agricultural Holding,b_county,LRA,01/045/0065,N,F,2021-01-02 00:00.00.000,b_test_type,IRELAND
 c_submission,B6-11,c_id,COW,FARMED,2023-01-03,01/096/0047,Agricultural Holding,c_county,LRA,01/087/0152,N,F,2021-01-03 00:00.00.000,c_test_type,NULL
 d_submission,B6-11,d_id,COW,FARMED,2023-01-04,01/127/0106,Agricultural Holding,d_county,LRA,01/121/0003,N,F,2021-01-04 00:00.00.000,d_test_type,NULL
-e_submission,B6-11,e_id,BADGER,FARMED,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,NULL,c_test_type,NULL
-f_submission,B6-11,f_id,BADGER,FARMED,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,2021-01-04 00:00.00.000,d_test_type,NULL
+e_submission,B6-11,e_id,BADGER,WILD,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,NULL,c_test_type,NULL
+f_submission,B6-11,f_id,BADGER,WILD,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,NULL,d_test_type,NULL
