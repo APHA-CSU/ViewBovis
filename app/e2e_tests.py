@@ -72,10 +72,16 @@ class E2ETests(unittest.TestCase):
             sub_element = row.find_element(By.XPATH,
                                            ".//div[@tabulator-field='submission']")
             rows_dict[sub_element.text] = row
-        # assert the SOI row is nor clickable
+        # assert the SOI row is not clickable
         self.assertIn("tabulator-unselectable",
                       rows_dict["a_submission"].get_attribute("class"),
                       "SOI row is selectable!")
+        # assert rows for submissions with missing location data are not
+        # clickable
+        for sub in ["e", "f"]:
+            self.assertIn("tabulator-unselectable",
+                          rows_dict[f"{sub}_submission"].get_attribute("class"),
+                          "Non location row is selectable!")
         # assert the SOI row is highlighted
         self.assertIn("rgb(255, 190, 51)",
                       rows_dict["a_submission"].get_attribute("style"),
@@ -116,15 +122,16 @@ class E2ETests(unittest.TestCase):
             # click the map icon - make pop-up go away
             map_sub_div_element.click()
             self.wait.until(EC.invisibility_of_element(pop_up_header))
-        # assert that "e" (related isolate without location data) is not
-        # plotted on the map
-        try:
-            map_sub_div_element = \
-                self.driver.find_element(By.XPATH,
-                                         "//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-e_submission leaflet-zoom-animated leaflet-interactive']")
-            self.fail("Unexpected isolate plotted on map!")
-        except exceptions.NoSuchElementException:
-            pass
+        # assert that submissions without location data are not plotted
+        # on the map
+        for sub in ["e", "f"]:
+            try:
+                map_sub_div_element = \
+                    self.driver.find_element(By.XPATH,
+                                             f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
+                self.fail("Unexpected isolate plotted on map!")
+            except exceptions.NoSuchElementException:
+                pass
 
 
 if __name__ == "__main__":
