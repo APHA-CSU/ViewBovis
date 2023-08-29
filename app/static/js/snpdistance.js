@@ -951,7 +951,7 @@ const showRelatedSamples = async function () {
         selectable:true,
         selectableRangeMode:"click",
         selectableCheck:function(row){
-          return row.getData().submission != soi; //disallow selection of soi row
+          return row.getData().submission != soi && row.getData().cph != null; //disallow selection of soi row
         },
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
