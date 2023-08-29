@@ -94,6 +94,15 @@ class E2ETests(unittest.TestCase):
                 map_sub_div_element.find_element(By.TAG_NAME, "i")
             self.assertEqual(related_icon_number.get_attribute("style"),
                              "color: rgb(255, 190, 51);")
+            # click the map icon - make pop-up visible
+            map_sub_div_element.click()
+            # assert the pop-up contents
+            pop_up_header = \
+                self.wait.until(EC.visibility_of_element_located((By.XPATH,
+                                                                  "//*[@id='map2']/div[1]/div[6]/div/div[1]/div/div[1]")))
+            self.assertEqual(pop_up_header.text, f"{sub}_id")
+            # click the map icon - make pop-up go away
+            map_sub_div_element.click()
 
 
 if __name__ == "__main__":
