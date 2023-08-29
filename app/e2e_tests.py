@@ -39,7 +39,7 @@ class E2ETests(unittest.TestCase):
     def tearDown(self) -> None:
         self.driver.close()
 
-    def test_snp_map_setup(self):
+    def test_snp_map(self):
         # navigate to snp map
         snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
         snp_dist_btn.click()
@@ -63,6 +63,8 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.XPATH,
                                                   "//div[@class='tabulator-table']")))
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
+        # build a dictionary with key as the isolated submission number
+        # and value as the row element
         rows_dict = {}
         # loop through rows
         for row in rows:
@@ -70,7 +72,16 @@ class E2ETests(unittest.TestCase):
             sub_element = row.find_element(By.XPATH,
                                            ".//div[@tabulator-field='submission']")
             rows_dict[sub_element.text] = row
-        # loop through clickable rows (with associated map icons)
+        # assert the SOI row is nor clickable
+        self.assertIn("tabulator-unselectable",
+                      rows_dict["a_submission"].get_attribute("class"),
+                      "SOI row is selectable!")
+        # assert the SOI row is highlighted
+        self.assertIn("rgb(255, 190, 51)",
+                      rows_dict["a_submission"].get_attribute("style"),
+                      "SOI row is not highlighted!")
+        # loop through clickable rows (related isolates with associated
+        # map icons)
         for sub in ["b", "c", "d"]:
             # locate the associated submission on the map
             map_sub_div_element = \
@@ -79,9 +90,9 @@ class E2ETests(unittest.TestCase):
             related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
             # assert icon number is white, i.e. not selected
             self.assertEqual(related_icon_number.get_attribute("style"), "color: white;")
-            # hacky way to ensure that the row is in clickable state - will
-            # try to click 10 times over the space of 1 second, if still not
-            # clickable on the 10th try an Exception is raised.
+            # hacky way to ensure that the row is clickable: will try to
+            # click 10 times over 1 second, if still not clickable on
+            # the 10th try an Exception is raised.
             for _ in range(9):
                 try:
                     rows_dict[f"{sub}_submission"].click()
@@ -92,8 +103,9 @@ class E2ETests(unittest.TestCase):
             # assert that the related isolate number has changed colour
             related_icon_number = \
                 map_sub_div_element.find_element(By.TAG_NAME, "i")
-            self.assertEqual(related_icon_number.get_attribute("style"),
-                             "color: rgb(255, 190, 51);")
+            self.assertIn("rgb(255, 190, 51)",
+                          related_icon_number.get_attribute("style"),
+                          "Correct map icon not highlighted!")
             # click the map icon - make pop-up visible
             map_sub_div_element.click()
             # assert the pop-up contents
@@ -103,6 +115,16 @@ class E2ETests(unittest.TestCase):
             self.assertEqual(pop_up_header.text, f"{sub}_id")
             # click the map icon - make pop-up go away
             map_sub_div_element.click()
+            self.wait.until(EC.invisibility_of_element(pop_up_header))
+        # assert that "e" (related isolate without location data) is not
+        # plotted on the map
+        try:
+            map_sub_div_element = \
+                self.driver.find_element(By.XPATH,
+                                         "//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-e_submission leaflet-zoom-animated leaflet-interactive']")
+            self.fail("Unexpected isolate plotted on map!")
+        except exceptions.NoSuchElementException:
+            pass
 
 
 if __name__ == "__main__":
