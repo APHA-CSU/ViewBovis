@@ -40,14 +40,17 @@ class E2ETests(unittest.TestCase):
         self.driver.close()
 
     def test_snp_map(self):
+        soi = "a"
+        related_plots = ["b", "c", "d"]
+        related_nonplots = ["e", "f"]
         # navigate to snp map
         snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
         snp_dist_btn.click()
         snp_map_btn = self.driver.find_element(By.ID, "btn-view-snpmap")
         snp_map_btn.click()
-        # search for related samples within 1 SNP of "a_id"
+        # search for related samples within 5 SNP of "a_id"
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
-        search_box.send_keys("a_id")
+        search_box.send_keys(f"{soi}_id")
         snp_distance = self.driver.find_element(By.ID, "snp-distance-value")
         self.driver.execute_script("arguments[0].textContent = arguments[1];",
                                    snp_distance, "5")
@@ -74,21 +77,21 @@ class E2ETests(unittest.TestCase):
             rows_dict[sub_element.text] = row
         # assert the SOI row is not clickable
         self.assertIn("tabulator-unselectable",
-                      rows_dict["a_submission"].get_attribute("class"),
+                      rows_dict[f"{soi}_submission"].get_attribute("class"),
                       "SOI row is selectable!")
         # assert rows for submissions with missing location data are not
         # clickable
-        for sub in ["e", "f"]:
+        for sub in related_nonplots:
             self.assertIn("tabulator-unselectable",
                           rows_dict[f"{sub}_submission"].get_attribute("class"),
                           "Non location row is selectable!")
         # assert the SOI row is highlighted
         self.assertIn("rgb(255, 190, 51)",
-                      rows_dict["a_submission"].get_attribute("style"),
+                      rows_dict[f"{soi}_submission"].get_attribute("style"),
                       "SOI row is not highlighted!")
         # loop through clickable rows (related isolates with associated
         # map icons)
-        for sub in ["b", "c", "d"]:
+        for sub in related_plots:
             # locate the associated submission on the map
             map_sub_div_element = \
                 self.driver.find_element(By.XPATH,
@@ -124,7 +127,7 @@ class E2ETests(unittest.TestCase):
             self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
-        for sub in ["e", "f"]:
+        for sub in related_nonplots:
             try:
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
