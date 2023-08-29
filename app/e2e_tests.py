@@ -69,13 +69,11 @@ class E2ETests(unittest.TestCase):
         table = \
             self.wait.until(
                 EC.visibility_of_element_located((By.XPATH,
-                                                  "//div[@role='rowgroup']")))
-        print(table)
-        rows = table.find_elements(By.TAG_NAME, "div")
+                                                  "//div[@class='tabulator-table']")))
+        rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         rows_dict = {}
         for row in rows:
-            id = row.find_element(By.XPATH, "//div[@tabulator-field='animal_id']")
-            print(id.text)
+            id = row.find_element(By.XPATH, ".//div[@tabulator-field='animal_id']")
             rows_dict[id.text] = row
 
         print(rows_dict)
