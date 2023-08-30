@@ -127,7 +127,7 @@ class E2ETests(unittest.TestCase):
             self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
-        for sub in related_nonplots:
+        for sub in related_plots:
             try:
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
