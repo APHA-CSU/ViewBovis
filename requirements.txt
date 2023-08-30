@@ -1,7 +1,3 @@
 flask==2.2.2
 pandas==1.5.3
 gunicorn==20.1.0
-selenium==4.11.2
-# TODO:
-# remove in real thing (not sure how well maintained this package is)
-flask-liveserver==0.0.4
