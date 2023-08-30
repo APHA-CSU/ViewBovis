@@ -1,6 +1,6 @@
 name: e2e_test
 
-on: [push]
+on: push
 
 jobs:
   test:
@@ -26,7 +26,7 @@ jobs:
       - name: Start app
         run: |
           cd app
-          python deploy.py --data_path ./tests/e2e_test_data/
+          nohup python deploy.py --data_path ./tests/e2e_test_data/
       - name: e2e test
         run: |
           python -m pytest app/tests/e2e_tests.py
