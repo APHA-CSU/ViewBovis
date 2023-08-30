@@ -26,7 +26,7 @@ jobs:
       - name: Start app
         run: |
           cd app
-          nohup python deploy.py --data_path ./tests/e2e_test_data/
+          python deploy.py --data_path ./tests/e2e_test_data/ &
       - name: e2e test
         run: |
-          python -m pytest app/tests/e2e_tests.py
+          sleep 5 && python -m pytest app/tests/e2e_tests.py
