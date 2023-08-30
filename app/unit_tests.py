@@ -151,7 +151,7 @@ class TestRequest(unittest.TestCase):
                                "stay_length": "X", "type": "R", "county": "O",
                                "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
         # test expected output
-        self.assertDictEqual(self.request.soi_movement_metadata(), expecteda)
+        self.assertDictEqual(self.request.soi_movement_metadata(), expected)
         # assert mock calls
         self.request._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
         # assert exceptions
