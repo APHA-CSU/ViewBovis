@@ -132,7 +132,6 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
                           "OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
                          index=["J", "O", "T"])
-        self.maxDiff = 1500
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
@@ -152,7 +151,7 @@ class TestRequest(unittest.TestCase):
                                "stay_length": "X", "type": "R", "county": "O",
                                "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
         # test expected output
-        self.assertDictEqual(self.request.soi_movement_metadata(), expected)
+        self.assertDictEqual(self.request.soi_movement_metadata(), expecteda)
         # assert mock calls
         self.request._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
         # assert exceptions
