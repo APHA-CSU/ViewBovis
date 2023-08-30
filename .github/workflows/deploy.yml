@@ -1,10 +1,12 @@
 name: deploy
 on:
-  push:
-    branches:
-      - prod 
+  workflow_run:
+    workflows: [build-and-test]
+    types: [completed]
+    branches: [prod]
 jobs:
   docker:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
