@@ -2,7 +2,8 @@ name: deploy
 on:
   workflow_run:
     workflows: [build-and-test]
-    types: [completed]
+    types: 
+      - completed
     #branches: [e2e_ci]
 jobs:
   docker:
