@@ -1,9 +1,9 @@
 name: deploy
 on:
   workflow_run:
-    workflows: build-and-test
-    types: completed
-    branches: e2e_ci
+    workflows: [build-and-test]
+    types: [completed]
+    #branches: [e2e_ci]
 jobs:
   docker:
     runs-on: ubuntu-latest
