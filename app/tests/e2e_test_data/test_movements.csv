@@ -1,0 +1,13 @@
+Submission,Loc_Num,Loc,County,CPH_Type,Loc_StartDate,Loc_Duration,Loc_EndDate,Area_At_Movement,Current_Area
+a_submission,0,01/006/0045,a1_county,Agricultural Holding,2021-01-01,365,2022-01-01,LRA,LRA
+a_submission,1,01/012/0152,a2_county,Market,2022-01-01,365,2023-01-01,LRA,LRA
+a_submission,2,01/045/0064,a3_county,Slaughterhouse (Red Meat),2023-01-01,0,2023-01-01,LRA,LRA
+b_submission,0,01/045/0065,b1_county,Agricultural Holding,2021-01-02,365,2022-01-01,LRA,LRA
+b_submission,1,01/075/0012,b2_county,Market,2022-01-02,365,2023-01-01,LRA,LRA
+b_submission,2,01/078/0059,b3_county,Slaughterhouse (Red Meat),2023-01-02,0,2023-01-01,LRA,LRA
+c_submission,0,01/087/0152,c1_county,Agricultural Holding,2021-01-03,365,2022-01-01,LRA,LRA
+c_submission,1,01/096/0047,c2_county,Market,2022-01-03,365,2023-01-01,LRA,LRA
+c_submission,2,01/101/0017,c3_county,Slaughterhouse (Red Meat),2023-01-03,0,2023-01-01,LRA,LRA
+d_submission,0,01/121/0003,d1_county,Agricultural Holding,2021-01-04,365,2022-01-01,LRA,LRA
+d_submission,1,01/127/0106,d2_county,Market,2022-01-04,365,2023-01-01,LRA,LRA
+d_submission,2,01/131/0004,d3_county,Slaughterhouse (Red Meat),2023-01-04,0,2023-01-01,LRA,LRA

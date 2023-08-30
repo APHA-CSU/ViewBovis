@@ -951,7 +951,7 @@ const showRelatedSamples = async function () {
         selectable:true,
         selectableRangeMode:"click",
         selectableCheck:function(row){
-          return row.getData().submission != soi; //disallow selection of soi row
+          return row.getData().submission != soi && row.getData().cph != null; //disallow selection of soi row
         },
         columns: [
             {title:"Precise Location", field:"cph", headerFilter:"input"},
@@ -1031,7 +1031,7 @@ const btnShowTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__show-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" href="#table-sidebar-container">Show Table</a>
+      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" id="show-table" href="#table-sidebar-container">Show Table</a>
     `);
     return divContainer;
   }

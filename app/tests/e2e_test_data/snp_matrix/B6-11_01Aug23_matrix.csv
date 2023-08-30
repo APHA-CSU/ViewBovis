@@ -1,0 +1,7 @@
+snp-dists,a_sample,b_sample,c_sample,d_sample,e_sample,f_sample
+a_sample,0,1,2,3,4,5
+b_sample,1,0,2,3,4,5
+c_sample,2,2,0,1,1,1
+d_sample,3,3,1,0,2,3
+e_sample,4,4,1,2,0,6
+f_sample,5,5,1,3,6,0
