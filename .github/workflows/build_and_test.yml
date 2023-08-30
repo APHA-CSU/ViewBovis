@@ -30,6 +30,8 @@ jobs:
 
   e2e-test:
 
+    needs: [unit-test]
+
     runs-on: ubuntu-latest
 
     steps:
