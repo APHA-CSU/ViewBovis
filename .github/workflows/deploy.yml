@@ -1,11 +1,14 @@
 name: deploy
 on:
-  push:
-    branches:
-      - prod 
+  workflow_run:
+    workflows: [build-and-test]
+    types: 
+      - completed
+    branches: [prod]
 jobs:
   docker:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup Docker Buildx

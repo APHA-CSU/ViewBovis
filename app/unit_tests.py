@@ -132,7 +132,6 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
                           "OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
                          index=["J", "O", "T"])
-        self.maxDiff = 1500
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
