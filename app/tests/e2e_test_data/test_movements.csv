@@ -11,3 +11,9 @@ c_submission,2,01/101/0017,c3_county,Slaughterhouse (Red Meat),2023-01-03,0,2023
 d_submission,0,01/121/0003,d1_county,Agricultural Holding,2021-01-04,365,2022-01-01,LRA,LRA
 d_submission,1,01/127/0106,d2_county,Market,2022-01-04,365,2023-01-01,LRA,LRA
 d_submission,2,01/131/0004,d3_county,Slaughterhouse (Red Meat),2023-01-04,0,2023-01-01,LRA,LRA
+g_submission,0,02/055/0011,d1_county,Agricultural Holding,2021-01-04,365,2022-01-01,LRA,LRA
+g_submission,1,02/055/0027,d2_county,Market,2022-01-04,365,2023-01-01,LRA,LRA
+g_submission,2,02/055/0082,d3_county,Slaughterhouse (Red Meat),2023-01-04,0,2023-01-01,LRA,LRA
+h_submission,0,02/056/0017,d1_county,Agricultural Holding,2021-01-04,365,2022-01-01,LRA,LRA
+h_submission,1,02/056/0022,d2_county,Market,2022-01-04,365,2023-01-01,LRA,LRA
+h_submission,2,02/056/0092,d3_county,Slaughterhouse (Red Meat),2023-01-04,0,2023-01-01,LRA,LRA
