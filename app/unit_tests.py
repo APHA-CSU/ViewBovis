@@ -186,6 +186,7 @@ class TestRequest(unittest.TestCase):
         setattr(self.request, "_submission", "foo_sub")
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"foo": ["bar"]}))
+        setattr(self.request, "_xy", (1, 2))
         # setup - mock private methods
         self.request._related_snp_matrix = mock.Mock()
         self.request._query_metadata = mock.Mock()
@@ -245,6 +246,11 @@ class TestRequest(unittest.TestCase):
         self.request._get_os_map_ref.assert_called_once_with({"O", "J"})
         self.request._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                      mock.call((2, 5))])
+        # test missing cph
+        setattr(self.request, "_xy", None)
+        with self.assertRaises(NoMetaDataException):
+            self.request.related_submissions_metadata(1)
+
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_snp_matrix(self, _):

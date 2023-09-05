@@ -47,7 +47,10 @@ class Request:
             # retrieve x,y and lat,lon into tuples
             df_cph_2_osmapref = \
                 self._get_os_map_ref(self._df_metadata_soi["CPH"])
-            self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
+            if not self._df_metadata_soi["CPH"][0]:
+                self._xy = None
+            else:
+                self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
         # if missing metadata
         else:
             # get WGS metadata for the SOI
@@ -331,6 +334,8 @@ class Request:
         """
         # TODO: workout how to include SOI without metadata
         if self._df_metadata_soi.empty:
+            raise NoMetaDataException(self._id)
+        elif self._xy is None:
             raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
