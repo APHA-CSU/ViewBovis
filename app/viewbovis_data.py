@@ -409,7 +409,6 @@ class Request:
         # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
-        print(self._df_metadata_soi)
         return {"soi": self._submission,
                 "identifier": None if self._df_metadata_soi.empty
                 else self._df_metadata_soi["Identifier"][0],
