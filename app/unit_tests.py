@@ -152,11 +152,12 @@ class TestRequest(unittest.TestCase):
         # assert mock calls
         self.request._transform_dateformat.assert_has_calls([mock.call("D"),
                                                              mock.call("M")])
+        self.request._transform_dateformat.reset_mock()
 
         # setup - mock attributes - missing dates
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
-                              "Host": ["COW"], "SlaughterDate": None,
+                              "Host": ["COW"], "SlaughterDate": ["D"],
                               "Animal_Type": ["E"], "CPH": ["F"],
                               "CPH_Type": ["H"], "County": ["I"],
                               "RiskArea": ["J"], "Loc0": ["K"],
@@ -171,7 +172,7 @@ class TestRequest(unittest.TestCase):
                     "identifier": "B",
                     "species": "COW",
                     "animal_type": "E",
-                    "slaughter_date": None,
+                    "slaughter_date": "D_transformed",
                     "cph": "F",
                     "cph_type": "H",
                     "county": "I",
@@ -184,7 +185,7 @@ class TestRequest(unittest.TestCase):
         # test expected output
         self.assertDictEqual(self.request.soi_metadata(), expected)
         # assert mock calls
-        self.request._transform_dateformat.assert_not_called()
+        self.request._transform_dateformat.assert_called_once_with("D")
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
