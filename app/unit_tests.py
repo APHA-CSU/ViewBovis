@@ -36,12 +36,14 @@ class TestRequest(unittest.TestCase):
                                                          "long": ["foo_long"],
                                                          "x": ["foo_x"],
                                                          "y": ["foo_y"]})
+
         # test missing all data
         mock_query_wgs_metadata.return_value = pd.DataFrame()
         mock_query_metadata.return_value = pd.DataFrame()
         # assert NoDataException is raised
         with self.assertRaises(NoDataException):
             self.request = Request("foo_path", "foo_id")
+
         # test missing WGS data
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
@@ -49,6 +51,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request._submission, "foo_index")
         self.assertEqual(self.request._xy, ("foo_x", "foo_y"))
         self.assertEqual(self.request._sample_name, None)
+
         # testing missing metadata
         mock_query_metadata.return_value = pd.DataFrame()
         mock_query_wgs_metadata.return_value = \
@@ -57,6 +60,7 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(self.request._submission, "foo_index")
         self.assertEqual(self.request._xy, None)
         self.assertEqual(self.request._sample_name, "foo_sample")
+
         # test no missing data
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
@@ -69,16 +73,20 @@ class TestRequest(unittest.TestCase):
     @mock.patch("viewbovis_data.glob.glob")
     @mock.patch("viewbovis_data.pd.read_csv")
     def test_related_snp_matrix(self, mock_read_csv, mock_glob, _):
+        # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
+
         # setup - mock attributes
         setattr(self.request, "_df_wgs_metadata_soi",
                 pd.DataFrame({"group": ["foo_clade"]}, index=["foo_index"]))
         setattr(self.request, "_matrix_dir", "mock_matrix_dir")
         setattr(self.request, "_sample_name", "foo")
         setattr(self.request, "_submission", "foo_sub")
+
         # setup - mock private methods
         self.request._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
         self.request._sort_matrix = mock.Mock(wraps=lambda x: x)
+
         # setup - return values for external mocks
         mock_read_csv.return_value = \
             pd.DataFrame({"foo": [0, 3, 5],
@@ -86,19 +94,24 @@ class TestRequest(unittest.TestCase):
                           "baz": [5, 10, 0]},
                          index=["foo", "bar", "baz"])
         mock_glob.return_value = "mock_matrix_path"
+
+        # test normal operation
         # expected output
         expected = pd.DataFrame({"foo_sub": [0, 3], "bar_sub": [3, 0]},
                                 index=["foo_sub", "bar_sub"])
         nptesting.assert_array_equal(self.request._related_snp_matrix(3),
                                      expected)
-        # assert exception
+
+        # test missing WGS data
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
         with self.assertRaises(NoWgsDataException):
             self.request._related_snp_matrix(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
+        # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
+
         # setup - mock attributes
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
@@ -112,11 +125,13 @@ class TestRequest(unittest.TestCase):
                              index=["Y"]))
         setattr(self.request, "_df_wgs_metadata_soi",
                 pd.DataFrame({"foo": ["bar"]}))
+
         # setup - mock private methods
         self.request._query_movdata = mock.Mock()
         self.request._get_os_map_ref = mock.Mock()
         self.request._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
+
         # setup - return values for public & private method mocks
         self.request._query_movdata.return_value = \
             pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
@@ -132,6 +147,8 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
                           "OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
                          index=["J", "O", "T"])
+
+        # test normal operation
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
                     "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
@@ -154,10 +171,15 @@ class TestRequest(unittest.TestCase):
         self.assertDictEqual(self.request.soi_movement_metadata(), expected)
         # assert mock calls
         self.request._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
-        # assert exceptions
+
+        # test missing metadata
+        # assert exception
         setattr(self.request, "_df_metadata_soi", pd.DataFrame())
         with self.assertRaises(NoMetaDataException):
             self.request.soi_movement_metadata()
+
+        # test not a cow
+        # assert exception
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"Host": ["notCOW"]}, index=["Y"]))
         with self.assertRaises(NonBovineException):
@@ -165,9 +187,13 @@ class TestRequest(unittest.TestCase):
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_sort_matrix(self, _):
+        # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
+
         # setup - mock attributes
         setattr(self.request, "_submission", "foo")
+
+        # test normal operation
         # expected output
         expected = pd.DataFrame({"foo": [0, 3, 5],
                                  "bar": [3, 0, 10],
@@ -181,12 +207,15 @@ class TestRequest(unittest.TestCase):
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_related_submissions_metadata(self, _):
+        # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
+
         # setup - mock attributes
         setattr(self.request, "_submission", "foo_sub")
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"foo": ["bar"]}))
         setattr(self.request, "_xy", (1, 2))
+
         # setup - mock private methods
         self.request._related_snp_matrix = mock.Mock()
         self.request._query_metadata = mock.Mock()
@@ -194,6 +223,7 @@ class TestRequest(unittest.TestCase):
         self.request._geo_distance = mock.Mock()
         self.request._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
+
         # setup - return values for private method mocks
         self.request._related_snp_matrix.return_value = \
             pd.DataFrame({"foo_sub": [0, 3, 1],
@@ -216,6 +246,8 @@ class TestRequest(unittest.TestCase):
                           "Long": [4, 5], "OSMapRef": ["foo_ref", "bar_ref"]},
                          index=["J", "O"])
         self.request._geo_distance.side_effect = [0.0, 1.1]
+
+        # test normal operation
         # expected output
         expected = \
             {"foo_sub": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
@@ -246,25 +278,33 @@ class TestRequest(unittest.TestCase):
         self.request._get_os_map_ref.assert_called_once_with({"O", "J"})
         self.request._geo_distance.assert_has_calls([mock.call((1, 4)),
                                                      mock.call((2, 5))])
+
         # test missing cph
         setattr(self.request, "_xy", None)
+        # assert NoMetaDataException
         with self.assertRaises(NoMetaDataException):
             self.request.related_submissions_metadata(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_snp_matrix(self, _):
+        # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
+
         # setup - mock attributes
         setattr(self.request, "_submission", "foo_sub")
         setattr(self.request, "_df_metadata_soi",
                 pd.DataFrame({"Identifier": ["foo_id"]}))
+
         # setup - mock private methods
         self.request._related_snp_matrix = mock.Mock()
+
         # setup - return values for private method mocks
         self.request._related_snp_matrix.return_value = \
             pd.DataFrame({"foo_sub": [0, 3],
                           "bar_sub": [3, 0]},
                          index=["foo_sub", "bar_sub"])
+
+        # test normal operation
         # expected output
         expected = {"soi": "foo_sub",
                     "identifier": "foo_id",
@@ -276,6 +316,7 @@ class TestRequest(unittest.TestCase):
         # test expected output
         self.assertDictEqual(self.request.snp_matrix(3), expected)
         # assert mock calls
+        self.request._related_snp_matrix.assert_called_once_with(3)
 
 
 if __name__ == "__main__":
