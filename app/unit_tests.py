@@ -108,6 +108,85 @@ class TestRequest(unittest.TestCase):
             self.request._related_snp_matrix(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
+    def test_soi_metadata(self, _):
+        # setup - instantiate request object
+        self.request = Request("foo_path", "foo_id")
+
+        # setup - mock attributes
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
+                              "Host": ["COW"], "SlaughterDate": ["D"],
+                              "Animal_Type": ["E"], "CPH": ["F"],
+                              "CPH_Type": ["H"], "County": ["I"],
+                              "RiskArea": ["J"], "Loc0": ["K"],
+                              "OutsideHomeRange": ["L"], "wsdBirthDate": ["M"],
+                              "Gender": ["N"], "Disclosing_Test": ["O"],
+                              "Import_Country": ["P"]},
+                             index=["Y"]))
+        setattr(self.request, "_df_wgs_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
+
+        # setup - mock private methods
+        self.request._transform_dateformat = \
+            mock.Mock(side_effect=transform_dateformat_side_effect_func)
+
+        # test normal operation
+        # expected output
+        expected = {"submission": "Y",
+                    "clade": "A",
+                    "identifier": "B",
+                    "species": "COW",
+                    "animal_type": "E",
+                    "slaughter_date": "D_transformed",
+                    "cph": "F",
+                    "cph_type": "H",
+                    "county": "I",
+                    "risk_area": "J",
+                    "out_of_homerange": "L",
+                    "dob": "M_transformed",
+                    "sex": "N",
+                    "disclosing_test": "O",
+                    "import_country": "P"}
+        # test expected output
+        self.assertDictEqual(self.request.soi_metadata(), expected)
+        # assert mock calls
+        self.request._transform_dateformat.assert_has_calls([mock.call("D"),
+                                                             mock.call("M")])
+
+        # setup - mock attributes - missing dates
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
+                              "Host": ["COW"], "SlaughterDate": None,
+                              "Animal_Type": ["E"], "CPH": ["F"],
+                              "CPH_Type": ["H"], "County": ["I"],
+                              "RiskArea": ["J"], "Loc0": ["K"],
+                              "OutsideHomeRange": ["L"], "wsdBirthDate": None,
+                              "Gender": ["N"], "Disclosing_Test": ["O"],
+                              "Import_Country": ["P"]},
+                             index=["Y"]))
+        # test normal operation
+        # expected output
+        expected = {"submission": "Y",
+                    "clade": "A",
+                    "identifier": "B",
+                    "species": "COW",
+                    "animal_type": "E",
+                    "slaughter_date": None,
+                    "cph": "F",
+                    "cph_type": "H",
+                    "county": "I",
+                    "risk_area": "J",
+                    "out_of_homerange": "L",
+                    "dob": None,
+                    "sex": "N",
+                    "disclosing_test": "O",
+                    "import_country": "P"}
+        # test expected output
+        self.assertDictEqual(self.request.soi_metadata(), expected)
+        # assert mock calls
+        self.request._transform_dateformat.assert_not_called()
+
+    @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
         # setup - instantiate request object
         self.request = Request("foo_path", "foo_id")
