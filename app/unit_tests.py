@@ -251,7 +251,6 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(NoMetaDataException):
             self.request.related_submissions_metadata(1)
 
-
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_snp_matrix(self, _):
         self.request = Request("foo_path", "foo_id")
