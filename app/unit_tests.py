@@ -232,12 +232,12 @@ class TestRequest(unittest.TestCase):
                          index=["foo_sub", "bar_sub", "baz_sub"])
         self.request._query_metadata.return_value = \
             pd.DataFrame({"Identifier": ["foo_id", "bar_id"],
-                          "SlaughterDate": ["foo_date", "bar_date"],
-                          "CPH": ["J", "O"], "Host": ["COW", "COW"],
+                          "SlaughterDate": ["foo_date", None],
+                          "CPH": ["J", None], "Host": ["COW", "COW"],
                           "Clade": ["foo_clade", "bar_clade"],
                           "Animal_Type": ["J", "K"],
                           "OutsideHomeRange": ["L", "M"],
-                          "wsdBirthDate": ["N", "O"],
+                          "wsdBirthDate": ["N", None],
                           "Gender": ["P", "Q"], "Disclosing_Test": ["R", "S"],
                           "Import_Country": ["T", "U"]},
                          index=["foo_sub", "bar_sub"])
@@ -245,7 +245,7 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"x": [1, 2], "y": [4, 5], "Lat": [1, 2],
                           "Long": [4, 5], "OSMapRef": ["foo_ref", "bar_ref"]},
                          index=["J", "O"])
-        self.request._geo_distance.side_effect = [0.0, 1.1]
+        self.request._geo_distance.side_effect = [1.1, 0.0]
 
         # test normal operation
         # expected output
@@ -255,13 +255,13 @@ class TestRequest(unittest.TestCase):
                          "species": "COW", "animal_type": "J", "clade": "foo_clade",
                          "slaughter_date": "foo_date_transformed", "sex": "P",
                          "disclosing_test": "R", "dob": "N_transformed",
-                         "import_country": "T", "distance": 0.0},
-             "bar_sub": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
+                         "import_country": "T", "distance": 1.1},
+             "bar_sub": {"cph": None, "lat": None, "lon": None, "os_map_ref": None,
                          "snp_distance": 3, "animal_id": "bar_id",
                          "species": "COW", "animal_type": "K", "clade": "bar_clade",
-                         "slaughter_date": "bar_date_transformed", "sex": "Q",
-                         "disclosing_test": "S", "dob": "O_transformed",
-                         "import_country": "U", "distance": 1.1},
+                         "slaughter_date": None, "sex": "Q",
+                         "disclosing_test": "S", "dob": None,
+                         "import_country": "U", "distance": None},
              "baz_sub": {"cph": None, "lat": None, "lon": None, "os_map_ref": None,
                          "snp_distance": 1, "animal_id": None, "species": None,
                          "animal_type": None, "clade": None, "slaughter_date": None,
@@ -275,10 +275,14 @@ class TestRequest(unittest.TestCase):
         self.request._query_metadata.assert_called_once_with(["foo_sub",
                                                               "bar_sub",
                                                               "baz_sub"])
-        self.request._get_os_map_ref.assert_called_once_with({"O", "J"})
-        self.request._geo_distance.assert_has_calls([mock.call((1, 4)),
-                                                     mock.call((2, 5))])
+        self.request._get_os_map_ref.assert_called_once_with({None, "J"})
+        self.request._geo_distance.assert_called_once_with((1, 4))
 
+        # test missing metadata
+        setattr(self.request, "_df_metadata_soi", pd.DataFrame())
+        # assert NoMetaDataException
+        with self.assertRaises(NoMetaDataException):
+            self.request.related_submissions_metadata(1)
         # test missing cph
         setattr(self.request, "_xy", None)
         # assert NoMetaDataException
