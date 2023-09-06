@@ -5,3 +5,5 @@ c_submission,B6-11,c_id,COW,FARMED,2023-01-03,01/096/0047,Agricultural Holding,c
 d_submission,B6-11,d_id,COW,FARMED,2023-01-04,01/127/0106,Agricultural Holding,d_county,LRA,01/121/0003,N,F,2021-01-04 00:00.00.000,d_test_type,NULL
 e_submission,B6-11,e_id,BADGER,WILD,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,NULL,c_test_type,NULL
 f_submission,B6-11,f_id,BADGER,WILD,NULL,NULL,NULL,NULL,NULL,NULL,NULL,F,NULL,d_test_type,NULL
+g_submission,B6-11,g_id,COW,FARMED,2023-01-05,02/055/0027,Agricultural Holding,c_county,LRA,01/087/0152,N,F,2021-01-05 00:00.00.000,g_test_type,NULL
+h_submission,B6-11,h_id,COW,FARMED,2023-01-06,02/056/0022,Agricultural Holding,d_county,LRA,01/121/0003,N,F,2021-01-04 00:00.00.000,h_test_type,NULL

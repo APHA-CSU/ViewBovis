@@ -43,6 +43,7 @@ class E2ETests(unittest.TestCase):
         soi = "a"
         related_plots = ["b", "c", "d"]
         related_nonplots = ["e", "f"]
+        distant_relations = ["g", "h"]
         # navigate to snp map
         snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
         snp_dist_btn.click()
@@ -75,6 +76,9 @@ class E2ETests(unittest.TestCase):
             sub_element = row.find_element(By.XPATH,
                                            ".//div[@tabulator-field='submission']")
             rows_dict[sub_element.text] = row
+        # assert distantly related isolates are not included
+        for sub in distant_relations:
+            self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable
         self.assertIn("tabulator-unselectable",
                       rows_dict[f"{soi}_submission"].get_attribute("class"),
@@ -127,7 +131,7 @@ class E2ETests(unittest.TestCase):
             self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
-        for sub in related_nonplots:
+        for sub in related_nonplots + distant_relations:
             try:
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
