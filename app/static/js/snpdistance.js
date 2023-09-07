@@ -952,9 +952,9 @@ const showRelatedSamples = async function () {
           return row.getData().submission != soi && row.getData().cph != null; //disallow selection of soi row
         },
         columns: [
-            {title:"Precise Location", field:"cph", headerFilter:"input"},
-            {title:"Identifier", field:"animal_id", headerFilter:"input"},
-            {title:"Submission", field:"submission", headerFilter:"input",
+            {title:"Precise Location", field:"cph", headerFilter:"input", sorter: "string"},
+            {title:"Identifier", field:"animal_id", headerFilter:"input", sorter: "string"},
+            {title:"Submission", field:"submission", headerFilter:"input", sorter: "string",
               formatter: function(cell) {
                 var cellValue = cell.getValue();
                 if (cellValue == soi){
@@ -962,9 +962,9 @@ const showRelatedSamples = async function () {
                 }
                 return cellValue;
               }},
-            {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
+            {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+            {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input", sorter: "date"},  
         ],
         initialSort:[
           {column:"distance", dir:"asc"},
