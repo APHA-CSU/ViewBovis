@@ -427,9 +427,15 @@ class Request:
                 SOI, the identifier of the SOI, a list of sampleIDs in
                 the order they appear in the matrix (SOI first) and the
                 SNP matrix in "molten" format
+
+            Raises:
+                MatrixTooLargeException: if the resulting SNP matrix
+                exceeds 60 isolates
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         submissions = df_snps_related.index.to_list()
+        if len(submissions) > 60:
+            raise MatrixTooLargeException()
         # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
@@ -461,3 +467,9 @@ class NoWgsDataException(NoDataException):
 class NonBovineException(NoDataException):
     def __init__(self, id):
         self.message = f"Non-bovine submission: {id}"
+
+
+class MatrixTooLargeException(NoDataException):
+    def __init__(self):
+        self.message = "SNP matrix exceeds the maximum size limit (60 isolates). \
+            Consider Viewing the tree in Nextstrain instead."

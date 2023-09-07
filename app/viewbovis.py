@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, render_template, request, g
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
-                           NoWgsDataException, NonBovineException
+                           NoWgsDataException, NonBovineException,\
+                           MatrixTooLargeException
 
 app = Flask(__name__)
 
@@ -96,6 +97,7 @@ def snp_matrix():
 @app.errorhandler(NoMetaDataException)
 @app.errorhandler(NoWgsDataException)
 @app.errorhandler(NonBovineException)
+@app.errorhandler(MatrixTooLargeException)
 def custom_exception_handler(error):
     app.logger.info(error)
     return jsonify({"warnings": True,
