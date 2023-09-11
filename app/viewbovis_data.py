@@ -35,6 +35,10 @@ class Request:
             data are, full metadata, the submission number, the xy for
             the positive test site, the full WGS metadata and the sample
             name
+
+            Raises:
+                NoDataException: if the SOI does not exist in either
+                metadata or WGS data
         """
         # get metadata for the SOI
         self._df_metadata_soi = self._query_metadata([self._id])
@@ -47,7 +51,10 @@ class Request:
             # retrieve x,y and lat,lon into tuples
             df_cph_2_osmapref = \
                 self._get_os_map_ref(self._df_metadata_soi["CPH"])
-            self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
+            if not self._df_metadata_soi["CPH"][0]:
+                self._xy = None
+            else:
+                self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
         # if missing metadata
         else:
             # get WGS metadata for the SOI
@@ -64,7 +71,6 @@ class Request:
         else:
             self._sample_name = None
 
-    # TODO: validate input
     def _query_metadata(self, ids: list) -> pd.DataFrame:
         """
             Fetches metadata for a given a list of ids. Returns a
@@ -79,7 +85,6 @@ class Request:
                                  index_col="Submission",
                                  params=ids+ids)
 
-    # TODO: validate input
     def _query_wgs_metadata(self, id: str) -> pd.DataFrame:
         """
             Fetches WGS metadata for a given id. Returns a DataFrame
@@ -94,7 +99,8 @@ class Request:
 
     def _sample_to_submission(self, sample: str) -> str:
         """
-            Maps a submission number to sample name
+            Maps a submission number to sample name. Returns 'None' if
+            there is no WGS metadata for the sample
         """
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db,
@@ -103,11 +109,13 @@ class Request:
             return None
         return df_wgs_sub["Submission"][0]
 
-    # TODO: validate input
     def _query_movdata(self, submission: str) -> pd.DataFrame:
         """
             Fetches movement data for a given submission. Returns an
             empty DataFrame if no data exists
+
+            Raises:
+                NoMetaDataException: for missing movement data
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
         mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
@@ -144,6 +152,7 @@ class Request:
                                  index_col="CPH",
                                  params=cphs)
 
+    # TODO: unit test
     def _geo_distance(self, xy: tuple) -> float:
         """
             Returns the geographical distance in miles from the SOI
@@ -176,6 +185,9 @@ class Request:
                 df_snps_related_processed (pd.DataFrame): a SNP matrix
                 for genetically related isolates with submission numbers
                 as row and column labels
+
+            Raises:
+                NoWgsDataException: for missing WGS data
         """
         if self._df_wgs_metadata_soi.empty:
             raise NoWgsDataException(self._id)
@@ -211,9 +223,12 @@ class Request:
     def soi_metadata(self) -> dict:
         """
             Returns metadata for the SOI in dictionary format. For
-            submissions with missing metadata, only "submission" and
-            "clade" fields will have valid values, all others will be
-            "None"
+            submissions with missing metadata, only 'submission' and
+            'clade' fields will have valid values, all others will be
+            'None'
+
+            Raises:
+                NoWgsDataException: for missing WGS data for the SOI
         """
         if self._df_metadata_soi.empty:
             return {"submission": self._df_wgs_metadata_soi.index[0],
@@ -262,11 +277,12 @@ class Request:
     def soi_movement_metadata(self) -> dict:
         """
             Returns metadata and movement data for the SOI in dictionary
-            format.
+            format
 
-            Raises: NoMetadataException for missing metadata for the
-                SOI
-            Raises: NonBovineException if the SOI is not a cow.
+            Raises:
+                NoMetaDataException: for missing metadata for the SOI
+            Raises:
+                NonBovineException: if the SOI is not a cow
         """
         if self._df_metadata_soi.empty:
             raise NoMetaDataException(self._id)
@@ -298,11 +314,12 @@ class Request:
                              "risk_area_current": row["Current_Area"]}
                          for _, row in df_movements.iterrows()}})
 
+    # TODO: workout how to include SOI without metadata
     def related_submissions_metadata(self, snp_threshold: int) -> dict:
         """
             Returns metadata and SNP distance for genetically related
             submissions. Submissions with missing metadata will be
-            included but contain 'None' in the metadata fields.
+            included but contain 'None' in the metadata fields
 
             Parameters:
                 snp_threshold (str): maximum SNP distance for genetic
@@ -323,14 +340,22 @@ class Request:
                         "sex": sex of the host species, e.g. M/F,
                         "disclosing_test": the disclosing test type,
                             e.g. VE-WHT
+                        "dob": the date of birth,
                         "import_country": the country the host was
                             imported from,
                         "distance": distance to the sample of interest
                             in miles
                      "SOI": the submission number of the SOI}
+
+            Raises:
+                NoMetaDataException: for missing metadata for the SOI
+
+                NoMetaDataException: for missing CPH in metadata for the
+                    SOI
         """
-        # TODO: workout how to include SOI without metadata
         if self._df_metadata_soi.empty:
+            raise NoMetaDataException(self._id)
+        elif self._xy is None:
             raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
@@ -386,7 +411,6 @@ class Request:
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 
-    # TODO: make so SOI can be a submission without metadata.
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
             Returns SNP matrix data for related submissions
@@ -403,14 +427,21 @@ class Request:
                 SOI, the identifier of the SOI, a list of sampleIDs in
                 the order they appear in the matrix (SOI first) and the
                 SNP matrix in "molten" format
+
+            Raises:
+                MatrixTooLargeException: if the resulting SNP matrix
+                exceeds 60 isolates
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         submissions = df_snps_related.index.to_list()
+        if len(submissions) > 60:
+            raise MatrixTooLargeException()
         # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         return {"soi": self._submission,
-                "identifier": self._df_metadata_soi["Identifier"][0],
+                "identifier": None if self._df_metadata_soi.empty
+                else self._df_metadata_soi["Identifier"][0],
                 "sampleIDs": submissions,
                 "matrix": snps_related}
 
@@ -436,3 +467,10 @@ class NoWgsDataException(NoDataException):
 class NonBovineException(NoDataException):
     def __init__(self, id):
         self.message = f"Non-bovine submission: {id}"
+
+
+class MatrixTooLargeException(NoDataException):
+    def __init__(self):
+        self.message = "SNP matrix exceeds the maximum size limit (60 isolates). \
+            Consider reducing the SNP distance threshold or viewing the \
+                phylogenetic tree in Nextstrain instead."

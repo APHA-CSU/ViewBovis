@@ -1,0 +1,9 @@
+Submission,Sample,GenomeCov,MeanDepth,pcMapped,group,Ncount,ResultLoc
+a_submission,a_sample,100,100,100,B6-11,100,a_loc
+b_submission,b_sample,100,100,100,B6-11,100,b_loc
+c_submission,c_sample,100,100,100,B6-11,100,b_loc
+d_submission,d_sample,100,100,100,B6-11,100,b_loc
+e_submission,e_sample,100,100,100,B6-11,100,b_loc
+f_submission,f_sample,100,100,100,B6-11,100,b_loc
+g_submission,g_sample,100,100,100,B6-11,100,b_loc
+h_submission,h_sample,100,100,100,B6-11,100,b_loc

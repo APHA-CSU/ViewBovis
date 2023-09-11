@@ -530,6 +530,31 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 //
 // ------------------------ //
 
+// function to display server error text
+const cattle_mov_serverError = function () {
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
+// function to display client error text
+const cattle_mov_ClientError = function (err) {
+    // log the error
+    console.log(err);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
 // Initiate variables
 let cowMarker, cowLayer, linePts, cattleMovLine;
 
@@ -537,7 +562,6 @@ let cowMarker, cowLayer, linePts, cattleMovLine;
 const showMovements = async function () {
 
   try {
-
     // Render spinner
     document.getElementById("cattle-spinner").classList.remove("hidden");
 
@@ -558,44 +582,42 @@ const showMovements = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-    // console.log(response);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
-    console.log(json);
 
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner").classList.add("hidden");
+    if(!response.ok) {
 
+      cattle_mov_serverError();
 
-    // If response contains a warning
-    if (json["warnings"]) {
-      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
-      `);
     } else {
-      // Render cow markers and lines
-      renderCowMarkers(json, cowIcons, "#0096FF");
 
-      // Allow user access to other elements by removing the disabled class
-      document.getElementById("cattleMovementLines--1").disabled = false;
-      document.getElementById("input__sampleID--2").disabled = false;
-      document.getElementById("btn__cattleMovement--2").disabled = false;
-      // document.getElementById("slider__snp-threshold").disabled = false;
-      // document.getElementById("btn__related-isolates").disabled = false;
+      const json = await response.json();
+      console.log(json);
+
+      // Remove spinner when fetch is complete
+      document.getElementById("cattle-spinner").classList.add("hidden");
+
+
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // Render cow markers and lines
+        renderCowMarkers(json, cowIcons, "#0096FF");
+
+        // Allow user access to other elements by removing the disabled class
+        document.getElementById("cattleMovementLines--1").disabled = false;
+        document.getElementById("input__sampleID--2").disabled = false;
+        document.getElementById("btn__cattleMovement--2").disabled = false;
+        // document.getElementById("slider__snp-threshold").disabled = false;
+        // document.getElementById("btn__related-isolates").disabled = false;
+      }
     }
 
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
+    cattle_mov_ClientError(err);
   }
-};
+}
 
 // Executes the async showMovements() function when the main "Show Cattle Movement" button is clicked
 document.getElementById("btn__cattleMovement--1").addEventListener("click", showMovements);
@@ -636,36 +658,30 @@ const showMovements2 = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
-    // console.log(json);
-
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner2").classList.add("hidden");
-
-    // If response contains a warning
-    if (json["warnings"]) {
-      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
-      `);
+    if(!response.ok) {
+      cattle_mov_serverError()
     } else {
-      // Render cow markers and lines
-      renderCowMarkers(json, cowIcons, "#cb181d", true);
-      // Allow user access to other elements by removing the disabled class
-      document.getElementById("cattleMovementLines--2").disabled = false;
-    };
+      const json = await response.json();
+      // console.log(json);
+
+      // Remove spinner when fetch is complete
+      document.getElementById("cattle-spinner2").classList.add("hidden");
+
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // Render cow markers and lines
+        renderCowMarkers(json, cowIcons, "#cb181d", true);
+        // Allow user access to other elements by removing the disabled class
+        document.getElementById("cattleMovementLines--2").disabled = false;
+      };
+    }
 
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner2").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text2").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="cattle-error-message2">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
-    
+    cattle_mov_ClientError(err) 
   } 
 };
 

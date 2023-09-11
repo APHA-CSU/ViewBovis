@@ -33,11 +33,11 @@
                         </li>
                         <!-- Cattle Movement Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-2" data-tab="2">Cattle Movement</a>
+                            <a class="nav-link nav-link-2" data-tab="2", id="cattle_movement_tab">Cattle Movement</a>
                         </li>
                         <!-- SNP Matrix Tab -->
                         <li class="nav-item">
-                            <a class="nav-link nav-link-3 " data-tab="3">SNP Distance</a>
+                            <a class="nav-link nav-link-3 ", data-tab="3", id="snp_distance_tab">SNP Distance</a>
                         </li>
                         <!-- Nextstrain Tab -->
                         <li class="nav-item">
@@ -148,11 +148,11 @@
                         <div class="govuk-notification-banner__content home-banner-content">
                             <p>
                                 <span class="fw-bold float-start">Metadata</span>
-                                <span class="float-end">27/07/2023</span> 
+                                <span class="float-end">17/08/2023</span> 
                             </p>
                             <p style="padding-top: 10px">
                                 <span class="fw-bold float-start">WGS</span>
-                                <span class="float-end">18/08/2023</span> 
+                                <span class="float-end">01/09/2023</span> 
                             </p>
                         </div>
                     </div>
@@ -838,9 +838,9 @@
                                 The resources below have been developed to help you understand how to use Nextstrain and how to interpret the phylogeny.<br>
                             </p>
                             <p class="fs-6">
-                                <a class="text-hyperlink">How to use Nextstrain guide</a><br>
-                                <a class="text-hyperlink">Video tutorials</a><br>
-                                <a class="text-hyperlink">Selt-assessment exercise</a>
+                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2" target="_blank">How to use Nextstrain guide</a><br>
+                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu" target="_blank">Video tutorials</a><br>
+                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03" target="_blank">Self-assessment exercise</a>
                             </p>
                         </div>
                     </div>
@@ -918,10 +918,10 @@
                             These support documents should be the first port of call:
                         </p>
                         <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FSupport%20Documents%2FViewBovis%5FHow%2DtoDoc%5FPrivateBeta%2Epdf&parent=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FSupport%20Documents&p=true&ga=1" target="_blank">How to use the app</a>
+                            <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">How to use the app</a>
                         </p>
                         <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FSupport%20Documents%2FViewBovis%5FGlossary%5FPrivateBeta%2Epdf&parent=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FSupport%20Documents&p=true&ga=1" target="_blank">Glossary</a>
+                            <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">Glossary</a>
                         </p>
                         <p>
                             <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FBackground%20on%20the%20data%20in%20ViewBovis&p=true&ga=1" target="_blank">About the data</a>
@@ -1066,6 +1066,7 @@
     <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js"></script>
     <script src="/static/libraries/tabulator/tabulator.min.js"></script>
     <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js"></script>
+    <script src="/static/libraries/luxon.min.js"></script>
     <script src="/static/js/timeout.js"></script>
     <script src="/static/js/nextstrain.js"></script>
     <script src="/static/js/leaflet.shpfile.js"></script>
