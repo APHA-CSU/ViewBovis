@@ -472,4 +472,5 @@ class NonBovineException(NoDataException):
 class MatrixTooLargeException(NoDataException):
     def __init__(self):
         self.message = "SNP matrix exceeds the maximum size limit (60 isolates). \
-            Consider viewing the phylogenetic tree in Nextstrain instead."
+            Consider reducing the SNP distance threshold or viewing the \
+                phylogenetic tree in Nextstrain instead."
