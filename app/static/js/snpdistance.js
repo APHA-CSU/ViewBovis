@@ -925,7 +925,7 @@ const showRelatedSamples = async function () {
       snp_distance_serverError()
 
     } else {
-
+    
       let json = await response.json();
       
       console.log(json)
@@ -938,7 +938,6 @@ const showRelatedSamples = async function () {
           <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
         `);
       } else {
-
         // TODO: better solution to this - massive hack in Tom's absence 
         let soi = json.SOI;
         delete json.SOI;
@@ -961,8 +960,6 @@ const showRelatedSamples = async function () {
             <span>Clade: ${json[soi].clade}<br/></span>
           </p>
           <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
-          <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
-          <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
         `);
 
         // Tabulator requires array of json objects
@@ -985,9 +982,9 @@ const showRelatedSamples = async function () {
             return row.getData().submission != soi && row.getData().cph != null; //disallow selection of soi row
           },
           columns: [
-              {title:"Precise Location", field:"cph", headerFilter:"input"},
-              {title:"Identifier", field:"animal_id", headerFilter:"input"},
-              {title:"Submission", field:"submission", headerFilter:"input",
+              {title:"Precise Location", field:"cph", headerFilter:"input", sorter: "string"},
+              {title:"Identifier", field:"animal_id", headerFilter:"input", sorter: "string"},
+              {title:"Submission", field:"submission", headerFilter:"input", sorter: "string",
                 formatter: function(cell) {
                   var cellValue = cell.getValue();
                   if (cellValue == soi){
@@ -995,9 +992,9 @@ const showRelatedSamples = async function () {
                   }
                   return cellValue;
                 }},
-              {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
-              {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-              {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
+              {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+              {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+              {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input", sorter: "date"},  
           ],
           initialSort:[
             {column:"distance", dir:"asc"},
@@ -1022,9 +1019,8 @@ const showRelatedSamples = async function () {
             document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
           }
         });
-      };
-
-    };
+      }
+    }
   } catch(err) {
     snp_distance_ClientError(err);
   };
