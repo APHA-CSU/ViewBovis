@@ -124,7 +124,7 @@ class TestRequest(unittest.TestCase):
                               "Import_Country": ["P"]},
                              index=["Y"]))
         setattr(self.request, "_df_wgs_metadata_soi",
-                pd.DataFrame({"foo": ["bar"]}))
+                pd.DataFrame({"group": ["A"]}, index=["Y"]))
 
         # setup - mock private methods
         self.request._transform_dateformat = \
@@ -132,21 +132,12 @@ class TestRequest(unittest.TestCase):
 
         # test normal operation
         # expected output
-        expected = {"submission": "Y",
-                    "clade": "A",
-                    "identifier": "B",
-                    "species": "COW",
-                    "animal_type": "E",
-                    "slaughter_date": "D_transformed",
-                    "cph": "F",
-                    "cph_type": "H",
-                    "county": "I",
-                    "risk_area": "J",
-                    "out_of_homerange": "L",
-                    "dob": "M_transformed",
-                    "sex": "N",
-                    "disclosing_test": "O",
-                    "import_country": "P"}
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "COW", "animal_type": "E",
+                    "slaughter_date": "D_transformed", "cph": "F",
+                    "cph_type": "H", "county": "I", "risk_area": "J",
+                    "out_of_homerange": "L", "dob": "M_transformed",
+                    "sex": "N", "disclosing_test": "O", "import_country": "P"}
         # test expected output
         self.assertDictEqual(self.request.soi_metadata(), expected)
         # assert mock calls
@@ -167,25 +158,29 @@ class TestRequest(unittest.TestCase):
                              index=["Y"]))
         # test normal operation
         # expected output
-        expected = {"submission": "Y",
-                    "clade": "A",
-                    "identifier": "B",
-                    "species": "COW",
-                    "animal_type": "E",
-                    "slaughter_date": "D_transformed",
-                    "cph": "F",
-                    "cph_type": "H",
-                    "county": "I",
-                    "risk_area": "J",
-                    "out_of_homerange": "L",
-                    "dob": None,
-                    "sex": "N",
-                    "disclosing_test": "O",
-                    "import_country": "P"}
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "COW", "animal_type": "E",
+                    "slaughter_date": "D_transformed", "cph": "F",
+                    "cph_type": "H", "county": "I", "risk_area": "J",
+                    "out_of_homerange": "L", "dob": None, "sex": "N",
+                    "disclosing_test": "O", "import_country": "P"}
         # test expected output
         self.assertDictEqual(self.request.soi_metadata(), expected)
         # assert mock calls
         self.request._transform_dateformat.assert_called_once_with("D")
+
+        # setup - mock attributes - missing metadata
+        setattr(self.request, "_df_metadata_soi", pd.DataFrame())
+        # test normal operation
+        # expected output
+        expected = {"submission": "Y", "clade": "A", "identifier": None,
+                    "species": None, "animal_type": None,
+                    "slaughter_date": None, "cph": None, "cph_type": None,
+                    "county": None, "risk_area": None, "out_of_homerange": None,
+                    "dob": None, "sex": None, "disclosing_test": None,
+                    "import_country": None}
+        # test expected output
+        self.assertDictEqual(self.request.soi_metadata(), expected)
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
@@ -194,25 +189,25 @@ class TestRequest(unittest.TestCase):
 
         # setup - mock attributes
         setattr(self.request, "_df_metadata_soi",
-                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
-                              "Host": ["COW"], "SlaughterDate": ["D"],
-                              "Animal_Type": ["E"], "CPH": ["F"],
-                              "CPH_Type": ["H"], "County": ["I"],
-                              "RiskArea": ["J"], "Loc0": ["K"],
-                              "OutsideHomeRange": ["L"], "wsdBirthDate": ["M"],
-                              "Gender": ["N"], "Disclosing_Test": ["O"],
-                              "Import_Country": ["P"]},
-                             index=["Y"]))
+                pd.DataFrame({"Host": ["COW"]}))
         setattr(self.request, "_df_wgs_metadata_soi",
-                pd.DataFrame({"foo": ["bar"]}))
+                pd.DataFrame({"group": ["A"]}))
+        setattr(self.request, "_submission", "Y")
 
         # setup - mock private methods
+        self.request.soi_metadata = mock.Mock()
         self.request._query_movdata = mock.Mock()
         self.request._get_os_map_ref = mock.Mock()
         self.request._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
 
         # setup - return values for public & private method mocks
+        self.request.soi_metadata.return_value = \
+            {"submission": "Y", "clade": "A", "identifier": "B",
+             "species": "COW", "animal_type": "E", "slaughter_date": "D",
+             "cph": "F", "cph_type": "H", "county": "I", "risk_area": "J",
+             "out_of_homerange": "L", "dob": "M", "sex": "N",
+             "disclosing_test": "O", "import_country": "P"}
         self.request._query_movdata.return_value = \
             pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
                           "County": ["M", "N", "O"],
@@ -231,9 +226,9 @@ class TestRequest(unittest.TestCase):
         # test normal operation
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
-                    "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
+                    "species": "COW", "slaughter_date": "D", "animal_type": "E",
                     "cph": "F", "cph_type": "H", "county": "I",
-                    "risk_area": "J", "out_of_homerange": "L", "dob": "M_transformed",
+                    "risk_area": "J", "out_of_homerange": "L", "dob": "M",
                     "sex": "N", "disclosing_test": "O", "import_country": "P", "move":
                         {"0": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
                                "on_date": "S_transformed", "off_date": "Z_transformed",

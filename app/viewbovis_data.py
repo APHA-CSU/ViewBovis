@@ -250,7 +250,7 @@ class Request:
             raise NoWgsDataException(self._id)
         else:
             return {"submission": self._df_metadata_soi.index[0],
-                    "clade": self._df_metadata_soi["Clade"][0],
+                    "clade": self._df_wgs_metadata_soi["group"][0],
                     "identifier": self._df_metadata_soi["Identifier"][0],
                     "species": self._df_metadata_soi["Host"][0],
                     "animal_type": self._df_metadata_soi["Animal_Type"][0],
@@ -289,8 +289,7 @@ class Request:
         if self._df_metadata_soi["Host"][0] != "COW":
             raise NonBovineException(self._id)
         # get movement data for SOI
-        df_movements = \
-            self._query_movdata(self._df_metadata_soi.index[0])
+        df_movements = self._query_movdata(self._submission)
         df_cph_2_osmapref = \
             self._get_os_map_ref(set(df_movements["Loc"].to_list()))
         # construct dictionary of movement data
