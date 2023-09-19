@@ -16,6 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common import exceptions
 
 CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+API_URL = "http://127.0.0.1:5000"
 
 
 class E2ETests(unittest.TestCase):
@@ -30,7 +31,7 @@ class E2ETests(unittest.TestCase):
         # start chromedriver
         self.driver = webdriver.Chrome(service=s, options=chrome_options)
         # connect to ViewBovis
-        self.driver.get("http://127.0.0.1:5000")
+        self.driver.get(API_URL)
         # pass security modal
         security_modal = self.driver.find_element(By.ID, "checkbox--agree")
         security_modal.click()
