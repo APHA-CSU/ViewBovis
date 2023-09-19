@@ -1,4 +1,6 @@
+import os
 import unittest
+
 import requests
 
 
@@ -11,9 +13,13 @@ class TestViewBovisAPI(unittest.TestCase):
         """
             API endpoint: {API_URL}/
         """
+        index_file_path = \
+            os.path.join(os.path.dirname(
+                os.path.dirname(os.path.abspath(__file__))),
+                         "templates/index.html")
         r = requests.get(f"{API_URL}/")
         assert r.status_code == 200
-        with open("../templates/index.html", "r") as index:
+        with open(index_file_path, "r") as index:
             self.assertEqual(index.read(), r.text)
 
     def test_get_sample(self):
