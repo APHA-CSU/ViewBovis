@@ -1,7 +1,7 @@
 """
     First start at some end-to-end tests. Need to ensure the the app is
     running connecting to the test database,
-    i.e. python deploy.py --data_path e2e_test_data/
+    i.e. python deploy.py --data_path test_data/
 """
 
 import unittest
