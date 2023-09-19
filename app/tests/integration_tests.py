@@ -34,6 +34,14 @@ class TestViewBovisAPI(unittest.TestCase):
         assert r.status_code == 200
         self.assertDictEqual(r.json(), expected_resp_body)
 
+        # request missing data
+        r = requests.get(f"{API_URL}/sample?sample_name=no_data_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Invalid submission: no_data_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
         # request missing metadata
         r = requests.get(f"{API_URL}"
                          "/sample?sample_name=no_meta_submission")
@@ -53,7 +61,28 @@ class TestViewBovisAPI(unittest.TestCase):
                               "disclosing_test": None,
                               "import_country": None}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing movement data
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=no_mov_submission")
+        expected_resp_body = {"submission": "no_mov_submission",
+                              "clade": "B6-11",
+                              "identifier": "no_mov_id",
+                              "species": "COW",
+                              "animal_type": "FARMED",
+                              "slaughter_date": "09/01/2023",
+                              "cph": "02/057/0030",
+                              "cph_type": "Agricultural Holding",
+                              "county": "k_county",
+                              "risk_area": "LRA",
+                              "out_of_homerange": "N",
+                              "dob": "09/01/2022",
+                              "sex": "F",
+                              "disclosing_test": "k_test_type",
+                              "import_country": None}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
 
         # request missing wgs data
         r = requests.get(f"{API_URL}"
@@ -62,15 +91,7 @@ class TestViewBovisAPI(unittest.TestCase):
             {"warnings": True,
              "warning": "Missing WGS data for submission: no_wgs_submission"}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
-
-        # request missing data
-        r = requests.get(f"{API_URL}/sample?sample_name=no_data_submission")
-        expected_resp_body = \
-            {"warnings": True,
-             "warning": "Invalid submission: no_data_submission"}
-        assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_movements(self):
         # request complete data
@@ -128,7 +149,16 @@ class TestViewBovisAPI(unittest.TestCase):
                                        "risk_area_at_move": "LRA",
                                        "risk_area_current": "LRA"}}}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing data
+        r = requests.get(f"{API_URL}"
+                         "/sample/movements?sample_name=no_data_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Invalid submission: no_data_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
 
         # request missing metadata
         r = requests.get(f"{API_URL}"
@@ -138,7 +168,27 @@ class TestViewBovisAPI(unittest.TestCase):
              "warning":
              "Incomplete or missing metadata for submission: no_meta_submission"}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing movement data
+        r = requests.get(f"{API_URL}"
+                         "/sample/movements?sample_name=no_mov_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning":
+             "Incomplete or missing metadata for submission: no_mov_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing WGS data
+        r = requests.get(f"{API_URL}"
+                         "/sample/movements?sample_name=no_wgs_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning":
+             "Missing WGS data for submission: no_wgs_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
 
         # request non-bovine submission
         r = requests.get(f"{API_URL}/sample/movements?sample_name=e_submission")
@@ -146,16 +196,7 @@ class TestViewBovisAPI(unittest.TestCase):
             {"warnings": True,
              "warning": "Non-bovine submission: e_submission"}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
-
-        # request missing data
-        r = requests.get(f"{API_URL}"
-                         "/sample/movements?sample_name=no_data_submission")
-        expected_resp_body = \
-            {"warnings": True,
-             "warning": "Invalid submission: no_data_submission"}
-        assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_related_samples(self):
         # request complete data
@@ -195,13 +236,13 @@ class TestViewBovisAPI(unittest.TestCase):
                  "species": "COW"},
              "e_submission":
                 {"animal_id": "e_id", "animal_type": "WILD", "clade": "B6-11",
-                 "cph": None, "disclosing_test": "c_test_type",
+                 "cph": None, "disclosing_test": "e_test_type",
                  "distance": None, "dob": None, "import_country": None,
                  "lat": None, "lon": None, "os_map_ref": None, "sex": "F",
                  "slaughter_date": None, "snp_distance": 4, "species": "BADGER"},
              "f_submission":
                 {"animal_id": "f_id", "animal_type": "WILD", "clade": "B6-11",
-                 "cph": None, "disclosing_test": "d_test_type",
+                 "cph": None, "disclosing_test": "f_test_type",
                  "distance": None, "dob": None, "import_country": None,
                  "lat": None, "lon": None, "os_map_ref": None, "sex": "F",
                  "slaughter_date": None, "snp_distance": 5, "species": "BADGER"},
@@ -215,10 +256,10 @@ class TestViewBovisAPI(unittest.TestCase):
                  "species": "COW"},
              "h_submission":
                 {"animal_id": "h_id", "animal_type": "FARMED", "clade": "B6-11",
-                 "cph": "02/056/0022", "disclosing_test": "h_test_type",
-                 "distance": 63.19178408232313, "dob": "04/01/2021",
-                 "import_country": None, "lat": 51.3695780198466,
-                 "lon": -1.46376836612594, "os_map_ref": "SU3742563527",
+                 "cph": "02/056/0017", "disclosing_test": "h_test_type",
+                 "distance": 63.18915563224568, "dob": "06/01/2021",
+                 "import_country": None, "lat": 51.381247568801,
+                 "lon": -1.48956807966256, "os_map_ref": "SU3562064812",
                  "sex": "F", "slaughter_date": "06/01/2023", "snp_distance": 6,
                  "species": "COW"},
              "no_meta_submission":
@@ -226,23 +267,21 @@ class TestViewBovisAPI(unittest.TestCase):
                  "cph": None, "disclosing_test": None, "distance": None,
                  "dob": None, "import_country": None, "lat": None, "lon": None,
                  "os_map_ref": None, "sex": None, "slaughter_date": None,
-                 "snp_distance": 6, "species": None}}
+                 "snp_distance": 6, "species": None},
+             "no_mov_submission":
+                {"animal_id": "no_mov_id", "animal_type": "FARMED",
+                 "clade": "B6-11", "cph": "02/057/0030",
+                 "disclosing_test": "k_test_type", "distance": 61.1514061005409,
+                 "dob": "09/01/2022", "import_country": None,
+                 "lat": 51.3908645164462, "lon": -1.43010479046847,
+                 "os_map_ref": "SU3975065912", "sex": "F",
+                 "slaughter_date": "09/01/2023", "snp_distance": 6,
+                 "species": "COW"}}
         r = requests.get(f"{API_URL}"
                          "/sample/related?sample_name=a_submission&"
                          "snp_distance=6")
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
-
-        # request missing data
-        r = requests.get(f"{API_URL}"
-                         "/sample/related?sample_name=no_meta_submission&"
-                         "snp_distance=1")
-        expected_resp_body = \
-            {"warnings": True,
-             "warning":
-             "Incomplete or missing metadata for submission: no_meta_submission"}
-        assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
 
         # request missing data
         r = requests.get(f"{API_URL}"
@@ -252,10 +291,110 @@ class TestViewBovisAPI(unittest.TestCase):
             {"warnings": True,
              "warning": "Invalid submission: no_data_submission"}
         assert r.status_code == 200
-        self.assertDictEqual(r.json(), expected_resp_body)
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing metadata
+        r = requests.get(f"{API_URL}"
+                         "/sample/related?sample_name=no_meta_submission&"
+                         "snp_distance=1")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning":
+             "Incomplete or missing metadata for submission: no_meta_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing movement data
+        r = requests.get(f"{API_URL}"
+                         "/sample/related?sample_name=no_mov_submission&"
+                         "snp_distance=1")
+        assert r.status_code == 200
+        response_body = r.json()
+        self.assertEqual("no_mov_submission", response_body["SOI"])
+        self.assertIn("b_submission", response_body)
+        self.assertIn("c_submission", response_body)
+        self.assertIn("d_submission", response_body)
+        self.assertIn("e_submission", response_body)
+        self.assertIn("f_submission", response_body)
+        self.assertIn("g_submission", response_body)
+        self.assertIn("h_submission", response_body)
+        self.assertIn("i_submission", response_body)
+        self.assertIn("no_mov_submission", response_body)
+
+        # request missing wgs data
+        r = requests.get(f"{API_URL}"
+                         "/sample/related?sample_name=no_wgs_submission&"
+                         "snp_distance=1")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Missing WGS data for submission: no_wgs_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_snp_matrix(self):
+        # request complete data
         r = requests.get(f"{API_URL}"
                          "/sample/matrix?sample_name=a_submission&"
                          "snp_distance=1")
         assert r.status_code == 200
+        expected_resp_body = \
+            {"soi": "a_submission", "identifier": "a_id",
+             "sampleIDs": ["a_submission", "b_submission"],
+             "matrix": [["a_submission", "a_submission", 0],
+                        ["a_submission", "b_submission", 1],
+                        ["b_submission", "a_submission", 1],
+                        ["b_submission", "b_submission", 0]]}
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing data
+        r = requests.get(f"{API_URL}"
+                         "/sample/matrix?sample_name=no_data_submission&"
+                         "snp_distance=1")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Invalid submission: no_data_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request missing meta data
+        r = requests.get(f"{API_URL}"
+                         "/sample/matrix?sample_name=no_meta_submission&"
+                         "snp_distance=1")
+        assert r.status_code == 200
+        response_body = r.json()
+        self.assertEqual("no_meta_submission", response_body["soi"])
+        self.assertEqual(None, response_body["identifier"])
+        self.assertIn("sampleIDs", response_body)
+        self.assertIn("matrix", response_body)
+
+        # request missing movement data
+        r = requests.get(f"{API_URL}"
+                         "/sample/matrix?sample_name=no_mov_submission&"
+                         "snp_distance=1")
+        assert r.status_code == 200
+        response_body = r.json()
+        self.assertEqual("no_mov_submission", response_body["soi"])
+        self.assertEqual("no_mov_id", response_body["identifier"])
+        self.assertIn("sampleIDs", response_body)
+        self.assertIn("matrix", response_body)
+
+        # request missing wgs data
+        r = requests.get(f"{API_URL}"
+                         "/sample/matrix?sample_name=no_wgs_submission&"
+                         "snp_distance=1")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning":
+             "Missing WGS data for submission: no_wgs_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excessive matrix
+        r = requests.get(f"{API_URL}"
+                         "/sample/matrix?sample_name=a_submission&"
+                         "snp_distance=7")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "SNP matrix exceeds the maximum size limit (60 isolates). Consider reducing the SNP distance threshold or viewing the phylogenetic tree in Nextstrain instead."}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
