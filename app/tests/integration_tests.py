@@ -10,6 +10,8 @@ class TestViewBovisAPI(unittest.TestCase):
     def test_get_homepage(self):
         r = requests.get(f"{API_URL}/")
         assert r.status_code == 200
+        with open("../templates/index.html", "r") as index:
+            self.assertEqual(index.read(), r.text)
 
     def test_get_sample(self):
         # request complete data
