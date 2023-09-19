@@ -8,12 +8,19 @@ API_URL = "http://127.0.0.1:5000"
 class TestViewBovisAPI(unittest.TestCase):
 
     def test_get_homepage(self):
+        """
+            API endpoint: {API_URL}/
+        """
         r = requests.get(f"{API_URL}/")
         assert r.status_code == 200
         with open("../templates/index.html", "r") as index:
             self.assertEqual(index.read(), r.text)
 
     def test_get_sample(self):
+        """
+            API endpoint: {API_URL}/sample?sample_name={submission number or
+                identifier}
+        """
         # request complete data
         r = requests.get(f"{API_URL}/sample?sample_name=a_submission")
         expected_resp_body = {"submission": "a_submission",
@@ -94,6 +101,10 @@ class TestViewBovisAPI(unittest.TestCase):
         self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_movements(self):
+        """
+            API endpoint: {API_URL}/sample/movements?sample_name={submission
+                number or identifier}
+        """
         # request complete data
         r = requests.get(f"{API_URL}/sample/movements?sample_name=a_submission")
         expected_resp_body = {"submission": "a_submission",
@@ -199,6 +210,10 @@ class TestViewBovisAPI(unittest.TestCase):
         self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_related_samples(self):
+        """
+            API endpoint: {API_URL}/sample/related?sample_name={submission
+                number or identifier}&snp_distance={SNP distance threshold}
+        """
         # request complete data
         expected_resp_body = \
             {"SOI": "a_submission",
@@ -332,6 +347,10 @@ class TestViewBovisAPI(unittest.TestCase):
         self.assertDictEqual(expected_resp_body, r.json())
 
     def test_get_snp_matrix(self):
+        """
+            API endpoint: {API_URL}/sample/matrix?sample_name={submission
+            number or identifier}&snp_distance={SNP distance threshold}
+        """
         # request complete data
         r = requests.get(f"{API_URL}"
                          "/sample/matrix?sample_name=a_submission&"
