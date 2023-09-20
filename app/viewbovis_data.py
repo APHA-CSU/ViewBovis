@@ -207,6 +207,7 @@ class Request:
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
                                   map(lambda x: self._sample_to_submission(x)))
+        # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
 
     def _sort_matrix(self, df_matrix):
