@@ -92,7 +92,7 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"foo": [0, 3, 5],
                           "bar": [3, 0, 10],
                           "baz": [5, 10, 0]},
-                         index=["foo", "bar", "baz"])
+                         index=["foo", "bar", "baz"])#.rename_axis("snp-dists")
         mock_glob.return_value = "mock_matrix_path"
 
         # test normal operation
