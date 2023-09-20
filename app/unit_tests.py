@@ -48,26 +48,26 @@ class TestRequest(unittest.TestCase):
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, ("foo_x", "foo_y"))
-        self.assertEqual(self.request._sample_name, None)
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(("foo_x", "foo_y"), self.request._xy)
+        self.assertEqual(None, self.request._sample_name)
 
         # testing missing metadata
         mock_query_metadata.return_value = pd.DataFrame()
         mock_query_wgs_metadata.return_value = \
             pd.DataFrame({"Sample": ["foo_sample"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, None)
-        self.assertEqual(self.request._sample_name, "foo_sample")
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(None, self.request._xy)
+        self.assertEqual("foo_sample", self.request._sample_name)
 
         # test no missing data
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, ("foo_x", "foo_y"))
-        self.assertEqual(self.request._sample_name, "foo_sample")
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(("foo_x", "foo_y"), self.request._xy)
+        self.assertEqual("foo_sample", self.request._sample_name)
 
     @mock.patch("viewbovis_data.Request._load_soi")
     @mock.patch("viewbovis_data.glob.glob")
@@ -100,7 +100,7 @@ class TestRequest(unittest.TestCase):
         expected = pd.DataFrame({"foo_sub": [0, 3], "bar_sub": [3, 0]},
                                 index=["foo_sub", "bar_sub"])
         true_output = self.request._related_snp_matrix(3)
-        nptesting.assert_array_equal(true_output, expected)
+        nptesting.assert_array_equal(expected, true_output)
         self.assertEqual(None, true_output.index.name)
 
         # test missing WGS data
@@ -140,7 +140,7 @@ class TestRequest(unittest.TestCase):
                     "out_of_homerange": "L", "dob": "M_transformed",
                     "sex": "N", "disclosing_test": "O", "import_country": "P"}
         # test expected output
-        self.assertDictEqual(self.request.soi_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_metadata())
         # assert mock calls
         self.request._transform_dateformat.assert_has_calls([mock.call("D"),
                                                              mock.call("M")])
@@ -166,7 +166,7 @@ class TestRequest(unittest.TestCase):
                     "out_of_homerange": "L", "dob": None, "sex": "N",
                     "disclosing_test": "O", "import_country": "P"}
         # test expected output
-        self.assertDictEqual(self.request.soi_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_metadata())
         # assert mock calls
         self.request._transform_dateformat.assert_called_once_with("D")
 
@@ -181,7 +181,7 @@ class TestRequest(unittest.TestCase):
                     "dob": None, "sex": None, "disclosing_test": None,
                     "import_country": None}
         # test expected output
-        self.assertDictEqual(self.request.soi_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_metadata())
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
@@ -244,7 +244,7 @@ class TestRequest(unittest.TestCase):
                                "stay_length": "X", "type": "R", "county": "O",
                                "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
         # test expected output
-        self.assertDictEqual(self.request.soi_movement_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_movement_metadata())
         # assert mock calls
         self.request._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
 
@@ -275,11 +275,10 @@ class TestRequest(unittest.TestCase):
                                  "bar": [3, 0, 10],
                                  "baz": [5, 10, 0]},
                                 index=["foo", "bar", "baz"])
-        pdtesting.assert_frame_equal(self.request._sort_matrix(
+        pdtesting.assert_frame_equal(expected, self.request._sort_matrix(
             pd.DataFrame({"bar": [0, 3, 10],
                           "foo": [3, 0, 5],
-                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])),
-            expected)
+                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])))
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_related_submissions_metadata(self, _):
@@ -345,8 +344,8 @@ class TestRequest(unittest.TestCase):
                          "import_country": None, "distance": None},
              "SOI": "foo_sub"}
         # test expected output
-        self.assertDictEqual(
-            self.request.related_submissions_metadata(3), expected)
+        self.assertDictEqual(expected,
+            self.request.related_submissions_metadata(3))
         # assert mock calls
         self.request._query_metadata.assert_called_once_with(["foo_sub",
                                                               "bar_sub",
@@ -394,7 +393,7 @@ class TestRequest(unittest.TestCase):
                                ["bar_sub", "foo_sub", 3],
                                ["bar_sub", "bar_sub", 0]]}
         # test expected output
-        self.assertDictEqual(self.request.snp_matrix(3), expected)
+        self.assertDictEqual(expected, self.request.snp_matrix(3))
         # assert mock calls
         self.request._related_snp_matrix.assert_called_once_with(3)
 
