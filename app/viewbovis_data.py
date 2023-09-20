@@ -201,12 +201,12 @@ class Request:
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
         # remove "snp-dists" index name
-        df_snps_related_no_idx = df_snps_related.rename_axis(None)
+        df_snps_related_no_idx_name = df_snps_related.rename_axis(None)
         # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related_no_idx.\
-            set_index(df_snps_related_no_idx.index.
+        df_snps_related_processed = df_snps_related_no_idx_name.\
+            set_index(df_snps_related_no_idx_name.index.
                       map(lambda x: self._sample_to_submission(x))).\
-            transpose().set_index(df_snps_related_no_idx.index.
+            transpose().set_index(df_snps_related_no_idx_name.index.
                                   map(lambda x: self._sample_to_submission(x)))
         # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
