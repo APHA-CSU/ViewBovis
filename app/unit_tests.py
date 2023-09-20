@@ -92,15 +92,16 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"foo": [0, 3, 5],
                           "bar": [3, 0, 10],
                           "baz": [5, 10, 0]},
-                         index=["foo", "bar", "baz"])#.rename_axis("snp-dists")
+                         index=["foo", "bar", "baz"]).rename_axis("snp-dists")
         mock_glob.return_value = "mock_matrix_path"
 
         # test normal operation
         # expected output
         expected = pd.DataFrame({"foo_sub": [0, 3], "bar_sub": [3, 0]},
                                 index=["foo_sub", "bar_sub"])
-        nptesting.assert_array_equal(self.request._related_snp_matrix(3),
-                                     expected)
+        true_output = self.request._related_snp_matrix(3)
+        nptesting.assert_array_equal(true_output, expected)
+        self.assertEqual(None, true_output.index.name)
 
         # test missing WGS data
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
