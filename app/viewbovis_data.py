@@ -200,10 +200,9 @@ class Request:
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
-        # TODO: below line not inplace!!!
-        df_snps_related.index.rename(None, inplace=True)
-        # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
+        # remove "snp-dists" index name and map the index and columns
+        # from sample name to submission number
+        df_snps_related_processed = df_snps_related.rename_axis(None).\
             set_index(df_snps_related.index.
                       map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related.index.
