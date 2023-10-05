@@ -8,17 +8,17 @@
 
 ![Capture](https://github.com/aphascience/ViewBovis/assets/10742324/76f407b7-2351-4a43-8efe-3e02cf1bd0c0)
 
-## Flask
-
-TODO
-
 ## ViewBovis API
 
-TODO
+This repository provides a rest API for the ViewBovis application. The API is written in Python using the [Flask web framework](https://flask.palletsprojects.com/en/3.0.x/). The main interface to the API can be observed in `app/viewbovis.py` which shows the five API endpoints: `/`, `/sample`, `sample/movements`, `/sample/related` and `/sample/matrix`. The main implementation for these endpoints is found in `app/viewbovis_data.py`, where the application queries the database and SNP matrix CSVs for data and constructs python dictonaries to be returned as JSON by the API.
+
+Requests at `/` return the main `index.html` page. All other requests return data in JSON format relating to a sample of interest (SOI) (the SOI is encoded in a query string paramater along with additional information). To see details of each endpoint please read the docstrings found in `app/viewbovis.py` and `app/viewbovis_data.py` along with the viewing the integration tests, found at `app/tests/integration_tests.py` which serves as documentation for the API detailing the expected response to a wide variety of requests at each endpoint. 
 
 ## Nextstrain
 
-TODO
+[Nextstrain](https://nextstrain.org/) is a key feature of the ViewBovis application that provides clade-wise phylogentic trees for M. bovis isolates in cattle and wildlife alongside a geographical map of isolate location. An [APHA developed version of Auspice](https://github.com/APHA-CSU/auspice) (Nextstrain's web-tool for visualising phylogentic data) is included within the main ViewBovis application via an iframe. This means that the client must be able to directly connect to a running Auspice server in order for the iframe to work.
+
+For more details on Auspice and Nextstrain, please see the [APHA's auspic repo](https://github.com/APHA-CSU/auspice) and the documentation at [nextstrain.org](https://nextstrain.org/).
 
 ## Installation
 
