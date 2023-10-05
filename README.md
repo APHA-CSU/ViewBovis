@@ -16,7 +16,9 @@ Requests at `/` return the main `index.html` page. All other requests return dat
 
 ## Nextstrain
 
-TODO
+[Nextstrain](https://nextstrain.org/) is a key feature of the ViewBovis application that provides clade-wise phylogentic trees for M. bovis isolates in cattle and wildlife alongside a geographical map of isolate location. An [APHA developed version of Auspice](https://github.com/APHA-CSU/auspice) (Nextstrain's web-tool for visualising phylogentic data) is included within the main ViewBovis application via an iframe. This means that the client must be able to directly connect to a running Auspice server in order for the iframe to work.
+
+For more details on Auspice and Nextstrain, please see the [APHA's auspic repo](https://github.com/APHA-CSU/auspice) and the documentation at [nextstrain.org](https://nextstrain.org/).
 
 ## Installation
 
