@@ -200,14 +200,15 @@ class Request:
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
-        # TODO: below line not inplace!!!
-        df_snps_related.index.rename(None, inplace=True)
+        # remove "snp-dists" index name
+        df_snps_related_no_idx_name = df_snps_related.rename_axis(None)
         # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.
+        df_snps_related_processed = df_snps_related_no_idx_name.\
+            set_index(df_snps_related_no_idx_name.index.
                       map(lambda x: self._sample_to_submission(x))).\
-            transpose().set_index(df_snps_related.index.
+            transpose().set_index(df_snps_related_no_idx_name.index.
                                   map(lambda x: self._sample_to_submission(x)))
+        # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
 
     def _sort_matrix(self, df_matrix):
@@ -470,6 +471,7 @@ class NonBovineException(NoDataException):
 
 class MatrixTooLargeException(NoDataException):
     def __init__(self):
-        self.message = "SNP matrix exceeds the maximum size limit (60 isolates). \
-            Consider reducing the SNP distance threshold or viewing the \
-                phylogenetic tree in Nextstrain instead."
+        self.message = ("SNP matrix exceeds the maximum size limit (60 "
+                        "isolates). Consider reducing the SNP distance "
+                        "threshold or viewing the phylogenetic tree in "
+                        "Nextstrain instead.")
