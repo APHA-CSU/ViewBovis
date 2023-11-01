@@ -40,12 +40,10 @@ class Request:
                 NoDataException: if the SOI does not exist in either
                 metadata or WGS data
         """
-        # get metadata for the SOI
         self._df_metadata_soi = self._query_metadata([self._id])
         if not self._df_metadata_soi.empty:
-            # get submission number if eartag used in request
+            # get submission number incase eartag used in request
             self._submission = self._df_metadata_soi.index[0]
-            # get WGS metadata for the SOI
             self._df_wgs_metadata_soi = \
                 self._query_wgs_metadata(self._submission)
             # retrieve x,y and lat,lon into tuples
@@ -55,19 +53,17 @@ class Request:
                 self._xy = None
             else:
                 self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
-        # if missing metadata
+        # missing metadata
         else:
-            # get WGS metadata for the SOI
             self._df_wgs_metadata_soi = self._query_wgs_metadata(self._id)
             self._xy = None
             if not self._df_wgs_metadata_soi.empty:
-                # get the submission number
                 self._submission = self._df_wgs_metadata_soi.index[0]
             else:
                 raise NoDataException(self._id)
         if not self._df_wgs_metadata_soi.empty:
-            # retrieve sample name from submission number
             self._sample_name = self._df_wgs_metadata_soi["Sample"][0]
+        # missing WGS data
         else:
             self._sample_name = None
             self._exclusion = self._query_exclusion()
@@ -305,11 +301,9 @@ class Request:
             raise NoMetaDataException(self._id)
         if self._df_metadata_soi["Host"][0] != "COW":
             raise NonBovineException(self._id)
-        # get movement data for SOI
         df_movements = self._query_movdata(self._submission)
         df_cph_2_osmapref = \
             self._get_os_map_ref(set(df_movements["Loc"].to_list()))
-        # construct dictionary of movement data
         return dict(self.soi_metadata(),
                     **{"move":
                         {str(row["Loc_Num"]):
@@ -381,9 +375,8 @@ class Request:
             # get lat/long mappings for CPH of related submissions
             df_cph_2_osmapref = \
                 self._get_os_map_ref(set(df_metadata_related["CPH"].to_list()))
-        # related samples without metadata
         no_meta_submissions = \
-            set(df_snps_related.index) - set(df_metadata_related.index)
+            set(df_snps_related.index) - set(df_metadata_related.index)  # related samples without metadata
         # append no_meta_response to response to the create the full
         # response dictionary
         return \
