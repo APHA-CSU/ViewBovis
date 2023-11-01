@@ -1,5 +1,7 @@
 import sqlite3
 import glob
+import calendar
+import re
 from datetime import datetime
 from os import path
 
@@ -33,6 +35,10 @@ class Request:
             data are, full metadata, the submission number, the xy for
             the positive test site, the full WGS metadata and the sample
             name
+
+            Raises:
+                NoDataException: if the SOI does not exist in either
+                metadata or WGS data
         """
         # get metadata for the SOI
         self._df_metadata_soi = self._query_metadata([self._id])
@@ -45,7 +51,10 @@ class Request:
             # retrieve x,y and lat,lon into tuples
             df_cph_2_osmapref = \
                 self._get_os_map_ref(self._df_metadata_soi["CPH"])
-            self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
+            if not self._df_metadata_soi["CPH"][0]:
+                self._xy = None
+            else:
+                self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
         # if missing metadata
         else:
             # get WGS metadata for the SOI
@@ -63,7 +72,6 @@ class Request:
             self._sample_name = None
             self._exclusion = self._query_exclusion()
 
-    # TODO: validate input
     def _query_metadata(self, ids: list) -> pd.DataFrame:
         """
             Fetches metadata for a given a list of ids. Returns a
@@ -78,7 +86,6 @@ class Request:
                                  index_col="Submission",
                                  params=ids+ids)
 
-    # TODO: validate input
     def _query_wgs_metadata(self, id: str) -> pd.DataFrame:
         """
             Fetches WGS metadata for a given id. Returns a DataFrame
@@ -105,7 +112,8 @@ class Request:
 
     def _sample_to_submission(self, sample: str) -> str:
         """
-            Maps a submission number to sample name
+            Maps a submission number to sample name. Returns 'None' if
+            there is no WGS metadata for the sample
         """
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db,
@@ -114,11 +122,13 @@ class Request:
             return None
         return df_wgs_sub["Submission"][0]
 
-    # TODO: validate input
     def _query_movdata(self, submission: str) -> pd.DataFrame:
         """
             Fetches movement data for a given submission. Returns an
             empty DataFrame if no data exists
+
+            Raises:
+                NoMetaDataException: for missing movement data
         """
         query = "SELECT * FROM movements WHERE Submission=:submission"
         mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
@@ -127,12 +137,20 @@ class Request:
             raise NoMetaDataException(submission)
         return mov_data
 
-    # TODO: unit test?
+    # TODO: unit test? - yes definitely!
     def _transform_dateformat(self, date: str) -> str:
         """
             Transforms a date string format as yyyy-mm-dd to dd-mm-yyyy
         """
-        return datetime.strptime(date, "%Y-%m-%d").strftime("%d/%m/%Y")
+        # TODO: map in btb-forestry, where the sqlite db is built?
+        month_mapper = {month: f"{index:02}" for index, month in
+                        enumerate(calendar.month_abbr) if month}
+        # transform the occasional month from abbreviated name to
+        # numbers, e.g. "Jan" -> "01"
+        date_transformed, _ = \
+            re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
+                    lambda x: month_mapper[x.group()], date)
+        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
@@ -147,6 +165,7 @@ class Request:
                                  index_col="CPH",
                                  params=cphs)
 
+    # TODO: unit test
     def _geo_distance(self, xy: tuple) -> float:
         """
             Returns the geographical distance in miles from the SOI
@@ -179,6 +198,9 @@ class Request:
                 df_snps_related_processed (pd.DataFrame): a SNP matrix
                 for genetically related isolates with submission numbers
                 as row and column labels
+
+            Raises:
+                NoWgsDataException: for missing WGS data
         """
         if self._df_wgs_metadata_soi.empty:
             if self._exclusion is None:
@@ -189,19 +211,20 @@ class Request:
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
                                           f"{clade}_*_matrix.csv"))
-        df_snps = pd.read_csv(matrix_path[0], index_col="snp-dists 0.8.2")
+        df_snps = pd.read_csv(matrix_path[0], index_col=0)
         # get isolates within snp_threshold
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
-        # TODO: below line not inplace!!!
-        df_snps_related.index.rename(None, inplace=True)
+        # remove "snp-dists" index name
+        df_snps_related_no_idx_name = df_snps_related.rename_axis(None)
         # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.
+        df_snps_related_processed = df_snps_related_no_idx_name.\
+            set_index(df_snps_related_no_idx_name.index.
                       map(lambda x: self._sample_to_submission(x))).\
-            transpose().set_index(df_snps_related.index.
+            transpose().set_index(df_snps_related_no_idx_name.index.
                                   map(lambda x: self._sample_to_submission(x)))
+        # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
 
     def _sort_matrix(self, df_matrix):
@@ -217,9 +240,12 @@ class Request:
     def soi_metadata(self) -> dict:
         """
             Returns metadata for the SOI in dictionary format. For
-            submissions with missing metadata, only "submission" and
-            "clade" fields will have valid values, all others will be
-            "None"
+            submissions with missing metadata, only 'submission' and
+            'clade' fields will have valid values, all others will be
+            'None'
+
+            Raises:
+                NoWgsDataException: for missing WGS data for the SOI
         """
         if self._df_metadata_soi.empty:
             return {"submission": self._df_wgs_metadata_soi.index[0],
@@ -232,10 +258,16 @@ class Request:
                     "cph_type": None,
                     "county": None,
                     "risk_area": None,
-                    "out_of_homerange": None}
+                    "out_of_homerange": None,
+                    "dob": None,
+                    "sex": None,
+                    "disclosing_test": None,
+                    "import_country": None}
+        elif self._df_wgs_metadata_soi.empty:
+            raise NoWgsDataException(self._id)
         else:
             return {"submission": self._df_metadata_soi.index[0],
-                    "clade": self._df_metadata_soi["Clade"][0],
+                    "clade": self._df_wgs_metadata_soi["group"][0],
                     "identifier": self._df_metadata_soi["Identifier"][0],
                     "species": self._df_metadata_soi["Host"][0],
                     "animal_type": self._df_metadata_soi["Animal_Type"][0],
@@ -247,24 +279,34 @@ class Request:
                     "county": self._df_metadata_soi["County"][0],
                     "risk_area": self._df_metadata_soi["RiskArea"][0],
                     "out_of_homerange":
-                        self._df_metadata_soi["OutsideHomeRange"][0]}
+                        self._df_metadata_soi["OutsideHomeRange"][0],
+                    "dob":
+                        None if not self._df_metadata_soi["wsdBirthDate"][0]
+                        else self._transform_dateformat(
+                            self._df_metadata_soi["wsdBirthDate"][0].split()[0]
+                            ),
+                    "sex": self._df_metadata_soi["Gender"][0],
+                    "disclosing_test":
+                        self._df_metadata_soi["Disclosing_Test"][0],
+                    "import_country":
+                        self._df_metadata_soi["Import_Country"][0]}
 
     def soi_movement_metadata(self) -> dict:
         """
             Returns metadata and movement data for the SOI in dictionary
-            format.
+            format
 
-            Raises: NoMetadataException for missing metadata for the
-                SOI
-            Raises: NonBovineException if the SOI is not a cow.
+            Raises:
+                NoMetaDataException: for missing metadata for the SOI
+            Raises:
+                NonBovineException: if the SOI is not a cow
         """
         if self._df_metadata_soi.empty:
             raise NoMetaDataException(self._id)
         if self._df_metadata_soi["Host"][0] != "COW":
             raise NonBovineException(self._id)
         # get movement data for SOI
-        df_movements = \
-            self._query_movdata(self._df_metadata_soi.index[0])
+        df_movements = self._query_movdata(self._submission)
         df_cph_2_osmapref = \
             self._get_os_map_ref(set(df_movements["Loc"].to_list()))
         # construct dictionary of movement data
@@ -272,23 +314,28 @@ class Request:
                     **{"move":
                         {str(row["Loc_Num"]):
                             {"cph": row["Loc"],
-                             "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["Loc"]],
+                             "os_map_ref": df_cph_2_osmapref["OSMapRef"]
+                                [row["Loc"]],
                              "lat": df_cph_2_osmapref["Lat"][row["Loc"]],
                              "lon": df_cph_2_osmapref["Long"][row["Loc"]],
                              "on_date":
-                                self._transform_dateformat(row["Loc_StartDate"]),
+                                self._transform_dateformat(
+                                    row["Loc_StartDate"]),
                              "off_date":
                                 self._transform_dateformat(row["Loc_EndDate"]),
                              "stay_length": row["Loc_Duration"],
                              "type": row["CPH_Type"],
-                             "county": row["County"]}
+                             "county": row["County"],
+                             "risk_area_at_move": row["Area_At_Movement"],
+                             "risk_area_current": row["Current_Area"]}
                          for _, row in df_movements.iterrows()}})
 
+    # TODO: workout how to include SOI without metadata
     def related_submissions_metadata(self, snp_threshold: int) -> dict:
         """
             Returns metadata and SNP distance for genetically related
             submissions. Submissions with missing metadata will be
-            included but contain 'None' in the metadata fields.
+            included but contain 'None' in the metadata fields
 
             Parameters:
                 snp_threshold (str): maximum SNP distance for genetic
@@ -300,13 +347,32 @@ class Request:
                         "cph": CPH location of positive test
                         "lat": latitude,
                         "lon": longitude,
+                        "species": species of the host animal,
+                        "animal_type": e.g. farmed, pet, wild etc.
                         "snp_distance": SNPs to sample of interest,
                         "animal_id": eartag,
                         "clade": clade of sample,
                         "slaughter_date": date of slaughter,
+                        "sex": sex of the host species, e.g. M/F,
+                        "disclosing_test": the disclosing test type,
+                            e.g. VE-WHT
+                        "dob": the date of birth,
+                        "import_country": the country the host was
+                            imported from,
                         "distance": distance to the sample of interest
-                            in miles}
+                            in miles
+                     "SOI": the submission number of the SOI}
+
+            Raises:
+                NoMetaDataException: for missing metadata for the SOI
+
+                NoMetaDataException: for missing CPH in metadata for the
+                    SOI
         """
+        if self._df_metadata_soi.empty:
+            raise NoMetaDataException(self._id)
+        elif self._xy is None:
+            raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
         df_metadata_related = \
@@ -323,31 +389,44 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "os_map_ref": df_cph_2_osmapref["OSMapRef"][row["CPH"]],
-                     "lat": df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": df_cph_2_osmapref["Long"][row["CPH"]],
+                     "os_map_ref": None if not row["CPH"] else
+                        df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": None if not row["CPH"] else
+                        df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": None if not row["CPH"] else
+                        df_cph_2_osmapref["Long"][row["CPH"]],
+                     "species": row["Host"],
+                     "animal_type": row["Animal_Type"],
                      "snp_distance":
                         int(df_snps_related[self._submission][index]),
                      "animal_id": row["Identifier"],
                      "clade": row["Clade"],
                      "slaughter_date":
-                         (None if not row["SlaughterDate"] else
-                          self._transform_dateformat(row["SlaughterDate"])),
-                     "distance":
-                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
-                                             df_cph_2_osmapref["y"][row["CPH"]]
-                                             ))}
+                         None if not row["SlaughterDate"] else
+                         self._transform_dateformat(row["SlaughterDate"]),
+                     "sex": row["Gender"],
+                     "disclosing_test": row["Disclosing_Test"],
+                     "dob":
+                         None if not row["wsdBirthDate"] else
+                         self._transform_dateformat(
+                            row["wsdBirthDate"].split()[0]),
+                     "import_country": row["Import_Country"],
+                     "distance": None if not row["CPH"] else
+                        self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
+                                            df_cph_2_osmapref["y"][row["CPH"]]
+                                            ))}
                     for index, row in df_metadata_related.iterrows()},
                  **{subm: {"cph": None, "os_map_ref": None, "lat": None,
-                           "lon": None,
+                           "lon": None, "species": None, "animal_type": None,
                            "snp_distance":
                                int(df_snps_related[self._submission][subm]),
                            "animal_id": None, "clade": None,
-                           "slaughter_date": None, "distance": None}
+                           "slaughter_date": None, "sex": None,
+                           "disclosing_test": None, "dob": None,
+                           "import_country": None, "distance": None}
                     for subm in no_meta_submissions},
                  **{"SOI": self._submission})
 
-    # TODO: make so SOI can be a submission without metadata.
     def snp_matrix(self, snp_threshold: int) -> dict:
         """
             Returns SNP matrix data for related submissions
@@ -364,14 +443,21 @@ class Request:
                 SOI, the identifier of the SOI, a list of sampleIDs in
                 the order they appear in the matrix (SOI first) and the
                 SNP matrix in "molten" format
+
+            Raises:
+                MatrixTooLargeException: if the resulting SNP matrix
+                exceeds 60 isolates
         """
         df_snps_related = self._related_snp_matrix(snp_threshold)
         submissions = df_snps_related.index.to_list()
+        if len(submissions) > 60:
+            raise MatrixTooLargeException()
         # restructure matrix - molten
         snps_related = df_snps_related.copy().stack().\
             reset_index().values.tolist()
         return {"soi": self._submission,
-                "identifier": self._df_metadata_soi["Identifier"][0],
+                "identifier": None if self._df_metadata_soi.empty
+                else self._df_metadata_soi["Identifier"][0],
                 "sampleIDs": submissions,
                 "matrix": snps_related}
 
@@ -407,3 +493,11 @@ class ExcludedSubmissionException(NoDataException):
 class NonBovineException(NoDataException):
     def __init__(self, id):
         self.message = f"Non-bovine submission: {id}"
+
+
+class MatrixTooLargeException(NoDataException):
+    def __init__(self):
+        self.message = ("SNP matrix exceeds the maximum size limit (60 "
+                        "isolates). Consider reducing the SNP distance "
+                        "threshold or viewing the phylogenetic tree in "
+                        "Nextstrain instead.")

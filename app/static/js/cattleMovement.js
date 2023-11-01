@@ -8,44 +8,6 @@
 "use strict";
 
 
-// ------------------------ //
-//
-// BASEMAP PARAMETERS
-//
-// ------------------------ //
-
-// Coordinates and zoom level of map on first render
-const defaultCoords = [52.56555275762325, -1.4667093894864072];
-const defaultZoom = 6;
-
-// Tiles
-// https://leaflet-extras.github.io/leaflet-providers/preview/
-
-// OpenStreetMap tiles
-const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-// Esri grey canvas
-const Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-	maxZoom: 16,
-});
-// Esri world imagery
-const Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});
-
-// Initiate map and set bounding box to the centre of England
-// const map = L.map("map").setView(defaultCoords, defaultZoom);
-const map = L.map("map", {
-  center: defaultCoords,
-  zoom: defaultZoom,
-  layers: [osm, Esri_WorldGrayCanvas, Esri_WorldImagery],
-  zoomControl: false,
-});
-
-
 
 // ------------------------ //
 //
@@ -328,6 +290,10 @@ const popupContent = function(data, movArr, index) {
               <td><strong>Out of Home Range:</strong></td>
               <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
             </tr>
+            <tr>
+              <td><strong>Risk Area:</strong></td>
+              <td>${movArr[index].risk_area_current}</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -340,19 +306,23 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td>TBC</td>
+              <td>${data.dob}</td>
             </tr>
             <tr>
               <td><strong>Slaughter Date:</strong></td>
               <td>${data.slaughter_date}</td>
             </tr>
             <tr>
-              <td><strong>Age:</strong></td>
-              <td>TBC</td>
-            </tr>
-            <tr>
               <td><strong>Sex:</strong></td>
-              <td>TBC</td>
+              <td>${data.sex == `F` ? `Female`: data.sex == `M` ? `Male`: `Unknown`}</td>
+            </tr> 
+            <tr>
+              <td><strong>Disclosing Test Type:</strong></td>
+              <td>${data.disclosing_test}</td>
+            </tr> 
+            <tr>
+              <td><strong>Import Country:</strong></td>
+              <td>${data.import_country == null ? `British`: `${data.import_country}`}</td>
             </tr> 
           </tbody>
         </table>
@@ -522,6 +492,31 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 //
 // ------------------------ //
 
+// function to display server error text
+const cattle_mov_serverError = function () {
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
+// function to display client error text
+const cattle_mov_ClientError = function (err) {
+    // log the error
+    console.log(err);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("cattle-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="cattle-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
 // Initiate variables
 let cowMarker, cowLayer, linePts, cattleMovLine;
 
@@ -529,7 +524,6 @@ let cowMarker, cowLayer, linePts, cattleMovLine;
 const showMovements = async function () {
 
   try {
-
     // Render spinner
     document.getElementById("cattle-spinner").classList.remove("hidden");
 
@@ -550,48 +544,42 @@ const showMovements = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-    // console.log(response);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
-    console.log(json);
 
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner").classList.add("hidden");
+    if(!response.ok) {
+
+      cattle_mov_serverError();
+
+    } else {
+
+      const json = await response.json();
+      console.log(json);
+
+      // Remove spinner when fetch is complete
+      document.getElementById("cattle-spinner").classList.add("hidden");
 
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // Render cow markers and lines
+        renderCowMarkers(json, cowIcons, "#0096FF");
 
-      // Render cow markers and lines
-      renderCowMarkers(json, cowIcons, "#0096FF");
-
-      // Allow user access to other elements by removing the disabled class
-      document.getElementById("cattleMovementLines--1").disabled = false;
-      document.getElementById("input__sampleID--2").disabled = false;
-      document.getElementById("btn__cattleMovement--2").disabled = false;
-      // document.getElementById("slider__snp-threshold").disabled = false;
-      // document.getElementById("btn__related-isolates").disabled = false;
-    }
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message">${Object.values(json)[0]}</p>
-      `);
+        // Allow user access to other elements by removing the disabled class
+        document.getElementById("cattleMovementLines--1").disabled = false;
+        document.getElementById("input__sampleID--2").disabled = false;
+        document.getElementById("btn__cattleMovement--2").disabled = false;
+        // document.getElementById("slider__snp-threshold").disabled = false;
+        // document.getElementById("btn__related-isolates").disabled = false;
+      }
     }
 
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="cattle-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
+    cattle_mov_ClientError(err);
   }
-};
+}
 
 // Executes the async showMovements() function when the main "Show Cattle Movement" button is clicked
 document.getElementById("btn__cattleMovement--1").addEventListener("click", showMovements);
@@ -632,41 +620,30 @@ const showMovements2 = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
-    // console.log(json);
+    if(!response.ok) {
+      cattle_mov_serverError()
+    } else {
+      const json = await response.json();
+      // console.log(json);
 
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner2").classList.add("hidden");
+      // Remove spinner when fetch is complete
+      document.getElementById("cattle-spinner2").classList.add("hidden");
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
-
-      // Render cow markers and lines
-      renderCowMarkers(json, cowIcons, "#cb181d", true);
-
-      // Allow user access to other elements by removing the disabled class
-      document.getElementById("cattleMovementLines--2").disabled = false;
-    };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("cattle-warning-text2").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="cattle-error-message2">${Object.values(json)[0]}</p>
-      `);
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("cattle-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="cattle-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // Render cow markers and lines
+        renderCowMarkers(json, cowIcons, "#cb181d", true);
+        // Allow user access to other elements by removing the disabled class
+        document.getElementById("cattleMovementLines--2").disabled = false;
+      };
     }
 
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("cattle-spinner2").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("cattle-warning-text2").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="cattle-error-message2">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
-    
+    cattle_mov_ClientError(err) 
   } 
 };
 

@@ -1,0 +1,12 @@
+[Unit]
+Description=Start viewbovis (BETA)
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/ranch-159/ViewBovis/
+Type=simple
+ExecStart=bash deploy.sh /ViewBovis/
+
+[Install]
+WantedBy=multi-user.target
