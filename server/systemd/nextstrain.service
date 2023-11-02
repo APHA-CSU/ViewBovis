@@ -1,7 +1,7 @@
 [Unit]
 Description=Start nextstrain
 Requires=network-online.target
-After=network-online.target
+After=network-online.target download_viewbovis_data.service
 
 [Service]
 WorkingDirectory=/home/ranch-159/
