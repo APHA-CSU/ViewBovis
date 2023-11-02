@@ -794,19 +794,42 @@ const popupContentSNPMap = function(data, AFnumber) {
 //
 // ------------------------ //
 
+// function to display server error text
+const snp_distance_serverError = function () {
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmap-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmap-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
+// function to display client error text
+const snp_distance_ClientError = function (err) {
+    // log the error
+    console.log(err);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmap-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmap-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
 // Initiate variables
-let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowEarTagSelect, rowEarTagDeselect;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
   
   // Extract data for target sample
-  const targetSample = json[target];
-  // console.log(targetSample);
+  let targetSample = json[target];
 
   // Create a layer group that will contain all the cow markers
   markerLayer = L.layerGroup().addTo(map2);
-  // console.log(markerLayer);
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
@@ -819,32 +842,46 @@ const renderRelatedMarkers = function (json, target) {
   let relatedSample = {...json}; // deep copy json object
   delete relatedSample[target];
   relatedSampleArr = Object.values(relatedSample);
-  // console.log(relatedSampleArr);
+
+  // add submission number to relatedSampleArr
+  for (let i = 0; i < relatedSampleArr.length; i++) {
+    relatedSampleArr[i].submission = Object.keys(relatedSample)[i]
+  }
+
+  // find the indexes where cph is null
+  var idxs = [];
+  for (let i = relatedSampleArr.length - 1; i >= 0; i--) {
+      if (relatedSampleArr[i].cph === null) {
+          idxs.unshift(i);
+      }
+  }
+  // delete the Submissions where the CPH is null
+  for (let i = idxs.length -1; i >= 0; i--)
+    relatedSampleArr.splice(idxs[i],1);
 
   // Add related sample(s) to map
-  for (let i = 0; i < relatedSampleArr.length; i++) {
-    relatedMarker = L.marker([relatedSampleArr[i].lat, relatedSampleArr[i].lon], {
+  relatedSampleArr.forEach(function (item) {
+    relatedMarker = L.marker([item.lat, item.lon], {
       icon: new L.AwesomeNumberMarkers({
-        className: `awesome-number-marker marker-${relatedSampleArr[i].animal_id}`,
+        className: `awesome-number-marker marker-${item.submission}`,
         iconSize: [35, 45],
         iconAnchor:   [17, 42],
         popupAnchor: [1, -32],
-        number: relatedSampleArr[i].snp_distance,
+        number: item.snp_distance,
         markerColor: "gray",
         numberColor: "white"
       })
     });
-  markerLayer.addLayer(relatedMarker);
-
-  // Add popup to related sample(s)
-  relatedMarker.bindPopup(popupContentSNPMap(relatedSampleArr[i], Object.keys(relatedSample)[i]), cowheadPopupOptions2);
-  };
+    markerLayer.addLayer(relatedMarker);
+    // Add popup to related samples
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+  });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
-  const allLat = Object.values(json).map( arr => arr.lat ); 
-  const allLon = Object.values(json).map( arr => arr.lon ); 
+  let allSamplesArr = Object.values({...json})
+  const allLat = allSamplesArr.map( arr => arr.lat ); 
+  const allLon = allSamplesArr.map( arr => arr.lon ); 
   const allPts = allLat.map( (lat, index) => { return [lat, allLon[index]] });
-  // console.log(allPts);
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
   map2.fitBounds(L.latLngBounds(allPts).pad(0.10));
@@ -882,106 +919,111 @@ const showRelatedSamples = async function () {
 
     // Fetch json data from backend
     const response = await fetch(`/sample/related?sample_name=${sampleID}&snp_distance=${snpDistance}`);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    let json = await response.json();
-    // console.log(response);
-    console.log(json);
+
+    if(!response.ok) {
+
+      snp_distance_serverError()
+
+    } else {
     
-    // Remove spinner when fetch is complete
-    document.getElementById("snpmap-spinner").classList.add("hidden");
+      let json = await response.json();
+      
+      console.log(json)
+      // Remove spinner when fetch is complete
+      document.getElementById("snpmap-spinner").classList.add("hidden");
 
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // TODO: better solution to this - massive hack in Tom's absence 
+        let soi = json.SOI;
+        delete json.SOI;
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
+        // Remove time from date property and round miles to two decimal places
+        Object.values(json).forEach((item) => {
+          item.distance = parseFloat(item.distance).toFixed(2);
+        });
 
-      // TODO: better solution to this - massive hack in Tom's absence 
-      var soi = json.SOI;
-      delete json.SOI;
+        // Render related markers
+        renderRelatedMarkers(json, soi);
 
-      // Remove time from date property and round miles to two decimal places
-      Object.values(json).forEach((item) => {
-        item.distance = parseFloat(item.distance).toFixed(2);
-      });
+        // Render html table title in right sidebar
+        document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
+          <h4>${soi}</h4>
+          <p>
+            <span>Identifier: ${json[soi].animal_id}<br/></span>
+            <span>Precise Location: ${json[soi].cph}<br/></span>
+            <span>OS Map Reference: ${json[soi].os_map_ref}<br/></span>
+            <span>Clade: ${json[soi].clade}<br/></span>
+          </p>
+          <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
+        `);
 
-      // Render related markers
-      renderRelatedMarkers(json, soi);
+        // Tabulator requires array of json objects
+        let tabledata = Object.values(json)
+        // Add submission number to tabledata
+        for (let i = 0; i < tabledata.length; i++) {
+          tabledata[i].submission = Object.keys(json)[i]
+        }
 
-      // Render html table title in right sidebar
-      document.getElementById("table-sidebar-title").insertAdjacentHTML("afterbegin", `
-        <h4>${soi}</h4>
-        <p>
-          <span>Identifier: ${json[soi].animal_id}<br/></span>
-          <span>Precise Location: ${json[soi].cph}<br/></span>
-          <span>OS Map Reference: ${json[soi].os_map_ref}<br/></span>
-          <span>Clade: ${json[soi].clade}<br/></span>
-        </p>
-        <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
-        <button id="btn-select-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="selectAllRows()">Select All</button>
-        <button id="btn-deselect-all" class="govuk-button govuk-button--secondary btn-snptable" onclick="deselectAllRows()">Deselect All</button>
-      `);
-
-      // Render table in right sidebar
-      snpTable = new Tabulator("#table-content-container", {
-        data: Object.values(json),
-        selectable:true,
-        selectableRangeMode:"click",
-        columnDefaults:{
-            resizable:false,
+        // Render table in right sidebar
+        snpTable = new Tabulator("#table-content-container", {
+          data: tabledata,
+          columnDefaults:{
+              resizable:false,
+            },
+          movableColumns: true,
+          selectable:true,
+          selectableRangeMode:"click",
+          selectableCheck:function(row){
+            return row.getData().submission != soi && row.getData().cph != null; //disallow selection of soi row
           },
-        layout: "fitDataTable",
-        movableColumns: true,
-        columns: [
-            {title:"Precise Location", field:"cph", headerFilter:"input"},
-            {title:"Identifier", field:"animal_id", headerFilter:"input"},
-            {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right"},
-            {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input"},  
-        ],
-        initialSort:[
-          {column:"distance", dir:"asc"},
-          {column:"snp_distance", dir:"asc"},
-        ],
-      });
+          columns: [
+              {title:"Precise Location", field:"cph", headerFilter:"input", sorter: "string"},
+              {title:"Identifier", field:"animal_id", headerFilter:"input", sorter: "string"},
+              {title:"Submission", field:"submission", headerFilter:"input", sorter: "string",
+                formatter: function(cell) {
+                  var cellValue = cell.getValue();
+                  if (cellValue == soi){
+                    cell.getRow().getElement().style.backgroundColor = "#ffbe33"
+                  }
+                  return cellValue;
+                }},
+              {title:"SNP distance", field:"snp_distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+              {title:"Miles", field:"distance", headerFilter:"input", hozAlign:"right", sorter:"number"},
+              {title:"Slaughter Date", field:"slaughter_date", headerFilter:"input", sorter: "date"},  
+          ],
+          initialSort:[
+            {column:"distance", dir:"asc"},
+            {column:"snp_distance", dir:"asc"},
+          ],
+        });
 
-      // Sort table by SNP then Miles
-      // snpTable.setSort([
-      //   { column: "snp_distance", dir:"asc" },
-      //   { column: "distance", dir:"asc" },
-      // ]);
+        // When a row is selected, change the colour of the map marker
+        snpTable.on("rowSelected", function(row){
+          if (row.getData().cph != null){
+            // Get the row submission
+            rowSubmissionSelect = row.getData().submission;
+            document.querySelector(`.marker-${rowSubmissionSelect}`).firstChild.style.color = "#ffbe33";
+          }
+        });
 
-      // When a row is selected, change the colour of the map marker
-      snpTable.on("rowSelected", function(row){
-        // Get the row ear tag ID
-        rowEarTagSelect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagSelect}`).firstChild.style.color = "yellow";
-      });
-
-      // Reset marker colour to default when row is deselected
-      snpTable.on("rowDeselected", function(row){
-        // Get the row ear tag ID
-        rowEarTagDeselect = row.getData().animal_id;
-        document.querySelector(`.marker-${rowEarTagDeselect}`).firstChild.style.color = "white";
-      });
-    };
-
-    // If first object in JSON is an error, print the error message
-    if(Object.keys(json)[0] === "error") {
-      document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
-        <p class="warning-text" id="snpmap-error-message">${Object.values(json)[0]}</p>
-      `);
-    };
-
+        // Reset marker colour to default when row is deselected
+        snpTable.on("rowDeselected", function(row){
+          if (row.getData().cph != null){
+            // Get the row submission
+            rowSubmissionDeselect = row.getData().submission;
+            document.querySelector(`.marker-${rowSubmissionDeselect}`).firstChild.style.color = "white";
+          }
+        });
+      }
+    }
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("snpmap-spinner").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmap-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
-  }
+    snp_distance_ClientError(err);
+  };
   
 };
 
@@ -1009,7 +1051,7 @@ const btnShowTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__show-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" href="#table-sidebar-container">Show Table</a>
+      <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" id="show-table" href="#table-sidebar-container">Show Table</a>
     `);
     return divContainer;
   }

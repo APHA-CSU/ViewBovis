@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, render_template, request, g
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
-                           NoWgsDataException, NonBovineException
+                           NoWgsDataException, NonBovineException,\
+                           MatrixTooLargeException
 
 app = Flask(__name__)
 
@@ -16,7 +17,7 @@ def get_request_object(id):
         application context. This function is called before every
         request.
     """
-    if not hasattr(g, "data"):
+    if not hasattr(g, "request"):
         g.request = Request(app.data_path, id)
 
 
@@ -26,7 +27,7 @@ def disconnect_db(exception):
         Closes the database connection and delete the database object.
         Called automatically when the application context ends.
     """
-    if hasattr(g, 'request'):
+    if hasattr(g, "request"):
         g.request.__del__()
         del g.request
 
@@ -96,6 +97,8 @@ def snp_matrix():
 @app.errorhandler(NoMetaDataException)
 @app.errorhandler(NoWgsDataException)
 @app.errorhandler(NonBovineException)
+@app.errorhandler(MatrixTooLargeException)
 def custom_exception_handler(error):
     app.logger.info(error)
-    return jsonify({"error": f"{str(error)}"})
+    return jsonify({"warnings": True,
+                    "warning": f"{str(error)}"})

@@ -412,6 +412,31 @@ const plotHeatmap = function(matrix, identifier, af, sampleNames, minValue, maxV
 //
 // ------------------------ //
 
+// function to display server error text
+const matrix_serverError = function () {
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmatrix-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
+// function to display client error text
+const matrix_ClientError = function (err) {
+    // log the error
+    console.log(err);
+
+    // Remove spinner when fetch is complete
+    document.getElementById("snpmatrix-spinner").classList.add("hidden");  
+
+    // Activate generic (unknown) warning message on UI
+    document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
+      <p class="error-text" id="snpmatrix-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+    `);
+}
+
 // Async function that renders target samples and its related samples on map
 const showSNPMatrix = async function () {
 
@@ -434,57 +459,52 @@ const showSNPMatrix = async function () {
     // Fetch json data from backend
     const response = await fetch(`/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`);
     // console.log(response);
-    if(!response.ok) throw new Error("Problem getting SNP data from backend");
-    const json = await response.json();
-    console.log(json);
+    if(!response.ok) {
+      matrix_serverError()
+    } else {
+      const json = await response.json();
+      console.log(json);
 
-    // Remove spinner when fetch is complete
-    document.getElementById("snpmatrix-spinner").classList.add("hidden");
+      // Remove spinner when fetch is complete
+      document.getElementById("snpmatrix-spinner").classList.add("hidden");
 
-    // If first object in JSON is not an error, proceed with main function
-    if(Object.keys(json)[0] !== "error") {
-      // Extract the selected sample Submission number and Identifier
-      const selectedSampleSubmission = json.soi;
-      const selectedSampleIdentifier = json.identifier;
-      // console.log(selectedSampleIdentifier);
+      // If response contains a warning
+      if (json["warnings"]) {
+        document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
+          <p class="warning-text" id="snpmatrix-error-message">${json["warning"]}</p>
+        `);
+      } else {
+        // Extract the selected sample Submission number and Identifier
+        const selectedSampleSubmission = json.soi;
+        const selectedSampleIdentifier = json.identifier;
+        // console.log(selectedSampleIdentifier);
 
-      // Extract matrix from json array
-      const matrix = json.matrix;
-      // console.log(matrix);
+        // Extract matrix from json array
+        const matrix = json.matrix;
+        // console.log(matrix);
 
-      const sampleIDs = json.sampleIDs
-      console.log(sampleIDs);
+        const sampleIDs = json.sampleIDs
+        console.log(sampleIDs);
 
-      //================
-      // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
-      //================
-      
-      // Extract minimum and maximum SNP distance
-      const minValue = Math.min(...matrix.map( i => i[2]));
-      const maxValue = Math.max(...matrix.map( i => i[2]));
-      // console.log(minValue, maxValue);
+        //================
+        // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
+        //================
+        
+        // Extract minimum and maximum SNP distance
+        const minValue = Math.min(...matrix.map( i => i[2]));
+        const maxValue = Math.max(...matrix.map( i => i[2]));
+        // console.log(minValue, maxValue);
 
-      // Render SNP distribution plot
-      renderSNPDistribution(matrix, minValue, maxValue); 
+        // Render SNP distribution plot
+        renderSNPDistribution(matrix, minValue, maxValue); 
 
-      // Render SNP matrix
-      plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleSubmission, sampleIDs, minValue, maxValue);
-    }else{
-      document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
-      <p class="warning-text" id="snpmatrix-error-message">${Object.values(json)[0]}</p>
-    `);
+        // Render SNP matrix
+        plotHeatmap(matrix, selectedSampleIdentifier, selectedSampleSubmission, sampleIDs, minValue, maxValue);
+      }
     }
 
   } catch(err) {
-    console.error(err)
-
-    // Remove spinner when fetch is complete
-    document.getElementById("snpmatrix-spinner").classList.add("hidden");  
-
-    // Activate generic (unknown) warning message on UI
-    document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
-    `);
+    matrix_ClientError(err)
   }
 };
 
