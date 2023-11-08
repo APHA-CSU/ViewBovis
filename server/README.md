@@ -85,12 +85,12 @@ Automatic start-up is managed by SCE support, and power-down is implemented via 
 
 When the server is booted, systemd will automatically run services to:
 
-1. Pull the production data from `s3-csu-003` and save to `/ViewBovis` (TODO).
+1. [`server/systemd/download_viewbovis_data.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) pulls the production data from `s3-csu-003` and saves it to `/ViewBovis`.
 1. Start the nginx proxy server. - The nginx installation deals with this service, we just need to ensure that [nginx is installed on the server and the proxy server is configured correctly](#nginx). 
-1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/deploy.sh). `deploy.sh` will first update the local docker image of the production version of ViewBovis before running the container.
+1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/server/deploy.sh). `deploy.sh` will first update the local docker image of the production version of ViewBovis before running the container.
 1. [`server/systemd/nextstrain.service`](https://github.com/aphascience/ViewBovis/blob/main/server/nextstrain.service) starts the Nextstrain auspice server. 
 
-These services ensure that the app is automatically made available to users as soon as the server starts.
+These services ensure that the app is automatically made available to users and that it is up-to-date with the latest production data as soon as the server starts.
 
 #### On shutdown
 
