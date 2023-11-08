@@ -5,8 +5,9 @@ import pandas as pd
 import pandas.testing as pdtesting
 import numpy.testing as nptesting
 
-from viewbovis_data import Request, NoDataException, NoMetaDataException,\
-                           NoWgsDataException, NonBovineException
+from viewbovis_data import Request, NoDataException, NoMetaDataException, \
+                           NoWgsDataException, NonBovineException, \
+                           ExcludedSubmissionException
 
 
 def transform_dateformat_side_effect_func(value):
@@ -182,6 +183,20 @@ class TestRequest(unittest.TestCase):
                     "import_country": None}
         # test expected output
         self.assertDictEqual(expected, self.request.soi_metadata())
+
+        # test missing WGS data
+        # assert exception
+        setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
+        setattr(self.request, "_excluded", None)
+        with self.assertRaises(NoWgsDataException):
+            self.request.soi_metadata()
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
+        setattr(self.request, "_excluded", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
+            self.request.soi_metadata()
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
