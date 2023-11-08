@@ -44,7 +44,7 @@ const ns_serverError = function () {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="nextstrain-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="nextstrain-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -58,7 +58,7 @@ const ns_ClientError = function (err) {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="nextstrain-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="nextstrain-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -98,7 +98,7 @@ const showTable = async function() {
             // If response contains a warning
             if (json["warnings"]) {
                 document.getElementById("nextstrain-search-table").insertAdjacentHTML("afterbegin", `
-                <p class="warning-text" id="nextstrain-error-message">${json["warning"]}</p>
+                <p class="warning-text" style="white-space:pre" id="nextstrain-error-message">${json["warning"]}</p>
                 `);
             } else {
                 // Create an array containing table data
