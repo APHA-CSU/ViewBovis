@@ -96,18 +96,17 @@ class Request:
                                  index_col="Submission",
                                  params={"id": id})
 
-    def _query_exclusion(self) -> pd.DataFrame:
+    def _query_exclusion(self) -> str:
         """
             Returns the exclusion reason for the SOI. If the SOI is not
-            in the list of excluded samples an empty DataFrame is
-            returned
+            in the list of excluded samples, None is returned
         """
         query = """SELECT Exclusion FROM excluded WHERE
                    Submission=:submission"""
         df_exclusion = pd.read_sql_query(query, self._db,
                                          params={"submission":
                                                  self._submission})
-        return df_exclusion["Exclusion"]
+        return df_exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -202,10 +201,10 @@ class Request:
                 NoWgsDataException: for missing WGS data
         """
         if self._df_wgs_metadata_soi.empty:
-            if self._exclusion.empty:
+            if self._exclusion is None:
                 raise NoWgsDataException(self._id)
             else:
-                raise ExcludedSubmissionException(self._id, self._exclusion[0])
+                raise ExcludedSubmissionException(self._id, self._exclusion)
         clade = self._df_wgs_metadata_soi["group"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
@@ -263,7 +262,10 @@ class Request:
                     "disclosing_test": None,
                     "import_country": None}
         elif self._df_wgs_metadata_soi.empty:
-            raise NoWgsDataException(self._id)
+            if self._exclusion is None:
+                raise NoWgsDataException(self._id)
+            else:
+                raise ExcludedSubmissionException(self._id, self._exclusion)
         else:
             return {"submission": self._df_metadata_soi.index[0],
                     "clade": self._df_wgs_metadata_soi["group"][0],
