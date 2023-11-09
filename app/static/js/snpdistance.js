@@ -801,7 +801,7 @@ const snp_distance_serverError = function () {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmap-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="snpmap-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -815,7 +815,7 @@ const snp_distance_ClientError = function (err) {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("snpmap-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmap-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="snpmap-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -935,7 +935,7 @@ const showRelatedSamples = async function () {
       // If response contains a warning
       if (json["warnings"]) {
         document.getElementById("snpmap-warning-text").insertAdjacentHTML("beforebegin", `
-          <p class="warning-text" id="snpmap-error-message">${json["warning"]}</p>
+          <p class="warning-text" style="white-space:pre" id="snpmap-error-message">${json["warning"]}</p>
         `);
       } else {
         // TODO: better solution to this - massive hack in Tom's absence 

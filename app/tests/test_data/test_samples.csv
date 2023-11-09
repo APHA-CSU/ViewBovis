@@ -10,3 +10,4 @@ h_submission,B6-11,h_id,COW,FARMED,2023-01-06,02/056/0017,Agricultural Holding,h
 i_submission,B6-11,i_id,COW,FARMED,2023-01-07,02/056/0092,Agricultural Holding,i_county,LRA,02/057/0005,N,F,2022-01-07 00:00.00.000,i_test_type,NULL
 no_wgs_submission,foo_clade,no_wgs_id,COW,FARMED,2023-01-08,02/057/0030,Agricultural Holding,j_county,LRA,02/057/0041,N,F,2022-01-08 00:00.00.000,j_test_type,NULL
 no_mov_submission,B6-11,no_mov_id,COW,FARMED,2023-01-09,02/057/0030,Agricultural Holding,k_county,LRA,02/057/0041,N,F,2022-01-09 00:00.00.000,k_test_type,NULL
+excluded_submission,no_clade,excluded_id,COW,FARMED,2023-01-10,02/057/0068,Agricultural Holding,l_county,LRA,02/057/0041,N,F,2022-01-10 00:00.00.000,l_test_type,NULL
