@@ -106,6 +106,22 @@ class TestViewBovisAPI(unittest.TestCase):
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
     def test_get_movements(self):
         """
             API endpoint: {API_URL}/sample/movements?sample_name={submission
@@ -212,6 +228,22 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning": "Non-bovine submission: e_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -352,6 +384,22 @@ class TestViewBovisAPI(unittest.TestCase):
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
     def test_get_snp_matrix(self):
         """
             API endpoint: {API_URL}/sample/matrix?sample_name={submission
@@ -421,5 +469,21 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning": "SNP matrix exceeds the maximum size limit (60 isolates). Consider reducing the SNP distance threshold or viewing the phylogenetic tree in Nextstrain instead."}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
