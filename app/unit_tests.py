@@ -431,5 +431,6 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(MatrixTooLargeException):
             self.request.snp_matrix(1)
 
+
 if __name__ == "__main__":
     unittest.main()
