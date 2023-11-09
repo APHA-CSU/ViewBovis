@@ -103,10 +103,10 @@ class Request:
         """
         query = """SELECT Exclusion FROM excluded WHERE
                    Submission=:submission"""
-        df_exclusion = pd.read_sql_query(query, self._db,
-                                         params={"submission":
-                                                 self._submission})
-        return df_exclusion["Exclusion"][0]
+        exclusion = pd.read_sql_query(query, self._db,
+                                      params={"submission":
+                                              self._submission})
+        return exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
