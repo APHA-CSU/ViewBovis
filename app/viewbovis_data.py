@@ -96,6 +96,8 @@ class Request:
                                  index_col="Submission",
                                  params={"id": id})
 
+    # TODO: unit test mocking pd.read_sql_query, i.e. just test the
+    # if statement
     def _query_exclusion(self) -> str:
         """
             Returns the exclusion reason for the SOI. If the SOI is not
@@ -106,7 +108,10 @@ class Request:
         exclusion = pd.read_sql_query(query, self._db,
                                       params={"submission":
                                               self._submission})
-        return exclusion["Exclusion"][0]
+        if exclusion.empty:
+            return None
+        else:
+            return exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
