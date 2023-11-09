@@ -94,10 +94,6 @@ def snp_matrix():
 
 
 @app.errorhandler(NoDataException)
-@app.errorhandler(NoMetaDataException)
-@app.errorhandler(NoWgsDataException)
-@app.errorhandler(NonBovineException)
-@app.errorhandler(MatrixTooLargeException)
 def custom_exception_handler(error):
     app.logger.info(error)
     return jsonify({"warnings": True,
