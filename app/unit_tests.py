@@ -7,7 +7,7 @@ import numpy.testing as nptesting
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException, \
                            NoWgsDataException, NonBovineException, \
-                           ExcludedSubmissionException
+                           ExcludedSubmissionException, MatrixTooLargeException
 
 
 def transform_dateformat_side_effect_func(value):
@@ -423,6 +423,13 @@ class TestRequest(unittest.TestCase):
         # assert mock calls
         self.request._related_snp_matrix.assert_called_once_with(3)
 
+        # test large matrix
+        # setup - return values for private method mocks
+        self.request._related_snp_matrix.return_value = \
+            pd.DataFrame(index=list(range(61)))
+        # assert MatrixTooLargeException
+        with self.assertRaises(MatrixTooLargeException):
+            self.request.snp_matrix(1)
 
 if __name__ == "__main__":
     unittest.main()
