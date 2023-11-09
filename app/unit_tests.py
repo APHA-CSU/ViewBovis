@@ -27,7 +27,9 @@ class TestRequest(unittest.TestCase):
     @mock.patch("viewbovis_data.Request._query_metadata")
     @mock.patch("viewbovis_data.Request._query_wgs_metadata")
     @mock.patch("viewbovis_data.Request._get_os_map_ref")
+    @mock.patch("viewbovis_data.Request._query_exclusion")
     def test_load_soi(self,
+                      query_exclusion,
                       mock_get_os_map_ref,
                       mock_query_wgs_metadata,
                       mock_query_metadata):
@@ -83,6 +85,7 @@ class TestRequest(unittest.TestCase):
         setattr(self.request, "_matrix_dir", "mock_matrix_dir")
         setattr(self.request, "_sample_name", "foo")
         setattr(self.request, "_submission", "foo_sub")
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
@@ -105,8 +108,15 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(None, true_output.index.name)
 
         # test missing WGS data
+        # assert exception
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
         with self.assertRaises(NoWgsDataException):
+            self.request._related_snp_matrix(1)
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_exclusion", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
             self.request._related_snp_matrix(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
@@ -127,6 +137,7 @@ class TestRequest(unittest.TestCase):
                              index=["Y"]))
         setattr(self.request, "_df_wgs_metadata_soi",
                 pd.DataFrame({"group": ["A"]}, index=["Y"]))
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._transform_dateformat = \
@@ -186,15 +197,15 @@ class TestRequest(unittest.TestCase):
 
         # test missing WGS data
         # assert exception
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
-        setattr(self.request, "_excluded", None)
         with self.assertRaises(NoWgsDataException):
             self.request.soi_metadata()
 
         # test excluded sample
         # assert exception
-        setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
-        setattr(self.request, "_excluded", "impureCulture")
+        setattr(self.request, "_exclusion", "impureCulture")
         with self.assertRaises(ExcludedSubmissionException):
             self.request.soi_metadata()
 
