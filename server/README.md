@@ -87,7 +87,7 @@ When the server is booted, systemd will automatically run services to:
 
 1. [`server/systemd/download_viewbovis_data.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) pulls the production data from `s3-csu-003` and saves it to `/ViewBovis`.
 1. Start the nginx proxy server. - The nginx installation deals with this service, we just need to ensure that [nginx is installed on the server and the proxy server is configured correctly](#nginx). 
-1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/server/deploy.sh). `deploy.sh` will first update the local docker image of the production version of ViewBovis before running the container.
+1. [`server/systemd/viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service) starts the ViewBovis Docker container by running [`deploy.sh`](https://github.com/aphascience/ViewBovis/blob/main/server/deploy.sh).
 1. [`server/systemd/nextstrain.service`](https://github.com/aphascience/ViewBovis/blob/main/server/nextstrain.service) starts the Nextstrain auspice server. 
 
 These services ensure that the app is automatically made available to users and that it is up-to-date with the latest production data as soon as the server starts.
@@ -95,6 +95,8 @@ These services ensure that the app is automatically made available to users and 
 #### On shutdown
 
 Before the server shuts down, systemd will run a service, [`server/systemd/viewbovis_analytics.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis_analytics.service), to run [`parse_nginx_log.py`](https://github.com/aphascience/ViewBovis/blob/main/parse_nginx_log.py).  
+
+#### <a name="server-updates"></a> Updating 
 
 When building the server, or after making changes to these systemd service files they need to be copied to the `/etc/systemd/system` folder on the server and subsequently the service need to be started: 
 
@@ -209,7 +211,10 @@ To deploy a new version of the software to the server:
     ```
     docker push aphacsubot/viewbovis:prod
     ```
+1. Log onto `ranch-159` and pull the latest production image from dockerhub. This can be done from your personal user.
 
-Releasing a new version of the software, which means pushing to the production branch, will automatically trigger a build and push of the Docker image to [dockerhub](https://hub.docker.com/r/aphacsubot/viewbovis/).
+    `docker pull aphacsubot/viewbovis:prod`
 
-When the server is booted at 8am each day, a system service, [`viewbovis.service`](https://github.com/aphascience/ViewBovis/blob/main/server/viewbovis.service), will automatically check for updates to the production image on dockerhub and pull the image as required. Thus, any new release published on GitHub will be automatically deployed the following day.
+1. The make the latest changes immediately available either reboot the server, `sudo reboot now`, or restart the ViewBovis container service, `sudo systemctl restart viewbovis.service`
+
+If you are making changes to any of the server configuration files, e.g. `systemd`, these will need to updated in a more manual procedure as they sit outside of the Docker container. See [Updates](#server-updates) for this procedure.  
