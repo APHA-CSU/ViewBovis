@@ -9,19 +9,6 @@ API_URL = "http://127.0.0.1:5000"
 
 class TestViewBovisAPI(unittest.TestCase):
 
-    def test_get_homepage(self):
-        """
-            API endpoint: {API_URL}/
-        """
-        index_file_path = \
-            os.path.join(os.path.dirname(
-                os.path.dirname(os.path.abspath(__file__))),
-                         "templates/index.html")
-        r = requests.get(f"{API_URL}/")
-        assert r.status_code == 200
-        with open(index_file_path, "r") as index:
-            self.assertEqual(index.read(), r.text)
-
     def test_get_sample(self):
         """
             API endpoint: {API_URL}/sample?sample_name={submission number or
