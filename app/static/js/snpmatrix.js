@@ -419,7 +419,7 @@ const matrix_serverError = function () {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="snpmatrix-error-message">Server error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -433,7 +433,7 @@ const matrix_ClientError = function (err) {
 
     // Activate generic (unknown) warning message on UI
     document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("afterbegin", `
-      <p class="error-text" id="snpmatrix-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
+      <p class="error-text" style="white-space:pre" id="snpmatrix-error-message">Client side error: please report to developers (please include details on how to reproduce this error)</p>
     `);
 }
 
@@ -471,7 +471,7 @@ const showSNPMatrix = async function () {
       // If response contains a warning
       if (json["warnings"]) {
         document.getElementById("snpmatrix-warning-text").insertAdjacentHTML("beforebegin", `
-          <p class="warning-text" id="snpmatrix-error-message">${json["warning"]}</p>
+          <p class="warning-text" style="white-space:pre" id="snpmatrix-error-message">${json["warning"]}</p>
         `);
       } else {
         // Extract the selected sample Submission number and Identifier

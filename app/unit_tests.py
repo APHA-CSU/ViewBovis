@@ -5,8 +5,9 @@ import pandas as pd
 import pandas.testing as pdtesting
 import numpy.testing as nptesting
 
-from viewbovis_data import Request, NoDataException, NoMetaDataException,\
-                           NoWgsDataException, NonBovineException
+from viewbovis_data import Request, NoDataException, NoMetaDataException, \
+                           NoWgsDataException, NonBovineException, \
+                           ExcludedSubmissionException, MatrixTooLargeException
 
 
 def transform_dateformat_side_effect_func(value):
@@ -26,7 +27,9 @@ class TestRequest(unittest.TestCase):
     @mock.patch("viewbovis_data.Request._query_metadata")
     @mock.patch("viewbovis_data.Request._query_wgs_metadata")
     @mock.patch("viewbovis_data.Request._get_os_map_ref")
+    @mock.patch("viewbovis_data.Request._query_exclusion")
     def test_load_soi(self,
+                      query_exclusion,
                       mock_get_os_map_ref,
                       mock_query_wgs_metadata,
                       mock_query_metadata):
@@ -82,6 +85,7 @@ class TestRequest(unittest.TestCase):
         setattr(self.request, "_matrix_dir", "mock_matrix_dir")
         setattr(self.request, "_sample_name", "foo")
         setattr(self.request, "_submission", "foo_sub")
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
@@ -104,8 +108,15 @@ class TestRequest(unittest.TestCase):
         self.assertEqual(None, true_output.index.name)
 
         # test missing WGS data
+        # assert exception
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
         with self.assertRaises(NoWgsDataException):
+            self.request._related_snp_matrix(1)
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_exclusion", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
             self.request._related_snp_matrix(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
@@ -126,6 +137,7 @@ class TestRequest(unittest.TestCase):
                              index=["Y"]))
         setattr(self.request, "_df_wgs_metadata_soi",
                 pd.DataFrame({"group": ["A"]}, index=["Y"]))
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._transform_dateformat = \
@@ -182,6 +194,20 @@ class TestRequest(unittest.TestCase):
                     "import_country": None}
         # test expected output
         self.assertDictEqual(expected, self.request.soi_metadata())
+
+        # test missing WGS data
+        # assert exception
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
+        setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
+        with self.assertRaises(NoWgsDataException):
+            self.request.soi_metadata()
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_exclusion", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
+            self.request.soi_metadata()
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
@@ -396,6 +422,14 @@ class TestRequest(unittest.TestCase):
         self.assertDictEqual(expected, self.request.snp_matrix(3))
         # assert mock calls
         self.request._related_snp_matrix.assert_called_once_with(3)
+
+        # test large matrix
+        # setup - return values for private method mocks
+        self.request._related_snp_matrix.return_value = \
+            pd.DataFrame(index=list(range(61)))
+        # assert MatrixTooLargeException
+        with self.assertRaises(MatrixTooLargeException):
+            self.request.snp_matrix(1)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,7 @@
 from flask import Flask, jsonify, render_template, request, g
+import os
+import json
+from datetime import datetime
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
@@ -34,7 +37,11 @@ def disconnect_db(exception):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    with open(os.path.join(app.data_path, "metadata.json")) as f:
+        metadata = json.load(f)
+    return render_template("index.html",
+                           data_update_date=datetime.strptime(metadata["today"],
+                                                              '%d%b%y').strftime("%d/%m/%Y"))
 
 
 @app.route("/sample", methods=["GET"])
@@ -94,10 +101,6 @@ def snp_matrix():
 
 
 @app.errorhandler(NoDataException)
-@app.errorhandler(NoMetaDataException)
-@app.errorhandler(NoWgsDataException)
-@app.errorhandler(NonBovineException)
-@app.errorhandler(MatrixTooLargeException)
 def custom_exception_handler(error):
     app.logger.info(error)
     return jsonify({"warnings": True,

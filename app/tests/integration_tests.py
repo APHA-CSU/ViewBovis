@@ -9,19 +9,6 @@ API_URL = "http://127.0.0.1:5000"
 
 class TestViewBovisAPI(unittest.TestCase):
 
-    def test_get_homepage(self):
-        """
-            API endpoint: {API_URL}/
-        """
-        index_file_path = \
-            os.path.join(os.path.dirname(
-                os.path.dirname(os.path.abspath(__file__))),
-                         "templates/index.html")
-        r = requests.get(f"{API_URL}/")
-        assert r.status_code == 200
-        with open(index_file_path, "r") as index:
-            self.assertEqual(index.read(), r.text)
-
     def test_get_sample(self):
         """
             API endpoint: {API_URL}/sample?sample_name={submission number or
@@ -103,6 +90,22 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning": "Missing WGS data for submission: no_wgs_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -212,6 +215,22 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning": "Non-bovine submission: e_submission"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -352,6 +371,22 @@ class TestViewBovisAPI(unittest.TestCase):
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
     def test_get_snp_matrix(self):
         """
             API endpoint: {API_URL}/sample/matrix?sample_name={submission
@@ -421,5 +456,21 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning": "SNP matrix exceeds the maximum size limit (60 isolates). Consider reducing the SNP distance threshold or viewing the phylogenetic tree in Nextstrain instead."}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+
+        # request excluded submission
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_submission")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
+        assert r.status_code == 200
+        self.assertDictEqual(expected_resp_body, r.json())
+        r = requests.get(f"{API_URL}"
+                         "/sample?sample_name=excluded_id")
+        expected_resp_body = \
+            {"warnings": True,
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
