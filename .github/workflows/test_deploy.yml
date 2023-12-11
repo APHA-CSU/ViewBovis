@@ -20,4 +20,4 @@ jobs:
         with:
           push: true
           tags: aphacsubot/viewbovis:prod-test
-          build-args: PORT=3002, workers=1
+          build-args: port=3002, workers=1
