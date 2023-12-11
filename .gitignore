@@ -1,4 +1,6 @@
 /app/__pycache__/
+/app/tests/__pycache__/
 .vscode/
 data/
 static/data/
+.github/CODEOWNERS

@@ -40,12 +40,10 @@ class Request:
                 NoDataException: if the SOI does not exist in either
                 metadata or WGS data
         """
-        # get metadata for the SOI
         self._df_metadata_soi = self._query_metadata([self._id])
         if not self._df_metadata_soi.empty:
-            # get submission number if eartag used in request
+            # get submission number incase eartag used in request
             self._submission = self._df_metadata_soi.index[0]
-            # get WGS metadata for the SOI
             self._df_wgs_metadata_soi = \
                 self._query_wgs_metadata(self._submission)
             # retrieve x,y and lat,lon into tuples
@@ -55,21 +53,22 @@ class Request:
                 self._xy = None
             else:
                 self._xy = tuple(df_cph_2_osmapref.iloc[0, 2:].values.flatten())
-        # if missing metadata
+        # missing metadata
         else:
-            # get WGS metadata for the SOI
             self._df_wgs_metadata_soi = self._query_wgs_metadata(self._id)
             self._xy = None
             if not self._df_wgs_metadata_soi.empty:
-                # get the submission number
                 self._submission = self._df_wgs_metadata_soi.index[0]
+            # missing WGS & missing metadata
             else:
                 raise NoDataException(self._id)
+        # metadata and WGS both present
         if not self._df_wgs_metadata_soi.empty:
-            # retrieve sample name from submission number
             self._sample_name = self._df_wgs_metadata_soi["Sample"][0]
+        # missing WGS data
         else:
             self._sample_name = None
+            self._exclusion = self._query_exclusion()
 
     def _query_metadata(self, ids: list) -> pd.DataFrame:
         """
@@ -96,6 +95,23 @@ class Request:
                                  self._db,
                                  index_col="Submission",
                                  params={"id": id})
+
+    # TODO: unit test mocking pd.read_sql_query, i.e. just test the
+    # if statement
+    def _query_exclusion(self) -> str:
+        """
+            Returns the exclusion reason for the SOI. If the SOI is not
+            in the list of excluded samples, None is returned
+        """
+        query = """SELECT Exclusion FROM excluded WHERE
+                   Submission=:submission"""
+        exclusion = pd.read_sql_query(query, self._db,
+                                      params={"submission":
+                                              self._submission})
+        if exclusion.empty:
+            return None
+        else:
+            return exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -190,7 +206,10 @@ class Request:
                 NoWgsDataException: for missing WGS data
         """
         if self._df_wgs_metadata_soi.empty:
-            raise NoWgsDataException(self._id)
+            if self._exclusion is None:
+                raise NoWgsDataException(self._id)
+            else:
+                raise ExcludedSubmissionException(self._id, self._exclusion)
         clade = self._df_wgs_metadata_soi["group"][0]
         # load snp matrix for the required clade
         matrix_path = glob.glob(path.join(self._matrix_dir,
@@ -200,14 +219,15 @@ class Request:
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
-        # TODO: below line not inplace!!!
-        df_snps_related.index.rename(None, inplace=True)
+        # remove "snp-dists" index name
+        df_snps_related_no_idx_name = df_snps_related.rename_axis(None)
         # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related.copy().\
-            set_index(df_snps_related.index.
+        df_snps_related_processed = df_snps_related_no_idx_name.\
+            set_index(df_snps_related_no_idx_name.index.
                       map(lambda x: self._sample_to_submission(x))).\
-            transpose().set_index(df_snps_related.index.
+            transpose().set_index(df_snps_related_no_idx_name.index.
                                   map(lambda x: self._sample_to_submission(x)))
+        # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
 
     def _sort_matrix(self, df_matrix):
@@ -247,10 +267,13 @@ class Request:
                     "disclosing_test": None,
                     "import_country": None}
         elif self._df_wgs_metadata_soi.empty:
-            raise NoWgsDataException(self._id)
+            if self._exclusion is None:
+                raise NoWgsDataException(self._id)
+            else:
+                raise ExcludedSubmissionException(self._id, self._exclusion)
         else:
             return {"submission": self._df_metadata_soi.index[0],
-                    "clade": self._df_metadata_soi["Clade"][0],
+                    "clade": self._df_wgs_metadata_soi["group"][0],
                     "identifier": self._df_metadata_soi["Identifier"][0],
                     "species": self._df_metadata_soi["Host"][0],
                     "animal_type": self._df_metadata_soi["Animal_Type"][0],
@@ -288,12 +311,9 @@ class Request:
             raise NoMetaDataException(self._id)
         if self._df_metadata_soi["Host"][0] != "COW":
             raise NonBovineException(self._id)
-        # get movement data for SOI
-        df_movements = \
-            self._query_movdata(self._df_metadata_soi.index[0])
+        df_movements = self._query_movdata(self._submission)
         df_cph_2_osmapref = \
             self._get_os_map_ref(set(df_movements["Loc"].to_list()))
-        # construct dictionary of movement data
         return dict(self.soi_metadata(),
                     **{"move":
                         {str(row["Loc_Num"]):
@@ -365,9 +385,8 @@ class Request:
             # get lat/long mappings for CPH of related submissions
             df_cph_2_osmapref = \
                 self._get_os_map_ref(set(df_metadata_related["CPH"].to_list()))
-        # related samples without metadata
         no_meta_submissions = \
-            set(df_snps_related.index) - set(df_metadata_related.index)
+            set(df_snps_related.index) - set(df_metadata_related.index)  # related samples without metadata
         # append no_meta_response to response to the create the full
         # response dictionary
         return \
@@ -464,6 +483,16 @@ class NoWgsDataException(NoDataException):
         self.message = f"Missing WGS data for submission: {id}"
 
 
+class ExcludedSubmissionException(NoDataException):
+    def __init__(self, id, exclusion):
+        reasons = {"notMbovis": "not M. bovis",
+                   "impureCulture": "contaminated sample",
+                   "lowQualityData": "low quality data",
+                   "identifiedOutlier": "identified outlier"}
+        self.message = \
+            f"Excluded submission: {id}\nReason: {reasons[exclusion]}"
+
+
 class NonBovineException(NoDataException):
     def __init__(self, id):
         self.message = f"Non-bovine submission: {id}"
@@ -471,6 +500,7 @@ class NonBovineException(NoDataException):
 
 class MatrixTooLargeException(NoDataException):
     def __init__(self):
-        self.message = "SNP matrix exceeds the maximum size limit (60 isolates). \
-            Consider reducing the SNP distance threshold or viewing the \
-                phylogenetic tree in Nextstrain instead."
+        self.message = ("SNP matrix exceeds the maximum size limit (60 "
+                        "isolates). Consider reducing the SNP distance "
+                        "threshold or viewing the phylogenetic tree in "
+                        "Nextstrain instead.")

@@ -5,8 +5,9 @@ import pandas as pd
 import pandas.testing as pdtesting
 import numpy.testing as nptesting
 
-from viewbovis_data import Request, NoDataException, NoMetaDataException,\
-                           NoWgsDataException, NonBovineException
+from viewbovis_data import Request, NoDataException, NoMetaDataException, \
+                           NoWgsDataException, NonBovineException, \
+                           ExcludedSubmissionException, MatrixTooLargeException
 
 
 def transform_dateformat_side_effect_func(value):
@@ -26,7 +27,9 @@ class TestRequest(unittest.TestCase):
     @mock.patch("viewbovis_data.Request._query_metadata")
     @mock.patch("viewbovis_data.Request._query_wgs_metadata")
     @mock.patch("viewbovis_data.Request._get_os_map_ref")
+    @mock.patch("viewbovis_data.Request._query_exclusion")
     def test_load_soi(self,
+                      query_exclusion,
                       mock_get_os_map_ref,
                       mock_query_wgs_metadata,
                       mock_query_metadata):
@@ -48,26 +51,26 @@ class TestRequest(unittest.TestCase):
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, ("foo_x", "foo_y"))
-        self.assertEqual(self.request._sample_name, None)
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(("foo_x", "foo_y"), self.request._xy)
+        self.assertEqual(None, self.request._sample_name)
 
         # testing missing metadata
         mock_query_metadata.return_value = pd.DataFrame()
         mock_query_wgs_metadata.return_value = \
             pd.DataFrame({"Sample": ["foo_sample"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, None)
-        self.assertEqual(self.request._sample_name, "foo_sample")
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(None, self.request._xy)
+        self.assertEqual("foo_sample", self.request._sample_name)
 
         # test no missing data
         mock_query_metadata.return_value = \
             pd.DataFrame({"CPH": ["foo_cph"]}, index=["foo_index"])
         self.request = Request("foo_path", "foo_id")
-        self.assertEqual(self.request._submission, "foo_index")
-        self.assertEqual(self.request._xy, ("foo_x", "foo_y"))
-        self.assertEqual(self.request._sample_name, "foo_sample")
+        self.assertEqual("foo_index", self.request._submission)
+        self.assertEqual(("foo_x", "foo_y"), self.request._xy)
+        self.assertEqual("foo_sample", self.request._sample_name)
 
     @mock.patch("viewbovis_data.Request._load_soi")
     @mock.patch("viewbovis_data.glob.glob")
@@ -82,6 +85,7 @@ class TestRequest(unittest.TestCase):
         setattr(self.request, "_matrix_dir", "mock_matrix_dir")
         setattr(self.request, "_sample_name", "foo")
         setattr(self.request, "_submission", "foo_sub")
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._sample_to_submission = mock.Mock(wraps=lambda x: f"{x}_sub")
@@ -92,19 +96,27 @@ class TestRequest(unittest.TestCase):
             pd.DataFrame({"foo": [0, 3, 5],
                           "bar": [3, 0, 10],
                           "baz": [5, 10, 0]},
-                         index=["foo", "bar", "baz"])
+                         index=["foo", "bar", "baz"]).rename_axis("snp-dists")
         mock_glob.return_value = "mock_matrix_path"
 
         # test normal operation
         # expected output
         expected = pd.DataFrame({"foo_sub": [0, 3], "bar_sub": [3, 0]},
                                 index=["foo_sub", "bar_sub"])
-        nptesting.assert_array_equal(self.request._related_snp_matrix(3),
-                                     expected)
+        true_output = self.request._related_snp_matrix(3)
+        nptesting.assert_array_equal(expected, true_output)
+        self.assertEqual(None, true_output.index.name)
 
         # test missing WGS data
+        # assert exception
         setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
         with self.assertRaises(NoWgsDataException):
+            self.request._related_snp_matrix(1)
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_exclusion", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
             self.request._related_snp_matrix(1)
 
     @mock.patch("viewbovis_data.Request._load_soi")
@@ -124,7 +136,8 @@ class TestRequest(unittest.TestCase):
                               "Import_Country": ["P"]},
                              index=["Y"]))
         setattr(self.request, "_df_wgs_metadata_soi",
-                pd.DataFrame({"foo": ["bar"]}))
+                pd.DataFrame({"group": ["A"]}, index=["Y"]))
+        setattr(self.request, "_exclusion", None)
 
         # setup - mock private methods
         self.request._transform_dateformat = \
@@ -132,23 +145,14 @@ class TestRequest(unittest.TestCase):
 
         # test normal operation
         # expected output
-        expected = {"submission": "Y",
-                    "clade": "A",
-                    "identifier": "B",
-                    "species": "COW",
-                    "animal_type": "E",
-                    "slaughter_date": "D_transformed",
-                    "cph": "F",
-                    "cph_type": "H",
-                    "county": "I",
-                    "risk_area": "J",
-                    "out_of_homerange": "L",
-                    "dob": "M_transformed",
-                    "sex": "N",
-                    "disclosing_test": "O",
-                    "import_country": "P"}
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "COW", "animal_type": "E",
+                    "slaughter_date": "D_transformed", "cph": "F",
+                    "cph_type": "H", "county": "I", "risk_area": "J",
+                    "out_of_homerange": "L", "dob": "M_transformed",
+                    "sex": "N", "disclosing_test": "O", "import_country": "P"}
         # test expected output
-        self.assertDictEqual(self.request.soi_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_metadata())
         # assert mock calls
         self.request._transform_dateformat.assert_has_calls([mock.call("D"),
                                                              mock.call("M")])
@@ -167,25 +171,43 @@ class TestRequest(unittest.TestCase):
                              index=["Y"]))
         # test normal operation
         # expected output
-        expected = {"submission": "Y",
-                    "clade": "A",
-                    "identifier": "B",
-                    "species": "COW",
-                    "animal_type": "E",
-                    "slaughter_date": "D_transformed",
-                    "cph": "F",
-                    "cph_type": "H",
-                    "county": "I",
-                    "risk_area": "J",
-                    "out_of_homerange": "L",
-                    "dob": None,
-                    "sex": "N",
-                    "disclosing_test": "O",
-                    "import_country": "P"}
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "COW", "animal_type": "E",
+                    "slaughter_date": "D_transformed", "cph": "F",
+                    "cph_type": "H", "county": "I", "risk_area": "J",
+                    "out_of_homerange": "L", "dob": None, "sex": "N",
+                    "disclosing_test": "O", "import_country": "P"}
         # test expected output
-        self.assertDictEqual(self.request.soi_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_metadata())
         # assert mock calls
         self.request._transform_dateformat.assert_called_once_with("D")
+
+        # setup - mock attributes - missing metadata
+        setattr(self.request, "_df_metadata_soi", pd.DataFrame())
+        # test normal operation
+        # expected output
+        expected = {"submission": "Y", "clade": "A", "identifier": None,
+                    "species": None, "animal_type": None,
+                    "slaughter_date": None, "cph": None, "cph_type": None,
+                    "county": None, "risk_area": None, "out_of_homerange": None,
+                    "dob": None, "sex": None, "disclosing_test": None,
+                    "import_country": None}
+        # test expected output
+        self.assertDictEqual(expected, self.request.soi_metadata())
+
+        # test missing WGS data
+        # assert exception
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"foo": ["bar"]}))
+        setattr(self.request, "_df_wgs_metadata_soi", pd.DataFrame())
+        with self.assertRaises(NoWgsDataException):
+            self.request.soi_metadata()
+
+        # test excluded sample
+        # assert exception
+        setattr(self.request, "_exclusion", "impureCulture")
+        with self.assertRaises(ExcludedSubmissionException):
+            self.request.soi_metadata()
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_soi_movement_metadata(self, _):
@@ -194,25 +216,25 @@ class TestRequest(unittest.TestCase):
 
         # setup - mock attributes
         setattr(self.request, "_df_metadata_soi",
-                pd.DataFrame({"Clade": ["A"], "Identifier": ["B"],
-                              "Host": ["COW"], "SlaughterDate": ["D"],
-                              "Animal_Type": ["E"], "CPH": ["F"],
-                              "CPH_Type": ["H"], "County": ["I"],
-                              "RiskArea": ["J"], "Loc0": ["K"],
-                              "OutsideHomeRange": ["L"], "wsdBirthDate": ["M"],
-                              "Gender": ["N"], "Disclosing_Test": ["O"],
-                              "Import_Country": ["P"]},
-                             index=["Y"]))
+                pd.DataFrame({"Host": ["COW"]}))
         setattr(self.request, "_df_wgs_metadata_soi",
-                pd.DataFrame({"foo": ["bar"]}))
+                pd.DataFrame({"group": ["A"]}))
+        setattr(self.request, "_submission", "Y")
 
         # setup - mock private methods
+        self.request.soi_metadata = mock.Mock()
         self.request._query_movdata = mock.Mock()
         self.request._get_os_map_ref = mock.Mock()
         self.request._transform_dateformat = \
             mock.Mock(side_effect=transform_dateformat_side_effect_func)
 
         # setup - return values for public & private method mocks
+        self.request.soi_metadata.return_value = \
+            {"submission": "Y", "clade": "A", "identifier": "B",
+             "species": "COW", "animal_type": "E", "slaughter_date": "D",
+             "cph": "F", "cph_type": "H", "county": "I", "risk_area": "J",
+             "out_of_homerange": "L", "dob": "M", "sex": "N",
+             "disclosing_test": "O", "import_country": "P"}
         self.request._query_movdata.return_value = \
             pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
                           "County": ["M", "N", "O"],
@@ -231,9 +253,9 @@ class TestRequest(unittest.TestCase):
         # test normal operation
         # expected output
         expected = {"submission": "Y", "clade": "A", "identifier": "B",
-                    "species": "COW", "slaughter_date": "D_transformed", "animal_type": "E",
+                    "species": "COW", "slaughter_date": "D", "animal_type": "E",
                     "cph": "F", "cph_type": "H", "county": "I",
-                    "risk_area": "J", "out_of_homerange": "L", "dob": "M_transformed",
+                    "risk_area": "J", "out_of_homerange": "L", "dob": "M",
                     "sex": "N", "disclosing_test": "O", "import_country": "P", "move":
                         {"0": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
                                "on_date": "S_transformed", "off_date": "Z_transformed",
@@ -248,7 +270,7 @@ class TestRequest(unittest.TestCase):
                                "stay_length": "X", "type": "R", "county": "O",
                                "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
         # test expected output
-        self.assertDictEqual(self.request.soi_movement_metadata(), expected)
+        self.assertDictEqual(expected, self.request.soi_movement_metadata())
         # assert mock calls
         self.request._get_os_map_ref.assert_called_once_with({"J", "O", "T"})
 
@@ -279,11 +301,10 @@ class TestRequest(unittest.TestCase):
                                  "bar": [3, 0, 10],
                                  "baz": [5, 10, 0]},
                                 index=["foo", "bar", "baz"])
-        pdtesting.assert_frame_equal(self.request._sort_matrix(
+        pdtesting.assert_frame_equal(expected, self.request._sort_matrix(
             pd.DataFrame({"bar": [0, 3, 10],
                           "foo": [3, 0, 5],
-                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])),
-            expected)
+                          "baz": [10, 5, 0]}, index=["bar", "foo", "baz"])))
 
     @mock.patch("viewbovis_data.Request._load_soi")
     def test_related_submissions_metadata(self, _):
@@ -349,8 +370,8 @@ class TestRequest(unittest.TestCase):
                          "import_country": None, "distance": None},
              "SOI": "foo_sub"}
         # test expected output
-        self.assertDictEqual(
-            self.request.related_submissions_metadata(3), expected)
+        self.assertDictEqual(expected,
+            self.request.related_submissions_metadata(3))
         # assert mock calls
         self.request._query_metadata.assert_called_once_with(["foo_sub",
                                                               "bar_sub",
@@ -398,9 +419,17 @@ class TestRequest(unittest.TestCase):
                                ["bar_sub", "foo_sub", 3],
                                ["bar_sub", "bar_sub", 0]]}
         # test expected output
-        self.assertDictEqual(self.request.snp_matrix(3), expected)
+        self.assertDictEqual(expected, self.request.snp_matrix(3))
         # assert mock calls
         self.request._related_snp_matrix.assert_called_once_with(3)
+
+        # test large matrix
+        # setup - return values for private method mocks
+        self.request._related_snp_matrix.return_value = \
+            pd.DataFrame(index=list(range(61)))
+        # assert MatrixTooLargeException
+        with self.assertRaises(MatrixTooLargeException):
+            self.request.snp_matrix(1)
 
 
 if __name__ == "__main__":
