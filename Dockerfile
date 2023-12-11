@@ -9,6 +9,10 @@ LABEL about.documentation="https://github.com/aphascience/ViewBovis"
 
 ################## SETUP ############################
 
+# args
+ARG port
+ARG workers
+
 # Copy repository
 WORKDIR "/ViewBovis/"
 COPY ./ ./
@@ -32,6 +36,6 @@ RUN python3.10 -m pip install -r requirements.txt
 ################### ENTRY ##############################
 
 WORKDIR "/ViewBovis/app"
-CMD ["gunicorn", "-b", "127.0.0.1:3000", "-w", "8", "deploy:app", \
+CMD ["gunicorn", "-b", "127.0.0.1:${port}", "-w", "${workers}", "deploy:app", \
     "--log-level=info", "--access-logfile", "/ViewBovis/access.log", \
     "--error-logfile", "/ViewBovis/error.log"]
