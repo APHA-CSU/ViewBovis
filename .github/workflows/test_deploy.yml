@@ -19,5 +19,5 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: aphacsubot/viewbovis:prod
-          build-args: PORT=3000, workers=8
+          tags: aphacsubot/viewbovis:prod-test
+          build-args: PORT=3002, workers=1
