@@ -194,27 +194,59 @@ This json file is saved daily to `/var/log/viewbovis_requests_YYYY-mm-dd` on the
 
 ## <a name="deploy"></a> Deployment
 
-To deploy a new version of the software to the server:
+Before deploying new versions of the software, it is important to deploy a version to the testing domain on `ranch-159`. To deploy a test version:
+
+1. merge the `main` branch into the `prod-test` branch (this can be done locally):
+
+    ```
+    git checkout prod-test
+    git merge master
+    ```
+1. push the `prod-test` branch to the remote repository in github.com:
+    ```
+    git push origin prod-test
+    ```
+    This will automatically trigger the test-deploy workflow in github actions which builds the test docker image and pushes it to DockerHub
+1. log onto `ranch-159` as the `ranch-159` user and update the local test version of this repository:
+
+    ```
+    cd ~/ViewBovis-test
+    git pull origin prod-test
+    ```
+1. and pull the latest test image from DockerHub:
+
+    ```
+    docker pull aphacsubot/viewbovis:prod-test
+    ```
+1. start the testing version of the application:
+    
+    ```
+    bash server/deploy-test.sh /ViewBovis testing
+    ```
+1. connect to the testing version of the application via PaloAlto and test that all functionality of the app is working as designed. Use the [checklist document](https://defra.sharepoint.com/:w:/r/teams/Team4008/_layouts/15/Doc.aspx?sourcedoc=%7BFA3F5A41-F72D-4518-AAB1-FF02AE5A2D26%7D&file=ViewBovisChecks_FollowingARelease_September2023.docx&action=default&mobileredirect=true) for guidance on assuring that the app is working properly. 
+1. if everything is working, kill the testing docker container and move onto deploying the production version:
+
+    ```
+    docker kill viewbovis-test
+    ```
+
+
+**To deploy a new production version of the software to the server:**
 
 1. publish a new release of the software. For instruction on this, follow the [release process document](https://github.com/aphascience/ViewBovis/blob/main/release_process.md)
-1. checkout and update your `prod` branch locally
+1. merging into the production branch will automatically trigger the deploy workflow in github actions which builds the production docker image and pushes it to DockerHub 
+1. log onto `ranch-159` as the `ranch-159` user and update the local version of this repository:
+
     ```
-    git checkout prod
+    cd ~/ViewBovis
     git pull origin prod
     ```
-1. build the docker image
-    ```
-    docker build . -t aphacsubot/viewbovis:no_deploy
-    ```
-1. log-in to DockerHub from the CLI. This involves creating a new PAT token from the aphcsubot DockerHub account in the browser. (You may need to request access from Richard Ellis). Then run `docker login -u aphacsubot` and when prompted for a password paste the new PAT token into the CLI.
-1. push the latest production image to Dockerhub:
-    ```
-    docker push aphacsubot/viewbovis:prod
-    ```
-1. Log onto `ranch-159` and pull the latest production image from dockerhub. This can be done from your personal user.
+1. and pull the latest production image from dockerhub:
 
-    `docker pull aphacsubot/viewbovis:prod`
+    ```
+    docker pull aphacsubot/viewbovis:prod
+    ```
 
-1. The make the latest changes immediately available either reboot the server, `sudo reboot now`, or restart the ViewBovis container service, `sudo systemctl restart viewbovis.service`
+1. To make the latest changes immediately available, either reboot the server, `sudo reboot now`, or restart the ViewBovis container service, `sudo systemctl restart viewbovis.service`
 
 If you are making changes to any of the server configuration files, e.g. `systemd`, these will need to updated in a more manual procedure as they sit outside of the Docker container. See [Updates](#server-updates) for this procedure.  
