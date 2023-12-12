@@ -223,7 +223,7 @@ Before deploying new versions of the software, it is important to deploy a versi
     ```
     bash server/deploy-test.sh /ViewBovis testing
     ```
-1. connect to the testing version of the application via PaloAlto and test that all functionality of the app is working as designed
+1. connect to the testing version of the application via PaloAlto and test that all functionality of the app is working as designed. Use the [checklist document](https://defra.sharepoint.com/:w:/r/teams/Team4008/_layouts/15/Doc.aspx?sourcedoc=%7BFA3F5A41-F72D-4518-AAB1-FF02AE5A2D26%7D&file=ViewBovisChecks_FollowingARelease_September2023.docx&action=default&mobileredirect=true) for guidance on assuring that the app is working properly. 
 1. if everything is working, kill the testing docker container and move onto deploying the production version:
 
     ```
