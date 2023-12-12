@@ -196,22 +196,39 @@ This json file is saved daily to `/var/log/viewbovis_requests_YYYY-mm-dd` on the
 
 Before deploying new versions of the software, it is important to deploy a version to the testing domain on `ranch-159`. To deploy a test version:
 
-1. merge the master branch into the `prod-test` branch in GitHub.com. This will automatically trigger the test-deploy workflow in github actions which builds the test docker image and pushes it to DockerHub
+1. merge the `main` branch into the `prod-test` branch (this can be done locally):
+
+    ```
+    git checkout prod-test
+    git merge master
+    ```
+1. push the `prod-test` branch to the remote repository in github.com:
+    ```
+    git push origin prod-test
+    ```
+    This will automatically trigger the test-deploy workflow in github actions which builds the test docker image and pushes it to DockerHub
 1. log onto `ranch-159` as the `ranch-159` user and update the local test version of this repository:
 
     ```
-        cd ~/ViewBovis-test
-        git pull origin prod-test
+    cd ~/ViewBovis-test
+    git pull origin prod-test
     ```
-1. and pull the latest test image from dockerhub:
+1. and pull the latest test image from DockerHub:
 
-    `docker pull aphacsubot/viewbovis:prod-test`
+    ```
+    docker pull aphacsubot/viewbovis:prod-test
+    ```
 1. start the testing version of the application:
     
-    `bash server/deploy-test.sh`
+    ```
+    bash server/deploy-test.sh /ViewBovis testing
+    ```
 1. connect to the testing version of the application via PaloAlto and test that all functionality of the app is working as designed
-1. kill the testing docker container:
-    `docker kill viewbovis-test`
+1. if everything is working, kill the testing docker container and move onto deploying the production version:
+
+    ```
+    docker kill viewbovis-test
+    ```
 
 
 **To deploy a new production version of the software to the server:**
@@ -221,13 +238,15 @@ Before deploying new versions of the software, it is important to deploy a versi
 1. log onto `ranch-159` as the `ranch-159` user and update the local version of this repository:
 
     ```
-        cd ~/ViewBovis
-        git pull origin prod
+    cd ~/ViewBovis
+    git pull origin prod
     ```
 1. and pull the latest production image from dockerhub:
 
-    `docker pull aphacsubot/viewbovis:prod`
+    ```
+    docker pull aphacsubot/viewbovis:prod
+    ```
 
-1. The make the latest changes immediately available, either reboot the server, `sudo reboot now`, or restart the ViewBovis container service, `sudo systemctl restart viewbovis.service`
+1. To make the latest changes immediately available, either reboot the server, `sudo reboot now`, or restart the ViewBovis container service, `sudo systemctl restart viewbovis.service`
 
 If you are making changes to any of the server configuration files, e.g. `systemd`, these will need to updated in a more manual procedure as they sit outside of the Docker container. See [Updates](#server-updates) for this procedure.  
