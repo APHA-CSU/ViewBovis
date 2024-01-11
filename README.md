@@ -54,11 +54,11 @@ curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 3. It is recommended to use a virtual environment using either [`venv`](https://docs.python.org/3/library/venv.html) or [`virtualenv`](https://virtualenv.pypa.io/en/stable/installation.html). To install `virtualenv`:
 
 ```
-python3 -m pip install virtualenv
+python3.10 -m pip install virtualenv
 ```
 4. Setup and activate new virtual environment:
 ```
-virtualenv -p /usr/bin/python3.10 </path/to/the/new/virtualenv/>
+python3.10 -m virtualenv -p /usr/bin/python3.10 </path/to/the/new/virtualenv/>
 ```
 ```
 source </path/to/the/new/virtualenv/>bin/activate
