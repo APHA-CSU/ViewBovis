@@ -70,7 +70,7 @@ jobs:
           pip install pytest selenium==4.11.2
           pip install -r requirements.txt
       - name: Prepare Selenium
-        uses: nanasess/setup-chromedriver@v2
+        uses: nanasess/setup-chromedriver@v2.2.1
       - name: Start XVFB
         run: |
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional, disables headless mode
