@@ -150,17 +150,10 @@ class Request:
                         enumerate(calendar.month_abbr) if month}
         # transform the occasional month from abbreviated name to
         # numbers, e.g. "Jan" -> "01"
-        transformed = 0
-        try:
-            date_transformed, _ = \
-                re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
-                        lambda x: month_mapper[x.group()], date)
-            transformed = datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
-        # allow exception where date is not present
-        except ValueError:
-            transformed = ''
-
-        return transformed
+        date_transformed, _ = \
+            re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
+                    lambda x: month_mapper[x.group()], date)
+        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
