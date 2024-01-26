@@ -285,7 +285,8 @@ class Request:
                     "species": self._df_metadata_soi["Host"][0],
                     "animal_type": self._df_metadata_soi["Animal_Type"][0],
                     "slaughter_date":
-                        self._transform_dateformat(
+                        None if not self._df_metadata_soi["SlaughterDate"][0]
+                        else self._transform_dateformat(
                             self._df_metadata_soi["SlaughterDate"][0]),
                     "cph": self._df_metadata_soi["CPH"][0],
                     "cph_type": self._df_metadata_soi["CPH_Type"][0],
