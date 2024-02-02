@@ -202,6 +202,7 @@ const cowIcons = {
     iconSize: [110, 110],
     iconAnchor: [40, 81],
   }),
+  //
   cowMarket: L.icon({
     iconUrl: "/static/img/CH_MarketV2.svg",
     iconSize: [40, 40],
