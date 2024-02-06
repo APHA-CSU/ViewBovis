@@ -203,9 +203,9 @@ const cowIcons = {
     iconAnchor: [40, 81],
   }),
   cowMarket: L.icon({
-    iconUrl: "/static/img/CH_MarketV2.svg",
-    iconSize: [40, 40],
-    iconAnchor: [20, 35],
+    iconUrl: "/static/img/CH_Market_no_outline.svg",
+    iconSize: [110, 110],
+    iconAnchor: [40, 81],
   }),
   cowSlaughter: L.icon({
     iconUrl: "/static/img/CH_Slaughterhouse_no_outline.svg",
