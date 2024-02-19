@@ -444,20 +444,23 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
 
   // Add cow head markers to map
   for (let i = 0; i < moveLat.length; i++) {
-    // Render markers and the correct cow icons
-    second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)});
-    second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
-
-    // Add popup content to each cow head marker
-    // second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
-
-     cowMarker.data = movArr[i];
-
-  cowMarker.on("click", function (event) {
-    markerData = event.target.data;
-    popupOverlayTable(markerData, json, i, movArr);
-  });
-  };
+    if(second === false){
+      cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)})
+      cowLayer.addLayer(cowMarker)
+      cowMarker.data = movArr[i]
+      cowMarker.on("click", function (event) {
+        markerData = event.target.data;
+        popupOverlayTable(markerData, json, i, movArr);
+      });
+    } else{
+      cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)});
+      cowLayer2.addLayer(cowMarker2);
+      cowMarker2.data = movArr[i]
+      cowMarker2.on("click", function (event) {
+        markerData = event.target.data;
+        popupOverlayTable(markerData, json, i, movArr);
+    })
+  }};
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
   if(second === false) {
