@@ -223,16 +223,16 @@ const cowheadPopupOptions = {
   closeOnClick: false,
 };
 
-// Function to create HTML popup content using template literal
-const popupContent = function(data, movArr, index) {
-
-  return `
-  <div class="fs-5 fw-bold">${data.identifier}</div><br>
+// Function to update the marker info table content
+function popupOverlayTable(markerData,json, index, movArr) {
+  const htmlContent = `
+  <div class="fs-6 fw-bold" style=>${json.identifier}</div><br>
   <div>
     <nav>
       <div class="nav nav-tabs" id="popupNav" role="tablist">
         <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
         <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+        <button id="closeButton">Close</button>
       </div>
     </nav>
     <div class="tab-content" id="popTabContent">     
@@ -245,54 +245,54 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Duration of Stay:</strong></td>
-              <td>${movArr[index].stay_length <= 30 ? `${movArr[index].stay_length} days` :
-                    movArr[index].stay_length > 30 && movArr[index].stay_length <= 365 ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks` :
-                    `${(movArr[index].stay_length / 365).toFixed(1)} years`}
+              <td>${markerData.stay_length <= 30 ? `${markerData.stay_length} days` :
+              markerData.stay_length > 30 && markerData.stay_length <= 365 ? `${(markerData.stay_length / 7).toFixed(0)} weeks` :
+                    `${(markerData.stay_length / 365).toFixed(1)} years`}
               </td> 
             </tr>
             <tr>
               <td><strong>Date of Arrival:</strong></td>
-              <td>${movArr[index].on_date}</td> 
+              <td>${markerData.on_date}</td> 
             </tr>
             <tr>
               <td><strong>Date of Departure:</strong></td>
-              <td>${movArr[index].off_date}</td> 
+              <td>${markerData.off_date}</td> 
             </tr>
             <tr>
               <td><strong>Species:</strong></td>
-              <td>${data.species === "COW" ? "Bovine" : data.species}</td>
+              <td>${json.species === "COW" ? "Bovine" : json.species}</td>
             </tr>
             <tr>
               <td><strong>Precise Location:</strong></td>
-              <td>${movArr[index].cph}</td>
+              <td>${markerData.cph}</td>
             </tr>
             <tr>
               <td><strong>Precise Location Type:</strong></td>
-              <td>${movArr[index].type}</td>
+              <td>${markerData.type}</td>
             </tr>
             <tr>
               <td><strong>OS Map Reference:</strong></td>
-              <td>${movArr[index].os_map_ref}</td>
+              <td>${markerData.os_map_ref}</td>
             </tr>
             <tr>
               <td><strong>Submission:</strong></td>
-              <td>${data.submission}</td> 
+              <td>${json.submission}</td> 
             </tr>
             <tr>
               <td><strong>County:</strong></td>
-              <td>${movArr[index].county}</td>
+              <td>${markerData.county}</td>
             </tr>
             <tr>
               <td><strong>Clade:</strong></td>
-              <td>${data.clade}</td>
+              <td>${json.clade}</td>
             </tr>
             <tr>
               <td><strong>Out of Home Range:</strong></td>
-              <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
+              <td>${json.out_of_homerange === "N" ? "No" : "Yes"}</td>
             </tr>
             <tr>
               <td><strong>Risk Area:</strong></td>
-              <td>${movArr[index].risk_area_current}</td>
+              <td>${markerData.risk_area_current}</td>
             </tr>
           </tbody>
         </table>
@@ -306,30 +306,39 @@ const popupContent = function(data, movArr, index) {
             </tr>
             <tr>
               <td><strong>Date of Birth:</strong></td>
-              <td>${data.dob}</td>
+              <td>${json.dob}</td>
             </tr>
             <tr>
               <td><strong>Slaughter Date:</strong></td>
-              <td>${data.slaughter_date}</td>
+              <td>${json.slaughter_date}</td>
             </tr>
             <tr>
               <td><strong>Sex:</strong></td>
-              <td>${data.sex == `F` ? `Female`: data.sex == `M` ? `Male`: `Unknown`}</td>
+              <td>${json.sex == `F` ? `Female`: json.sex == `M` ? `Male`: `Unknown`}</td>
             </tr> 
             <tr>
               <td><strong>Disclosing Test Type:</strong></td>
-              <td>${data.disclosing_test}</td>
+              <td>${json.disclosing_test}</td>
             </tr> 
             <tr>
               <td><strong>Import Country:</strong></td>
-              <td>${data.import_country == null ? `British`: `${data.import_country}`}</td>
+              <td>${json.import_country == null ? `British`: `${json.import_country}`}</td>
             </tr> 
           </tbody>
         </table>
       </div>
     </div>           
   `;
-};
+   const popupOverlay = document.getElementById('popupOverlay');
+   popupOverlay.innerHTML = htmlContent;
+
+   popupOverlay.classList.remove('hidden');
+
+   const closeButton = document.getElementById("closeButton");
+   closeButton.addEventListener('click', function(){;
+    popupOverlay.classList.add('hidden');
+   });
+}
 
 
 // ------------------------ //
@@ -421,7 +430,7 @@ const renderCowIcon = function (movementArr, cowIconObj) {
 
 // Function whose input is the json file returned by Flask and whose output is rendering the cow markers and lines on the map
 const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
-
+  let markerData;
   // Extract movement data from json object into an array
   const movArr = Object.values(json.move);
   console.log(movArr);
@@ -440,7 +449,14 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
+    // second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
+
+     cowMarker.data = movArr[i];
+
+  cowMarker.on("click", function (event) {
+    markerData = event.target.data;
+    popupOverlayTable(markerData, json, i, movArr);
+  });
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -452,7 +468,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   };
 
   // Automatically zoom in on the markers and allow some padding (buffer) to ensure all points are in view
-  second === false ? map.fitBounds(L.latLngBounds(linePts).pad(0.10)) : map.fitBounds(L.latLngBounds(linePts.concat(linePts2)).pad(0.10));
+  //second === false ? map.fitBounds(L.latLngBounds(linePts).pad(0.10)) : map.fitBounds(L.latLngBounds(linePts.concat(linePts2)).pad(0.10));
 
   // Connect the points with a line
   second === false ? cattleMovLine = L.polyline(linePts, {color: lineColour}).addTo(map) : cattleMovLine2 = L.polyline(linePts2, {color: lineColour}).addTo(map);

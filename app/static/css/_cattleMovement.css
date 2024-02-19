@@ -169,3 +169,48 @@ label.govuk-label.govuk-checkboxes__label {
     color: var(--apha-orange);
     font-size: 20px;
 }
+
+#popupOverlay{
+    position: absolute;
+    z-index: 1000;
+    right: 0.7%;
+    margin-top:390px;
+    transform: translateY(-50%);
+    padding: 5px;
+    width: 300px;
+    max-width: 80%;
+    max-height: 270px;
+    overflow-y: auto;
+    background: #fff;
+    margin-right: 10px;
+    border-radius: 10px;
+    border: 2px solid rgba(0,0,0,0.2);
+    background-clip: padding-box;
+    float: right;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+td {
+    white-space: nowrap;
+}
+
+.hidden {
+    display: none
+}
+
+#closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #000;
+}
+
+#closeButton:hover {
+    color: red;
+}
