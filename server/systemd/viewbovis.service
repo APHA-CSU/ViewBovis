@@ -6,7 +6,7 @@ After=network-online.target download_viewbovis_data.service
 [Service]
 WorkingDirectory=/home/ranch-159/ViewBovis/server/
 Type=simple
-ExecStart=bash deploy.sh /ViewBovis/
+ExecStart=bash deploy.sh /ViewBovis/ prod
 
 [Install]
 WantedBy=multi-user.target

@@ -462,21 +462,21 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   if(second === false) {
     cattleMovLine.arrowheads({
       yawn: 40,
-      size: "5%",
+      size: "15px",
       fill: true,
       fillColor: lineColour,
       // color: "black",
-      frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
+      frequency: "100px", // options: 10, "500m", "50px", "allvertices", "endonly"
     }).addTo(map);
   };
   if(second === true) {
     cattleMovLine2.arrowheads({
       yawn: 40,
-      size: "2%",
+      size: "15px",
       fill: true,
       fillColor: lineColour,
       // color: "black",
-      frequency: "20000m", // options: 10, "500m", "50px", "allvertices", "endonly"
+      frequency: "100px", // options: 10, "500m", "50px", "allvertices", "endonly"
     }).addTo(map);
   };
 
