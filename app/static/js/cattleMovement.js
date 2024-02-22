@@ -224,19 +224,20 @@ const cowheadPopupOptions = {
 };
 
 // Function to create HTML popup content using template literal
-const popupContent = function(data, movArr, index) {
+const popupContent = function(data, movArr, index, second = false) {
+const lineIndex = second ? "2" : ""
 
   return `
   <div class="fs-5 fw-bold">${data.identifier}</div><br>
   <div>
     <nav>
       <div class="nav nav-tabs" id="popupNav" role="tablist">
-        <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
-        <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+        <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent${index}${lineIndex}" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
+        <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent${index}${lineIndex}" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
       </div>
     </nav>
     <div class="tab-content" id="popTabContent">     
-      <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
+      <div class="tab-pane fade show active" id="navSummaryContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
         <table class="table table-striped">
           <tbody>
             <tr>
@@ -297,7 +298,7 @@ const popupContent = function(data, movArr, index) {
           </tbody>
         </table>
       </div>
-      <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
+      <div class="tab-pane fade show" id="navInfoContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
         <table class="table table-striped">
           <tbody>
             <tr>
@@ -440,7 +441,7 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
     second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
 
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i, true), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
