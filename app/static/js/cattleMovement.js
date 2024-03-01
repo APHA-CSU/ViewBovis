@@ -391,13 +391,15 @@ markerLegend.onAdd = function (map) {
 const clearPreviousMovements = function (second = false) {
   // Execute this code to clear main cattle movement
   if(second === false) {
-    if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
+    if(typeof cowMarker !== "undefined") map.removeLayer(markersClusterLayer);
+    if(typeof cowMarker !== "undefined") map.removeLayer(markersLayer);
     if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
     if(typeof markerLegend !== "undefined") markerLegend.remove();
   };
   // Execute this code to clear second cattle movement
   if(second === true) {
-    if(typeof cowMarker2 !== "undefined") map.removeLayer(cowLayer2);
+    if(typeof cowMarker2 !== "undefined") map.removeLayer(markersClusterLayer2);
+    if(typeof cowMarker2 !== "undefined") map.removeLayer(markersLayer2);
     if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.remove();
   };
 };
@@ -432,14 +434,46 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   const moveLon = movArr.map(arr => arr.lon);
 
   // Create a layer group that will contain all the cow markers
-  second === false ? cowLayer = L.layerGroup().addTo(map) : cowLayer2 = L.layerGroup().addTo(map);
+  second === false ?
+  markersClusterLayer = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map)
+  :
+  markersClusterLayer2 = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map)
+
+  second === false ?
+  markersLayer = L.layerGroup().addTo(map)
+  :
+  markersLayer2 = L.layerGroup().addTo(map)
 
   // Add cow head markers to map
   for (let i = 0; i < moveLat.length; i++) {
     // Render markers and the correct cow icons
     second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)});
-    second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
+    
+    // Check if there are other movements with the same latitude
+    const sameLatCount = moveLat.filter(lat => lat === moveLat[i]).length;
 
+     // Add the cow marker to the appropriate layer
+     if (sameLatCount > 1) {
+      second === false ? markersClusterLayer.addLayer(cowMarker) : markersClusterLayer2.addLayer(cowMarker2) 
+    } else {
+      second === false ? markersLayer.addLayer(cowMarker) : markersLayer2.addLayer(cowMarker2) 
+    }
     // Add popup content to each cow head marker
     second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i, true), cowheadPopupOptions);
   };
@@ -519,7 +553,7 @@ const cattle_mov_ClientError = function (err) {
 }
 
 // Initiate variables
-let cowMarker, cowLayer, linePts, cattleMovLine;
+let cowMarker, markersClusterLayer, markersLayer, linePts, cattleMovLine;
 
 // Async function that renders main cattle movement
 const showMovements = async function () {
@@ -594,7 +628,7 @@ document.getElementById("btn__cattleMovement--1").addEventListener("click", show
 // ------------------------ //
 
 // Initiate variables
-let cowMarker2, cowLayer2, linePts2, cattleMovLine2;
+let cowMarker2, markersClusterLayer2, markersLayer2, linePts2, cattleMovLine2;
 
 // Async function that renders main cattle movement
 const showMovements2 = async function () {
@@ -671,11 +705,13 @@ document.getElementById("cattleMovementLines--1").addEventListener("change", tog
 // Function to toggle lines and arrows from map 
 const toggleMovementLines2 = function() {
   if(this.checked === true) {
-    map.addLayer(cowLayer2);
+    map.addLayer(markersClusterLayer2);
+    map.addLayer(markersLayer2);
     cattleMovLine2.addTo(map);
   };
   if(this.checked === false) {
-    map.removeLayer(cowLayer2);
+    map.removeLayer(markersClusterLayer2);
+    map.removeLayer(markersLayer2);
     cattleMovLine2.remove();
   };
 };
