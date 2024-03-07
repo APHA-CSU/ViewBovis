@@ -193,24 +193,24 @@ document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM
 // Object to store cow icons
 const cowIcons = {
   cowStandard: L.icon({
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconUrl: "/static/img/holding.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
   }),
   cowShowground: L.icon({
-    iconUrl: "/static/img/CH_Showground_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/showground.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20,35],
   }),
   cowMarket: L.icon({
-    iconUrl: "/static/img/CH_Market_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/market.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35],
   }),
   cowSlaughter: L.icon({
-    iconUrl: "/static/img/CH_Slaughterhouse_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/slaughterhouse.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35],
   }),
 }; 
 
@@ -352,21 +352,25 @@ markerLegend.onAdd = function (map) {
     <div class="legend-marker-container" style="padding-top:5px;">
         <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/holding.svg" class="legend-marker-img">
           <span class="legend-marker-title">Holding</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Market_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/market.svg" class="legend-marker-img">
           <span class="legend-marker-title">Market</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Showground_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/showground.svg" class="legend-marker-img">
           <span class="legend-marker-title">Showground</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Slaughterhouse_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/slaughterhouse.svg" class="legend-marker-img">
           <span class="legend-marker-title">Slaughterhouse</span>
         </span>
+        <span style="display: flex; align-items: center;">
+        <img src="/static/img/movementCluster.svg" class="legend-marker-img">
+        <span class="legend-marker-title">Movement Cluster</span>
+      </span>
         <span style="display: flex; align-items: center;">
           <svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#0096FF" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>

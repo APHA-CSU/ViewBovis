@@ -115,8 +115,8 @@ label.govuk-label.govuk-checkboxes__label {
 
 /* Leaflet legend styles */
 .legend-marker-container {
-    height: 120px;
-    overflow-y: scroll;
+    height: 268px;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 .legend-marker-title {
