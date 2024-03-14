@@ -1,0 +1,166 @@
+        <!-- ================================== -->
+        <!-- Nextstrain Content -->
+        <!-- ================================== -->
+        <div class="container-fluid content content-4 hidden" id="nextstrain-container-id">
+            <div id="nextstrain-splash-page">
+                <!-- Government BETA Banner -->
+                <div class="row alpha-side-margin">
+                    <div class="govuk-phase-banner">
+                        <div>
+                            <strong class="govuk-tag govuk-phase-banner__content__tag">
+                                beta
+                            </strong>
+                            <span>
+                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Nextstrain Logo and Description -->    
+                <div class="row  align-items-center">
+                    <div class="col-3 text-center">
+                        <a href="https://nextstrain.org/" target="_blank"><img src="/static/img/nextstrain-logo.svg" id="nextstrain-logo"></a>
+                    </div>
+                    <div class="col-9">
+                        <div class="home-description-container">
+                            <p class="home-description fs-5">
+                                <span class="text-green fw-bold">Nextstrain</span> is a tool used to visualise whole genome sequencing (WGS) data from <em>Mycobacterium bovis</em>. You can view and explore both a phylogenetic tree and a map to understand genetic relatedness and locate samples geographically. This visualisation enables you to view data on both bovine and non-bovine samples.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Box Content -->
+                <div class="row gx-6">
+                    <div class="col-9">
+                        <!-- Search box -->
+                        <div class="nextstrain-box">
+                            <div class="row">
+                                <!-- Search description -->
+                                <div class="col-4 nextstrain-search-container">
+                                    <p class="fw-bold fs-4">Search & Select Data</p>
+                                    <p class="fs-6">
+                                        Use the search box to find your sample of interest. Click a link in the table to view the phylogenetic tree in Nextstrain.
+                                    </p>
+                                    <ul class="fs-6" style="height: 150px; overflow-y: scroll;">
+                                        <li>Clicking an Identifier (e.g. Ear Tag) or Submission (e.g. AF number) highlights the sample of interest for that clade.</li>
+                                        <li>Clicking on CPH or County highlights all samples in the same CPH or County, respectively.</li>
+                                        <li>Clicking on the Clade or the link to the 'Commonly Viewed Clades' shows the whole phylogenetic tree.</li>
+                                    </ul>
+                                    <!-- <p class="fs-6">
+                                        A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
+                                    </p> -->
+                                </div>
+                                <div class="col-8 nextstrain-select-data">
+                                    <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
+                                        <!-- Input text -->
+                                        <div class="col-8" style="border-right: 15px solid #f2f2f2;">
+                                            <div class="govuk-form-group" style="margin-bottom: 10px; margin-top: 10px;">
+                                                <label class="govuk-label fs-6">
+                                                    <strong>Search Below:</strong></br>
+                                                </label>
+                                                <p>
+                                                    For example: Identifier (Ear Tag: <em>UK262728200982</em>) OR Submission (AF number: <em>AF-21-08014-22</em>).
+                                                </p>
+                                                <div class="govuk-input__wrapper">
+                                                    <input value="" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
+                                                    <div class="govuk-input__suffix" aria-hidden="true" id="nextstrain-search-button" style="cursor: pointer;">
+                                                        <a>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                    <!-- <a id="link_toNextstrain" class="text-hyperlink"><h3 class="px-5">B6-13</h3></a> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Popular clades shortcut -->
+                                        <div class="col-4">
+                                            <label class="govuk-label fs-6" style="margin-bottom: 10px; margin-top: 10px;">
+                                                <strong>Commonly Viewed Clades:</strong></br>
+                                            </label>
+                                            <p>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B111">B1-11</a></span>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B613">B6-13</a></span>
+                                            </br>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B671">B6-71</a></span>
+                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B691">B6-91</a></span>
+                                               
+                                            </p>
+                </div>
+            </div>
+            <div class="row" id="nextstrain-search-table-container" style="margin-right: 0; margin-top: 5px;">
+                <!-- Search table spinner -->
+                <div class="text-center hidden" id="nextstrain-search-table-spinner">
+                    <br>
+                    <div class="spinner-border text-secondary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Table for sample or clade selection -->
+                            <div id="nextstrain-search-table"></div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="nextstrain-box">
+                <!-- Training resources box -->
+                <p class="fw-bold fs-4">Training resources</p>
+                <p class="fs-6">
+                    The resources below have been developed to help you understand how to use Nextstrain and how to interpret the phylogeny.<br>
+                </p>
+                <p class="fs-6">
+                    <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2" target="_blank">How to use Nextstrain guide</a><br>
+                    <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu" target="_blank">Video tutorials</a><br>
+                    <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03" target="_blank">Self-assessment exercise</a>
+                </p>
+            </div>
+        </div>
+    </div>
+                <!-- Government Footer -->
+                <footer class="row footer">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-start footer-text">
+                            Service developed and maintained by APHA Science
+                        </div>
+                        <div>
+                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
+                            <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_nextstrain">Accessibility Statement</a>
+                        </div>
+                        <!-- Accessibility Statement Modal -->
+                        <!-- Purpose: popup information about accessibility on click -->
+                        <div class="modal fade" id="accessibilityModal_nextstrain" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body fs-6">
+                                        <p>
+                                        This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                                        </p>
+                                        </br>
+                                        <ul class="list-group">
+                                        <li class="list-group-item">Statement 1</li>
+                                        <li class="list-group-item">Statement 2</li>
+                                        <li class="list-group-item">Statement 3</li>
+                                        <li class="list-group-item">Statement 4</li>
+                                        <li class="list-group-item">Statement 5</li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="/static/js/nextstrain.js"></script>
