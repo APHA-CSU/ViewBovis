@@ -704,18 +704,18 @@ markerLegend2.onAdd = function (map) {
 //
 // ------------------------ //
 
-// Object to store cow icons
-const cowIcons2 = {
-  cowStandard: L.icon({
+// Object to store sample icons
+const sampleIcon = {
+  standardIcon2: L.icon({
     iconUrl: "/static/img/sample-icon.svg",
     iconSize: [55, 55],
-    iconAnchor:   [25, 45], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconAnchor:   [25, 45], // horizontal and vertical adjustment so that the icon exactly matches marker coordinate
   })
 };
 
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
-const cowheadPopupOptions2 = {
+const popupOptions2 = {
   maxWidth: 400, // in pixels
   className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
   autoClose: false,
@@ -826,15 +826,15 @@ const renderRelatedMarkers = function (json, target) {
   // Extract data for target sample
   let targetSample = json[target];
 
-  // Create a layer group that will contain all the cow markers
+  // Create a layer group that will contain all the markers
   markerLayer = L.layerGroup().addTo(map2);
 
   // Add target sample to map
-  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
+  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: sampleIcon.standardIcon2});
   markerLayer.addLayer(targetMarker);
 
   // Add popup to target sample
-  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), cowheadPopupOptions2);
+  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), popupOptions2);
 
   // Extract data for related sample(s)
   let relatedSample = {...json}; // deep copy json object
@@ -872,7 +872,7 @@ const renderRelatedMarkers = function (json, target) {
     });
     markerLayer.addLayer(relatedMarker);
     // Add popup to related samples
-    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), popupOptions2);
   });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
