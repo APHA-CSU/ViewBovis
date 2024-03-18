@@ -48,7 +48,7 @@ document.getElementById("btn-view-matrix").addEventListener("click", () => {
   // Hide splash page and show SNP map content
   document.getElementById("snpdistance-splash-page").classList.add("hidden");
   document.getElementById("snpmatrix-content").classList.remove("hidden");
-  map2.invalidateSize();
+  //map2.invalidateSize();
 
   // Render a back button
   document.getElementById("snpmatrix-sidebar-container").insertAdjacentElement("afterbegin", backBtn3);

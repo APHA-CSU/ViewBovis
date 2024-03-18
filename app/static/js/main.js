@@ -6,7 +6,7 @@
 // =========================================== //
 
 "use strict";
-var cattleMovementHtml, nextstrainHtml, SNPmatrixHtml, IsSharedScriptAppended, SNPscript
+var cattleMovementHtml, nextstrainHtml, SNPHtml, IsSharedScriptAppended, SNPscript
 // Select DOM elements
 var navBar = document.querySelector(".navbar-nav");
 var navLinks = document.querySelectorAll(".nav-link");
@@ -49,13 +49,13 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
     setTimeout(function(){
         securityModal.hide();
     }, 500);
-    await dynamicLoadFile("/static/libraries/leaflet-1.9.3/leaflet.js","JS",null)
-    await dynamicLoadFile("https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js","JS",null)
-    await dynamicLoadFile("/static/js/leaflet.shpfile.js","JS",null)
-    await dynamicLoadFile("/static/js/shp.js","JS",null)
-    await dynamicLoadFile("/static/js/leaflet.geometryutil.js","JS",null)
-    await dynamicLoadFile("/static/js/leaflet-arrowheads.js","JS",null)
-    await dynamicLoadFile("/static/js/leaflet_awesome_number_markers.js","JS",null)
+    await fetchStaticFile("/static/libraries/leaflet-1.9.3/leaflet.js","JS",null)
+    await fetchStaticFile("https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js","JS",null)
+    await fetchStaticFile("/static/js/leaflet.shpfile.js","JS",null)
+    await fetchStaticFile("/static/js/shp.js","JS",null)
+    await fetchStaticFile("/static/js/leaflet.geometryutil.js","JS",null)
+    await fetchStaticFile("/static/js/leaflet-arrowheads.js","JS",null)
+    await fetchStaticFile("/static/js/leaflet_awesome_number_markers.js","JS",null)
 });
 
 // ------------------------ //
@@ -119,44 +119,13 @@ const hideContent = function(){
 navBar.addEventListener("click", async function(e){
     // Select the closest element with the 'nav-link' class
     const clicked = e.target.closest(".nav-link");
-    // console.log(clicked);
+    if(!clicked) return
     
     // Hide all content function
     hideContent();
-
-    //load all html files
-    if (!cattleMovementHtml && (clicked.dataset.tab === "2" || clicked.dataset.tab === "3" )) cattleMovementHtml = await dynamicLoadFile("/static/html/cattlemovement.html","HTML","cattlemovement")
-    if(!SNPmatrixHtml && clicked.dataset.tab === "3") SNPmatrixHtml =  await dynamicLoadFile("/static/html/SNPdistance.html","HTML","SNPdistance")
-    else if(!nextstrainHtml && clicked.dataset.tab === "4") nextstrainHtml = await dynamicLoadFile("/static/html/nextstrain.html","HTML","nextstrain")
-    //load all shared JS and html here
-    if(!IsSharedScriptAppended && (clicked.dataset.tab === "2" || clicked.dataset.tab === "3" )){
-        loadMap()
-        await dynamicLoadFile("/static/js/L.LinearMeasurement.js","JS",null)
-        await dynamicLoadFile("/static/js/cattleMovement.js","JS","defer")
-        IsSharedScriptAppended = true
-    }
     
-    if (clicked.dataset.tab === "3" && !SNPscript){
-        await dynamicLoadFile("/static/js/snpdistance.js","JS",null)
-        await dynamicLoadFile("/static/js/snpmatrix.js","JS","module")
-        SNPscript = true
-    }
-    /* load this if user clicked Next strain or cattle movement
-    <script src="/static/libraries/leaflet-1.9.3/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>  
-    <script src="/static/js/leaflet.shpfile.js" defer></script>
-    <script src="/static/js/shp.js" defer></script>
-    <script src="/static/js/leaflet.geometryutil.js" ></script>
-    <script src="/static/js/leaflet-arrowheads.js" ></script>
-    <script src="/static/js/L.LinearMeasurement.js" ></script>
-    <script src="/static/js/leaflet_awesome_number_markers.js" ></script>
-    <script src="/static/js/cattleMovement.js"></script>*/
-    // If nothing clicked then end function
-    if(!clicked) return // guard clause
-
-    navBar = document.querySelector(".navbar-nav");
-    navLinks = document.querySelectorAll(".nav-link");
-    navContent = document.querySelectorAll(".content");
+    //fetch and load all static contents
+    await loadStaticContent(clicked.dataset.tab)
 
  
     // Activate bold font for nav-link clicked (add 'active' class)
@@ -173,10 +142,13 @@ navBar.addEventListener("click", async function(e){
 
 // Button to Cattle Movement Map
 // Purpose: hide all content when button is clicked then show content
-document.getElementById("btn-home-cattleLink").addEventListener("click", () => {
+document.getElementById("btn-home-cattleLink").addEventListener("click", async () => {
 
     // Hide all content function
     hideContent();
+
+    //load all the static files
+    await loadStaticContent("2")
 
     // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-2").classList.add("active");
@@ -185,16 +157,19 @@ document.getElementById("btn-home-cattleLink").addEventListener("click", () => {
     document.querySelector(".content-2").classList.remove("hidden");
 
     // Redraw cattle movement leaflet map to solve sizing issue on startup
-    mapElem.invalidateSize();
+    map.invalidateSize();
 });
 
 
 // Button to Nextstrain
 // Purpose: hide all content when button is clicked then show content
-document.getElementById("btn-home-nextstrainLink").addEventListener("click", () => {
+document.getElementById("btn-home-nextstrainLink").addEventListener("click", async () => {
 
     // Hide all content function
     hideContent();
+
+    //load all the static files
+    await loadStaticContent("4")
 
     // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-4").classList.add("active");
@@ -206,10 +181,13 @@ document.getElementById("btn-home-nextstrainLink").addEventListener("click", () 
 
 // Button to SNP Map
 // Purpose: hide all content when button is clicked then show content
-document.getElementById("btn-home-snpMapLink").addEventListener("click", () => {
+document.getElementById("btn-home-snpMapLink").addEventListener("click", async () => {
 
     // Hide all content function
     hideContent();
+
+    //load all the static files
+    await loadStaticContent("3")
 
     // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-3").classList.add("active");
@@ -221,10 +199,13 @@ document.getElementById("btn-home-snpMapLink").addEventListener("click", () => {
 
 // Button to SNP Matrix
 // Purpose: hide all content when button is clicked then show content
-document.getElementById("btn-home-snpMatrixLink").addEventListener("click", () => {
+document.getElementById("btn-home-snpMatrixLink").addEventListener("click", async () => {
 
     // Hide all content function
     hideContent();
+
+    //load all the static files
+    await loadStaticContent("3")
 
     // Activate bold font (add 'active' class)
     document.querySelector(".nav-link-3").classList.add("active");
@@ -238,7 +219,7 @@ document.getElementById("btn-home-snpMatrixLink").addEventListener("click", () =
 // DYNAMIC FILE LOADING
 //
 //--------------------------//
-async function dynamicLoadFile(filepath,type,id){
+async function fetchStaticFile(filepath,type,id){
 if (type === "HTML" && id){
     let response = await fetch(filepath).then(res => res.text()).then(html => {
         document.getElementById(id).innerHTML = html;
@@ -248,12 +229,13 @@ if (type === "HTML" && id){
         document.getElementById(id).innerHTML = "Page not found"
         return false
     })
+    navContent = document.querySelectorAll(".content");
     return response
 } else if (type==="JS"){
     let newScript = document.createElement("script");
     if(id="defer") newScript.defer = true 
-    if(id="async") newScript.async = true
-    if(id="module") {
+    else if(id="async") newScript.async = true
+    else if(id="module") {
         newScript.type = "module"
         newScript.async = true
     }
@@ -267,6 +249,38 @@ if (type === "HTML" && id){
 
 }
 }
+
+
+async function loadStaticContent(tab){
+    document.getElementById("spinner").style.visibility="visible";
+    let pointerEvents = navBar.style.pointerEvents
+    navBar.style.pointerEvents = 'none'
+    document.body.style.cursor = "wait"
+    //load all html files
+    if (!cattleMovementHtml && (tab === "2" || tab === "3")) cattleMovementHtml = await fetchStaticFile("/static/html/cattlemovement.html","HTML","cattlemovement")
+    if(!SNPHtml && tab === "3") SNPHtml =  await fetchStaticFile("/static/html/SNPdistance.html","HTML","SNPdistance")
+    else if(!nextstrainHtml && tab === "4") {
+nextstrainHtml = await fetchStaticFile("/static/html/nextstrain.html","HTML","nextstrain")
+await fetchStaticFile("/static/js/nextstrain.js","JS",null)
+}
+    //load all shared JS and html here
+    if(!IsSharedScriptAppended && (tab === "2" || tab === "3")){
+        await fetchStaticFile("/static/js/L.LinearMeasurement.js","JS",null)
+        loadMap()
+        await fetchStaticFile("/static/js/cattleMovement.js","JS","defer")
+        IsSharedScriptAppended = true
+    }
+    if (tab === "3" && !SNPscript){
+        await fetchStaticFile("/static/js/snpdistance.js","JS",null)
+        await fetchStaticFile("/static/js/snpmatrix.js","JS",null)
+        SNPscript = true
+    }
+    document.getElementById("spinner").style.visibility="hidden";
+    document.body.style.cursor = "auto"
+    navBar.style.pointerEvents = pointerEvents
+}
+
+
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
