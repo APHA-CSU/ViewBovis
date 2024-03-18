@@ -232,12 +232,11 @@ if (type === "HTML" && id){
     navContent = document.querySelectorAll(".content");
     return response
 } else if (type==="JS"){
-    let newScript = document.createElement("script");
-    if(id="defer") newScript.defer = true 
-    else if(id="async") newScript.async = true
-    else if(id="module") {
+    const newScript = document.createElement("script");
+    if(id==="defer") newScript.defer = true 
+    else if(id==="async") newScript.async = true
+    else if(id==="module") {
         newScript.type = "module"
-        newScript.async = true
     }
     newScript.textContent = await fetch(filepath).then(res => res.text()).catch(err => {
         console.error(err)
@@ -272,7 +271,7 @@ await fetchStaticFile("/static/js/nextstrain.js","JS",null)
     }
     if (tab === "3" && !SNPscript){
         await fetchStaticFile("/static/js/snpdistance.js","JS",null)
-        await fetchStaticFile("/static/js/snpmatrix.js","JS",null)
+        await fetchStaticFile("/static/js/snpmatrix.js","JS","module")
         SNPscript = true
     }
     document.getElementById("spinner").style.visibility="hidden";
