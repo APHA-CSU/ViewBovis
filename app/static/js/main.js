@@ -194,6 +194,7 @@ document.getElementById("btn-home-snpMapLink").addEventListener("click", async (
 
     // Show content
     document.querySelector(".content-3").classList.remove("hidden");
+    loadSNPmap();
 });
 
 

@@ -610,8 +610,7 @@ backBtn2.classList.add("back-to-start-page-bttn");
 // ------------------------ //
 
 // Render SNP map page on click of "View Map" button
-document.getElementById("btn-view-snpmap").addEventListener("click", () => {
-
+function loadSNPmap(){
   // Hide splash page and show SNP map content
   document.getElementById("snpdistance-splash-page").classList.add("hidden");
   document.getElementById("snpmap-content").classList.remove("hidden");
@@ -622,8 +621,11 @@ document.getElementById("btn-view-snpmap").addEventListener("click", () => {
 
   // Ensure hidden class removed from back button
   backBtn2.classList.remove("hidden");
-});
+}
 
+document.getElementById("btn-view-snpmap").addEventListener("click", () => {
+loadSNPmap()
+});
 
 // ------------------------ //
 //
