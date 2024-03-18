@@ -683,14 +683,12 @@ markerLegend2.onAdd = function (map) {
     <div style="padding-top:5px;">
         <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/sample-icon.svg" class="legend-marker-img">
           <span class="legend-marker-title">Sample</span>
         </span>
         <span style="display: flex; align-items: center; padding-bottom: 5px;">
-          <svg style="margin-left: 8px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-          </svg>
-          <span class="legend-marker-title" style="margin-left:11px;">SNP Relatedness</span>
+        <img src="/static/img/relatedness-icon.svg" class="legend-marker-img">
+          <span class="legend-marker-title">SNP Relatedness</span>
         </span>
       </div>
     `);
@@ -706,18 +704,18 @@ markerLegend2.onAdd = function (map) {
 //
 // ------------------------ //
 
-// Object to store cow icons
-const cowIcons2 = {
-  cowStandard: L.icon({
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+// Object to store sample icons
+const sampleIcon = {
+  standardIcon2: L.icon({
+    iconUrl: "/static/img/sample-icon.svg",
+    iconSize: [55, 55],
+    iconAnchor:   [25, 45], // horizontal and vertical adjustment so that the icon exactly matches marker coordinate
   })
 };
 
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
-const cowheadPopupOptions2 = {
+const popupOptions2 = {
   maxWidth: 400, // in pixels
   className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
   autoClose: false,
@@ -828,15 +826,15 @@ const renderRelatedMarkers = function (json, target) {
   // Extract data for target sample
   let targetSample = json[target];
 
-  // Create a layer group that will contain all the cow markers
+  // Create a layer group that will contain all the markers
   markerLayer = L.layerGroup().addTo(map2);
 
   // Add target sample to map
-  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
+  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: sampleIcon.standardIcon2});
   markerLayer.addLayer(targetMarker);
 
   // Add popup to target sample
-  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), cowheadPopupOptions2);
+  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), popupOptions2);
 
   // Extract data for related sample(s)
   let relatedSample = {...json}; // deep copy json object
@@ -874,7 +872,7 @@ const renderRelatedMarkers = function (json, target) {
     });
     markerLayer.addLayer(relatedMarker);
     // Add popup to related samples
-    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), popupOptions2);
   });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
