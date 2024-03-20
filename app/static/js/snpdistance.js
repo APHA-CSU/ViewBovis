@@ -818,7 +818,7 @@ const snp_distance_ClientError = function (err) {
 }
 
 // Initiate variables
-let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpMarkersClusterLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
@@ -826,8 +826,18 @@ const renderRelatedMarkers = function (json, target) {
   // Extract data for target sample
   let targetSample = json[target];
 
-  // Create a layer group that will contain all the markers
+  // Create a layer group for target sample marker
   markerLayer = L.layerGroup().addTo(map2);
+  // Create a layer group for related samples markers
+  snpMarkersClusterLayer = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='snp-cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'snp-cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map2)
 
   // Add target sample to map
   targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: sampleIcon.standardIcon2});
@@ -870,7 +880,7 @@ const renderRelatedMarkers = function (json, target) {
         numberColor: "white"
       })
     });
-    markerLayer.addLayer(relatedMarker);
+    snpMarkersClusterLayer.addLayer(relatedMarker);
     // Add popup to related samples
     relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), popupOptions2);
   });
@@ -896,6 +906,7 @@ const showRelatedSamples = async function () {
 
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
+    if(typeof markerLayer !== "undefined") map2.removeLayer(snpMarkersClusterLayer);
     document.getElementById("snpmap-warning-text").textContent = "";
     if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
       document.getElementById("snpmap-error-message").remove();
