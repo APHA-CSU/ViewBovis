@@ -6,11 +6,11 @@
 // =========================================== //
 
 "use strict";
-var cattleMovementHtml, nextstrainHtml, SNPHtml, IsSharedScriptAppended, SNPscript
+let cattleMovementFiles, nextstrainFiles, SNPFiles, leafletFileStatus;
 // Select DOM elements
-var navBar = document.querySelector(".navbar-nav");
-var navLinks = document.querySelectorAll(".nav-link");
-var navContent = document.querySelectorAll(".content");
+const navBar = document.querySelector(".navbar-nav");
+const navLinks = document.querySelectorAll(".nav-link");
+let navContent = document.querySelectorAll(".content");
 
 // ------------------------ //
 //
@@ -21,7 +21,7 @@ var navContent = document.querySelectorAll(".content");
 // Waits until the page is fully loaded. Then removes the loading
 // spinner, removes the grey overlay div and re-enables "pointerEvents"
 // (the mouse)
-window.addEventListener("load", function() {
+window.addEventListener("load", async function() {
     document.getElementById("spinner").style.visibility="hidden";
     document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
     document.getElementById("checkbox--agree").addEventListener("click", function(){
@@ -49,6 +49,16 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
     setTimeout(function(){
         securityModal.hide();
     }, 500);
+    await loadLeafletFiles()
+});
+
+// ----------------------------- //
+//
+//  LOAD ALL LEAFLET SCRIPT FILES
+//
+// ----------------------------- //
+async function loadLeafletFiles(){
+    leafletFileStatus = "WAIT"
     await fetchStaticFile("/static/libraries/leaflet-1.9.3/leaflet.js","JS",null)
     await fetchStaticFile("https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js","JS",null)
     await fetchStaticFile("/static/js/leaflet.shpfile.js","JS",null)
@@ -56,7 +66,9 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
     await fetchStaticFile("/static/js/leaflet.geometryutil.js","JS",null)
     await fetchStaticFile("/static/js/leaflet-arrowheads.js","JS",null)
     await fetchStaticFile("/static/js/leaflet_awesome_number_markers.js","JS",null)
-});
+    await fetchStaticFile("/static/js/L.LinearMeasurement.js","JS",null)
+    leafletFileStatus = "DONE"
+}
 
 // ------------------------ //
 //
@@ -67,7 +79,7 @@ var osm,Esri_WorldGrayCanvas,Esri_WorldImagery,map
 const defaultCoords = [52.56555275762325, -1.4667093894864072];
 const defaultZoom = 6;
 
-function loadMap(){
+function loadCattleMovementMap(){
 // Coordinates and zoom level of map on first render
 
 
@@ -194,7 +206,7 @@ document.getElementById("btn-home-snpMapLink").addEventListener("click", async (
 
     // Show content
     document.querySelector(".content-3").classList.remove("hidden");
-    loadSNPmap();
+    loadSNPmapPage();
 });
 
 
@@ -213,6 +225,7 @@ document.getElementById("btn-home-snpMatrixLink").addEventListener("click", asyn
 
     // Show content
     document.querySelector(".content-3").classList.remove("hidden");
+    loadSNPmatrixPage()
 });
 
 // -------------------------//
@@ -230,6 +243,7 @@ if (type === "HTML" && id){
         document.getElementById(id).innerHTML = "Page not found"
         return false
     })
+    //update navContent Variable for new HTML files
     navContent = document.querySelectorAll(".content");
     return response
 } else if (type==="JS"){
@@ -241,7 +255,7 @@ if (type === "HTML" && id){
     }
     newScript.textContent = await fetch(filepath).then(res => res.text()).catch(err => {
         console.error(err)
-        throw err
+        return false
     });
     document.body.appendChild(newScript)
     return true
@@ -256,25 +270,32 @@ async function loadStaticContent(tab){
     let pointerEvents = navBar.style.pointerEvents
     navBar.style.pointerEvents = 'none'
     document.body.style.cursor = "wait"
-    //load all html files
-    if (!cattleMovementHtml && (tab === "2" || tab === "3")) cattleMovementHtml = await fetchStaticFile("/static/html/cattlemovement.html","HTML","cattlemovement")
-    if(!SNPHtml && tab === "3") SNPHtml =  await fetchStaticFile("/static/html/SNPdistance.html","HTML","SNPdistance")
-    else if(!nextstrainHtml && tab === "4") {
-nextstrainHtml = await fetchStaticFile("/static/html/nextstrain.html","HTML","nextstrain")
-await fetchStaticFile("/static/js/nextstrain.js","JS",null)
+    //check for leafletfileStatus for SNPmap and Cattlemovement map Pages
+    if((tab === "2" || tab === "3") && leafletFileStatus === "WAIT") {
+        await new Promise((res,rej)=> {
+            const leafletInterval = setInterval(()=> {
+                if(leafletFileStatus === "DONE"){
+                    clearInterval(leafletInterval)
+                    res()
+                }
+            },100)
+        })
+    }
+    //fetch and load all html and script files
+    if (!cattleMovementFiles && tab === "2") {
+        cattleMovementFiles = await fetchStaticFile("/static/html/cattlemovement.html","HTML","cattlemovement")
+        loadCattleMovementMap()
+        cattleMovementFiles = await fetchStaticFile("/static/js/cattleMovement.js","JS","defer")
+    }
+    if(!SNPFiles && tab === "3") {
+        SNPFiles =  await fetchStaticFile("/static/html/SNPdistance.html","HTML","SNPdistance")
+        SNPFiles = await fetchStaticFile("/static/js/snpdistance.js","JS",null)
+        SNPFiles = await fetchStaticFile("/static/js/snpmatrix.js","JS",null)
+    }
+    else if(!nextstrainFiles && tab === "4") {
+        nextstrainFiles = await fetchStaticFile("/static/html/nextstrain.html","HTML","nextstrain")
+        await fetchStaticFile("/static/js/nextstrain.js","JS",null)
 }
-    //load all shared JS and html here
-    if(!IsSharedScriptAppended && (tab === "2" || tab === "3")){
-        await fetchStaticFile("/static/js/L.LinearMeasurement.js","JS",null)
-        loadMap()
-        await fetchStaticFile("/static/js/cattleMovement.js","JS","defer")
-        IsSharedScriptAppended = true
-    }
-    if (tab === "3" && !SNPscript){
-        await fetchStaticFile("/static/js/snpdistance.js","JS",null)
-        await fetchStaticFile("/static/js/snpmatrix.js","JS","module")
-        SNPscript = true
-    }
     document.getElementById("spinner").style.visibility="hidden";
     document.body.style.cursor = "auto"
     navBar.style.pointerEvents = pointerEvents

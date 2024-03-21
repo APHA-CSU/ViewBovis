@@ -437,12 +437,18 @@
         
 
     <!-- JavaScript -->
-    <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js"></script>
+    <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js" async></script>
     <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js" async></script>
     <script src="/static/libraries/tabulator/tabulator.min.js" defer></script>
     <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js" async></script>
-    <script src="/static/libraries/luxon.min.js"></script>
+    <script src="/static/libraries/luxon.min.js" defer></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/timeout.js"></script>
+
+    <!--Viridis colour palette
+    https://github.com/d3/d3-scale-chromatic-->
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3" defer></script>
     </body>
 </html>
