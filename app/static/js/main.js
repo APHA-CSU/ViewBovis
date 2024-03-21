@@ -21,7 +21,7 @@ let navContent = document.querySelectorAll(".content");
 // Waits until the page is fully loaded. Then removes the loading
 // spinner, removes the grey overlay div and re-enables "pointerEvents"
 // (the mouse)
-window.addEventListener("load", async function() {
+window.addEventListener("load", function() {
     document.getElementById("spinner").style.visibility="hidden";
     document.getElementsByTagName("BODY")[0].style.pointerEvents = "auto";
     document.getElementById("checkbox--agree").addEventListener("click", function(){
