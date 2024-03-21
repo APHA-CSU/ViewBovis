@@ -216,8 +216,14 @@ const baseMaps2 = {
 let layerControl2 = L.control.layers(baseMaps2, null, {collapsed: false}).addTo(map2);
 
 // Add a title to the basemap control
-document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
-document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
+document.querySelectorAll(".leaflet-control-layers-base").forEach((layer,index) => {
+  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML != "Basemaps") {
+  layer.insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>")}
+});
+document.querySelectorAll('.leaflet-control-layers-selector').forEach((node,index) => {
+if (index === 0 || index === 3) node.click()
+})
+// ensure OSM is the default basemap
   
 
 
