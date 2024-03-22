@@ -1,5 +1,3 @@
-@import "/static/libraries/bootstrap-5.2.3-dist/bootstrap.min.css";
-@import "/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.css";
 @import "/static/libraries/leaflet-1.9.3/leaflet.css";
 @import "/static/libraries/tabulator/tabulator.min.css";
 @import "./_global.css";
@@ -9,7 +7,4 @@
 @import "./_Leaflet.LinearMeasurement.css";
 @import "./_helpAndSupport.css";
 @import "./_leaflet_awesome_number_markers.css";
-@import "./_cattleMovement.css";
-@import "./_snpmap.css";
-@import "./_snpmatrix.css";
 @import "./_components.css";

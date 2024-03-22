@@ -7,11 +7,6 @@
 
 "use strict";
 
-// Viridis colour palette
-// https://github.com/d3/d3-scale-chromatic
-import {interpolateViridis} from "https://cdn.skypack.dev/d3-scale-chromatic@3";
-
-
 // ------------------------ //
 //
 //  BACK BUTTON
@@ -42,11 +37,11 @@ backBtn3.classList.add("back-to-start-page-bttn");
 //
 // ------------------------ //
 
-// Render SNP map page on click of "View Map" button
-document.getElementById("btn-view-matrix").addEventListener("click", () => {
-
+// Render SNP matrix page on click of "View Matrix" button
+function loadSNPmatrixPage(){
   // Hide splash page and show SNP map content
   document.getElementById("snpdistance-splash-page").classList.add("hidden");
+  document.getElementById("snpmap-content").classList.add("hidden");
   document.getElementById("snpmatrix-content").classList.remove("hidden");
   map2.invalidateSize();
 
@@ -55,6 +50,10 @@ document.getElementById("btn-view-matrix").addEventListener("click", () => {
 
   // Ensure hidden class removed from back button
   backBtn3.classList.remove("hidden");
+}
+
+document.getElementById("btn-view-matrix").addEventListener("click", () => {
+loadSNPmatrixPage()
 });
 
 
@@ -177,7 +176,7 @@ const renderSNPDistribution = function(matrix, minValue, maxValue) {
   const snpDistributionInstance = echarts.init(snpDistributionDOM);
 
   // Generate an array of colors using d3.interpolateViridis
-  const viridis =  Object.keys(snpCountsAll).map((d) => interpolateViridis(d / (maxValue)));
+  const viridis =  Object.keys(snpCountsAll).map((d) => d3.interpolateViridis(d / (maxValue)));
   // console.log(viridis);
 
   // Bar chart configuration
@@ -261,7 +260,7 @@ const plotHeatmap = function(matrix, identifier, af, sampleNames, minValue, maxV
   const echartInstance = echarts.init(chartDom);
 
   // Generate an array of colors using d3.interpolateViridis
-  const viridis =  [...Array(maxValue+1).keys()].map((d) => interpolateViridis(d / (maxValue)));
+  const viridis =  [...Array(maxValue+1).keys()].map((d) => d3.interpolateViridis(d / (maxValue)));
   
   // Configure chart options
   const option = {

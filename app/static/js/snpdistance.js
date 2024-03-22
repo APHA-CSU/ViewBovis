@@ -216,8 +216,14 @@ const baseMaps2 = {
 let layerControl2 = L.control.layers(baseMaps2, null, {collapsed: false}).addTo(map2);
 
 // Add a title to the basemap control
-document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
-document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
+document.querySelectorAll(".leaflet-control-layers-base").forEach((layer,index) => {
+  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML != "Basemaps") {
+  layer.insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>")}
+});
+document.querySelectorAll('.leaflet-control-layers-selector').forEach((node,index) => {
+if (index === 0 || index === 3) node.click()
+})
+// ensure OSM is the default basemap
   
 
 
@@ -610,10 +616,10 @@ backBtn2.classList.add("back-to-start-page-bttn");
 // ------------------------ //
 
 // Render SNP map page on click of "View Map" button
-document.getElementById("btn-view-snpmap").addEventListener("click", () => {
-
+function loadSNPmapPage(){
   // Hide splash page and show SNP map content
   document.getElementById("snpdistance-splash-page").classList.add("hidden");
+  document.getElementById("snpmatrix-content").classList.add("hidden");
   document.getElementById("snpmap-content").classList.remove("hidden");
   map2.invalidateSize();
 
@@ -622,8 +628,12 @@ document.getElementById("btn-view-snpmap").addEventListener("click", () => {
 
   // Ensure hidden class removed from back button
   backBtn2.classList.remove("hidden");
-});
+}
 
+//Add event listener on View Map Button - SNP Distance
+document.getElementById("btn-view-snpmap").addEventListener("click", () => {
+  loadSNPmapPage()
+});
 
 // ------------------------ //
 //
