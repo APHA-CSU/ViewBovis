@@ -431,6 +431,68 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(MatrixTooLargeException):
             self.request.snp_matrix(1)
 
+    @mock.patch("viewbovis_data.Request._load_soi")
+    def test_whitespace_removal(self, _):
+        # setup - instantiate request object
+        self.request = Request("foo_path", "foo_id")
+
+        # setup - mock attributes
+        setattr(self.request, "_df_metadata_soi",
+                pd.DataFrame({"Host": ["COW"]}))
+        setattr(self.request, "_df_wgs_metadata_soi",
+                pd.DataFrame({"group": ["A"]}))
+        setattr(self.request, "_submission", "   Y   ")
+
+        # setup - mock private methods
+        self.request.soi_metadata = mock.Mock()
+        self.request._query_movdata = mock.Mock()
+        self.request._get_os_map_ref = mock.Mock()
+        self.request._transform_dateformat = \
+            mock.Mock(side_effect=transform_dateformat_side_effect_func)
+
+        # setup - return values for public & private method mocks
+        self.request.soi_metadata.return_value = \
+            {"submission": "Y", "clade": "A", "identifier": "B",
+             "species": "COW", "animal_type": "E", "slaughter_date": "D",
+             "cph": "F", "cph_type": "H", "county": "I", "risk_area": "J",
+             "out_of_homerange": "L", "dob": "M", "sex": "N",
+             "disclosing_test": "O", "import_country": "P"}
+        self.request._query_movdata.return_value = \
+            pd.DataFrame({"Loc_Num": [0, 1, 2], "Loc": ["J", "O", "T"],
+                          "County": ["M", "N", "O"],
+                          "CPH_Type": ["P", "Q", "R"],
+                          "Loc_StartDate": ["S", "T", "U"],
+                          "Loc_Duration": ["V", "W", "X"],
+                          "Loc_EndDate": ["Z", "AA", "AB"],
+                          "Area_At_Movement": ["AC", "AD", "AE"],
+                          "Current_Area": ["AF", "AG", "AH"]},
+                         index=["Y", "Y", "Y"])
+        self.request._get_os_map_ref.return_value = \
+            pd.DataFrame({"Lat": [1, 2, 3], "Long": [4, 5, 6],
+                          "OSMapRef": ["foo_ref", "bar_ref", "baz_ref"]},
+                         index=["J", "O", "T"])
+
+        # test normal operation
+        # expected output
+        expected = {"submission": "Y", "clade": "A", "identifier": "B",
+                    "species": "COW", "slaughter_date": "D", "animal_type": "E",
+                    "cph": "F", "cph_type": "H", "county": "I",
+                    "risk_area": "J", "out_of_homerange": "L", "dob": "M",
+                    "sex": "N", "disclosing_test": "O", "import_country": "P", "move":
+                        {"0": {"cph": "J", "lat": 1, "lon": 4, "os_map_ref": "foo_ref",
+                               "on_date": "S_transformed", "off_date": "Z_transformed",
+                               "stay_length": "V", "type": "P", "county": "M",
+                               "risk_area_at_move": "AC", "risk_area_current": "AF"},
+                         "1": {"cph": "O", "lat": 2, "lon": 5, "os_map_ref": "bar_ref",
+                               "on_date": "T_transformed", "off_date": "AA_transformed",
+                               "stay_length": "W", "type": "Q", "county": "N",
+                               "risk_area_at_move": "AD", "risk_area_current": "AG"},
+                         "2": {"cph": "T", "lat": 3, "lon": 6, "os_map_ref": "baz_ref",
+                               "on_date": "U_transformed", "off_date": "AB_transformed",
+                               "stay_length": "X", "type": "R", "county": "O",
+                               "risk_area_at_move": "AE", "risk_area_current": "AH"}}}
+        # test expected output
+        self.assertDictEqual(expected, self.request.soi_movement_metadata())
 
 if __name__ == "__main__":
     unittest.main()
