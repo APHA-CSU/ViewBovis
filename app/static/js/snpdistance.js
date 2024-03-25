@@ -700,6 +700,10 @@ markerLegend2.onAdd = function (map) {
         <img src="/static/img/relatedness-icon.svg" class="legend-marker-img">
           <span class="legend-marker-title">SNP Relatedness</span>
         </span>
+        <span style="display: flex; align-items: center;">
+        <img src="/static/img/movementCluster.svg" class="legend-marker-img">
+        <span class="legend-marker-title">SNP Cluster</span>
+        </span>
       </div>
     `);
 
