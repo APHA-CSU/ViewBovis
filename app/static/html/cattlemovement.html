@@ -1,0 +1,166 @@
+        <!-- ================================== -->
+        <!-- Cattle Movement Content -->
+        <!-- ================================== -->
+        <div class="container-fluid content content-2 hidden">
+            <div class="row">
+                <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
+                    <div id="map-sidebar-container">
+                        <div class="govuk-heading-m " id="enter-sample-container">
+                            Enter Identifier or Submission
+                        </div>
+                        <div>
+                            <!-- Element: input sample box for main cattle movement -->
+                            <p>
+                                <!-- Ear-Tag or AF number -->
+                                <input value="" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
+                            </p>
+                            <!-- Element: button to show main cattle movement -->
+                            <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn__cattleMovement--1">Show Cattle Movement</button>
+
+                            <!-- Plot Related Isolates Spinner -->
+                            <div class="text-center" id="cattle-spinner-container">
+                                <div class="spinner-border text-secondary hidden" id="cattle-spinner" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <!-- Warning message if SNP data cannot be fetched -->
+                            <!-- <p class="hidden warning-text" id="cattle-warning-text">Warning: unknown error please report to developers</p> -->
+                            <div id="cattle-warning-text"></div>
+
+                        </div>
+                        <br>
+                        <!-- Element: dropdown box for inputting a second cattle movement -->
+                        <div class="row">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <!-- Element: title text and style for dropdown box -->
+                                        <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
+                                    </button>
+                                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body" id="accordion__secondMovement">
+                                        <div>
+                                            <!-- Element: input sample box for second cattle movement -->
+                                            <p>
+                                                <input value="" type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
+                                            </p>
+                                            <!-- Element: button to show second cattle movement -->
+                                            <button type="button" class="govuk-button" id="btn__cattleMovement--2" disabled="disabled" data-module="govuk-button" style="margin-bottom: 10px;">Show Second Movement</button>
+
+                                            <!-- Plot Related Isolates Spinner -->
+                                            <div class="text-center" id="cattle-spinner-container2">
+                                                <div class="spinner-border text-secondary hidden" id="cattle-spinner2" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                            <!-- Warning message if SNP data cannot be fetched -->
+                                            <div id="cattle-warning-text2"></div>
+
+                                            <!-- Element: toggle movement lines for second cattle movement -->
+                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--2" disabled="disabled" type="checkbox" checked>
+                                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--2">Toggle Movement</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <p class="fs-5 fw-bold">
+                                <span>
+                                    LAYERS
+                                    <svg id="layers-help-icon" type="button" xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="var(--apha-blue)" class="bi bi-question-circle-fill" viewBox="0 0 16 24">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z">
+                                            <title>Customise the map according to these options</title>
+                                        </path>    
+                                    </svg>
+                                </span>
+                            </p>
+                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+
+                                <!-- Risk areas checkbox and accordion -->
+                                <div class="govuk-checkboxes__item" style="width: 100%;">
+                                    <input class="govuk-checkboxes__input" id="riskAreasBox" type="checkbox">
+                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__riskAreas" for="riskAreasBox" style="width: 100%; padding: 0; border: none;">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__riskAreas" aria-expanded="false" aria-controls="body__riskAreas" style="padding: 10px;">
+                                            <span class="govuk-label" style="margin: 0;">Risk Areas</span>
+                                        </button>
+                                        <div id="body__riskAreas" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas">
+                                            <div class="accordion-body" style="padding-top: 0;">
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__HRA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA">HRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__LRA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LRA">LRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__Edge" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge">Edge</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__HTBA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA">HTBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__ITBA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__ITBA">ITBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__LTBA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA">LTBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__TBFA" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA">TBFA</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="countyBox" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
+                                </div>
+
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="hotspotBox" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox">TB Hotspots</label>
+                                </div>
+                                
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--1" type="checkbox" disabled="disabled" checked>
+                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--1">Movement Lines</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- <div id="snp-distance-container">
+                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
+                                SNP Distance
+                            </div>
+                            <div>
+                                <input type="range" class="form-range" id="slider__snp-threshold" min="0" max="10" step="1" id="snpThreshold" disabled="disabled" value="3">
+                                <button class="govuk-button" id="btn__related-isolates" disabled="disabled" aria-disabled="true"  data-module="govuk-button">
+                                    Show Related Isolates
+                                </button>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                    
+                <div class="col">
+                    <div class="custom-popup" id="map"></div>
+                </div>
+            </div>
+        </div>

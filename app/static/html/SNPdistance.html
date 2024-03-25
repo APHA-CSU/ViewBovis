@@ -1,0 +1,301 @@
+        <!-- ================================== -->
+        <!-- SNP Distance Content -->
+        <!-- ================================== -->
+        <link rel="stylesheet" href="/static/css/_snpmap.css" async>
+        <link rel="stylesheet" href="/static/css/_snpmatrix.css" async>
+        <div class="container-fluid content content-3 hidden">
+            <div id="snpdistance-splash-page" class="">
+                <!-- Government BETA Banner -->
+                <div class="row alpha-side-margin">
+                    <div class="govuk-phase-banner">
+                        <div>
+                            <strong class="govuk-tag govuk-phase-banner__content__tag">
+                                beta
+                            </strong>
+                            <span>
+                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- DNA Logo and Description -->    
+                <div class="row  align-items-center"  style="margin-left: 100px; margin-right: 100px;">
+                    <div class="col-3 text-center">
+                        <img src="/static/img/SNPPageDNA_aphaGreen.svg" id="snppage-logo" alt="snplogo">
+                    </div>
+                    <div class="col-9">
+                        <div class="home-description-container">
+                            <p class="home-description fs-5">
+                                <span class="text-green fw-bold">SNP Distance</span>: SNP stands for Single Nucleotide Polymorphism. SNPs are single changes in a nucleotide at a specific point in the genome (e.g. A -> T). SNP Distance is the number of differences between two samples; the fewer SNP differences, the more closely related the samples are.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- SNP Distance Boxes -->
+                <div class="row gx-6">
+                    <div class="col">
+                        <!-- SNP Map box -->
+                        <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
+                            <p class="fw-bold">SNP Map</p>
+                            <p>
+                                This map will allow you to pick a sample of interest and view related samples using a SNP distance threshold.
+                            </p>
+                            <br>
+                            <div class="text-center">
+                                <button type="button" id="btn-view-snpmap" class="btn govuk-button custom-govuk-button-home">
+                                    View Map
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <!-- SNP Matrix box -->
+                        <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
+                            <p class="fw-bold">SNP Matrix</p>
+                            <p>
+                                Visualise a pairwise SNP matrix containing a target sample and related samples. Each pairwise comparison displays the SNP difference between two samples.
+                            </p>
+                            <p class="text-center">
+                                <button type="button" id="btn-view-matrix" class="btn govuk-button custom-govuk-button-home">
+                                    View Matrix
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Government Footer -->
+                <footer class="row footer">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-start footer-text">
+                            Service developed and maintained by APHA Science
+                        </div>
+                        <div>
+                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
+                            <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_SNP">Accessibility Statement</a>
+                        </div>
+                        <!-- Accessibility Statement Modal -->
+                        <!-- Purpose: popup information about accessibility on click -->
+                        <div class="modal fade" id="accessibilityModal_SNP" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body fs-6">
+                                        <p>
+                                        This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                                        </p>
+                                        </br>
+                                        <ul class="list-group">
+                                        <li class="list-group-item">Statement 1</li>
+                                        <li class="list-group-item">Statement 2</li>
+                                        <li class="list-group-item">Statement 3</li>
+                                        <li class="list-group-item">Statement 4</li>
+                                        <li class="list-group-item">Statement 5</li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+
+            <!-- ================================== -->
+            <!-- SNP MAP CONTENT (HIDDEN BY DEFAULT) -->
+            <!-- ================================== -->
+            <div id="snpmap-content" class="row hidden">
+                <div class="col-3 collapse collapse-horizontal show" id="snpmap-content-container">
+                    <div id="snpmap-sidebar-container">
+                        <!-- <br> -->
+                        <div class="govuk-heading-m" id="enter-sample-container">
+                            Enter Identifier or Submission
+                        </div>
+                        <div>
+                            <!-- Element: input sample box for main cattle movement -->
+                            <p>
+                                <!-- Ear-Tag or AF number -->
+                                <input value="" type="text" class="input__sampleID" id="input__sampleID_temp--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
+                            </p>
+                        </div>
+                        <div id="snpmap-distance-container">
+                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
+                                Select SNP Distance
+                            </div>
+                            <div>
+
+                                <!-- Custom slider -->
+                                <!-- <div class="slider-container"> -->
+                                    <p class="display-value-fixed" style="float: left;">0</p>
+                                    <p class="display-value-fixed" style="float: right;">10</p>
+                                    <input id="snpmap-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                    <br>
+                                    <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snp-distance-value">1</p></span>
+                                <!-- </div> -->
+
+
+                                <br>
+                                <br>
+                                <button class="govuk-button" id="btn__plot-related-isolates" aria-disabled="true"  data-module="govuk-button">
+                                    Plot Related Isolates
+                                </button>
+                                <!-- Plot Related Isolates Spinner -->
+                                <div class="text-center" id="snpmap-spinner-container">
+                                    <div class="spinner-border text-secondary hidden" id="snpmap-spinner" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <!-- Warning message if SNP data cannot be fetched -->
+                                <div id="snpmap-warning-text"></div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <p class="fs-5 fw-bold">
+                                <span>
+                                    LAYERS
+                                    <svg id="layers-help-icon2" type="button" xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="var(--apha-blue)" class="bi bi-question-circle-fill" viewBox="0 0 16 24">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z">
+                                            <title>Customise the map according to these options</title>
+                                        </path> 
+                                    </svg>
+                                </span>
+                            </p>
+                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+
+                                <!-- Risk areas checkbox and accordion -->
+                                <div class="govuk-checkboxes__item" style="width: 100%;">
+                                    <input class="govuk-checkboxes__input" id="riskAreasBox2" type="checkbox">
+                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__riskAreas2" for="riskAreasBox2"2 style="width: 100%; padding: 0; border: none;">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__riskAreas2" aria-expanded="false" aria-controls="body__riskAreas2" style="padding: 10px;">
+                                            <span class="govuk-label" style="margin: 0;">Risk Areas</span>
+                                        </button>
+                                        <div id="body__riskAreas2" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas2">
+                                            <div class="accordion-body" style="padding-top: 0;">
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__HRA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA2">HRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__LRA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LRA2">LRA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__Edge2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge2">Edge</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__HTBA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA2">HTBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__ITBA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__ITBA2">ITBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__LTBA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA2">LTBA</label>
+                                                </div>
+                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
+                                                <div class="govuk-checkboxes__item">
+                                                    <input class="govuk-checkboxes__input" id="checkbox__TBFA2" type="checkbox">
+                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA2">TBFA</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <!-- Counties checkbox -->
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="countyBox2" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox2">Counties</label>
+                                </div>
+                                
+                                <!-- Hotspot checkbox -->
+                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
+                                    <input class="govuk-checkboxes__input" id="hotspotBox2" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox2">TB Hotspots</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SNP Map     -->
+                <div class="col">
+                    <div class="custom-popup" id="map2"></div>
+                </div>
+
+                <!-- SNP Map Table -->
+                <div class="col-4 collapse collapse-horizontal" id="table-sidebar-container">
+                    <div id="table-sidebar-title"></div>
+                    <div id="table-content-container"></div>
+                </div>
+            </div>
+
+            <!-- ================================== -->
+            <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
+            <!-- ================================== -->
+            <div id="snpmatrix-content" class="row hidden">
+                <div class="col-3" id="snpmatrix-content-container">
+                    <div id="snpmatrix-sidebar-container">
+                        <!-- <br> -->
+                        <div class="govuk-heading-m" id="enter-sample-container">
+                            Enter Identifier or Submission
+                        </div>
+                        <div>
+                            <p>
+                                <!-- Identifier or AF number -->
+                                <input value="" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
+                            </p>
+                        </div>
+                        <div id="snpmatrix-distance-container">
+                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
+                                Select SNP Distance
+                            </div>
+                            <div>
+
+                                <!-- Custom slider -->
+                                <p class="display-value-fixed" style="float: left;">0</p>
+                                <p class="display-value-fixed" style="float: right;">10</p>
+                                <input id="snpmatrix-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
+                                <br>
+                                <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snpmatrix-distance-value">1</p></span>
+
+                                <br>
+                                <br>
+                                <button class="govuk-button" id="btn__plot-snpmatrix" aria-disabled="true"  data-module="govuk-button">
+                                    Plot SNP Matrix
+                                </button>
+                                <!-- Plot SNP Matrix Spinner -->
+                                <div class="text-center" id="snpmatrix-spinner-container">
+                                    <div class="spinner-border text-secondary hidden" id="snpmatrix-spinner" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                 <!-- Warning message if SNP data cannot be fetched -->
+                                 <div id="snpmatrix-warning-text"></div>
+
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="snp-distribution-plot" style="height: 200px; width: 100%;"></div>
+                    </div>
+                </div>
+                <!-- SNP Matrix     -->
+                <div class="col-9" id="snpmatrix-container">
+                    <div id="snpmatrix" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+        </div>
