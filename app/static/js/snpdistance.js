@@ -920,7 +920,7 @@ const showRelatedSamples = async function () {
 
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
-    if(typeof markerLayer !== "undefined") map2.removeLayer(snpMarkersClusterLayer);
+    if(typeof snpMarkersClusterLayer !== "undefined") map2.removeLayer(snpMarkersClusterLayer);
     document.getElementById("snpmap-warning-text").textContent = "";
     if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
       document.getElementById("snpmap-error-message").remove();
