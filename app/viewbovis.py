@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, g
+from flask import Flask, jsonify, render_template, request, g, send_file, Response
 import os
 import json
 from datetime import datetime
@@ -42,6 +42,16 @@ def home():
     return render_template("index.html",
                            data_update_date=datetime.strptime(metadata["today"],
                                                               '%d%b%y').strftime("%d/%m/%Y"))
+
+@app.route('/static/js/<path:filename>')
+def static_compressed_js(filename):
+    js_folder = 'static/js'
+    jsc_folder = 'static/jsc'
+    jsc_filepath = os.path.join(jsc_folder,filename+'.gz')
+    if os.path.exists(jsc_filepath):
+        return send_file(jsc_filepath, as_attachment= False)
+    else:
+        return send_file(os.path.join(js_folder,filename))
 
 
 @app.route("/sample", methods=["GET"])
