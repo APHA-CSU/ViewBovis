@@ -119,6 +119,9 @@ body {
     margin-right: 0.5px;
 }
 
+.help-quicklink-boxes {
+    padding-top: 10px;
+}
 
 /* Apply this style to screens with a height >768px (larger laptop or desktop) */
 /* @media (min-height: 768px){
