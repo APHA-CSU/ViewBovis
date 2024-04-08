@@ -108,10 +108,7 @@ class Request:
         exclusion = pd.read_sql_query(query, self._db,
                                       params={"submission":
                                               self._submission})
-        if exclusion.empty:
-            return None
-        else:
-            return exclusion["Exclusion"][0]
+        return exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -121,8 +118,6 @@ class Request:
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"sample": sample})
-        if df_wgs_sub.empty:
-            return None
         return df_wgs_sub["Submission"][0]
 
     def _query_movdata(self, submission: str) -> pd.DataFrame:
@@ -374,9 +369,7 @@ class Request:
                 NoMetaDataException: for missing CPH in metadata for the
                     SOI
         """
-        if self._df_metadata_soi.empty:
-            raise NoMetaDataException(self._id)
-        elif self._xy is None:
+        if self._df_metadata_soi.empty or self._xy is None:
             raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions
