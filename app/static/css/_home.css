@@ -101,11 +101,7 @@ body {
     border-top: 10px solid var(--apha-green);
     padding: 10px;
     font-size: 17px;
-    height: 335px;
-}
-
-.home-box-about {
-    height: 448px;
+    height: calc(100% + 10px);
 }
 
 .custom-govuk-button-home {
