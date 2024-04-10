@@ -9,13 +9,18 @@
         rel="stylesheet" 
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
         crossorigin="anonymous">
-        <link rel="stylesheet" href="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.css">
+        <link rel="stylesheet" href="/static/css/_govuk_frontend_4.4.1.css">
         <link rel="stylesheet" href="/static/css/_global.css">
         <link rel="stylesheet" href="/static/css/_navbar.css">
         <link rel="stylesheet" href="/static/css/_home.css">
-        <link rel="stylesheet" href="/static/css/main.css">
-        <link rel="preload" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
-        <link rel="preload" href="/static/css/_cattleMovement.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <link rel="stylesheet" href="/static/css/_components.css">
+        <link rel="preload" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_cattleMovement.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/libraries/leaflet-1.9.3/leaflet.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/libraries/tabulator/tabulator.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_nextstrain.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_Leaflet.LinearMeasurement.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_leaflet_awesome_number_markers.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
     </head>
     <body>
         <!-- Grey overlay and loading spinner: hidden once page is loaded -->
@@ -26,9 +31,13 @@
         <!-- ================================== -->
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency" target="_blank">
+                <a class="navbar-brand" 
+                href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency" 
+                target="_blank">
                     <!-- Navbar Logo -->
-                    <img src="/static/img/APHA_logo_svg.svg" alt="Logo" width="auto" class="d-inline-block align-text-top">
+                    <img src="/static/img/APHA_logo_svg.svg" alt="APHA_logo" height="40px" width="40px" 
+                    class="d-inline-block align-text-top" style="margin-right: 10px;
+                    margin-top: 8px;" loading="lazy">
                 </a>
                 <!-- Navbar Title -->
                 <strong id="nav-main-title">ViewBovis [Official Sensitive]</strong>
@@ -67,7 +76,7 @@
         <!-- ================================== -->
         <!-- Security modal -->
         <!-- ================================== -->
-        <div class="modal" id="modal--security">
+        <div class="modal" id="modal--security" role="alertdialog" aria-label="Disclaimer">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="background-color: transparent; border: none; width: fit-content;">
                     <div class="modal-body">
@@ -130,7 +139,8 @@
             <div class="row align-items-center">
                 <!-- Column: logo -->
                 <div class="col-1">
-                    <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo" alt="APHA_logo">
+                    <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo" 
+                    alt="ViewBovis_logo" loading="lazy">
                 </div>
                 <!-- Column: description -->
                 <div class="col-8">
@@ -294,7 +304,7 @@
     <div class="row gx-6 help-quicklink-boxes">
         <div class="col">
             <!-- Support Documents box -->
-            <div class="home-box">
+            <div class="home-box home-box-about">
                 <p class="fw-bold">Support Documents</p>
                 <p>
                     These support documents should be the first port of call:
@@ -315,7 +325,7 @@
         </div>
         <div class="col">
             <!-- Training Videos box -->
-            <div class="home-box">
+            <div class="home-box home-box-about">
                 <p class="fw-bold">Training Videos</p>
                 <p>
                     These cover different aspects of learning and usability:
@@ -339,7 +349,7 @@
         </div>
         <div class="col">
             <!-- Other links and tools box -->
-            <div class="home-box">
+            <div class="home-box home-box-about">
                 <p class="fw-bold">Other links and tools</p>
                 <p>
                     Other associated tools which may be of use:
@@ -367,7 +377,7 @@
         </div>
         <div class="col">
             <!-- Contact Us box -->
-            <div class="home-box">
+            <div class="home-box home-box-about">
                 <p class="fw-bold">Contact Us</p>
                 <p>
                     We would love to hear your feedback about the app, any tech issues and any questions you may have using the links below:
@@ -447,7 +457,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" 
     crossorigin="anonymous"></script>
-    <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js" async></script>
     <script src="/static/libraries/tabulator/tabulator.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js" defer></script>
     <script src="/static/libraries/luxon.min.js" defer></script>
@@ -455,7 +464,7 @@
     <script src="/static/js/timeout.js"></script>
 
     <!--Viridis colour palette
-    https://github.com/d3/d3-scale-chromatic-->
+    https://github.com/d3/d3-scale-chromatic  -->
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3" defer></script>
