@@ -702,7 +702,7 @@ markerLegend2.onAdd = function (map) {
         </span>
         <span style="display: flex; align-items: center;">
         <img src="/static/img/movementCluster.svg" class="legend-marker-img">
-        <span class="legend-marker-title">SNP Cluster</span>
+        <span class="legend-marker-title">Geographic Group</span>
         </span>
       </div>
     `);
