@@ -126,3 +126,15 @@ input[type="range"]::-webkit-slider-thumb:active {
     height: 300px;
     overflow-y: scroll;
 }
+.snp-cluster-icon {
+    background-color:#00A33B;
+    color: #ffffff; 
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px; 
+  }
