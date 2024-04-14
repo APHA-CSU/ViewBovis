@@ -80,7 +80,7 @@ const showTable = async function() {
         document.getElementById("nextstrain-search-table-spinner").classList.remove("hidden");
 
         // Fetch json data from backend
-        const response = await fetch(`/sample?sample_name=${document.getElementById("nextstrain-input").value}`);
+        const response = await fetch(`/sample?sample_name=${validateIdentifierInput(document.getElementById("nextstrain-input").value)}`);
 
         if(!response.ok){
 

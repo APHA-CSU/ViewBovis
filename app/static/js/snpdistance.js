@@ -934,7 +934,7 @@ const showRelatedSamples = async function () {
     };
 
     // Select elements from DOM
-    const sampleID = document.getElementById("input__sampleID_temp--1").value;
+    const sampleID = validateIdentifierInput(document.getElementById("input__sampleID_temp--1").value);
     const snpDistance = document.getElementById("snp-distance-value").textContent;
 
     // Render spinner

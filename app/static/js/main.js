@@ -303,6 +303,10 @@ async function loadStaticContent(tab){
 }
 
 
+function validateIdentifierInput(identifierStr){
+// regex to remove all spaces and method to make all alphabets uppercase
+    return identifierStr.replace(/ /g, "").toUpperCase()
+}
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content

@@ -448,7 +448,7 @@ const showSNPMatrix = async function () {
     };
 
     // Select elements from DOM
-    const matrixSampleSelected = document.getElementById("snpmatrix-selected-sample").value;
+    const matrixSampleSelected = validateIdentifierInput(document.getElementById("snpmatrix-selected-sample").value);
     const matrixSNPDistance = document.getElementById("snpmatrix-distance-value").textContent;
     // console.log(matrixSampleSelected, matrixSNPDistance);
 
