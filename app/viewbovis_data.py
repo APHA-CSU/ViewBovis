@@ -44,6 +44,8 @@ class Request:
         if not self._df_metadata_soi.empty:
             # get submission number incase eartag used in request
             self._submission = self._df_metadata_soi.index[0]
+            self._submission.strip()
+            self._submission.lstrip()
             self._df_wgs_metadata_soi = \
                 self._query_wgs_metadata(self._submission)
             # retrieve x,y and lat,lon into tuples
