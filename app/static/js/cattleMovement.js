@@ -587,7 +587,7 @@ const showMovements = async function () {
     document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
     // Fetch json data from backend
-    const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    const response = await fetch(`/sample/movements?sample_name=${validateIdentifierInput(document.getElementById(`input__sampleID--${elementID}`).value)}`);
 
     if(!response.ok) {
 

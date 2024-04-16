@@ -48,6 +48,7 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
     // Add half a second delay to allow user to see the box being ticked
     setTimeout(function(){
         securityModal.hide();
+        document.body.style.overflow = "auto"
     }, 500);
     await loadLeafletFiles()
 });
@@ -60,7 +61,7 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
 async function loadLeafletFiles(){
     leafletFileStatus = "WAIT"
     await fetchStaticFile("/static/libraries/leaflet-1.9.3/leaflet.js","JS",null)
-    await fetchStaticFile("https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js","JS",null)
+    await fetchStaticFile("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js","JS",null)
     await fetchStaticFile("/static/js/leaflet.shpfile.js","JS",null)
     await fetchStaticFile("/static/js/shp.js","JS",null)
     await fetchStaticFile("/static/js/leaflet.geometryutil.js","JS",null)
@@ -302,6 +303,10 @@ async function loadStaticContent(tab){
 }
 
 
+function validateIdentifierInput(identifierStr){
+// regex to remove all spaces and method to make all alphabets uppercase
+    return identifierStr.replace(/ /g, "").toUpperCase()
+}
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content

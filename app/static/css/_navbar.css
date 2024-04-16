@@ -8,8 +8,6 @@
 .navbar {
     background-color: white !important;
     border-bottom: 0.2rem solid var(--apha-green);
-    padding: 0;
-    height: 55px;
     margin-top: -10px;
     margin-bottom: 10px;
 }
@@ -24,13 +22,6 @@
 .navbar-brand {
     margin-right: 10px;
     padding: 1px;
-}
-
-/* APHA logo */
-.navbar-brand img {
-    height: 40px;
-    margin-right: 10px;
-    margin-top: 8px
 }
 
 /* Tab navigation links */
@@ -56,6 +47,7 @@ a.nav-link.active {
 /* Non-active text styling */
 a.nav-link {
     color: black;
+    height: 100%;
 }
 
 /* Tab styling on hover */
