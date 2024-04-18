@@ -155,7 +155,10 @@ class Request:
         date_transformed, _ = \
             re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
                     lambda x: month_mapper[x.group()], date)
-        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
+        try:
+            return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
+        except ValueError:
+            return np.NaT
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
