@@ -76,8 +76,8 @@ async function loadLeafletFiles(){
 //  CATTLE MOVEMENT MAP
 //
 // ------------------------ //
-const defaultCoords = [52.56555275762325, -1.4667093894864072];
-const defaultZoom = 6;
+window.defaultCoords = [52.56555275762325, -1.4667093894864072];
+window.defaultZoom = 6;
 
 function loadCattleMovementMap(){
 // Coordinates and zoom level of map on first render
