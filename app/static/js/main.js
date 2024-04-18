@@ -76,7 +76,6 @@ async function loadLeafletFiles(){
 //  CATTLE MOVEMENT MAP
 //
 // ------------------------ //
-var osm,Esri_WorldGrayCanvas,Esri_WorldImagery,map
 const defaultCoords = [52.56555275762325, -1.4667093894864072];
 const defaultZoom = 6;
 
@@ -88,22 +87,22 @@ function loadCattleMovementMap(){
 // https://leaflet-extras.github.io/leaflet-providers/preview/
 
 // OpenStreetMap tiles
-osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+window.osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 });
 // Esri grey canvas
-Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+window.Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
     maxZoom: 16,
 });
 // Esri world imagery
-Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+window.Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 });
 // Initiate map and set bounding box to the centre of England
 // const map = L.map("map").setView(defaultCoords, defaultZoom);
-map = L.map("map", {
+window.map = L.map("map", {
     center: defaultCoords,
     zoom: defaultZoom,
     layers: [osm, Esri_WorldGrayCanvas, Esri_WorldImagery],
@@ -149,7 +148,7 @@ navBar.addEventListener("click", async function(e){
     document.querySelector(`.content-${clicked.dataset.tab}`).classList.remove("hidden");   
 
     // Redraw cattle movement leaflet map to solve sizing issue on startup
-    if(map) map.invalidateSize();
+    if(window.map) map.invalidateSize();
 });
 
 
@@ -303,7 +302,7 @@ async function loadStaticContent(tab){
 }
 
 
-function validateIdentifierInput(identifierStr){
+ window.validateIdentifierInput = function(identifierStr){
 // regex to remove all spaces and method to make all alphabets uppercase
     return identifierStr.replace(/ /g, "").toUpperCase()
 }
