@@ -2,12 +2,14 @@ from flask import Flask, jsonify, render_template, request, g
 import os
 import json
 from datetime import datetime
+from flask_wtf.csrf import CSRFProtect
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
                            MatrixTooLargeException
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 
 
 def get_request_object(id):
