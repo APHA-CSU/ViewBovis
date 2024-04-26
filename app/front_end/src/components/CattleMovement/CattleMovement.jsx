@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Sidebar from "./Sidebar";
+import MapSidebar from "../Sidebar/MapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 
 const CattleMovement = () => {
@@ -28,7 +28,7 @@ const CattleMovement = () => {
     <Container fluid id="custom-container">
       <Row>
         <Col className="sidebar col-3">
-          <Sidebar setSearchSample={setSearchSample} />
+          <MapSidebar setSearchSample={setSearchSample} />
         </Col>
         <Col>
           <CattleMovementMap />
