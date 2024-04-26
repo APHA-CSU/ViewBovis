@@ -1,38 +1,60 @@
-.App {
-  text-align: center;
+.app {
+  height: 100vh;
+  /* border: solid; */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* CATTLEMOVEMENT CSS */
+
+#custom-container {
+  /* border: solid; */
+  height: 90vh;
+  padding: 0%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.leaflet-container {
+  height: 89vh;
+  /* border: solid; */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sidebar.col-3  {
+  padding-right: 2%;
+  height: 89vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+}
+
+#enter-sample-container {
+  background: #d1d1d1;
+  padding: 10px;
+  margin-bottom: 1px;
+}
+
+.accordion-button{
+  font-weight: bold;
+}
+
+.checkbox{
+  font-family: GDS Transport, arial, sans-serif;
+  font-size: 1.1875rem;
+  padding-left: 15%;
+  margin-top: 4%;
+}
+
+.form-check-input {
+ border: solid;
+ border-radius: 0 !important;
+ 
+}
+/* .cluster-icon {
+  background-color: #333;
+  height: 2em;
+  width: 2em;
+  color: #fff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+  border-radius: 50%;
+  font-size: 1.2rem;
+  box-shadow: 0 0 0px 5px #fff;
+} */

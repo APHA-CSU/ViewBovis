@@ -1,31 +1,41 @@
 import { useEffect, useState } from "react";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Sidebar from "./Sidebar";
+import CattleMovementMap from "./CattleMovementMap";
 
-const CattleMovement = ({ searchInput }) => {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchSample, setSearchSample] = useState("")
-  const [jsonData, setjsonData] = useState({});
-
-  const handleChange = (event) => {
-    setsearchInput(event.target.value); // 1 create state
-}
-
-const handleSubmit = (event) => {
-    event.preventDefault();
-    setSearchSample(searchInput);
-    setsearchInput("");
-}
+const CattleMovement = () => {
+  const [searchSample, setSearchSample] = useState("");
+  // const [jsonData, setjsonData] = useState({});
 
   useEffect(() => {
-    fetch(`/sample/movements?sample_name=${searchInput}`)
+    fetch(`/sample/movements?sample_name=${searchSample}`)
       .then((response) => {
+        console.log(response);
         return response.json();
       })
       .then(({ data }) => {
-        setjsonData(data);
+        // setjsonData(data);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
-  }, [searchInput]);
+  }, [searchSample]);
 
-  return <h1>Cattle Movement</h1>;
+  return (
+    <Container fluid id="custom-container">
+      <Row>
+        <Col className="sidebar col-3">
+          <Sidebar setSearchSample={setSearchSample} />
+        </Col>
+        <Col>
+          <CattleMovementMap />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 export default CattleMovement;
