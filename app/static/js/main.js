@@ -61,7 +61,7 @@ document.getElementById("checkbox--agree").addEventListener("change", async func
 async function loadLeafletFiles(){
     leafletFileStatus = "WAIT"
     await fetchStaticFile("/static/libraries/leaflet-1.9.3/leaflet.js","JS",null)
-    await fetchStaticFile("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js","JS",null)
+    await fetchStaticFile("/static/js/markerCluster.js","JS",null)
     await fetchStaticFile("/static/js/leaflet.shpfile.js","JS",null)
     await fetchStaticFile("/static/js/shp.js","JS",null)
     await fetchStaticFile("/static/js/leaflet.geometryutil.js","JS",null)
