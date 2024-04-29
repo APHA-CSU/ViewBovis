@@ -8,13 +8,15 @@ import NavbarComp from "./components/Navbar/NavbarComp";
 
 function App() {
   return (
+    <div>
+      <NavbarComp/>
     <Container fluid className="app">
-      <NavbarComp />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cattlemovement" element={<CattleMovement />} />
       </Routes>
     </Container>
+    </div>
   );
 }
 

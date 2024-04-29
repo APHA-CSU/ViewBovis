@@ -3,6 +3,51 @@
   /* border: solid; */
 }
 
+/* NAVBAR */
+
+.navbarcomp {
+  border-bottom: 0.2rem solid #00a33b;
+  margin-bottom: 10px;
+  padding: 1px;
+}
+
+#nav-main-title {
+  font-size: 22px;
+  font-weight: bolder;
+  margin-bottom: -5px;
+}
+
+.navbar-brand {
+  margin-right: 10px;
+  padding: 1px;
+}
+
+.navbar-nav {
+  margin-left: 50px;
+  font-size: 18px;
+  margin-bottom: -10px;
+}
+
+/* Active text styling */
+a.nav-link.active {
+  /* color: black !important; */
+  color: white !important;
+  font-weight: bold;
+  background-color: #00a33b;
+}
+
+/* Non-active text styling */
+a.nav-link {
+  color: black;
+  height: 100%;
+}
+
+/* Tab styling on hover */
+a.nav-link:hover {
+  color: black;
+  font-weight: bold;
+}
+
 /* CATTLEMOVEMENT CSS */
 
 #custom-container {
@@ -16,12 +61,11 @@
   /* border: solid; */
 }
 
-.sidebar.col-3  {
+.sidebar.col-3 {
   padding-right: 2%;
   height: 89vh;
   overflow-y: scroll;
   overflow-x: hidden;
-
 }
 
 #enter-sample-container {
@@ -30,11 +74,11 @@
   margin-bottom: 1px;
 }
 
-.accordion-button{
+.accordion-button {
   font-weight: bold;
 }
 
-.checkbox{
+.checkbox {
   font-family: GDS Transport, arial, sans-serif;
   font-size: 1.1875rem;
   padding-left: 15%;
@@ -42,9 +86,8 @@
 }
 
 .form-check-input {
- border: solid;
- border-radius: 0 !important;
- 
+  border: solid;
+  border-radius: 0 !important;
 }
 /* .cluster-icon {
   background-color: #333;
