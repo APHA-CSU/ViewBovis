@@ -1,6 +1,7 @@
 .app {
   height: 100vh;
   /* border: solid; */
+  padding: 0px;
 }
 
 /* NAVBAR */
@@ -8,7 +9,7 @@
 .navbarcomp {
   border-bottom: 0.2rem solid #00a33b;
   margin-bottom: 10px;
-  padding: 1px;
+  padding: 0px;
 }
 
 #nav-main-title {
@@ -48,22 +49,62 @@ a.nav-link:hover {
   font-weight: bold;
 }
 
-/* CATTLEMOVEMENT CSS */
+/* HOME  */
+
+.home-logo {
+  height: 90px;
+  width: "auto";
+}
+
+.home-description-container {
+  border-left: 10px solid #b1b4b6;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.home-description {
+  margin-left: 10px;
+}
+
+.home-box {
+  background-color: #f2f2f2;
+  border-top: 10px solid #00a33b;
+  padding: 10px;
+  font-size: 17px;
+  height: 335px;
+}
+
+.home-govuk-buttons {
+  margin-bottom: 8px !important;
+  font-size: 15px !important;
+}
+
+.footer {
+  bottom: -2rem;
+  position: relative;
+  font-size: 12px;
+  background-color: #f2f2f2;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-left: 0.5px;
+  margin-right: 0.5px;
+}
+
+/* CATTLEMOVEMENT */
 
 #custom-container {
   /* border: solid; */
-  height: 90vh;
+  height: 88vh;
   padding: 0%;
 }
 
 .leaflet-container {
-  height: 89vh;
+  height: 88vh;
   /* border: solid; */
 }
 
 .sidebar.col-3 {
-  padding-right: 2%;
-  height: 89vh;
+  height: 88vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
