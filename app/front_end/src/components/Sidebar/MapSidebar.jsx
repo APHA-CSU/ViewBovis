@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Row, Accordion, Form } from "react-bootstrap";
-import { Button, Heading, Input } from "govuk-react";
+import Row from "react-bootstrap/Row";
+import Accordion from "react-bootstrap/Accordion";
+import Form from "react-bootstrap/Form";
+import Button from "@govuk-react/button";
+import Heading from "@govuk-react/heading";
+import Input from "@govuk-react/input";
 
 const MapSidebar = ({ setSearchSample }) => {
   const [searchInput, setSearchInput] = useState("");
