@@ -4,6 +4,8 @@ import Col from "react-bootstrap/Col";
 import PhaseBanner from "@govuk-react/phase-banner";
 import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
+import Table from "@govuk-react/table";
+import { H6 } from "@govuk-react/heading";
 import img from "../../imgs/VBIcon16_APHAGreen.svg";
 
 const Home = () => {
@@ -13,7 +15,9 @@ const Home = () => {
       <Row>
         <PhaseBanner level="beta">
           This is a new service - your{" "}
-          <Link href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</Link>{" "}
+          <Link href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">
+            feedback
+          </Link>{" "}
           will help us to improve it.
         </PhaseBanner>
       </Row>
@@ -43,7 +47,15 @@ const Home = () => {
           </div>
         </Col>
         {/* <!-- Column: data last updated --> */}
-        <Col className="col-3"></Col>
+        <Col className="col-3">
+          <Table>
+            <Row className="update-banner">
+            <H6>Service Last Updated:</H6>
+              <H6>Metadata</H6>
+              <H6>WGS</H6>
+            </Row>
+          </Table>
+        </Col>
       </Row>
       {/* <!-- Box Quick-Links Content --> */}
       <Row className="row gx-6">
@@ -60,7 +72,7 @@ const Home = () => {
               <Button
                 className="home-govuk-buttons"
                 buttonColour="#00a33b"
-                // style={{ fontSize: "16px" }} 
+                // style={{ fontSize: "16px" }}
               >
                 Cattle Movement Map
               </Button>
@@ -76,27 +88,17 @@ const Home = () => {
               and location data for bovine and non-bovine samples.
             </p>
             <p class="text-center">
-              View SNP distance visualisations:
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              View SNP distance visualisations:<br></br>
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 SNP Distance Map
-              </Button>
-              {" "}
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              </Button>{" "}
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 SNP Matrix
               </Button>
             </p>
             <p class="text-center">
               View interactive phylogenetic tree:<br></br>
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 Nextstrain
               </Button>
             </p>
@@ -111,23 +113,15 @@ const Home = () => {
               of ViewBovis and access support.
             </p>
             <p class="text-center">
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 About The Data & Data Dictionary
               </Button>
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              <br></br>
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 Training Resources
               </Button>
-            <br></br>
-              <Button
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
+              <br></br>
+              <Button className="home-govuk-buttons" buttonColour="#00a33b">
                 Missing Samples Report
               </Button>
             </p>
@@ -135,19 +129,29 @@ const Home = () => {
         </Col>
       </Row>
       {/* <!-- Government Footer --> */}
-    <Row className="footer">
-    <div class="d-flex justify-content-between">
-      <div class="text-start footer-text">
-      Service developed and maintained by APHA Science
-      </div>
-      <div>
-      <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
-      <a class="text-end text-decoration-underline text-hyperlink" href="#home">Accessibility Statement</a>
-      </div>
-    </div>
-    </Row>
-        {/* // <!-- Accessibility Statement  */}
-
+      <Row className="footer">
+        <div class="d-flex justify-content-between">
+          <div class="text-start footer-text">
+            Service developed and maintained by APHA Science
+          </div>
+          <div>
+            <a
+              class="text-end text-decoration-underline text-hyperlink px-3"
+              href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
+              target="_blank"
+            >
+              Technical Support
+            </a>
+            <a
+              class="text-end text-decoration-underline text-hyperlink"
+              href="#home"
+            >
+              Accessibility Statement
+            </a>
+          </div>
+        </div>
+      </Row>
+      {/* // <!-- Accessibility Statement  */}
     </Container>
   );
 };
