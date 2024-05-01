@@ -66,11 +66,17 @@ a.nav-link:hover {
   margin-left: 10px;
 }
 
-.update-banner{
-  display: inline-block;
-  border: 7px solid #1d70b8;
+.update-banner {
+  margin-right: 1px;
+  border: 7px solid #1d70b8; 
+  font-size: 1rem;
+  font-family: GDS Transport, arial, sans-serif;
+  font-weight: bold;
 }
 
+.update-banner p {
+  margin: 5px 0;
+}
 .home-box {
   background-color: #f2f2f2;
   border-top: 10px solid #00a33b;

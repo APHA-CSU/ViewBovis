@@ -5,7 +5,6 @@ import PhaseBanner from "@govuk-react/phase-banner";
 import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
 import Table from "@govuk-react/table";
-import { H6 } from "@govuk-react/heading";
 import img from "../../imgs/VBIcon16_APHAGreen.svg";
 
 const Home = () => {
@@ -48,11 +47,11 @@ const Home = () => {
         </Col>
         {/* <!-- Column: data last updated --> */}
         <Col className="col-3">
-          <Table>
+          <Table >
             <Row className="update-banner">
-            <H6>Service Last Updated:</H6>
-              <H6>Metadata</H6>
-              <H6>WGS</H6>
+            <p>Service Last Updated:</p>
+            <p>Metadata</p>
+            <p>WGS</p>
             </Row>
           </Table>
         </Col>
