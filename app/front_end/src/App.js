@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import "./App.css";
 import Home from "./components/Home/Home";
 import CattleMovement from "./components/CattleMovement/CattleMovement";
+import SNPdistance from "./components/SNPdistance/SNPdistance";
 import NavbarComp from "./components/Navbar/NavbarComp";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cattlemovement" element={<CattleMovement />} />
+        <Route path="/snpdistance" element={<SNPdistance />} />
       </Routes>
     </Container>
   );

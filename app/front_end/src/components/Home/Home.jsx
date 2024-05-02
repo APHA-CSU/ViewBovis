@@ -47,11 +47,11 @@ const Home = () => {
         </Col>
         {/* <!-- Column: data last updated --> */}
         <Col className="col-3">
-          <Table >
+          <Table>
             <Row className="update-banner">
-            <p>Service Last Updated:</p>
-            <p>Metadata</p>
-            <p>WGS</p>
+              <p>Service Last Updated:</p>
+              <p>Metadata</p>
+              <p>WGS</p>
             </Row>
           </Table>
         </Col>
@@ -141,6 +141,7 @@ const Home = () => {
             >
               Technical Support
             </a>
+            {/* // <!-- Accessibility Statement  */}
             <a
               class="text-end text-decoration-underline text-hyperlink"
               href="#home"
@@ -150,7 +151,6 @@ const Home = () => {
           </div>
         </div>
       </Row>
-      {/* // <!-- Accessibility Statement  */}
     </Container>
   );
 };

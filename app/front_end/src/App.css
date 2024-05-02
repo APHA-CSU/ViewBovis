@@ -68,7 +68,7 @@ a.nav-link:hover {
 
 .update-banner {
   margin-right: 1px;
-  border: 7px solid #1d70b8; 
+  border: 7px solid #1d70b8;
   font-size: 1rem;
   font-family: GDS Transport, arial, sans-serif;
   font-weight: bold;
@@ -153,3 +153,9 @@ a.nav-link:hover {
   font-size: 1.2rem;
   box-shadow: 0 0 0px 5px #fff;
 } */
+
+/* SNP DISTANCE */
+
+.snppage-logo {
+  margin-left: 150px;
+}
