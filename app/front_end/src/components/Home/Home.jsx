@@ -6,6 +6,7 @@ import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
 import Table from "@govuk-react/table";
 import img from "../../imgs/VBIcon16_APHAGreen.svg";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -69,9 +70,10 @@ const Home = () => {
             {/* <br> */}
             <div className="text-center">
               <Button
+                as={NavLink}
+                to="/cattlemovement"
                 className="home-govuk-buttons"
                 buttonColour="#00a33b"
-                // style={{ fontSize: "16px" }}
               >
                 Cattle Movement Map
               </Button>
@@ -88,16 +90,31 @@ const Home = () => {
             </p>
             <p class="text-center">
               View SNP distance visualisations:<br></br>
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/snpdistance/snpmap"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 SNP Distance Map
               </Button>{" "}
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/snpdistance/snpmatrix"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 SNP Matrix
               </Button>
             </p>
             <p class="text-center">
               View interactive phylogenetic tree:<br></br>
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/nextstrain"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 Nextstrain
               </Button>
             </p>
@@ -112,15 +129,30 @@ const Home = () => {
               of ViewBovis and access support.
             </p>
             <p class="text-center">
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/helpsupport"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 About The Data & Data Dictionary
               </Button>
               <br></br>
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/helpsupport"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 Training Resources
               </Button>
               <br></br>
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/helpsupport"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 Missing Samples Report
               </Button>
             </p>

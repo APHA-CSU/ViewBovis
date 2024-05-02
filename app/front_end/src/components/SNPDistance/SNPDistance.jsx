@@ -5,6 +5,7 @@ import PhaseBanner from "@govuk-react/phase-banner";
 import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
 import snplogo from "../../imgs/SNPPageDNA_aphaGreen.svg";
+import { NavLink } from "react-router-dom";
 
 const SNPdistance = () => {
   return (
@@ -42,7 +43,10 @@ const SNPdistance = () => {
       <Row className="gx-6">
         {/* <!-- SNP Map box --> */}
         <Col>
-          <div className="home-box"  style={{ marginLeft: '100px', marginRight: '100px' }}>
+          <div
+            className="home-box"
+            style={{ marginLeft: "100px", marginRight: "100px" }}
+          >
             <p class="fw-bold">SNP Map</p>
             <p>
               This map will allow you to pick a sample of interest and view
@@ -50,7 +54,12 @@ const SNPdistance = () => {
             </p>
             <br></br>
             <div class="text-center">
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/snpdistance/snpmap"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 View Map
               </Button>
             </div>
@@ -58,21 +67,31 @@ const SNPdistance = () => {
         </Col>
         {/* <!-- SNP Matrix box --> */}
         <Col>
-          <div className="home-box"  style={{ marginLeft: '100px', marginRight: '100px' }}>
+          <div
+            className="home-box"
+            style={{ marginLeft: "100px", marginRight: "100px" }}
+          >
             <p class="fw-bold">SNP Matrix</p>
             <p>
-            Visualise a pairwise SNP matrix containing a target sample and related samples. Each pairwise comparison displays the SNP difference between two samples.
+              Visualise a pairwise SNP matrix containing a target sample and
+              related samples. Each pairwise comparison displays the SNP
+              difference between two samples.
             </p>
             <div class="text-center">
-              <Button className="home-govuk-buttons" buttonColour="#00a33b">
+              <Button
+                as={NavLink}
+                to="/snpdistance/snpmatrix"
+                className="home-govuk-buttons"
+                buttonColour="#00a33b"
+              >
                 View Matrix
               </Button>
             </div>
           </div>
         </Col>
       </Row>
-            {/* <!-- Government Footer --> */}
-            <Row className="footer">
+      {/* <!-- Government Footer --> */}
+      <Row className="footer">
         <div class="d-flex justify-content-between">
           <div class="text-start footer-text">
             Service developed and maintained by APHA Science
