@@ -8,6 +8,7 @@ import SNPdistance from "./components/SNPDistance/SNPDistance";
 import SNPMap from "./components/SNPDistance/SNPMap";
 import SNPMatrix from "./components/SNPDistance/SNPMatrix";
 import Nextstrain from "./components/Nextstrain/Nextstrain";
+import HelpSupport from "./components/HelpSupport/HelpSupport";
 import NavbarComp from "./components/Navbar/NavbarComp";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/snpdistance/snpmap" element={<SNPMap />} />
         <Route path="/snpdistance/snpmatrix" element={<SNPMatrix />} />
         <Route path="/nextstrain" element={<Nextstrain />} />
+        <Route path="/helpsupport" element={<HelpSupport />} />
       </Routes>
     </Container>
   );
