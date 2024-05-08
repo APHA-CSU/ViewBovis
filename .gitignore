@@ -2,6 +2,7 @@
 /app/tests/__pycache__/
 .vscode/
 data/
+/app/front_end/node_modules
 static/data/
 .github/CODEOWNERS
 bin
