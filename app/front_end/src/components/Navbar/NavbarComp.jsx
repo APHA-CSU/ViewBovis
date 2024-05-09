@@ -22,8 +22,8 @@ const NavbarComp = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav class="navbar-nav">
-            <Nav.Link as={NavLink} exact to="/">
+          <Nav className="navbar-nav">
+            <Nav.Link as={NavLink} to="/">
               Home
             </Nav.Link>
             <Nav.Link as={NavLink} to="/cattlemovement">

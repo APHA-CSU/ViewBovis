@@ -25,15 +25,15 @@ const Nextstrain = () => {
           <a href="https://nextstrain.org/" target="_blank">
             <img
               src={nextstrainlogo}
-              class="nextstrainlogo"
+              className="nextstrainlogo"
               alt="nextstrainlogo"
             ></img>
           </a>
         </Col>
         <Col className="col-9">
-          <div class="home-description-container">
-            <p class="home-description fs-5">
-              <span class="text-green fw-bold">Nextstrain</span> is a tool used
+          <div className="home-description-container">
+            <p className="home-description fs-5">
+              <span className="text-green fw-bold">Nextstrain</span> is a tool used
               to visualise whole genome sequencing (WGS) data from{" "}
               <em>Mycobacterium bovis</em>. You can view and explore both a
               phylogenetic tree and a map to understand genetic relatedness and
@@ -102,24 +102,24 @@ const Nextstrain = () => {
                     <strong>Commonly Viewed Clades:</strong>
                     <br></br>
                     <p>
-                      <span class="fw-bold fs-4 px-2">
-                        <a class="text-hyperlink" id="clade-B111">
+                      <span className="fw-bold fs-4 px-2">
+                        <a className="text-hyperlink" id="clade-B111">
                           B1-11
                         </a>
                       </span>
-                      <span class="fw-bold fs-4 px-2">
-                        <a class="text-hyperlink" id="clade-B613">
+                      <span className="fw-bold fs-4 px-2">
+                        <a className="text-hyperlink" id="clade-B613">
                           B6-13
                         </a>
                       </span>
                       <br></br>
-                      <span class="fw-bold fs-4 px-2">
-                        <a class="text-hyperlink" id="clade-B671">
+                      <span className="fw-bold fs-4 px-2">
+                        <a className="text-hyperlink" id="clade-B671">
                           B6-71
                         </a>
                       </span>
-                      <span class="fw-bold fs-4 px-2">
-                        <a class="text-hyperlink" id="clade-B691">
+                      <span className="fw-bold fs-4 px-2">
+                        <a className="text-hyperlink" id="clade-B691">
                           B6-91
                         </a>
                       </span>
@@ -133,14 +133,14 @@ const Nextstrain = () => {
         {/* <!-- Training resources box --> */}
         <Col className="col-3">
           <div className="nextstrain-box">
-            <p class="fw-bold fs-4">Training resources</p>
-            <p class="fs-6">
+            <p className="fw-bold fs-4">Training resources</p>
+            <p className="fs-6">
               The resources below have been developed to help you understand how
               to use Nextstrain and how to interpret the phylogeny.<br></br>
             </p>
-            <p class="fs-6">
+            <p className="fs-6">
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2"
                 target="_blank"
               >
@@ -148,7 +148,7 @@ const Nextstrain = () => {
               </a>
               <br></br>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu"
                 target="_blank"
               >
@@ -156,7 +156,7 @@ const Nextstrain = () => {
               </a>
               <br></br>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03"
                 target="_blank"
               >
@@ -168,13 +168,13 @@ const Nextstrain = () => {
       </Row>
       {/* <!-- Government Footer --> */}
       <Row className="footer">
-        <div class="d-flex justify-content-between">
-          <div class="text-start footer-text">
+        <div className="d-flex justify-content-between">
+          <div className="text-start footer-text">
             Service developed and maintained by APHA Science
           </div>
           <div>
             <a
-              class="text-end text-decoration-underline text-hyperlink px-3"
+              className="text-end text-decoration-underline text-hyperlink px-3"
               href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
               target="_blank"
             >
@@ -182,7 +182,7 @@ const Nextstrain = () => {
             </a>
             {/* // <!-- Accessibility Statement  */}
             <a
-              class="text-end text-decoration-underline text-hyperlink"
+              className="text-end text-decoration-underline text-hyperlink"
               href="#home"
             >
               Accessibility Statement

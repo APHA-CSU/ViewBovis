@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 
 const Home = () => {
   return (
-    <Container fluid>
+    <Container fluid data-testid="home-1">
       {/* <!-- Government BETA Banner --> */}
       <Row>
         <PhaseBanner level="beta">
@@ -25,13 +25,13 @@ const Home = () => {
       <Row className="align-items-center">
         {/* <!-- Column: logo --> */}
         <Col className="col-1">
-          <img src={img} class="home-logo" alt="ViewBovis_logo"></img>
+          <img src={img} className="home-logo" alt="ViewBovis_logo"></img>
         </Col>
         {/* <!-- Column: description --> */}
         <Col className="col-8">
-          <div class="home-description-container">
-            <p class="home-description fs-5">
-              <span class="text-green fw-bold">ViewBovis</span> is a web
+          <div className="home-description-container">
+            <p className="home-description fs-5">
+              <span className="text-green fw-bold">ViewBovis</span> is a web
               application for exploring whole genome sequencing (WGS) data from{" "}
               <em>Mycobacterium bovis</em>. By linking genetic relatedness with
               geographical neighbourhood, you will be able to understand the
@@ -49,11 +49,11 @@ const Home = () => {
         {/* <!-- Column: data last updated --> */}
         <Col className="col-3">
           <Table>
-            <Row className="update-banner">
-              <p>Service Last Updated:</p>
-              <p>Metadata</p>
-              <p>WGS</p>
-            </Row>
+            <tr className="update-banner">
+              <td>Service Last Updated:</td>
+              <td>Metadata</td>
+              <td>WGS</td>
+            </tr>
           </Table>
         </Col>
       </Row>
@@ -62,7 +62,7 @@ const Home = () => {
         {/* <!-- Cattle movement box --> */}
         <Col>
           <div className="home-box">
-            <p class="fw-bold">Cattle Movement</p>
+            <p className="fw-bold">Cattle Movement</p>
             <p>
               View cattle movements on an interactive map which helps with
               tracing cattle to control and eradicate bovine tuberculosis (bTB).
@@ -83,12 +83,12 @@ const Home = () => {
         {/* <!-- Relatedness box --> */}
         <Col>
           <div className="home-box">
-            <p class="fw-bold">Relatedness</p>
+            <p className="fw-bold">Relatedness</p>
             <p>
               Visualise the relationships between samples with the help of WGS
               and location data for bovine and non-bovine samples.
             </p>
-            <p class="text-center">
+            <p className="text-center">
               View SNP distance visualisations:<br></br>
               <Button
                 as={NavLink}
@@ -107,7 +107,7 @@ const Home = () => {
                 SNP Matrix
               </Button>
             </p>
-            <p class="text-center">
+            <p className="text-center">
               View interactive phylogenetic tree:<br></br>
               <Button
                 as={NavLink}
@@ -123,12 +123,12 @@ const Home = () => {
         {/* <!-- Help and support box --> */}
         <Col>
           <div className="home-box">
-            <p class="fw-bold">Help & Support</p>
+            <p className="fw-bold">Help & Support</p>
             <p>
               View a range of resources to familiarise yourself with the content
               of ViewBovis and access support.
             </p>
-            <p class="text-center">
+            <p className="text-center">
               <Button
                 as={NavLink}
                 to="/helpsupport"
@@ -161,13 +161,13 @@ const Home = () => {
       </Row>
       {/* <!-- Government Footer --> */}
       <Row className="footer">
-        <div class="d-flex justify-content-between">
-          <div class="text-start footer-text">
+        <div className="d-flex justify-content-between">
+          <div className="text-start footer-text">
             Service developed and maintained by APHA Science
           </div>
           <div>
             <a
-              class="text-end text-decoration-underline text-hyperlink px-3"
+              className="text-end text-decoration-underline text-hyperlink px-3"
               href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
               target="_blank"
             >
@@ -175,7 +175,7 @@ const Home = () => {
             </a>
             {/* // <!-- Accessibility Statement  */}
             <a
-              class="text-end text-decoration-underline text-hyperlink"
+              className="text-end text-decoration-underline text-hyperlink"
               href="#home"
             >
               Accessibility Statement

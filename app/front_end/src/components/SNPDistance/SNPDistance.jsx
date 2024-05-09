@@ -24,13 +24,13 @@ const SNPdistance = () => {
       <Row className="align-items-center">
         {/* <!-- Column: logo --> */}
         <Col className="col-3 text-center">
-          <img src={snplogo} class="snppage-logo" alt="snplogo"></img>
+          <img src={snplogo} className="snppage-logo" alt="snplogo"></img>
         </Col>
         {/* <!-- Column: description --> */}
         <Col className="col-8">
-          <div class="home-description-container">
-            <p class="home-description fs-5">
-              <span class="text-green fw-bold">SNP Distance</span>: SNP stands
+          <div className="home-description-container">
+            <p className="home-description fs-5">
+              <span className="text-green fw-bold">SNP Distance</span>: SNP stands
               for Single Nucleotide Polymorphism. SNPs are single changes in a
               nucleotide at a specific point in the genome (e.g. A -> T). SNP
               Distance is the number of differences between two samples; the
@@ -47,13 +47,13 @@ const SNPdistance = () => {
             className="home-box"
             style={{ marginLeft: "100px", marginRight: "100px" }}
           >
-            <p class="fw-bold">SNP Map</p>
+            <p className="fw-bold">SNP Map</p>
             <p>
               This map will allow you to pick a sample of interest and view
               related samples using a SNP distance threshold.
             </p>
             <br></br>
-            <div class="text-center">
+            <div className="text-center">
               <Button
                 as={NavLink}
                 to="/snpdistance/snpmap"
@@ -71,13 +71,13 @@ const SNPdistance = () => {
             className="home-box"
             style={{ marginLeft: "100px", marginRight: "100px" }}
           >
-            <p class="fw-bold">SNP Matrix</p>
+            <p className="fw-bold">SNP Matrix</p>
             <p>
               Visualise a pairwise SNP matrix containing a target sample and
               related samples. Each pairwise comparison displays the SNP
               difference between two samples.
             </p>
-            <div class="text-center">
+            <div className="text-center">
               <Button
                 as={NavLink}
                 to="/snpdistance/snpmatrix"
@@ -92,13 +92,13 @@ const SNPdistance = () => {
       </Row>
       {/* <!-- Government Footer --> */}
       <Row className="footer">
-        <div class="d-flex justify-content-between">
-          <div class="text-start footer-text">
+        <div className="d-flex justify-content-between">
+          <div className="text-start footer-text">
             Service developed and maintained by APHA Science
           </div>
           <div>
             <a
-              class="text-end text-decoration-underline text-hyperlink px-3"
+              className="text-end text-decoration-underline text-hyperlink px-3"
               href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
               target="_blank"
             >
@@ -106,7 +106,7 @@ const SNPdistance = () => {
             </a>
             {/* // <!-- Accessibility Statement  */}
             <a
-              class="text-end text-decoration-underline text-hyperlink"
+              className="text-end text-decoration-underline text-hyperlink"
               href="#home"
             >
               Accessibility Statement

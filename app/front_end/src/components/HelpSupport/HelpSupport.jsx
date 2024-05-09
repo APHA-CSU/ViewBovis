@@ -23,12 +23,12 @@ const HelpSupport = () => {
       <Row>
         {/* <!-- Support Documents box --> */}
         <Col>
-          <div class="home-box"  style={{ marginTop: "20px", height: "405px" }}>
-            <p class="fw-bold">Support Documents</p>
+          <div className="home-box"  style={{ marginTop: "20px", height: "405px" }}>
+            <p className="fw-bold">Support Documents</p>
             <p>These support documents should be the first port of call:</p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J"
                 target="_blank"
               >
@@ -37,7 +37,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J"
                 target="_blank"
               >
@@ -46,7 +46,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FBackground%20on%20the%20data%20in%20ViewBovis&p=true&ga=1"
                 target="_blank"
               >
@@ -55,7 +55,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Exercises&p=true&ga=1"
                 target="_blank"
               >
@@ -66,12 +66,12 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Training Videos box --> */}
         <Col>
-          <div class="home-box"  style={{ marginTop: "20px", height: "405px" }}>
-            <p class="fw-bold">Training Videos</p>
+          <div className="home-box"  style={{ marginTop: "20px", height: "405px" }}>
+            <p className="fw-bold">Training Videos</p>
             <p>These cover different aspects of learning and usability:</p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FWhat%20is%20Phylogeny%2Emp4&ga=1"
                 target="_blank"
               >
@@ -80,7 +80,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FHomepage%5Fv1%2E%2Emp4&ga=1"
                 target="_blank"
               >
@@ -89,7 +89,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FNextstrain%5Fv1%2Emp4&ga=1"
                 target="_blank"
               >
@@ -98,7 +98,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FSNPMatrix%5Fv1%2Emp4&ga=1"
                 target="_blank"
               >
@@ -107,7 +107,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FMaps%5Fv1%2Emp4&ga=1"
                 target="_blank"
               >
@@ -118,12 +118,12 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Other links and tools box --> */}
         <Col>
-          <div class="home-box"  style={{ marginTop: "20px", height: "405px" }}>
-            <p class="fw-bold">Other links and tools</p>
+          <div className="home-box"  style={{ marginTop: "20px", height: "405px" }}>
+            <p className="fw-bold">Other links and tools</p>
             <p>Other associated tools which may be of use:</p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="http://services.demeter.zeus.gsi.gov.uk/iam/lo?TAM_OP=error&ERROR_CODE=0x38cf0427&URL=%2Fprweb%2FPRWebLDAP3%2Fapp%2FAnimalHealth%2FbPUd-1HMJMmK7qxOsowlXg*%2F%21STANDARD"
                 target="_blank"
               >
@@ -132,7 +132,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://apha-016.cvlnt.vla.gov.uk/SPIDA/"
                 target="_blank"
               >
@@ -141,7 +141,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="http://reports.cvlnt.vla.gov.uk/ReportGroup.aspx?ReportGroupId=da063b9e-fc87-43ff-9fc8-a88100e89f29"
                 target="_blank"
               >
@@ -150,7 +150,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://ibtb.co.uk/"
                 target="_blank"
               >
@@ -159,7 +159,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="http://services.demeter.zeus.gsi.gov.uk/spiritah/Map.action?themeName"
                 target="_blank"
               >
@@ -168,7 +168,7 @@ const HelpSupport = () => {
             </p>
             <p>
               <a
-                class="text-hyperlink"
+                className="text-hyperlink"
                 href="https://magic.defra.gov.uk/"
                 target="_blank"
               >
@@ -183,26 +183,26 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Contact Us box --> */}
         <Col>
-          <div class="home-box"  style={{ marginTop: "20px", height: "405px" }}>
-            <p class="fw-bold">Contact Us</p>
+          <div className="home-box"  style={{ marginTop: "20px", height: "405px" }}>
+            <p className="fw-bold">Contact Us</p>
             <p>
               We would love to hear your feedback about the app, any tech issues
               and any questions you may have using the links below:
             </p>
-            <div class="row">
-              <div class="col-3">
+            <div className="row">
+              <div className="col-3">
                 <a href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">
                   <img
                     src={FormImg}
                     width="40px"
-                    class="d-inline-block align-text-top"
+                    className="d-inline-block align-text-top"
                     alt="feedback"
                   ></img>
                 </a>
               </div>
-              <div class="col" style={{ paddingTop: "15px" }}>
+              <div className="col" style={{ paddingTop: "15px" }}>
                 <a
-                  class="text-hyperlink"
+                  className="text-hyperlink"
                   href="https://forms.office.com/e/RXTi1RzGnF"
                   target="_blank"
                 >
@@ -211,8 +211,8 @@ const HelpSupport = () => {
               </div>
             </div>
             <br></br>
-            <div class="row">
-              <div class="col-3">
+            <div className="row">
+              <div className="col-3">
                 <a
                   href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true"
                   target="_blank"
@@ -220,14 +220,14 @@ const HelpSupport = () => {
                   <img
                     src={TeamsImg}
                     width="40px"
-                    class="d-inline-block align-text-top"
+                    className="d-inline-block align-text-top"
                     alt="feedback"
                   ></img>
                 </a>
               </div>
-              <div class="col" style={{ paddingTop: "20px" }}>
+              <div className="col" style={{ paddingTop: "20px" }}>
                 <a
-                  class="text-hyperlink"
+                  className="text-hyperlink"
                   href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true"
                   target="_blank"
                 >
@@ -241,14 +241,14 @@ const HelpSupport = () => {
         <br></br>
       </Row>
             {/* <!-- Government Footer --> */}
-            <Row className="footer">
-        <div class="d-flex justify-content-between">
-          <div class="text-start footer-text">
+            <Row classNameName="footer">
+        <div className="d-flex justify-content-between">
+          <div className="text-start footer-text">
             Service developed and maintained by APHA Science
           </div>
           <div>
             <a
-              class="text-end text-decoration-underline text-hyperlink px-3"
+              className="text-end text-decoration-underline text-hyperlink px-3"
               href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
               target="_blank"
             >
@@ -256,7 +256,7 @@ const HelpSupport = () => {
             </a>
             {/* // <!-- Accessibility Statement  */}
             <a
-              class="text-end text-decoration-underline text-hyperlink"
+              className="text-end text-decoration-underline text-hyperlink"
               href="#home"
             >
               Accessibility Statement
