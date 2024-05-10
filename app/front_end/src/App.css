@@ -30,7 +30,7 @@
 }
 
 /* Active text styling */
-a.nav-link.active {
+a.navbar nav-link.active {
   /* color: black !important; */
   color: white !important;
   font-weight: bold;
@@ -38,13 +38,13 @@ a.nav-link.active {
 }
 
 /* Non-active text styling */
-a.nav-link {
+a.navbar nav-link {
   color: black;
   height: 100%;
 }
 
 /* Tab styling on hover */
-a.nav-link:hover {
+a.navbar nav-link:hover {
   color: black;
   font-weight: bold;
 }
@@ -141,18 +141,19 @@ a.nav-link:hover {
   border: solid;
   border-radius: 0 !important;
 }
-/* .cluster-icon {
-  background-color: #333;
-  height: 2em;
-  width: 2em;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  box-shadow: 0 0 0px 5px #fff;
-} */
+
+.cluster-icon {
+  background-color:#00A33B;
+  color: #ffffff; 
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px; 
+}
 
 /* SNP DISTANCE */
 

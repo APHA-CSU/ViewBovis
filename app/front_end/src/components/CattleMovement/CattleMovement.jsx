@@ -1,27 +1,30 @@
 import { useEffect, useState } from "react";
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import MapSidebar from "../MapSidebar/MapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
-  // const [jsonData, setjsonData] = useState({});
-
+  const [jsonData, setjsonData] = useState({});
+  console.log(jsonData);
   useEffect(() => {
-    fetch(`/sample/movements?sample_name=${searchSample}`)
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then(({ data }) => {
-        // setjsonData(data);
-        // console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    if (searchSample)
+      fetch(`/sample/movements?sample_name=${searchSample}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setjsonData(data);
+          // console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
   }, [searchSample]);
 
   return (
@@ -31,7 +34,7 @@ const CattleMovement = () => {
           <MapSidebar setSearchSample={setSearchSample} />
         </Col>
         <Col>
-          <CattleMovementMap />
+          <CattleMovementMap jsonData={jsonData} />
         </Col>
       </Row>
     </Container>
