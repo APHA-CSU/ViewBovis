@@ -30,7 +30,7 @@
 }
 
 /* Active text styling */
-a.navbar nav-link.active {
+.navbar-nav .nav-link.active {
   /* color: black !important; */
   color: white !important;
   font-weight: bold;
@@ -38,13 +38,13 @@ a.navbar nav-link.active {
 }
 
 /* Non-active text styling */
-a.navbar nav-link {
+.navbar-nav .nav-link.active {
   color: black;
   height: 100%;
 }
 
 /* Tab styling on hover */
-a.navbar nav-link:hover {
+a.nav-link:hover {
   color: black;
   font-weight: bold;
 }
