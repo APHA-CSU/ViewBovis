@@ -9,7 +9,7 @@ const NavbarComp = () => {
   return (
     <Navbar expand="lg" className="navbarcomp">
       <Container fluid>
-      <a className="navbar-brand" href="#home">
+      <a className="navbar-brand" href="/">
           <img
             src={logo} 
             alt="APHA_logo"

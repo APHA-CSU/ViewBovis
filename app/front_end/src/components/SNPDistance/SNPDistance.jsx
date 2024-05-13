@@ -32,7 +32,7 @@ const SNPdistance = () => {
             <p className="home-description fs-5">
               <span className="text-green fw-bold">SNP Distance</span>: SNP stands
               for Single Nucleotide Polymorphism. SNPs are single changes in a
-              nucleotide at a specific point in the genome (e.g. A -> T). SNP
+              nucleotide at a specific point in the genome (e.g. A -{`>`} T). SNP
               Distance is the number of differences between two samples; the
               fewer SNP differences, the more closely related the samples are.
             </p>
