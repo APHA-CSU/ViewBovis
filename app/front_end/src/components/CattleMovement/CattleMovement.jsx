@@ -28,7 +28,7 @@ const CattleMovement = () => {
   }, [searchSample]);
 
   return (
-    <Container fluid id="custom-container">
+    <Container fluid id="custom-container" data-testid="cattlemovement-1">
       <Row>
         <Col className="sidebar col-3">
           <MapSidebar setSearchSample={setSearchSample} />
