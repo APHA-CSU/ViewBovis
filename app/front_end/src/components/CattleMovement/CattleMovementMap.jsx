@@ -48,13 +48,13 @@ const CattleMovementMap = ({ jsonData }) => {
       })
     }];
 
-const PolylineDecorator = ({ patterns, polyline, color }) => {
+const PolylineDecorator = ({ patterns, color, position}) => {
     const map = useMap();
 
     useEffect(() => {
       if (!map) return;
   
-     L.polyline(polyline, {color}).addTo(map);  // added color property
+     let polyline = L.polyline(position, {color}).addTo(map);  // added color property
       L.polylineDecorator(polyline, {
         patterns,
         
@@ -255,8 +255,7 @@ const PolylineDecorator = ({ patterns, polyline, color }) => {
                 </Tab.Container>
               </div>
             </Popup>
-            <Polyline key={index} pathOptions={"blue"} positions={linePts} />
-            <PolylineDecorator key={`decorator-${index}`} patterns ={arrow} polyline={position}  color = {modeColor(line.mode)} />
+            <PolylineDecorator key={`decorator-${index}`} patterns ={arrow} color={"#0096FF"} position={linePts} />
           </Marker>
         ))}
       </MarkerClusterGroup>
