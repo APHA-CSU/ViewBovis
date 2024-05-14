@@ -1,12 +1,18 @@
-import { MapContainer } from "react-leaflet/MapContainer";
-import { TileLayer } from "react-leaflet/TileLayer";
-import { Marker } from "react-leaflet/Marker";
-import { Popup } from "react-leaflet/Popup";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  useMap
+} from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
-import "leaflet/dist/leaflet.css";
 import holdingImg from "../../imgs/holding.svg";
+import React, { useEffect } from 'react';
+import L from 'leaflet'; 
+import 'leaflet-polylinedecorator'; 
 
 const CattleMovementMap = ({ jsonData }) => {
   // Check if jsonData is null or undefined, return null or a loading indicator until data is fetched
@@ -17,18 +23,45 @@ const CattleMovementMap = ({ jsonData }) => {
   // Extract movement data from json object into an array
   const movArr = Object.values(jsonData.move);
   const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
-  console.log(movArr);
+  // console.log(movArr);
   const customIcon = new Icon({
     iconUrl: holdingImg,
     iconSize: [40, 40],
     iconAnchor: [20, 35],
   });
-  const createCustomClusterIcon = function (cluster) {
+ const createCustomClusterIcon = (cluster) => {
     return new divIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
       className: "cluster-icon",
       iconSize: [30, 30],
     });
+  };
+
+  const arrow = [
+    {
+      offset: "100%",
+      repeat: 0,
+      symbol: L.Symbol.arrowHead({
+        pixelSize: 15,
+        polygon: false,
+        pathOptions: { stroke: true }
+      })
+    }];
+
+const PolylineDecorator = ({ patterns, polyline, color }) => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map) return;
+  
+     L.polyline(polyline, {color}).addTo(map);  // added color property
+      L.polylineDecorator(polyline, {
+        patterns,
+        
+      }).addTo(map);
+    }, [map]);
+
+    return null;
   };
 
   return (
@@ -222,6 +255,8 @@ const CattleMovementMap = ({ jsonData }) => {
                 </Tab.Container>
               </div>
             </Popup>
+            <Polyline key={index} pathOptions={"blue"} positions={linePts} />
+            <PolylineDecorator key={`decorator-${index}`} patterns ={arrow} polyline={position}  color = {modeColor(line.mode)} />
           </Marker>
         ))}
       </MarkerClusterGroup>
