@@ -7,7 +7,7 @@
 
 "use strict";
 
-//Declaring local variables from the Global Object
+//Reuse variable from the Global object declared in main.js script file
 let map = globalObj.map;
 let defaultCoords = globalObj.defaultCoords;
 let defaultZoom = globalObj.defaultZoom;

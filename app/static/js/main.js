@@ -12,7 +12,7 @@ const navBar = document.querySelector(".navbar-nav");
 const navLinks = document.querySelectorAll(".nav-link");
 let navContent = document.querySelectorAll(".content");
 
-//Declaring Global Object to reuse variables from it
+//A Global Object to reuse variables from it
 window.globalObj = {}
 
 // ------------------------ //
@@ -82,6 +82,8 @@ async function loadLeafletFiles(){
 globalObj.defaultCoords = [52.56555275762325, -1.4667093894864072];
 globalObj.defaultZoom = 6;
 
+/* loadCattleMovementMap function will hold all variables inside the globalObj 
+to reuse it again in cattlemovement.js script */
 function loadCattleMovementMap(){
 // Coordinates and zoom level of map on first render
 
