@@ -6,11 +6,11 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const MapSidebar = ({ setSearchSample }) => {
+const MapSidebar = ({ setSearchSample, fetchCall }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleChange = (event) => {
-    setSearchInput(event.target.value);
+    setSearchInput((event.target.value).toUpperCase().replace(/ /g, ""));
   };
 
   const handleSubmit = (event) => {

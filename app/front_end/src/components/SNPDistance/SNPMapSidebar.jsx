@@ -6,8 +6,9 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const SNPMapSidebar = ({ setsearchSnp }) => {
+const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");
+  const [snpDistance, setsnpDistance] = useState(1);
 
   const handleChange = (event) => {
     setsnpSearchInput(event.target.value);
@@ -15,9 +16,9 @@ const SNPMapSidebar = ({ setsearchSnp }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setsearchSnp(snpSearchInput);
-    setsnpSearchInput("");
+    fetchSNPMapDataset(snpSearchInput,snpDistance);
   };
+
   return (
     <div>
       <form className="sample-search" onSubmit={handleSubmit}>
