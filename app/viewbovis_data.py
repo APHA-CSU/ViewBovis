@@ -153,7 +153,7 @@ class Request:
         try:
             return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
         except ValueError:
-            return np.NaT
+            return np.datetime64('NaT')
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
