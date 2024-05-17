@@ -3,16 +3,16 @@ import {
   TileLayer,
   Marker,
   Popup,
-  Polyline,
-  useMap
+  useMap,
+  LayersControl,
 } from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
 import holdingImg from "../../imgs/holding.svg";
-import React, { useEffect } from 'react';
-import L from 'leaflet'; 
-import 'leaflet-polylinedecorator'; 
+import React, { useEffect, useRef } from "react";
+import L from "leaflet";
+import "leaflet-polylinedecorator";
 
 const CattleMovementMap = ({ jsonData }) => {
   // Check if jsonData is null or undefined, return null or a loading indicator until data is fetched
@@ -29,7 +29,7 @@ const CattleMovementMap = ({ jsonData }) => {
     iconSize: [40, 40],
     iconAnchor: [20, 35],
   });
- const createCustomClusterIcon = (cluster) => {
+  const createCustomClusterIcon = (cluster) => {
     return new divIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
       className: "cluster-icon",
@@ -37,31 +37,42 @@ const CattleMovementMap = ({ jsonData }) => {
     });
   };
 
+  // Leaflet polylineDecorator patterns
   const arrow = [
     {
-      offset: "100%",
-      repeat: 0,
+      repeat: 100,
       symbol: L.Symbol.arrowHead({
         pixelSize: 15,
-        polygon: false,
-        pathOptions: { stroke: true }
-      })
-    }];
+        polygon: true,
+        pathOptions: { stroke: true },
+      }),
+    },
+  ];
 
-const PolylineDecorator = ({ patterns, color, position}) => {
+  const PolylineDecorator = ({ patterns, color, position }) => {
     const map = useMap();
+    const prevPolylineRef = useRef(null);
+    const prevDecoratorsRef = useRef([]);
 
     useEffect(() => {
       if (!map) return;
-  
-     let polyline = L.polyline(position, {color}).addTo(map);  // added color property
-      L.polylineDecorator(polyline, {
-        patterns,
-        
-      }).addTo(map);
-    }, [map]);
 
-    return null;
+      //Create new polyline & decorators and add it to the map
+      const polyline = L.polyline(position, { color }).addTo(map);
+      const decorators = L.polylineDecorator(polyline, { patterns }).addTo(map);
+
+      // Update prevPolylineRef & prevDecoratorsRef values to the current polyline & decorators values
+      prevPolylineRef.current = polyline;
+      prevDecoratorsRef.current = decorators;
+
+      // Remove previous polyline and decorators on component re-render (new sample search)
+      return () => {
+        if (prevPolylineRef.current) {
+          map.removeLayer(prevPolylineRef.current);
+          map.removeLayer(prevDecoratorsRef.current);
+        }
+      };
+    });
   };
 
   return (
@@ -74,6 +85,8 @@ const PolylineDecorator = ({ patterns, color, position}) => {
       attribution="Esri WorldImagery"
       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       /> */}
+      {/* <LayersControl position="topright">
+      <LayersControl.Overlay name="Marker with popup"> */}
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
@@ -255,10 +268,18 @@ const PolylineDecorator = ({ patterns, color, position}) => {
                 </Tab.Container>
               </div>
             </Popup>
-            <PolylineDecorator key={`decorator-${index}`} patterns ={arrow} color={"#0096FF"} position={linePts} />
+            <PolylineDecorator
+              key={`decorator-${index}`}
+              patterns={arrow}
+              color={"#0096FF"}
+              position={linePts}
+            />
           </Marker>
         ))}
       </MarkerClusterGroup>
+
+      {/* </LayersControl.Overlay>
+            </LayersControl> */}
     </MapContainer>
   );
 };
