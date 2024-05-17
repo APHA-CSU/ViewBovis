@@ -7,6 +7,13 @@
 
 "use strict";
 
+//Reuse variable from the Global object declared in main.js script file
+let map = globalObj.map;
+let defaultCoords = globalObj.defaultCoords;
+let defaultZoom = globalObj.defaultZoom;
+let osm = globalObj.osm;
+let Esri_WorldGrayCanvas = globalObj.Esri_WorldGrayCanvas;
+let Esri_WorldImagery = globalObj.Esri_WorldImagery;
 
 
 // ------------------------ //
@@ -180,7 +187,7 @@ let layerControl = L.control.layers(baseMaps, null, {collapsed: false}).addTo(ma
 
 // Add a title to the basemap control
 document.querySelectorAll(".leaflet-control-layers-base").forEach((layer,index) => {
-  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML != "Basemaps") {
+  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML !== "Basemaps") {
   layer.insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>")}
 });
 document.querySelectorAll('.leaflet-control-layers-selector').forEach((node,index) => {
