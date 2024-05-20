@@ -16,7 +16,7 @@ class TestViewBovisAPI(unittest.TestCase):
         """
         # request complete data
         r = requests.get(f"{API_URL}/sample?sample_name=a_submission")
-        expected_resp_body = {"submission": "A_submission",
+        expected_resp_body = {"submission": "A_SUBMISSION",
                               "clade": "B6-11",
                               "identifier": "a_id",
                               "species": "COW",
@@ -38,7 +38,7 @@ class TestViewBovisAPI(unittest.TestCase):
         r = requests.get(f"{API_URL}/sample?sample_name=no_data_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Invalid submission: no_data_submission"}
+             "warning": "Invalid submission: NO_DATA_SUBMISSION"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
