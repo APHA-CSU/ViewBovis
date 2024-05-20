@@ -110,7 +110,10 @@ class Request:
         exclusion = pd.read_sql_query(query, self._db,
                                       params={"submission":
                                               self._submission})
-        return exclusion["Exclusion"][0]
+        if exclusion.empty:
+            return None
+        else:
+            return exclusion["Exclusion"][0]
 
     def _sample_to_submission(self, sample: str) -> str:
         """
@@ -120,6 +123,8 @@ class Request:
         query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
         df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"sample": sample})
+        if df_wgs_sub.empty:
+            return None
         return df_wgs_sub["Submission"][0]
 
     def _query_movdata(self, submission: str) -> pd.DataFrame:
