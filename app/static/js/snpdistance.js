@@ -1092,7 +1092,7 @@ const btnHideTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__hide-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-toggle" data-bs-toggle="collapse" href="#table-sidebar-container">Hide Table</a>
+      <a class="snp-table-toggle" data-bs-toggle="collapse" href="#table-sidebar-container" id="hide-table">Hide Table</a>
     `);
     return divContainer;
   }
@@ -1110,13 +1110,13 @@ document.getElementById("table-sidebar-container").addEventListener("shown.bs.co
 });
 
 // Change icon to right-arrow after sidebar has collapsed
-document.getElementById("btn__show-table").addEventListener("click", () => {
+document.getElementById("show-table").addEventListener("click", () => {
   document.getElementById("btn__hide-table").classList.remove("hidden");
   document.getElementById("btn__show-table").classList.add("hidden");
 });
 
 // Change icon to left-arrow after sidebar has expanded
-document.getElementById("btn__hide-table").addEventListener("click", () => {
+document.getElementById("hide-table").addEventListener("click", () => {
   document.getElementById("btn__show-table").classList.remove("hidden");
   document.getElementById("btn__hide-table").classList.add("hidden");
 });
