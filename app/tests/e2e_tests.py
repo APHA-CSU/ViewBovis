@@ -48,6 +48,7 @@ class E2ETests(unittest.TestCase):
         # navigate to snp map
         snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
         snp_dist_btn.click()
+        self.wait = WebDriverWait(self.driver, 10)
         snp_map_btn = self.driver.find_element(By.ID, "btn-view-snpmap")
         snp_map_btn.click()
         # search for related samples within 5 SNP of "a_id"
