@@ -67,6 +67,7 @@ class E2ETests(unittest.TestCase):
             self.wait.until(
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
+        time.sleep(10.0)
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
         # and value as the row element
