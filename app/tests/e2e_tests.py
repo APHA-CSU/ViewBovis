@@ -102,8 +102,8 @@ class E2ETests(unittest.TestCase):
             if sub == "c":
                 print(sub)
                 map_sub_div_element = \
-                    self.driver.find_element(By.CLASS_NAME,
-                                            f'awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive')
+                    self.driver.find_element(By.XPATH,
+                                         f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
                 related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
                 # assert icon number is white, i.e. not selected
                 self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
