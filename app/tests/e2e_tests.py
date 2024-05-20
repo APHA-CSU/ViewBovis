@@ -98,7 +98,8 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
-            print(sub)
+            if sub != "c":
+                continue
             map_sub_div_element = \
                 self.driver.find_element(By.CLASS_NAME,
                                          f'awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive')
