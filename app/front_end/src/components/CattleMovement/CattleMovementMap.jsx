@@ -6,10 +6,13 @@ import {
   useMap,
   LayersControl,
 } from "react-leaflet";
-import { Icon, divIcon } from "leaflet";
+import { Icon, divIcon, icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
 import holdingImg from "../../imgs/holding.svg";
+import showgroundImg from "../../imgs/showground.svg";
+import marketImg from "../../imgs/market.svg";
+import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
@@ -23,12 +26,52 @@ const CattleMovementMap = ({ jsonData }) => {
   // Extract movement data from json object into an array
   const movArr = Object.values(jsonData.move);
   const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
-  // console.log(movArr);
-  const customIcon = new Icon({
-    iconUrl: holdingImg,
-    iconSize: [40, 40],
-    iconAnchor: [20, 35],
-  });
+
+  //Object to store marker icons
+  const customIcon = {
+    holding: new Icon({
+      iconUrl: holdingImg,
+      iconSize: [40, 40],
+      iconAnchor: [20, 35],
+    }),
+    showground: new Icon({
+      iconUrl: showgroundImg,
+      iconSize: [40, 40],
+      iconAnchor: [20, 35],
+    }),
+    market: new Icon({
+      iconUrl: marketImg,
+      iconSize: [40, 40],
+      iconAnchor: [20, 35],
+    }),
+    slaughterhouse: new Icon({
+      iconUrl: slaughterhouseImg,
+      iconSize: [40, 40],
+      iconAnchor: [20, 35],
+    }),
+  };
+
+  //Function to render the correct marker icon
+  const renderIcon = (move) => {
+    // Extract location type from movement array
+    let moveType = move.type;
+
+    // Return the correct cow icon given the location type
+    const iconToReturn =
+      moveType === "Agricultural Holding"
+        ? customIcon.holding
+        : moveType === "Market"
+        ? customIcon.market
+        : moveType === "Slaughterhouse (Red Meat)"
+        ? customIcon.slaughterhouse
+        : moveType === "Showground"
+        ? customIcon.showground
+        : customIcon.holding;
+
+    return iconToReturn;
+  };
+
+  //Movement cluster icon
   const createCustomClusterIcon = (cluster) => {
     return new divIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
@@ -49,6 +92,7 @@ const CattleMovementMap = ({ jsonData }) => {
     },
   ];
 
+  //Function for movement lines, arrows, and map bounds
   const PolylineDecorator = ({ patterns, color, position }) => {
     const map = useMap();
     const prevPolylineRef = useRef(null);
@@ -60,6 +104,10 @@ const CattleMovementMap = ({ jsonData }) => {
       //Create new polyline & decorators and add it to the map
       const polyline = L.polyline(position, { color }).addTo(map);
       const decorators = L.polylineDecorator(polyline, { patterns }).addTo(map);
+
+      // Get the bounds of the polyline & fit the map to the polyline bounds
+      const bounds = polyline.getBounds();
+      map.fitBounds(bounds);
 
       // Update prevPolylineRef & prevDecoratorsRef values to the current polyline & decorators values
       prevPolylineRef.current = polyline;
@@ -92,7 +140,11 @@ const CattleMovementMap = ({ jsonData }) => {
         iconCreateFunction={createCustomClusterIcon}
       >
         {linePts.map((position, index) => (
-          <Marker key={index} position={position} icon={customIcon}>
+          <Marker
+            key={index}
+            position={position}
+            icon={renderIcon(movArr[index])}
+          >
             <Popup>
               <div className="fs-5 fw-bold">{jsonData.identifier}</div>
               <br />
