@@ -48,7 +48,7 @@ class E2ETests(unittest.TestCase):
         # navigate to snp map
         snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
         snp_dist_btn.click()
-        snp_map_btn = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.ID,"btn-view-snpmap")))
+        snp_map_btn = self.wait.until(EC.element_to_be_clickable((By.ID,"btn-view-snpmap")))
         snp_map_btn.click()
         # search for related samples within 5 SNP of "a_id"
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
@@ -65,8 +65,8 @@ class E2ETests(unittest.TestCase):
         # get table rows
         table = \
             self.wait.until(
-                EC.visibility_of_element_located((By.XPATH,
-                                                  "//div[@class='tabulator-table']")))
+                EC.visibility_of_element_located((By.ID,
+                                                  "table-sidebar-container")))
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
         # and value as the row element
