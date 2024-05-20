@@ -67,6 +67,7 @@ class E2ETests(unittest.TestCase):
             self.wait.until(
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
+        #continue find element method after the table transit animation
         time.sleep(10.0)
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
@@ -99,8 +100,8 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
+            #todo - test for clustered samples
             if sub == "c":
-                print(sub)
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
                                          f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
