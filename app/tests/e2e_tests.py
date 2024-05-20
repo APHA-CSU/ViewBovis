@@ -42,7 +42,7 @@ class E2ETests(unittest.TestCase):
 
     def test_snp_map(self):
         soi = "a"
-        SOI = {soi}.upper()
+        SOI = soi.upper()
         related_plots = ["b", "c", "d"]
         related_nonplots = ["e", "f"]
         distant_relations = ["g", "h"]
