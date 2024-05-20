@@ -42,6 +42,7 @@ class E2ETests(unittest.TestCase):
 
     def test_snp_map(self):
         soi = "a"
+        SOI = {soi}.toUpperCase()
         related_plots = ["b", "c", "d"]
         related_nonplots = ["e", "f"]
         distant_relations = ["g", "h"]
@@ -84,7 +85,7 @@ class E2ETests(unittest.TestCase):
             self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable
         self.assertIn("tabulator-unselectable",
-                      rows_dict[f"{soi}_SUBMISSON"].get_attribute("class"),
+                      rows_dict[f"{SOI}_SUBMISSON"].get_attribute("class"),
                       "SOI row is selectable!")
         # assert rows for submissions with missing location data are not
         # clickable
