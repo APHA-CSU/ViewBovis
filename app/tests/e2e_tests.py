@@ -68,8 +68,6 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
-        print(rows)
-        print(len(rows))
         # build a dictionary with key as the isolated submission number
         # and value as the row element
         rows_dict = {}
@@ -78,10 +76,8 @@ class E2ETests(unittest.TestCase):
             # get the submission element for the row
             sub_element = row.find_element(By.XPATH,
                                            ".//div[@tabulator-field='submission']")
-            print(sub_element.text)
             rows_dict[sub_element.text] = row
         # assert distantly related isolates are not included
-        print(rows_dict)
         for sub in distant_relations:
             self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable
@@ -102,9 +98,10 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
+            print(sub)
             map_sub_div_element = \
-                self.driver.find_element(By.XPATH,
-                                         f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
+                self.driver.find_element(By.CLASS_NAME,
+                                         f'awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive')
             related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
             # assert icon number is white, i.e. not selected
             self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
