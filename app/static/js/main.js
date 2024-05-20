@@ -311,9 +311,9 @@ async function loadStaticContent(tab){
 // regex to remove all spaces and method to make all alphabets uppercase
 
 //exclude test cases
-    if(identifierStr.indexOf("_submission") > -1 || identifierStr.indexOf("_id") > -1){
-        return identifierStr
-    }
+//    if(identifierStr.indexOf("_submission") > -1 || identifierStr.indexOf("_id") > -1){
+//        return identifierStr
+//    }
     return identifierStr.replace(/ /g, "").toUpperCase()
 }
 
