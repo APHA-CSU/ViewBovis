@@ -68,6 +68,7 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
+        print(rows)
         # build a dictionary with key as the isolated submission number
         # and value as the row element
         rows_dict = {}
@@ -76,8 +77,10 @@ class E2ETests(unittest.TestCase):
             # get the submission element for the row
             sub_element = row.find_element(By.XPATH,
                                            ".//div[@tabulator-field='submission']")
+            print(sub_element.text)
             rows_dict[sub_element.text] = row
         # assert distantly related isolates are not included
+        print(rows_dict)
         for sub in distant_relations:
             self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable
