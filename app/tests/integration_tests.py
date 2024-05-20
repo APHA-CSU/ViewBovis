@@ -16,7 +16,7 @@ class TestViewBovisAPI(unittest.TestCase):
         """
         # request complete data
         r = requests.get(f"{API_URL}/sample?sample_name=a_submission")
-        expected_resp_body = {"submission": "A_SUBMISSION",
+        expected_resp_body = {"submission": "a_submission",
                               "clade": "B6-11",
                               "identifier": "a_id",
                               "species": "COW",
@@ -38,14 +38,14 @@ class TestViewBovisAPI(unittest.TestCase):
         r = requests.get(f"{API_URL}/sample?sample_name=no_data_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Invalid submission: NO_DATA_SUBMISSION"}
+             "warning": "Invalid submission: no_data_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
         # request missing metadata
         r = requests.get(f"{API_URL}"
                          "/sample?sample_name=no_meta_submission")
-        expected_resp_body = {"submission": "NO_META_SUBMISSION",
+        expected_resp_body = {"submission": "no_meta_submission",
                               "clade": "B6-11",
                               "identifier": None,
                               "species": None,
@@ -66,7 +66,7 @@ class TestViewBovisAPI(unittest.TestCase):
         # request missing movement data
         r = requests.get(f"{API_URL}"
                          "/sample?sample_name=no_mov_submission")
-        expected_resp_body = {"submission": "NO_MOV_SUBMISSION",
+        expected_resp_body = {"submission": "no_mov_submission",
                               "clade": "B6-11",
                               "identifier": "no_mov_id",
                               "species": "COW",
@@ -89,7 +89,7 @@ class TestViewBovisAPI(unittest.TestCase):
                          "/sample?sample_name=no_wgs_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Missing WGS data for submission: NO_WGS_SUBMISSION"}
+             "warning": "Missing WGS data for submission: no_wgs_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -98,14 +98,14 @@ class TestViewBovisAPI(unittest.TestCase):
                          "/sample?sample_name=excluded_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Excluded submission: EXCLUDED_SUBMISSION\nReason: contaminated sample"}
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
         r = requests.get(f"{API_URL}"
                          "/sample?sample_name=excluded_id")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Excluded submission: EXCLUDED_ID\nReason: contaminated sample"}
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -116,7 +116,7 @@ class TestViewBovisAPI(unittest.TestCase):
         """
         # request complete data
         r = requests.get(f"{API_URL}/sample/movements?sample_name=a_submission")
-        expected_resp_body = {"submission": "A_SUBMISSION",
+        expected_resp_body = {"submission": "a_submission",
                               "clade": "B6-11",
                               "identifier": "a_id",
                               "species": "COW",
@@ -176,7 +176,7 @@ class TestViewBovisAPI(unittest.TestCase):
                          "/sample/movements?sample_name=no_data_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Invalid submission: NO_DATA_SUBMISSON"}
+             "warning": "Invalid submission: no_data_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -186,7 +186,7 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning":
-             "Incomplete or missing metadata for submission: NO_META_SUBMISSION"}
+             "Incomplete or missing metadata for submission: no_meta_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -196,7 +196,7 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning":
-             "Incomplete or missing metadata for submission: NO_MOV_SUBMISSION"}
+             "Incomplete or missing metadata for submission: no_mov_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -206,7 +206,7 @@ class TestViewBovisAPI(unittest.TestCase):
         expected_resp_body = \
             {"warnings": True,
              "warning":
-             "Missing WGS data for submission: NO_WGS_SUBMISSION"}
+             "Missing WGS data for submission: no_wgs_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -214,7 +214,7 @@ class TestViewBovisAPI(unittest.TestCase):
         r = requests.get(f"{API_URL}/sample/movements?sample_name=e_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Non-bovine submission: E_SUBMISSION"}
+             "warning": "Non-bovine submission: e_submission"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
@@ -223,14 +223,14 @@ class TestViewBovisAPI(unittest.TestCase):
                          "/sample?sample_name=excluded_submission")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Excluded submission: EXCLUDED_SUBMISSION\nReason: contaminated sample"}
+             "warning": "Excluded submission: excluded_submission\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
         r = requests.get(f"{API_URL}"
                          "/sample?sample_name=excluded_id")
         expected_resp_body = \
             {"warnings": True,
-             "warning": "Excluded submission: EXCLUDED_ID\nReason: contaminated sample"}
+             "warning": "Excluded submission: excluded_id\nReason: contaminated sample"}
         assert r.status_code == 200
         self.assertDictEqual(expected_resp_body, r.json())
 
