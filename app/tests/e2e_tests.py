@@ -99,40 +99,40 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
-            if sub != "c":
-                continue
-            map_sub_div_element = \
-                self.driver.find_element(By.CLASS_NAME,
-                                         f'awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive')
-            related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
-            # assert icon number is white, i.e. not selected
-            self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
-            # hacky way to ensure that the row is clickable: will try to
-            # click 10 times over 1 second, if still not clickable on
-            # the 10th try an Exception is raised.
-            for _ in range(9):
-                try:
+            if sub == "c":
+                print(sub)
+                map_sub_div_element = \
+                    self.driver.find_element(By.CLASS_NAME,
+                                            f'awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive')
+                related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
+                # assert icon number is white, i.e. not selected
+                self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
+                # hacky way to ensure that the row is clickable: will try to
+                # click 10 times over 1 second, if still not clickable on
+                # the 10th try an Exception is raised.
+                for _ in range(9):
+                    try:
+                        rows_dict[f"{sub}_submission"].click()
+                        break
+                    except exceptions.ElementClickInterceptedException:
+                        time.sleep(0.1)
                     rows_dict[f"{sub}_submission"].click()
-                    break
-                except exceptions.ElementClickInterceptedException:
-                    time.sleep(0.1)
-                rows_dict[f"{sub}_submission"].click()
-            # assert that the related isolate number has changed colour
-            related_icon_number = \
-                map_sub_div_element.find_element(By.TAG_NAME, "i")
-            self.assertIn("rgb(255, 190, 51)",
-                          related_icon_number.get_attribute("style"),
-                          "Correct map icon not highlighted!")
-            # click the map icon - make pop-up visible
-            map_sub_div_element.click()
-            # assert the pop-up contents
-            pop_up_header = \
-                self.wait.until(EC.visibility_of_element_located((By.XPATH,
-                                                                  "//*[@id='map2']/div[1]/div[6]/div/div[1]/div/div[1]")))
-            self.assertEqual(f"{sub}_id", pop_up_header.text)
-            # click the map icon - make pop-up go away
-            map_sub_div_element.click()
-            self.wait.until(EC.invisibility_of_element(pop_up_header))
+                # assert that the related isolate number has changed colour
+                related_icon_number = \
+                    map_sub_div_element.find_element(By.TAG_NAME, "i")
+                self.assertIn("rgb(255, 190, 51)",
+                            related_icon_number.get_attribute("style"),
+                            "Correct map icon not highlighted!")
+                # click the map icon - make pop-up visible
+                map_sub_div_element.click()
+                # assert the pop-up contents
+                pop_up_header = \
+                    self.wait.until(EC.visibility_of_element_located((By.XPATH,
+                                                                    "//*[@id='map2']/div[1]/div[6]/div/div[1]/div/div[1]")))
+                self.assertEqual(f"{sub}_id", pop_up_header.text)
+                # click the map icon - make pop-up go away
+                map_sub_div_element.click()
+                self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
         for sub in related_nonplots + distant_relations:
