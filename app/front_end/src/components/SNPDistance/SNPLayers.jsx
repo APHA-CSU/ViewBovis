@@ -6,7 +6,7 @@ const markerNumberIcon = (number) => {
   return `<img src="${SNPrelated}" alt="${number}" width="30" height="30"/>
   <div style="
   position: absolute;
-  right: 35%;
+  right: 50%;
   top: 10%;
   font-size: medium;
   color: white;
