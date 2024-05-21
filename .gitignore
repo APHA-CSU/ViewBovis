@@ -1,5 +1,9 @@
 /app/__pycache__/
 /app/tests/__pycache__/
+
+#ignore node modulus of the react app version
+/app/front_end/node_modules/
+
 .vscode/
 data/
 static/data/
