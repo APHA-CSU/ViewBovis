@@ -310,12 +310,15 @@ async function loadStaticContent(tab){
  window.validateIdentifierInput = function(identifierStr){
 // regex to remove all spaces and method to make all alphabets uppercase
 
+let regEx = new RegExp(identifierStr, "ig")
+
 //exclude test cases
 //    if(identifierStr.indexOf("_submission") > -1 || identifierStr.indexOf("_id") > -1){
 //        return identifierStr
 //    }
-    return identifierStr.replace(/ /ig, "")
+    return regEx
 }
+
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
