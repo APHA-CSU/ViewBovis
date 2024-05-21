@@ -92,7 +92,7 @@ class Request:
             containing WGS metadata if it exists, otherwise returns an
             empty DataFrame
         """
-        query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
+        query = "SELECT * FROM wgs_metadata WHERE Submission iLIKE '%id%'"
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
