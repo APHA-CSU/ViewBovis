@@ -314,7 +314,7 @@ async function loadStaticContent(tab){
 //    if(identifierStr.indexOf("_submission") > -1 || identifierStr.indexOf("_id") > -1){
 //        return identifierStr
 //    }
-    return identifierStr.replace(/ /g, "").toUpperCase()
+    return identifierStr.replace(/ /ig, "")
 }
 
 // Hyperlink to Help and Support
