@@ -3,7 +3,6 @@
 .vscode/
 data/
 static/data/
-.github/CODEOWNERS
 bin
 lib
 pyvenv.cfg
