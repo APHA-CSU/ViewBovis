@@ -307,7 +307,9 @@ async function loadStaticContent(tab){
 }
 
 
-window.validateIdentifierInput = new RegExp(identifierStr, 'ig')
+window.validateIdentifierInput = function(identifierStr){
+    new RegExp(identifierStr, 'ig')
+}
 
 //window.validateIdentifierInput = function(identifierStr){
 // regex to remove all spaces and method to make all alphabets case insensitive
