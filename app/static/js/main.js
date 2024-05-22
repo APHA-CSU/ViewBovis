@@ -307,15 +307,15 @@ async function loadStaticContent(tab){
 }
 
 
-window.validateIdentifierInput = function(identifierStr){
-    new RegExp(identifierStr, 'ig')
-}
-
 //window.validateIdentifierInput = function(identifierStr){
-// regex to remove all spaces and method to make all alphabets case insensitive
-
-//    return identifierStr.replace(/ /ig, "")
+//    new RegExp(identifierStr, 'ig')
 //}
+
+window.validateIdentifierInput = function(identifierStr){
+// regex to remove all spaces
+
+    return identifierStr.replace(/ /ig, "")
+}
 
 // Hyperlink to Help and Support
 // Purpose: hide all content when button is clicked then show content
