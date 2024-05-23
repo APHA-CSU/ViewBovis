@@ -308,8 +308,8 @@ async function loadStaticContent(tab){
 
 
  window.validateIdentifierInput = function(identifierStr){
-// regex to remove all spaces and method to make all alphabets uppercase
-    return identifierStr.replace(/ /g, "").toUpperCase()
+// regex to remove all spaces in the Identifier or Submission id
+    return identifierStr.replace(/ /g, "")
 }
 
 // Hyperlink to Help and Support
