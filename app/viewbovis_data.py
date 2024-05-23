@@ -78,9 +78,10 @@ class Request:
             DataFrame containing metadata if it exists, otherwise
             returns an empty DataFrame
         """
-        query = f"""SELECT * FROM metadata WHERE Submission IN
-                    ({','.join('?' * len(ids))}) OR Identifier
-                    IN ({','.join('?' * len(ids))}) """
+        query = f"""SELECT * FROM metadata WHERE UPPER(Submission) IN
+                    ({','.join('?' * len(ids))}) OR UPPER(Identifier)
+                    IN ({','.join('?' * len(ids))})"""
+        ids = [elem.upper() for elem in ids]
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -92,7 +93,7 @@ class Request:
             containing WGS metadata if it exists, otherwise returns an
             empty DataFrame
         """
-        query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
+        query = "SELECT * FROM wgs_metadata WHERE UPPER(Submission)=UPPER(:id)"
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -106,7 +107,7 @@ class Request:
             in the list of excluded samples, None is returned
         """
         query = """SELECT Exclusion FROM excluded WHERE
-                   Submission=:submission"""
+                   UPPER(Submission)=UPPER(:submission)"""
         exclusion = pd.read_sql_query(query, self._db,
                                       params={"submission":
                                               self._submission})
@@ -120,7 +121,7 @@ class Request:
             Maps a submission number to sample name. Returns 'None' if
             there is no WGS metadata for the sample
         """
-        query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
+        query = "SELECT * FROM wgs_metadata WHERE UPPER(Sample)=UPPER(:sample)"
         df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"sample": sample})
         if df_wgs_sub.empty:
@@ -135,7 +136,7 @@ class Request:
             Raises:
                 NoMetaDataException: for missing movement data
         """
-        query = "SELECT * FROM movements WHERE Submission=:submission"
+        query = "SELECT * FROM movements WHERE UPPER(Submission)=UPPER(:submission)"
         mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
                                      params={"submission": submission})
         if mov_data.empty:
