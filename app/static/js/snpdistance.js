@@ -216,8 +216,14 @@ const baseMaps2 = {
 let layerControl2 = L.control.layers(baseMaps2, null, {collapsed: false}).addTo(map2);
 
 // Add a title to the basemap control
-document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
-document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
+document.querySelectorAll(".leaflet-control-layers-base").forEach((layer,index) => {
+  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML != "Basemaps") {
+  layer.insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>")}
+});
+document.querySelectorAll('.leaflet-control-layers-selector').forEach((node,index) => {
+if (index === 0 || index === 3) node.click()
+})
+// ensure OSM is the default basemap
   
 
 
@@ -610,10 +616,10 @@ backBtn2.classList.add("back-to-start-page-bttn");
 // ------------------------ //
 
 // Render SNP map page on click of "View Map" button
-document.getElementById("btn-view-snpmap").addEventListener("click", () => {
-
+function loadSNPmapPage(){
   // Hide splash page and show SNP map content
   document.getElementById("snpdistance-splash-page").classList.add("hidden");
+  document.getElementById("snpmatrix-content").classList.add("hidden");
   document.getElementById("snpmap-content").classList.remove("hidden");
   map2.invalidateSize();
 
@@ -622,8 +628,12 @@ document.getElementById("btn-view-snpmap").addEventListener("click", () => {
 
   // Ensure hidden class removed from back button
   backBtn2.classList.remove("hidden");
-});
+}
 
+//Add event listener on View Map Button - SNP Distance
+document.getElementById("btn-view-snpmap").addEventListener("click", () => {
+  loadSNPmapPage()
+});
 
 // ------------------------ //
 //
@@ -683,14 +693,16 @@ markerLegend2.onAdd = function (map) {
     <div style="padding-top:5px;">
         <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/sample-icon.svg" class="legend-marker-img">
           <span class="legend-marker-title">Sample</span>
         </span>
         <span style="display: flex; align-items: center; padding-bottom: 5px;">
-          <svg style="margin-left: 8px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="gray" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-          </svg>
-          <span class="legend-marker-title" style="margin-left:11px;">SNP Relatedness</span>
+        <img src="/static/img/relatedness-icon.svg" class="legend-marker-img">
+          <span class="legend-marker-title">SNP Relatedness</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+        <img src="/static/img/movementCluster.svg" class="legend-marker-img">
+        <span class="legend-marker-title">Geographic Group</span>
         </span>
       </div>
     `);
@@ -706,18 +718,18 @@ markerLegend2.onAdd = function (map) {
 //
 // ------------------------ //
 
-// Object to store cow icons
-const cowIcons2 = {
-  cowStandard: L.icon({
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+// Object to store sample icons
+const sampleIcon = {
+  standardIcon2: L.icon({
+    iconUrl: "/static/img/sample-icon.svg",
+    iconSize: [55, 55],
+    iconAnchor:   [25, 45], // horizontal and vertical adjustment so that the icon exactly matches marker coordinate
   })
 };
 
 // Custom popup options
 // https://leafletjs.com/reference.html#popup
-const cowheadPopupOptions2 = {
+const popupOptions2 = {
   maxWidth: 400, // in pixels
   className: "relatedPopupOptions", // must match a css class in _cattleMovement.css
   autoClose: false,
@@ -820,7 +832,7 @@ const snp_distance_ClientError = function (err) {
 }
 
 // Initiate variables
-let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
+let targetMarker, relatedSampleArr, relatedMarker, markerLayer, snpMarkersClusterLayer, snpTable, snpTableData, rowSubmissionSelect, rowSubmissionDeselect;
 
 // Function whose input is the json file returned by Flask and whose output is rendering markers on the map
 const renderRelatedMarkers = function (json, target) {
@@ -828,15 +840,25 @@ const renderRelatedMarkers = function (json, target) {
   // Extract data for target sample
   let targetSample = json[target];
 
-  // Create a layer group that will contain all the cow markers
+  // Create a layer group for target sample marker
   markerLayer = L.layerGroup().addTo(map2);
+  // Create a layer group for related samples markers
+  snpMarkersClusterLayer = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='snp-cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'snp-cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map2)
 
   // Add target sample to map
-  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: cowIcons2.cowStandard});
+  targetMarker = L.marker([targetSample.lat, targetSample.lon], {icon: sampleIcon.standardIcon2});
   markerLayer.addLayer(targetMarker);
 
   // Add popup to target sample
-  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), cowheadPopupOptions2);
+  targetMarker.bindPopup(popupContentSNPMap(targetSample, target), popupOptions2);
 
   // Extract data for related sample(s)
   let relatedSample = {...json}; // deep copy json object
@@ -872,9 +894,9 @@ const renderRelatedMarkers = function (json, target) {
         numberColor: "white"
       })
     });
-    markerLayer.addLayer(relatedMarker);
+    snpMarkersClusterLayer.addLayer(relatedMarker);
     // Add popup to related samples
-    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), cowheadPopupOptions2);
+    relatedMarker.bindPopup(popupContentSNPMap(item, item.submission), popupOptions2);
   });
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -898,6 +920,7 @@ const showRelatedSamples = async function () {
 
     // First clear any previous markers on map and warning text
     if(typeof markerLayer !== "undefined") map2.removeLayer(markerLayer);
+    if(typeof snpMarkersClusterLayer !== "undefined") map2.removeLayer(snpMarkersClusterLayer);
     document.getElementById("snpmap-warning-text").textContent = "";
     if(document.getElementById("snpmap-error-message") !== null && document.getElementById("snpmap-error-message") !== "undefined") {
       document.getElementById("snpmap-error-message").remove();
@@ -911,7 +934,7 @@ const showRelatedSamples = async function () {
     };
 
     // Select elements from DOM
-    const sampleID = document.getElementById("input__sampleID_temp--1").value;
+    const sampleID = validateIdentifierInput(document.getElementById("input__sampleID_temp--1").value);
     const snpDistance = document.getElementById("snp-distance-value").textContent;
 
     // Render spinner
@@ -959,7 +982,7 @@ const showRelatedSamples = async function () {
             <span>OS Map Reference: ${json[soi].os_map_ref}<br/></span>
             <span>Clade: ${json[soi].clade}<br/></span>
           </p>
-          <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
+          <button id="btn-download-snptable" class="govuk-button btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         `);
 
         // Tabulator requires array of json objects
@@ -1069,7 +1092,7 @@ const btnHideTable = L.Control.extend({
     divContainer.setAttribute("id", "btn__hide-table");
 
     divContainer.insertAdjacentHTML("afterbegin", `
-      <a class="snp-table-toggle" data-bs-toggle="collapse" href="#table-sidebar-container">Hide Table</a>
+      <a class="snp-table-toggle" data-bs-toggle="collapse" href="#table-sidebar-container" id="hide-table">Hide Table</a>
     `);
     return divContainer;
   }
@@ -1087,13 +1110,13 @@ document.getElementById("table-sidebar-container").addEventListener("shown.bs.co
 });
 
 // Change icon to right-arrow after sidebar has collapsed
-document.getElementById("btn__show-table").addEventListener("click", () => {
+document.getElementById("show-table").addEventListener("click", () => {
   document.getElementById("btn__hide-table").classList.remove("hidden");
   document.getElementById("btn__show-table").classList.add("hidden");
 });
 
 // Change icon to left-arrow after sidebar has expanded
-document.getElementById("btn__hide-table").addEventListener("click", () => {
+document.getElementById("hide-table").addEventListener("click", () => {
   document.getElementById("btn__show-table").classList.remove("hidden");
   document.getElementById("btn__hide-table").classList.add("hidden");
 });

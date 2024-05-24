@@ -7,6 +7,13 @@
 
 "use strict";
 
+//Reuse variable from the Global object declared in main.js script file
+let map = globalObj.map;
+let defaultCoords = globalObj.defaultCoords;
+let defaultZoom = globalObj.defaultZoom;
+let osm = globalObj.osm;
+let Esri_WorldGrayCanvas = globalObj.Esri_WorldGrayCanvas;
+let Esri_WorldImagery = globalObj.Esri_WorldImagery;
 
 
 // ------------------------ //
@@ -179,8 +186,13 @@ const baseMaps = {
 let layerControl = L.control.layers(baseMaps, null, {collapsed: false}).addTo(map);
 
 // Add a title to the basemap control
-document.querySelector(".leaflet-control-layers-base").insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>");
-document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM is the default basemap
+document.querySelectorAll(".leaflet-control-layers-base").forEach((layer,index) => {
+  if(document.querySelectorAll(".leaflet-control-layers-list")[index].children[0].innerHTML !== "Basemaps") {
+  layer.insertAdjacentHTML("beforebegin", "<strong style='font-size: 15px; margin-bottom: 15px;'>Basemaps</strong>")}
+});
+document.querySelectorAll('.leaflet-control-layers-selector').forEach((node,index) => {
+if (index === 0 || index === 3) node.click()
+}) // ensure OSM is the default basemap
 
 
 
@@ -193,24 +205,24 @@ document.querySelector('.leaflet-control-layers-selector').click() // ensure OSM
 // Object to store cow icons
 const cowIcons = {
   cowStandard: L.icon({
-    iconUrl: "/static/img/CH_1_no_outline.svg",
-    iconSize: [75, 75],
-    iconAnchor: [35, 55], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
+    iconUrl: "/static/img/holding.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35], // horizontal and vertical adjustment so that the cow head exactly matches marker coordinate
   }),
   cowShowground: L.icon({
-    iconUrl: "/static/img/CH_Showground_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/showground.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20,35],
   }),
   cowMarket: L.icon({
-    iconUrl: "/static/img/CH_Market_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/market.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35],
   }),
   cowSlaughter: L.icon({
-    iconUrl: "/static/img/CH_Slaughterhouse_no_outline.svg",
-    iconSize: [110, 110],
-    iconAnchor: [40, 81],
+    iconUrl: "/static/img/slaughterhouse.svg",
+    iconSize: [40, 40],
+    iconAnchor: [20, 35],
   }),
 }; 
 
@@ -224,19 +236,20 @@ const cowheadPopupOptions = {
 };
 
 // Function to create HTML popup content using template literal
-const popupContent = function(data, movArr, index) {
+const popupContent = function(data, movArr, index, second = false) {
+const lineIndex = second ? "2" : ""
 
   return `
   <div class="fs-5 fw-bold">${data.identifier}</div><br>
   <div>
     <nav>
       <div class="nav nav-tabs" id="popupNav" role="tablist">
-        <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
-        <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+        <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent${index}${lineIndex}" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
+        <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent${index}${lineIndex}" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
       </div>
     </nav>
     <div class="tab-content" id="popTabContent">     
-      <div class="tab-pane fade show active" id="navSummaryContent" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
+      <div class="tab-pane fade show active" id="navSummaryContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
         <table class="table table-striped">
           <tbody>
             <tr>
@@ -297,7 +310,7 @@ const popupContent = function(data, movArr, index) {
           </tbody>
         </table>
       </div>
-      <div class="tab-pane fade show" id="navInfoContent" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
+      <div class="tab-pane fade show" id="navInfoContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
         <table class="table table-striped">
           <tbody>
             <tr>
@@ -351,21 +364,25 @@ markerLegend.onAdd = function (map) {
     <div class="legend-marker-container" style="padding-top:5px;">
         <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_1_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/holding.svg" class="legend-marker-img">
           <span class="legend-marker-title">Holding</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Market_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/market.svg" class="legend-marker-img">
           <span class="legend-marker-title">Market</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Showground_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/showground.svg" class="legend-marker-img">
           <span class="legend-marker-title">Showground</span>
         </span>
         <span style="display: flex; align-items: center;">
-          <img src="/static/img/CH_Slaughterhouse_no_outline.svg" class="legend-marker-img">
+          <img src="/static/img/slaughterhouse.svg" class="legend-marker-img">
           <span class="legend-marker-title">Slaughterhouse</span>
         </span>
+        <span style="display: flex; align-items: center;">
+        <img src="/static/img/movementCluster.svg" class="legend-marker-img">
+        <span class="legend-marker-title">Movement Cluster</span>
+      </span>
         <span style="display: flex; align-items: center;">
           <svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#0096FF" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -390,13 +407,15 @@ markerLegend.onAdd = function (map) {
 const clearPreviousMovements = function (second = false) {
   // Execute this code to clear main cattle movement
   if(second === false) {
-    if(typeof cowMarker !== "undefined") map.removeLayer(cowLayer);
+    if(typeof cowMarker !== "undefined") map.removeLayer(markersClusterLayer);
+    if(typeof cowMarker !== "undefined") map.removeLayer(markersLayer);
     if(typeof cattleMovLine !== "undefined") cattleMovLine.remove();
     if(typeof markerLegend !== "undefined") markerLegend.remove();
   };
   // Execute this code to clear second cattle movement
   if(second === true) {
-    if(typeof cowMarker2 !== "undefined") map.removeLayer(cowLayer2);
+    if(typeof cowMarker2 !== "undefined") map.removeLayer(markersClusterLayer2);
+    if(typeof cowMarker2 !== "undefined") map.removeLayer(markersLayer2);
     if(typeof cattleMovLine2 !== "undefined") cattleMovLine2.remove();
   };
 };
@@ -431,16 +450,48 @@ const renderCowMarkers = function (json, cowIcon, lineColour, second = false) {
   const moveLon = movArr.map(arr => arr.lon);
 
   // Create a layer group that will contain all the cow markers
-  second === false ? cowLayer = L.layerGroup().addTo(map) : cowLayer2 = L.layerGroup().addTo(map);
+  second === false ?
+  markersClusterLayer = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map)
+  :
+  markersClusterLayer2 = L.markerClusterGroup({
+    iconCreateFunction: function(cluster){
+      return L.divIcon({
+        html: `<div class='cluster-icon'>${cluster.getChildCount()}</div>`,
+        className: 'cluster-icon',
+        iconSize:[30,30]
+      })
+    }
+  }).addTo(map)
+
+  second === false ?
+  markersLayer = L.layerGroup().addTo(map)
+  :
+  markersLayer2 = L.layerGroup().addTo(map)
 
   // Add cow head markers to map
   for (let i = 0; i < moveLat.length; i++) {
     // Render markers and the correct cow icons
     second === false ? cowMarker = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)}) : cowMarker2 = L.marker([moveLat[i], moveLon[i]], {icon: renderCowIcon(movArr[i], cowIcon)});
-    second === false ? cowLayer.addLayer(cowMarker) : cowLayer2.addLayer(cowMarker2);
+    
+    // Check if there are other movements with the same latitude
+    const sameLatCount = moveLat.filter(lat => lat === moveLat[i]).length;
 
+     // Add the cow marker to the appropriate layer
+     if (sameLatCount > 1) {
+      second === false ? markersClusterLayer.addLayer(cowMarker) : markersClusterLayer2.addLayer(cowMarker2) 
+    } else {
+      second === false ? markersLayer.addLayer(cowMarker) : markersLayer2.addLayer(cowMarker2) 
+    }
     // Add popup content to each cow head marker
-    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions);
+    second === false ? cowMarker.bindPopup(popupContent(json, movArr, i), cowheadPopupOptions) : cowMarker2.bindPopup(popupContent(json, movArr, i, true), cowheadPopupOptions);
   };
 
   // Create a new array in the format [ [lat1, lon1], [lat2, lon2], [..., ...] ]
@@ -518,7 +569,7 @@ const cattle_mov_ClientError = function (err) {
 }
 
 // Initiate variables
-let cowMarker, cowLayer, linePts, cattleMovLine;
+let cowMarker, markersClusterLayer, markersLayer, linePts, cattleMovLine;
 
 // Async function that renders main cattle movement
 const showMovements = async function () {
@@ -543,7 +594,7 @@ const showMovements = async function () {
     document.getElementById(`cattleMovementLines--${elementID}`).checked = true;
 
     // Fetch json data from backend
-    const response = await fetch(`/sample/movements?sample_name=${document.getElementById(`input__sampleID--${elementID}`).value}`);
+    const response = await fetch(`/sample/movements?sample_name=${validateIdentifierInput(document.getElementById(`input__sampleID--${elementID}`).value)}`);
 
     if(!response.ok) {
 
@@ -593,7 +644,7 @@ document.getElementById("btn__cattleMovement--1").addEventListener("click", show
 // ------------------------ //
 
 // Initiate variables
-let cowMarker2, cowLayer2, linePts2, cattleMovLine2;
+let cowMarker2, markersClusterLayer2, markersLayer2, linePts2, cattleMovLine2;
 
 // Async function that renders main cattle movement
 const showMovements2 = async function () {
@@ -670,11 +721,13 @@ document.getElementById("cattleMovementLines--1").addEventListener("change", tog
 // Function to toggle lines and arrows from map 
 const toggleMovementLines2 = function() {
   if(this.checked === true) {
-    map.addLayer(cowLayer2);
+    map.addLayer(markersClusterLayer2);
+    map.addLayer(markersLayer2);
     cattleMovLine2.addTo(map);
   };
   if(this.checked === false) {
-    map.removeLayer(cowLayer2);
+    map.removeLayer(markersClusterLayer2);
+    map.removeLayer(markersLayer2);
     cattleMovLine2.remove();
   };
 };

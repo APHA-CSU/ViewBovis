@@ -2,13 +2,20 @@ from flask import Flask, jsonify, render_template, request, g
 import os
 import json
 from datetime import datetime
+from flask_wtf.csrf import CSRFProtect
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
                            MatrixTooLargeException
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 
+def get_id_no_whitespace():
+    id = request.args.get("sample_name")
+    id.strip()
+    id.lstrip()
+    return id
 
 def get_request_object(id):
     """
@@ -52,7 +59,7 @@ def sample():
         encoded in the URL query string; e.g.
         "/sample?sample_name=AF-61-04255-17"
     """
-    id = request.args.get("sample_name")
+    id = get_id_no_whitespace()
     get_request_object(id)
     return jsonify(g.request.soi_metadata())
 
@@ -65,7 +72,7 @@ def movements():
         with the sample_name encoded in the URL query string; e.g.
         "/sample?sample_name=AF-61-04255-17"
     """
-    id = request.args.get("sample_name")
+    id = get_id_no_whitespace()
     get_request_object(id)
     return jsonify(g.request.soi_movement_metadata())
 
@@ -79,7 +86,7 @@ def related_samples():
         sample_name and snp_distance encoded in the URL query string;
         e.g. "/sample/related?sample_name=AF-61-04255-17&snp_distance=5"
     """
-    id = request.args.get("sample_name")
+    id = get_id_no_whitespace()
     snp_threshold = int(request.args.get("snp_distance"))
     get_request_object(id)
     return jsonify(g.request.related_submissions_metadata(snp_threshold))
@@ -94,11 +101,10 @@ def snp_matrix():
         snp_distance encoded in the URL query string; e.g.
         "/sample/matrix?sample_name=AF-61-04255-17&snp_distance=5"
     """
-    id = request.args.get("sample_name")
+    id = get_id_no_whitespace()
     snp_threshold = int(request.args.get("snp_distance"))
     get_request_object(id)
     return jsonify(g.request.snp_matrix(snp_threshold))
-
 
 @app.errorhandler(NoDataException)
 def custom_exception_handler(error):

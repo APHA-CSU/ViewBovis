@@ -115,8 +115,8 @@ label.govuk-label.govuk-checkboxes__label {
 
 /* Leaflet legend styles */
 .legend-marker-container {
-    height: 120px;
-    overflow-y: scroll;
+    height: 268px;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 .legend-marker-title {
@@ -169,3 +169,16 @@ label.govuk-label.govuk-checkboxes__label {
     color: var(--apha-orange);
     font-size: 20px;
 }
+
+.cluster-icon {
+    background-color:#00A33B;
+    color: #ffffff; 
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px; 
+  }

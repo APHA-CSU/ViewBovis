@@ -44,6 +44,8 @@ class Request:
         if not self._df_metadata_soi.empty:
             # get submission number incase eartag used in request
             self._submission = self._df_metadata_soi.index[0]
+            self._submission.strip()
+            self._submission.lstrip()
             self._df_wgs_metadata_soi = \
                 self._query_wgs_metadata(self._submission)
             # retrieve x,y and lat,lon into tuples
@@ -153,7 +155,10 @@ class Request:
         date_transformed, _ = \
             re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
                     lambda x: month_mapper[x.group()], date)
-        return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
+        try:
+            return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
+        except ValueError:
+            return None
 
     def _get_os_map_ref(self, cphs: set) -> tuple:
         """
@@ -374,9 +379,7 @@ class Request:
                 NoMetaDataException: for missing CPH in metadata for the
                     SOI
         """
-        if self._df_metadata_soi.empty:
-            raise NoMetaDataException(self._id)
-        elif self._xy is None:
+        if self._df_metadata_soi.empty or self._xy is None:
             raise NoMetaDataException(self._id)
         df_snps_related = self._related_snp_matrix(snp_threshold)
         # get metadata for all related submissions

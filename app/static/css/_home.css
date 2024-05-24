@@ -8,9 +8,10 @@
 /* Default styles that apply to screens with a maximum height of 768px (Defra laptops) */
 /* ------------------- */
 
-/* Initialise the mouse to be disabled, whilst page loads */
+/* Initialise the mouse to be disabled and scroll bar to be hidden, whilst page loads */
 body {
   pointer-events: none;
+  overflow: hidden;
 }
 
 /* Overlay of transparent grey, whilst the page loads */
@@ -100,8 +101,9 @@ body {
     border-top: 10px solid var(--apha-green);
     padding: 10px;
     font-size: 17px;
-    height: 335px;
+    height: calc(100% + 10px);
 }
+
 .custom-govuk-button-home {
     margin-bottom: 0;
     font-size: 15px;
@@ -119,6 +121,9 @@ body {
     margin-right: 0.5px;
 }
 
+.help-quicklink-boxes {
+    padding-top: 10px;
+}
 
 /* Apply this style to screens with a height >768px (larger laptop or desktop) */
 /* @media (min-height: 768px){

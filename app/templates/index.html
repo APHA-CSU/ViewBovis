@@ -5,7 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>ViewBovis</title>
         <!-- CSS -->
-        <link rel="stylesheet" href="/static/css/main.css">
+        <link href="/static/libraries/bootstrap-5.2.3-dist/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/_govuk_frontend_4.4.1.css">
+        <link rel="stylesheet" href="/static/css/_global.css">
+        <link rel="stylesheet" href="/static/css/_navbar.css">
+        <link rel="stylesheet" href="/static/css/_home.css">
+        <link rel="stylesheet" href="/static/css/_components.css">
+        <link rel="preload" href="/static/css/_marker_cluster.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_cattleMovement.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/libraries/leaflet-1.9.3/leaflet.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/libraries/tabulator/tabulator.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_nextstrain.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_Leaflet.LinearMeasurement.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+        <link rel="preload" href="/static/css/_leaflet_awesome_number_markers.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
     </head>
     <body>
         <!-- Grey overlay and loading spinner: hidden once page is loaded -->
@@ -16,9 +28,13 @@
         <!-- ================================== -->
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency" target="_blank">
+                <a class="navbar-brand" 
+                href="https://www.gov.uk/government/organisations/animal-and-plant-health-agency" 
+                target="_blank">
                     <!-- Navbar Logo -->
-                    <img src="/static/img/APHA_logo_svg.svg" alt="Logo" width="auto" class="d-inline-block align-text-top">
+                    <img src="/static/img/APHA_logo_svg.svg" alt="APHA_logo" height="50px" width="50px" 
+                    class="d-inline-block align-text-top" style="margin-right: 10px;
+                    margin-top: 8px;" loading="lazy">
                 </a>
                 <!-- Navbar Title -->
                 <strong id="nav-main-title">ViewBovis [Official Sensitive]</strong>
@@ -57,7 +73,7 @@
         <!-- ================================== -->
         <!-- Security modal -->
         <!-- ================================== -->
-        <div class="modal" id="modal--security">
+        <div class="modal" id="modal--security" role="alertdialog" aria-label="Disclaimer">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="background-color: transparent; border: none; width: fit-content;">
                     <div class="modal-body">
@@ -120,7 +136,8 @@
             <div class="row align-items-center">
                 <!-- Column: logo -->
                 <div class="col-1">
-                    <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo">
+                    <img src="/static/img/VBIcon16_APHAGreen.svg" class="home-logo" 
+                    alt="ViewBovis_logo" loading="lazy">
                 </div>
                 <!-- Column: description -->
                 <div class="col-8">
@@ -257,827 +274,194 @@
             </footer>
 
         </div>
+        <div id="cattlemovement"></div>
+        <div id="SNPdistance"></div>
+        <div id="nextstrain"></div>
         <!-- ================================== -->
-        <!-- Cattle Movement Content -->
-        <!-- ================================== -->
-        <div class="container-fluid content content-2 hidden">
-            <div class="row">
-                <div class="col-3 collapse collapse-horizontal show" id="content2-column1-container">
-                    <div id="map-sidebar-container">
-                        <div class="govuk-heading-m " id="enter-sample-container">
-                            Enter Identifier or Submission
-                        </div>
-                        <div>
-                            <!-- Element: input sample box for main cattle movement -->
-                            <p>
-                                <!-- Ear-Tag or AF number -->
-                                <input value="" type="text" class="input__sampleID" id="input__sampleID--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
-                            </p>
-                            <!-- Element: button to show main cattle movement -->
-                            <button type="button" class="govuk-button" style="margin-bottom: 10px;" data-module="govuk-button" id="btn__cattleMovement--1">Show Cattle Movement</button>
 
-                            <!-- Plot Related Isolates Spinner -->
-                            <div class="text-center" id="cattle-spinner-container">
-                                <div class="spinner-border text-secondary hidden" id="cattle-spinner" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                            <!-- Warning message if SNP data cannot be fetched -->
-                            <!-- <p class="hidden warning-text" id="cattle-warning-text">Warning: unknown error please report to developers</p> -->
-                            <div id="cattle-warning-text"></div>
-
-                        </div>
-                        <br>
-                        <!-- Element: dropdown box for inputting a second cattle movement -->
-                        <div class="row">
-                            <div class="accordion" id="accordionExample">
-                                <div class="accordion-item">
-                                    <button class="accordion-button collapsed" id="btn__cattle-movement--1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        <!-- Element: title text and style for dropdown box -->
-                                        <span style="font-weight: bold;font-size: 17px; color: black;">Add Another Movement</span>
-                                    </button>
-                                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body" id="accordion__secondMovement">
-                                        <div>
-                                            <!-- Element: input sample box for second cattle movement -->
-                                            <p>
-                                                <input value="" type="text" class="input__sampleID" id="input__sampleID--2" disabled="disabled" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
-                                            </p>
-                                            <!-- Element: button to show second cattle movement -->
-                                            <button type="button" class="govuk-button" id="btn__cattleMovement--2" disabled="disabled" data-module="govuk-button" style="margin-bottom: 10px;">Show Second Movement</button>
-
-                                            <!-- Plot Related Isolates Spinner -->
-                                            <div class="text-center" id="cattle-spinner-container2">
-                                                <div class="spinner-border text-secondary hidden" id="cattle-spinner2" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                            </div>
-                                            <!-- Warning message if SNP data cannot be fetched -->
-                                            <div id="cattle-warning-text2"></div>
-
-                                            <!-- Element: toggle movement lines for second cattle movement -->
-                                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--2" disabled="disabled" type="checkbox" checked>
-                                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--2">Toggle Movement</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <p class="fs-5 fw-bold">
-                                <span>
-                                    LAYERS
-                                    <svg id="layers-help-icon" type="button" xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="var(--apha-blue)" class="bi bi-question-circle-fill" viewBox="0 0 16 24">
-                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z">
-                                            <title>Customise the map according to these options</title>
-                                        </path>    
-                                    </svg>
-                                </span>
-                            </p>
-                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-
-                                <!-- Risk areas checkbox and accordion -->
-                                <div class="govuk-checkboxes__item" style="width: 100%;">
-                                    <input class="govuk-checkboxes__input" id="riskAreasBox" type="checkbox">
-                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__riskAreas" for="riskAreasBox" style="width: 100%; padding: 0; border: none;">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__riskAreas" aria-expanded="false" aria-controls="body__riskAreas" style="padding: 10px;">
-                                            <span class="govuk-label" style="margin: 0;">Risk Areas</span>
-                                        </button>
-                                        <div id="body__riskAreas" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas">
-                                            <div class="accordion-body" style="padding-top: 0;">
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__HRA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA">HRA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__LRA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LRA">LRA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__Edge" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge">Edge</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__HTBA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA">HTBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__ITBA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__ITBA">ITBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__LTBA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA">LTBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__TBFA" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA">TBFA</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="countyBox" type="checkbox">
-                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox">Counties</label>
-                                </div>
-
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="hotspotBox" type="checkbox">
-                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox">TB Hotspots</label>
-                                </div>
-                                
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="cattleMovementLines--1" type="checkbox" disabled="disabled" checked>
-                                    <label class="govuk-label govuk-checkboxes__label" for="cattleMovementLines--1">Movement Lines</label>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <!-- <div id="snp-distance-container">
-                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
-                                SNP Distance
-                            </div>
-                            <div>
-                                <input type="range" class="form-range" id="slider__snp-threshold" min="0" max="10" step="1" id="snpThreshold" disabled="disabled" value="3">
-                                <button class="govuk-button" id="btn__related-isolates" disabled="disabled" aria-disabled="true"  data-module="govuk-button">
-                                    Show Related Isolates
-                                </button>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
-                    
-                <div class="col">
-                    <div class="custom-popup" id="map"></div>
-                </div>
-            </div>
-        </div>
-        <!-- ================================== -->
-        <!-- SNP Distance Content -->
-        <!-- ================================== -->
-        <div class="container-fluid content content-3 hidden">
-            <div id="snpdistance-splash-page" class="">
-                <!-- Government BETA Banner -->
-                <div class="row alpha-side-margin">
-                    <div class="govuk-phase-banner">
-                        <div>
-                            <strong class="govuk-tag govuk-phase-banner__content__tag">
-                                beta
-                            </strong>
-                            <span>
-                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- DNA Logo and Description -->    
-                <div class="row  align-items-center"  style="margin-left: 100px; margin-right: 100px;">
-                    <div class="col-3 text-center">
-                        <img src="/static/img/SNPPageDNA_aphaGreen.svg" id="snppage-logo">
-                    </div>
-                    <div class="col-9">
-                        <div class="home-description-container">
-                            <p class="home-description fs-5">
-                                <span class="text-green fw-bold">SNP Distance</span>: SNP stands for Single Nucleotide Polymorphism. SNPs are single changes in a nucleotide at a specific point in the genome (e.g. A -> T). SNP Distance is the number of differences between two samples; the fewer SNP differences, the more closely related the samples are.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <!-- SNP Distance Boxes -->
-                <div class="row gx-6">
-                    <div class="col">
-                        <!-- SNP Map box -->
-                        <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
-                            <p class="fw-bold">SNP Map</p>
-                            <p>
-                                This map will allow you to pick a sample of interest and view related samples using a SNP distance threshold.
-                            </p>
-                            <br>
-                            <div class="text-center">
-                                <button type="button" id="btn-view-snpmap" class="btn govuk-button custom-govuk-button-home">
-                                    View Map
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <!-- SNP Matrix box -->
-                        <div class="home-box" style="margin-left: 100px; margin-right: 100px;">
-                            <p class="fw-bold">SNP Matrix</p>
-                            <p>
-                                Visualise a pairwise SNP matrix containing a target sample and related samples. Each pairwise comparison displays the SNP difference between two samples.
-                            </p>
-                            <p class="text-center">
-                                <button type="button" id="btn-view-matrix" class="btn govuk-button custom-govuk-button-home">
-                                    View Matrix
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Government Footer -->
-                <footer class="row footer">
-                    <div class="d-flex justify-content-between">
-                        <div class="text-start footer-text">
-                            Service developed and maintained by APHA Science
-                        </div>
-                        <div>
-                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
-                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
-                            <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_SNP">Accessibility Statement</a>
-                        </div>
-                        <!-- Accessibility Statement Modal -->
-                        <!-- Purpose: popup information about accessibility on click -->
-                        <div class="modal fade" id="accessibilityModal_SNP" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body fs-6">
-                                        <p>
-                                        This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
-                                        </p>
-                                        </br>
-                                        <ul class="list-group">
-                                        <li class="list-group-item">Statement 1</li>
-                                        <li class="list-group-item">Statement 2</li>
-                                        <li class="list-group-item">Statement 3</li>
-                                        <li class="list-group-item">Statement 4</li>
-                                        <li class="list-group-item">Statement 5</li>
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-
-            <!-- ================================== -->
-            <!-- SNP MAP CONTENT (HIDDEN BY DEFAULT) -->
-            <!-- ================================== -->
-            <div id="snpmap-content" class="row hidden">
-                <div class="col-3 collapse collapse-horizontal show" id="snpmap-content-container">
-                    <div id="snpmap-sidebar-container">
-                        <!-- <br> -->
-                        <div class="govuk-heading-m" id="enter-sample-container">
-                            Enter Identifier or Submission
-                        </div>
-                        <div>
-                            <!-- Element: input sample box for main cattle movement -->
-                            <p>
-                                <!-- Ear-Tag or AF number -->
-                                <input value="" type="text" class="input__sampleID" id="input__sampleID_temp--1" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
-                            </p>
-                        </div>
-                        <div id="snpmap-distance-container">
-                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
-                                Select SNP Distance
-                            </div>
-                            <div>
-
-                                <!-- Custom slider -->
-                                <!-- <div class="slider-container"> -->
-                                    <p class="display-value-fixed" style="float: left;">0</p>
-                                    <p class="display-value-fixed" style="float: right;">10</p>
-                                    <input id="snpmap-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
-                                    <br>
-                                    <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snp-distance-value">1</p></span>
-                                <!-- </div> -->
-
-
-                                <br>
-                                <br>
-                                <button class="govuk-button" id="btn__plot-related-isolates" aria-disabled="true"  data-module="govuk-button">
-                                    Plot Related Isolates
-                                </button>
-                                <!-- Plot Related Isolates Spinner -->
-                                <div class="text-center" id="snpmap-spinner-container">
-                                    <div class="spinner-border text-secondary hidden" id="snpmap-spinner" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                                <!-- Warning message if SNP data cannot be fetched -->
-                                <div id="snpmap-warning-text"></div>
-
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <p class="fs-5 fw-bold">
-                                <span>
-                                    LAYERS
-                                    <svg id="layers-help-icon2" type="button" xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="var(--apha-blue)" class="bi bi-question-circle-fill" viewBox="0 0 16 24">
-                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z">
-                                            <title>Customise the map according to these options</title>
-                                        </path> 
-                                    </svg>
-                                </span>
-                            </p>
-                            <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-
-                                <!-- Risk areas checkbox and accordion -->
-                                <div class="govuk-checkboxes__item" style="width: 100%;">
-                                    <input class="govuk-checkboxes__input" id="riskAreasBox2" type="checkbox">
-                                    <label class="govuk-checkboxes__label accordion accordion-item" id="accordion__riskAreas2" for="riskAreasBox2"2 style="width: 100%; padding: 0; border: none;">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#body__riskAreas2" aria-expanded="false" aria-controls="body__riskAreas2" style="padding: 10px;">
-                                            <span class="govuk-label" style="margin: 0;">Risk Areas</span>
-                                        </button>
-                                        <div id="body__riskAreas2" class="accordion-collapse collapse" data-bs-parent="#accordion__riskAreas2">
-                                            <div class="accordion-body" style="padding-top: 0;">
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>England</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__HRA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HRA2">HRA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__LRA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LRA2">LRA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__Edge2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__Edge2">Edge</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Wales</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__HTBA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__HTBA2">HTBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__ITBA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__ITBA2">ITBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__LTBA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__LTBA2">LTBA</label>
-                                                </div>
-                                                <div class="govuk-checkboxes__item" style="margin-left: -35px;"><strong>Scotland</strong></div>
-                                                <div class="govuk-checkboxes__item">
-                                                    <input class="govuk-checkboxes__input" id="checkbox__TBFA2" type="checkbox">
-                                                    <label class="govuk-label govuk-checkboxes__label" for="checkbox__TBFA2">TBFA</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-
-                                <!-- Counties checkbox -->
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="countyBox2" type="checkbox">
-                                    <label class="govuk-label govuk-checkboxes__label" for="countyBox2">Counties</label>
-                                </div>
-                                
-                                <!-- Hotspot checkbox -->
-                                <div class="govuk-checkboxes__item" style="margin-bottom: 20px;">
-                                    <input class="govuk-checkboxes__input" id="hotspotBox2" type="checkbox">
-                                    <label class="govuk-label govuk-checkboxes__label" for="hotspotBox2">TB Hotspots</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SNP Map     -->
-                <div class="col">
-                    <div class="custom-popup" id="map2"></div>
-                </div>
-
-                <!-- SNP Map Table -->
-                <div class="col-4 collapse collapse-horizontal" id="table-sidebar-container">
-                    <div id="table-sidebar-title"></div>
-                    <div id="table-content-container"></div>
-                </div>
-            </div>
-
-            <!-- ================================== -->
-            <!-- SNP MATRIX CONTENT (HIDDEN BY DEFAULT) -->
-            <!-- ================================== -->
-            <div id="snpmatrix-content" class="row hidden">
-                <div class="col-3" id="snpmatrix-content-container">
-                    <div id="snpmatrix-sidebar-container">
-                        <!-- <br> -->
-                        <div class="govuk-heading-m" id="enter-sample-container">
-                            Enter Identifier or Submission
-                        </div>
-                        <div>
-                            <p>
-                                <!-- Identifier or AF number -->
-                                <input value="" type="text" class="input__sampleID" id="snpmatrix-selected-sample" placeholder="e.g. UK705113600438" name="Name" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="input-tooltip" title="Identifier or Submission Number">
-                            </p>
-                        </div>
-                        <div id="snpmatrix-distance-container">
-                            <div class="govuk-heading-m" style="background:#d1d1d1;padding:10px;margin-top:30px;">
-                                Select SNP Distance
-                            </div>
-                            <div>
-
-                                <!-- Custom slider -->
-                                <p class="display-value-fixed" style="float: left;">0</p>
-                                <p class="display-value-fixed" style="float: right;">10</p>
-                                <input id="snpmatrix-range" type="range" class="snp-slider" min="0" max="10" step="1" value="1">
-                                <br>
-                                <span style="font-size: 20px;">SNP Distance: <p class="display-value" id="snpmatrix-distance-value">1</p></span>
-
-                                <br>
-                                <br>
-                                <button class="govuk-button" id="btn__plot-snpmatrix" aria-disabled="true"  data-module="govuk-button">
-                                    Plot SNP Matrix
-                                </button>
-                                <!-- Plot SNP Matrix Spinner -->
-                                <div class="text-center" id="snpmatrix-spinner-container">
-                                    <div class="spinner-border text-secondary hidden" id="snpmatrix-spinner" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                                 <!-- Warning message if SNP data cannot be fetched -->
-                                 <div id="snpmatrix-warning-text"></div>
-
-                            </div>
-                        </div>
-                        <hr>
-                        <div id="snp-distribution-plot" style="height: 200px; width: 100%;"></div>
-                    </div>
-                </div>
-                <!-- SNP Matrix     -->
-                <div class="col-9" id="snpmatrix-container">
-                    <div id="snpmatrix" style="margin-top: 10px;"></div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- ================================== -->
-        <!-- Nextstrain Content -->
-        <!-- ================================== -->
-        <div class="container-fluid content content-4 hidden" id="nextstrain-container-id">
-            <div id="nextstrain-splash-page">
-                <!-- Government BETA Banner -->
-                <div class="row alpha-side-margin">
-                    <div class="govuk-phase-banner">
-                        <div>
-                            <strong class="govuk-tag govuk-phase-banner__content__tag">
-                                beta
-                            </strong>
-                            <span>
-                                This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Nextstrain Logo and Description -->    
-                <div class="row  align-items-center">
-                    <div class="col-3 text-center">
-                        <a href="https://nextstrain.org/" target="_blank"><img src="/static/img/nextstrain-logo.svg" id="nextstrain-logo"></a>
-                    </div>
-                    <div class="col-9">
-                        <div class="home-description-container">
-                            <p class="home-description fs-5">
-                                <span class="text-green fw-bold">Nextstrain</span> is a tool used to visualise whole genome sequencing (WGS) data from <em>Mycobacterium bovis</em>. You can view and explore both a phylogenetic tree and a map to understand genetic relatedness and locate samples geographically. This visualisation enables you to view data on both bovine and non-bovine samples.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Box Content -->
-                <div class="row gx-6">
-                    <div class="col-9">
-                        <!-- Search box -->
-                        <div class="nextstrain-box">
-                            <div class="row">
-                                <!-- Search description -->
-                                <div class="col-4 nextstrain-search-container">
-                                    <p class="fw-bold fs-4">Search & Select Data</p>
-                                    <p class="fs-6">
-                                        Use the search box to find your sample of interest. Click a link in the table to view the phylogenetic tree in Nextstrain.
-                                    </p>
-                                    <ul class="fs-6" style="height: 150px; overflow-y: scroll;">
-                                        <li>Clicking an Identifier (e.g. Ear Tag) or Submission (e.g. AF number) highlights the sample of interest for that clade.</li>
-                                        <li>Clicking on CPH or County highlights all samples in the same CPH or County, respectively.</li>
-                                        <li>Clicking on the Clade or the link to the 'Commonly Viewed Clades' shows the whole phylogenetic tree.</li>
-                                    </ul>
-                                    <!-- <p class="fs-6">
-                                        A clade is a group of genetically similar isolates. Each clade includes a common ancestor and all its descendants.
-                                    </p> -->
-                                </div>
-                                <div class="col-8 nextstrain-select-data">
-                                    <div class="row" style="margin-top: 5px; margin-right:0; background-color: white;">
-                                        <!-- Input text -->
-                                        <div class="col-8" style="border-right: 15px solid #f2f2f2;">
-                                            <div class="govuk-form-group" style="margin-bottom: 10px; margin-top: 10px;">
-                                                <label class="govuk-label fs-6">
-                                                    <strong>Search Below:</strong></br>
-                                                </label>
-                                                <p>
-                                                    For example: Identifier (Ear Tag: <em>UK262728200982</em>) OR Submission (AF number: <em>AF-21-08014-22</em>).
-                                                </p>
-                                                <div class="govuk-input__wrapper">
-                                                    <input value="" class="govuk-input fs-5" id="nextstrain-input" type="text" spellcheck="false" placeholder="e.g. AF-10-125-125">
-                                                    <div class="govuk-input__suffix" aria-hidden="true" id="nextstrain-search-button" style="cursor: pointer;">
-                                                        <a>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                                            </svg>
-                                                        </a>
-                                                    </div>
-                                                    <!-- <a id="link_toNextstrain" class="text-hyperlink"><h3 class="px-5">B6-13</h3></a> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Popular clades shortcut -->
-                                        <div class="col-4">
-                                            <label class="govuk-label fs-6" style="margin-bottom: 10px; margin-top: 10px;">
-                                                <strong>Commonly Viewed Clades:</strong></br>
-                                            </label>
-                                            <p>
-                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B111">B1-11</a></span>
-                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B613">B6-13</a></span>
-                                            </br>
-                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B671">B6-71</a></span>
-                                                <span class="fw-bold fs-4 px-2"><a class="text-hyperlink" id="clade-B691">B6-91</a></span>
-                                               
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row" id="nextstrain-search-table-container" style="margin-right: 0; margin-top: 5px;">
-                                        <!-- Search table spinner -->
-                                        <div class="text-center hidden" id="nextstrain-search-table-spinner">
-                                            <br>
-                                            <div class="spinner-border text-secondary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Table for sample or clade selection -->
-                                        <div id="nextstrain-search-table"></div>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="nextstrain-box">
-                            <!-- Training resources box -->
-                            <p class="fw-bold fs-4">Training resources</p>
-                            <p class="fs-6">
-                                The resources below have been developed to help you understand how to use Nextstrain and how to interpret the phylogeny.<br>
-                            </p>
-                            <p class="fs-6">
-                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2" target="_blank">How to use Nextstrain guide</a><br>
-                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu" target="_blank">Video tutorials</a><br>
-                                <a class= "text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03" target="_blank">Self-assessment exercise</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Government Footer -->
-                <footer class="row footer">
-                    <div class="d-flex justify-content-between">
-                        <div class="text-start footer-text">
-                            Service developed and maintained by APHA Science
-                        </div>
-                        <div>
-                            <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
-                            <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
-                            <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_nextstrain">Accessibility Statement</a>
-                        </div>
-                        <!-- Accessibility Statement Modal -->
-                        <!-- Purpose: popup information about accessibility on click -->
-                        <div class="modal fade" id="accessibilityModal_nextstrain" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body fs-6">
-                                        <p>
-                                        This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
-                                        </p>
-                                        </br>
-                                        <ul class="list-group">
-                                        <li class="list-group-item">Statement 1</li>
-                                        <li class="list-group-item">Statement 2</li>
-                                        <li class="list-group-item">Statement 3</li>
-                                        <li class="list-group-item">Statement 4</li>
-                                        <li class="list-group-item">Statement 5</li>
-                                        </ul>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-        </div>
-
-        <!-- ================================== -->
         <!-- Help and Support Content -->
-        <!-- ================================== -->
-        <div class="container-fluid content content-5 hidden">
-            <!-- Government BETA Banner -->
-            <div class="row alpha-side-margin">
-                <div class="govuk-phase-banner ">
-                    <div>
-                        <strong class="govuk-tag govuk-phase-banner__content__tag">
-                            beta
-                        </strong>
-                        <span>
-                            This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
-                        </span>
-                    </div>
-                </div>
+<!-- ================================== -->
+<div class="container-fluid content content-5 hidden">
+    <!-- Government BETA Banner -->
+    <div class="row alpha-side-margin">
+        <div class="govuk-phase-banner ">
+            <div>
+                <strong class="govuk-tag govuk-phase-banner__content__tag">
+                    beta
+                </strong>
+                <span>
+                    This is a new service &ndash; your <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">feedback</a> will help us to improve it.
+                </span>
             </div>
-            <br>
-            <br>
-            <!-- Box Quick-Links Content -->
-            <div class="row gx-6 help-quicklink-boxes">
-                <div class="col">
-                    <!-- Support Documents box -->
-                    <div class="home-box">
-                        <p class="fw-bold">Support Documents</p>
-                        <p>
-                            These support documents should be the first port of call:
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">How to use the app</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">Glossary</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FBackground%20on%20the%20data%20in%20ViewBovis&p=true&ga=1" target="_blank">About the data</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Exercises&p=true&ga=1" target="_blank">Training Exercises</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="col">
-                    <!-- Training Videos box -->
-                    <div class="home-box">
-                        <p class="fw-bold">Training Videos</p>
-                        <p>
-                            These cover different aspects of learning and usability:
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FWhat%20is%20Phylogeny%2Emp4&ga=1" target="_blank">Introduction to Phylogeny</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FHomepage%5Fv1%2E%2Emp4&ga=1" target="_blank">ViewBovis Homepage Intro</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FNextstrain%5Fv1%2Emp4&ga=1" target="_blank">Nextstrain usability and interpretation</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FSNPMatrix%5Fv1%2Emp4&ga=1" target="_blank">SNP Matrix usability and interpretation</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FMaps%5Fv1%2Emp4&ga=1" target="_blank">Usability for SNP and Cattle Movement maps</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="col">
-                    <!-- Other links and tools box -->
-                    <div class="home-box">
-                        <p class="fw-bold">Other links and tools</p>
-                        <p>
-                            Other associated tools which may be of use:
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="http://services.demeter.zeus.gsi.gov.uk/iam/lo?TAM_OP=error&ERROR_CODE=0x38cf0427&URL=%2Fprweb%2FPRWebLDAP3%2Fapp%2FAnimalHealth%2FbPUd-1HMJMmK7qxOsowlXg*%2F%21STANDARD" target="_blank">Sam</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://apha-016.cvlnt.vla.gov.uk/SPIDA/" target="_blank">SPIDA</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="http://reports.cvlnt.vla.gov.uk/ReportGroup.aspx?ReportGroupId=da063b9e-fc87-43ff-9fc8-a88100e89f29" target="_blank">CRYSTAL</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://ibtb.co.uk/" target="_blank">ibTB</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="http://services.demeter.zeus.gsi.gov.uk/spiritah/Map.action?themeName" target="_blank">CPH Viewer</a>
-                        </p>
-                        <p>
-                            <a class="text-hyperlink" href="https://magic.defra.gov.uk/" target="_blank">MAGIC</a>
-                        </p>
-                        <h1 style="color:black;font-size:11px;">Note: We CANNOT provide support with these tools; contact the service provider.</h1> 
-                    </div>
-                </div>
-                <div class="col">
-                    <!-- Contact Us box -->
-                    <div class="home-box">
-                        <p class="fw-bold">Contact Us</p>
-                        <p>
-                            We would love to hear your feedback about the app, any tech issues and any questions you may have using the links below:
-                        </p>
-                        <div class="row">
-                            <div class="col-3">
-                                <a href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">
-                                    <img src="/static/img/feedback_form.svg" width="40px" class="d-inline-block align-text-top">
-                                </a>
-                                </div>
-                                <div class="col" style="padding-top: 15px;">
-                                    <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">User Survey</a>
-                                </div>
-                            </div>
-                            <br>
-                        <div class="row">
-                            <div class="col-3">
-                                <a href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true" target="_blank">
-                                    <img src="/static/img/ms_teams.svg" width="50px" class="d-inline-block">
-                                </a>
-                            </div>
-                            <div class="col" style="padding-top: 10px;">
-                                <a class="text-hyperlink" href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true" target="_blank">ViewBovis User Group</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <br>
-            <!-- Government Footer -->
-            <footer class="row footer">
-                <div class="d-flex justify-content-between">
-                    <div class="text-start footer-text">
-                        Service developed and maintained by APHA Science
-                    </div>
-                    <div>
-                        <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
-                        <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
-                        <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_help_support">Accessibility Statement</a>
-                    </div>
-                    <!-- Accessibility Statement Modal -->
-                    <!-- Purpose: popup information about accessibility on click -->
-                    <div class="modal fade" id="accessibilityModal_help_support" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body fs-6">
-                                    <p>
-                                    This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
-                                    </p>
-                                    </br>
-                                    <ul class="list-group">
-                                    <li class="list-group-item">Statement 1</li>
-                                    <li class="list-group-item">Statement 2</li>
-                                    <li class="list-group-item">Statement 3</li>
-                                    <li class="list-group-item">Statement 4</li>
-                                    <li class="list-group-item">Statement 5</li>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-               </div>
-            </footer>
         </div>
+    </div>
+    <br>
+    <br>
+    <!-- Box Quick-Links Content -->
+    <div class="row gx-6 help-quicklink-boxes">
+        <div class="col">
+            <!-- Support Documents box -->
+            <div class="home-box">
+                <p class="fw-bold">Support Documents</p>
+                <p>
+                    These support documents should be the first port of call:
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">How to use the app</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J" target="_blank">Glossary</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FBackground%20on%20the%20data%20in%20ViewBovis&p=true&ga=1" target="_blank">About the data</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Exercises&p=true&ga=1" target="_blank">Training Exercises</a>
+                </p>
+            </div>
+        </div>
+        <div class="col">
+            <!-- Training Videos box -->
+            <div class="home-box">
+                <p class="fw-bold">Training Videos</p>
+                <p>
+                    These cover different aspects of learning and usability:
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FWhat%20is%20Phylogeny%2Emp4&ga=1" target="_blank">Introduction to Phylogeny</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FHomepage%5Fv1%2E%2Emp4&ga=1" target="_blank">ViewBovis Homepage Intro</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FNextstrain%5Fv1%2Emp4&ga=1" target="_blank">Nextstrain usability and interpretation</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FSNPMatrix%5Fv1%2Emp4&ga=1" target="_blank">SNP Matrix usability and interpretation</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FMaps%5Fv1%2Emp4&ga=1" target="_blank">Usability for SNP and Cattle Movement maps</a>
+                </p>
+            </div>
+        </div>
+        <div class="col">
+            <!-- Other links and tools box -->
+            <div class="home-box">
+                <p class="fw-bold">Other links and tools</p>
+                <p>
+                    Other associated tools which may be of use:
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="http://services.demeter.zeus.gsi.gov.uk/iam/lo?TAM_OP=error&ERROR_CODE=0x38cf0427&URL=%2Fprweb%2FPRWebLDAP3%2Fapp%2FAnimalHealth%2FbPUd-1HMJMmK7qxOsowlXg*%2F%21STANDARD" target="_blank">Sam</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://apha-016.cvlnt.vla.gov.uk/SPIDA/" target="_blank">SPIDA</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="http://reports.cvlnt.vla.gov.uk/ReportGroup.aspx?ReportGroupId=da063b9e-fc87-43ff-9fc8-a88100e89f29" target="_blank">CRYSTAL</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://ibtb.co.uk/" target="_blank">ibTB</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="http://services.demeter.zeus.gsi.gov.uk/spiritah/Map.action?themeName" target="_blank">CPH Viewer</a>
+                </p>
+                <p>
+                    <a class="text-hyperlink" href="https://magic.defra.gov.uk/" target="_blank">MAGIC</a>
+                </p>
+                <h1 style="color:black;font-size:11px;">Note: We CANNOT provide support with these tools; contact the service provider.</h1> 
+            </div>
+        </div>
+        <div class="col">
+            <!-- Contact Us box -->
+            <div class="home-box">
+                <p class="fw-bold">Contact Us</p>
+                <p>
+                    We would love to hear your feedback about the app, any tech issues and any questions you may have using the links below:
+                </p>
+                <div class="row">
+                    <div class="col-3">
+                        <a href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">
+                            <img src="/static/img/feedback_form.svg" width="40px" class="d-inline-block align-text-top" alt="feedback">
+                        </a>
+                        </div>
+                        <div class="col" style="padding-top: 15px;">
+                            <a class="text-hyperlink" href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">User Survey</a>
+                        </div>
+                    </div>
+                    <br>
+                <div class="row">
+                    <div class="col-3">
+                        <a href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true" target="_blank">
+                            <img src="/static/img/ms_teams.svg" width="50px" class="d-inline-block" alt="MSteams_logo">
+                        </a>
+                    </div>
+                    <div class="col" style="padding-top: 10px;">
+                        <a class="text-hyperlink" href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true" target="_blank">ViewBovis User Group</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <!-- Government Footer -->
+    <footer class="row footer">
+        <div class="d-flex justify-content-between">
+            <div class="text-start footer-text">
+                Service developed and maintained by APHA Science
+            </div>
+            <div>
+                <!-- <a class="text-end text-decoration-underline text-hyperlink px-3 footer-help-link">Help and Support</a> -->
+                <a class="text-end text-decoration-underline text-hyperlink px-3" href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102" target="_blank">Technical Support</a>
+                <a class="text-end text-decoration-underline text-hyperlink" data-bs-toggle="modal" data-bs-target="#accessibilityModal_help_support">Accessibility Statement</a>
+            </div>
+            <!-- Accessibility Statement Modal -->
+            <!-- Purpose: popup information about accessibility on click -->
+            <div class="modal fade" id="accessibilityModal_help_support" tabindex="-1" aria-labelledby="accessibilityModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-3 fw-bold" id="accessibilityModalLabel">Accessibility Statement for ViewBovis</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body fs-6">
+                            <p>
+                            This application is maintained by The Animal and Plant Health Agency under XXX. We want as many people as possible to be able to use this application. For example, that means you should be able to:
+                            </p>
+                            </br>
+                            <ul class="list-group">
+                            <li class="list-group-item">Statement 1</li>
+                            <li class="list-group-item">Statement 2</li>
+                            <li class="list-group-item">Statement 3</li>
+                            <li class="list-group-item">Statement 4</li>
+                            <li class="list-group-item">Statement 5</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn govuk-button" data-bs-dismiss="modal" style="margin-bottom: 0;">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
 
+        
 
     <!-- JavaScript -->
-    <script src="/static/libraries/leaflet-1.9.3/leaflet.js"></script>
     <script src="/static/libraries/bootstrap-5.2.3-dist/bootstrap.bundle.min.js"></script>
-    <script src="/static/libraries/govuk-frontend-4.4.1/govuk-frontend-4.4.1.min.js"></script>
-    <script src="/static/libraries/tabulator/tabulator.min.js"></script>
-    <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js"></script>
-    <script src="/static/libraries/luxon.min.js"></script>
+    <script src="/static/libraries/tabulator/tabulator.min.js" defer></script>
+    <script src="/static/libraries/echarts-5.4.2-dist/echarts.min.js" defer></script>
+    <script src="/static/libraries/luxon.min.js" defer></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/timeout.js"></script>
-    <script src="/static/js/nextstrain.js"></script>
-    <script src="/static/js/leaflet.shpfile.js"></script>
-    <script src="/static/js/shp.js"></script>
-    <script src="/static/js/leaflet.geometryutil.js"></script>
-    <script src="/static/js/leaflet-arrowheads.js"></script>
-    <script src="/static/js/L.LinearMeasurement.js"></script>
-    <script src="/static/js/leaflet_awesome_number_markers.js"></script>
-    <script src="/static/js/snpdistance.js"></script>
-    <script type="module" src="/static/js/snpmatrix.js"></script>
-    <script src="/static/js/cattleMovement.js"></script>
+
+    <!--Viridis colour palette
+    https://github.com/d3/d3-scale-chromatic  -->
+    <script src="/static/libraries/d3-3-dist/d3.color.min.js" defer></script>
+    <script src="/static/libraries/d3-3-dist/d3.interpolate.min.js" defer></script>
+    <script src="/static/libraries/d3-3-dist/d3.scale.chromatic.min.js" defer></script>
     </body>
 </html>
