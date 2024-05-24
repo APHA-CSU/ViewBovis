@@ -210,6 +210,7 @@ const CattleMovementMap = ({ jsonData }) => {
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
+        maxClusterRadius={0}
       >
         {linePts.map((position, index) => (
           <Marker
