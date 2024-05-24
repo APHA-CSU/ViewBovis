@@ -13,9 +13,80 @@ import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
 import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
+import "./leaflet.shpfile";
+import shp from "shpjs";
+import JSZip from "jszip";
+
+const RiskAreas = () => {
+  const map = useMap();
+  const [riskAreaLayer, setRiskAreaLayer] = useState(null);
+
+  const riskAreaCols = (area) => {
+    switch (area) {
+      case "High Risk Area":
+      case "High TB Area":
+        return "#C62828";
+      case "Intermediate TB Area":
+      case "Edge Area":
+        return "orange";
+      case "Low Risk Area":
+      case "Low TB Area":
+        return "#00C853";
+      case "TB Free Area":
+        return "#CFD8DC";
+      default:
+        return "#000000";
+    }
+  };
+
+  const styleRiskAreaPoly = (feature) => {
+    return {
+      fillColor: riskAreaCols(feature.properties.TB_Area),
+      weight: 1.5,
+      opacity: 1,
+      color: "white",
+      dashArray: "3",
+      fillOpacity: 0.5,
+    };
+  };
+
+  useEffect(() => {
+    const loadShapefile = async () => {
+      try {
+        const response = await fetch("/RiskAreas.zip");
+        console.log(response);
+        const arrayBuffer = await response.arrayBuffer();
+        console.log(arrayBuffer);
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        console.log(zip);
+        const shapefileData = await zip
+          .file("RiskAreas.shp")
+          .async("arraybuffer");
+        console.log(shapefileData);
+        const geojson = await shp(shapefileData);
+        const layer = L.geoJSON(geojson, { style: styleRiskAreaPoly }).addTo(
+          map
+        );
+        setRiskAreaLayer(layer);
+      } catch (error) {
+        console.error("Error loading shapefile:", error);
+      }
+    };
+
+    loadShapefile();
+
+    return () => {
+      if (riskAreaLayer) {
+        map.removeLayer(riskAreaLayer);
+      }
+    };
+  }, [map]);
+
+  return null;
+};
 
 const CattleMovementMap = ({ jsonData }) => {
   // Check if jsonData is null or undefined, return null or a loading indicator until data is fetched
@@ -135,6 +206,7 @@ const CattleMovementMap = ({ jsonData }) => {
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
+      <RiskAreas />
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
@@ -329,7 +401,6 @@ const CattleMovementMap = ({ jsonData }) => {
           </Marker>
         ))}
       </MarkerClusterGroup>
-
       {/* </LayersControl.Overlay>
             </LayersControl> */}
     </MapContainer>
