@@ -982,7 +982,7 @@ const showRelatedSamples = async function () {
             <span>OS Map Reference: ${json[soi].os_map_ref}<br/></span>
             <span>Clade: ${json[soi].clade}<br/></span>
           </p>
-          <button id="btn-download-snptable" class="govuk-button govuk-button--secondary btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
+          <button id="btn-download-snptable" class="govuk-button btn-snptable" onclick="downloadSNPTable()">Download CSV</button>
         `);
 
         // Tabulator requires array of json objects
