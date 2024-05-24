@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -6,32 +6,33 @@ import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
 import SNPMapComp from "./SNPMapComp";
 
 const SNPMap = () => {
-  const [searchSnp, setsearchSnp] = useState("");
-  // const [jsonData, setjsonData] = useState({});
+  const [SNPMapDataset, setSNPMapDataset] = useState({})
 
-  useEffect(() => {
-    fetch(`/sample/movements?sample_name=${searchSnp}`)
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then(({ data }) => {
-        // setjsonData(data);
-        // console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [searchSnp]);
+  const fetchSNPMapDataset = (search_sample,snp_distance) => {
+  fetch(`/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`)
+  .then(res => {
+    if(!res.ok) {
+      console.error(res)
+      return null
+  }
+    else return res.json()
+  })
+  .then(res => {
+    if(res) setSNPMapDataset(res)
+    }).catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+  }
+  // const [jsonData, setjsonData] = useState({});
 
   return (
     <Container fluid id="custom-container">
       <Row>
         <Col className="sidebar col-3">
-          <SNPMapSidebar setsearchSnp={setsearchSnp} />
+          <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} />
         </Col>
         <Col>
-          <SNPMapComp />
+          <SNPMapComp SNPMapDataset={SNPMapDataset} />
         </Col>
       </Row>
     </Container>

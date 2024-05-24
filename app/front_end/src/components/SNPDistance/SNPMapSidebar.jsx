@@ -5,9 +5,11 @@ import Form from "react-bootstrap/Form";
 import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
+import "./SNPMap.css"
 
-const SNPMapSidebar = ({ setsearchSnp }) => {
+const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");
+  const [snpDistance, setsnpDistance] = useState(1);
 
   const handleChange = (event) => {
     setsnpSearchInput(event.target.value);
@@ -15,9 +17,9 @@ const SNPMapSidebar = ({ setsearchSnp }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setsearchSnp(snpSearchInput);
-    setsnpSearchInput("");
+    fetchSNPMapDataset(snpSearchInput,snpDistance);
   };
+
   return (
     <div>
       <form className="sample-search" onSubmit={handleSubmit}>
@@ -29,6 +31,13 @@ const SNPMapSidebar = ({ setsearchSnp }) => {
           <Heading id="enter-sample-container" size="MEDIUM" style={{ marginTop: "10px"}}>
           Select SNP Distance
           </Heading>
+          <div style={{marginTop:"20px"}}>
+          <p style={{float: "left",display: "inline",
+                    fontWeight : "bold",fontSize: "15px"}}>0</p>
+          <p style={{float: "right",display: "inline",
+                    fontWeight : "bold",fontSize: "15px"}}>10</p>
+          </div>
+          <Input className="snp-slider" type="range"></Input>
           <Button className="my-2" buttonColour="#00a33b">
           Plot Related Isolates
           </Button>
