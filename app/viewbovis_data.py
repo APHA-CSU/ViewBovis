@@ -78,8 +78,8 @@ class Request:
             DataFrame containing metadata if it exists, otherwise
             returns an empty DataFrame
         """
-        query = f"""SELECT * FROM metadata WHERE UPPER(Submission) IN
-                    ({','.join('?' * len(ids))}) OR UPPER(Identifier)
+        query = f"""SELECT * FROM metadata WHERE REPLACE(UPPER(Submission),' ','') IN
+                    ({','.join('?' * len(ids))}) OR REPLACE(UPPER(Identifier),' ','')
                     IN ({','.join('?' * len(ids))})"""
         ids = [elem.upper() for elem in ids]
         return pd.read_sql_query(query,
