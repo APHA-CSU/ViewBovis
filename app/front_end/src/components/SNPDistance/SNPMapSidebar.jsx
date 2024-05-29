@@ -6,6 +6,7 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 import "./SNPMap.css"
+import "bootstrap"
 
 const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");

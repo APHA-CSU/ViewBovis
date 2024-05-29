@@ -3,16 +3,18 @@ import SNPsoi from '../../imgs/SNPsoi.svg'
 import SNPrelated from '../../imgs/SNPrelated.svg'
 
 const markerNumberIcon = (number) => {
-  return `<img src="${SNPrelated}" alt="${number}" width="30" height="30"/>
-  <div style="
-  position: absolute;
-  right: 50%;
-  top: 10%;
-  font-size: medium;
+  return `
+  <div style="font-size: medium;
   color: white;
-  font-weight: 700;
-">${number}<div/>`
-
+  font-weight: 500;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+"><img src="${SNPrelated}" alt="${number}" width="30" height="30"/>
+<i style="position: absolute;">${number}</i><div/>`
 }
 
 const relatedMarker = (props, SOI) => { 
@@ -29,7 +31,7 @@ if(props.submission === SOI) {
       styles : {border: "none",
       background: "transparent", display : "flex"},
       iconSize: [40, 40],
-      iconAnchor: [10, 25],
+      iconAnchor: [20, 28],
     })
   }
 }
