@@ -232,9 +232,9 @@ class Request:
         try:
             df_snps_related_processed = df_snps_related_no_idx_name.\
             set_index(df_snps_related_no_idx_name.index.
-                      map(self._sample_to_submission(x))).\
+                      map(lambda x: self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related_no_idx_name.index.
-                                  map(self._sample_to_submission(x)))
+                                  map(lambda x: self._sample_to_submission(x)))
         except:
             raise NoWgsDataException(self._id)
         # print(df_snps_related_processed)
