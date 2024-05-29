@@ -224,15 +224,20 @@ class Request:
         # get isolates within snp_threshold
         related_samples = df_snps.loc[df_snps[self._sample_name]
                                       <= snp_threshold].index.to_list()
+        # print(related_samples)
         df_snps_related = df_snps.loc[related_samples, related_samples].copy()
         # remove "snp-dists" index name
         df_snps_related_no_idx_name = df_snps_related.rename_axis(None)
         # map the index and columns from sample name to submission number
-        df_snps_related_processed = df_snps_related_no_idx_name.\
+        try:
+            df_snps_related_processed = df_snps_related_no_idx_name.\
             set_index(df_snps_related_no_idx_name.index.
-                      map(lambda x: self._sample_to_submission(x))).\
+                      map(self._sample_to_submission(x))).\
             transpose().set_index(df_snps_related_no_idx_name.index.
-                                  map(lambda x: self._sample_to_submission(x)))
+                                  map(self._sample_to_submission(x)))
+        except:
+            raise NoWgsDataException(self._id)
+        # print(df_snps_related_processed)
         # sort the rows / columns of the matrix
         return self._sort_matrix(df_snps_related_processed)
 
