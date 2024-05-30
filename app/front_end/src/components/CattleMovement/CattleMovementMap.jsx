@@ -1,5 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON, Tooltip } from "react-leaflet";
-import { Icon, divIcon, icon } from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from "react-leaflet";
+import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
 import holdingImg from "../../imgs/holding.svg";
@@ -141,7 +141,6 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
-      <RiskAreas />
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
