@@ -141,7 +141,12 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
-      <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
+      <RiskAreas />
+      <MarkerClusterGroup
+        chunkedLoading
+        iconCreateFunction={createCustomClusterIcon}
+        maxClusterRadius={0}
+      >
         {linePts.map((position, index) => (
           <Marker key={index} position={position} icon={renderIcon(movArr[index])}>
             <Popup>
