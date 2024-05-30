@@ -5,10 +5,15 @@ import Col from "react-bootstrap/Col";
 import MapSidebar from "../MapSidebar/MapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 
-const CattleMovement = () => {
+const CattleMovement = ({ riskAreas, styleRiskArea }) => {
   const [searchSample, setSearchSample] = useState("");
   const [jsonData, setjsonData] = useState({});
-  console.log(jsonData);
+  const [showRiskAreas, setShowRiskAreas] = useState(false);
+
+  const handleRiskBoxClick = () => {
+    setShowRiskAreas(!showRiskAreas);
+  };
+
   useEffect(() => {
     if (searchSample)
       fetch(`/sample/movements?sample_name=${searchSample}`)
@@ -31,10 +36,18 @@ const CattleMovement = () => {
     <Container fluid id="custom-container" data-testid="cattlemovement-1">
       <Row>
         <Col className="sidebar col-3">
-          <MapSidebar setSearchSample={setSearchSample} />
+          <MapSidebar
+            setSearchSample={setSearchSample}
+            handleClick={handleRiskBoxClick}
+          />
         </Col>
         <Col>
-          <CattleMovementMap jsonData={jsonData} />
+          <CattleMovementMap
+            jsonData={jsonData}
+            showRiskAreas={showRiskAreas}
+            riskAreas={showRiskAreas ? riskAreas : null}
+            styleRiskArea={showRiskAreas ? styleRiskArea : null}
+          />
         </Col>
       </Row>
     </Container>

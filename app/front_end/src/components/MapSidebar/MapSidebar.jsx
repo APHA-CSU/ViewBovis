@@ -6,11 +6,11 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const MapSidebar = ({ setSearchSample, fetchCall }) => {
+const MapSidebar = ({ setSearchSample, handleClick }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleChange = (event) => {
-    setSearchInput((event.target.value).toUpperCase().replace(/ /g, ""));
+    setSearchInput(event.target.value.toUpperCase().replace(/ /g, ""));
   };
 
   const handleSubmit = (event) => {
@@ -18,6 +18,7 @@ const MapSidebar = ({ setSearchSample, fetchCall }) => {
     setSearchSample(searchInput);
     setSearchInput("");
   };
+
   return (
     <div>
       <form className="sample-search" onSubmit={handleSubmit}>
@@ -38,11 +39,15 @@ const MapSidebar = ({ setSearchSample, fetchCall }) => {
             <Accordion.Body>TBC</Accordion.Body>
           </Accordion.Item>
         </Accordion>
-      </Row> 
+      </Row>
       <Row className="my-5">
         <Heading size="SMALL">LAYERS</Heading>
         <Form>
-          <Form.Check className="checkbox" label="Risk Areas" />
+          <Form.Check
+            className="checkbox"
+            label="Risk Areas"
+            onClick={handleClick}
+          />
           <Form.Check className="checkbox" label="Counties" />
           <Form.Check className="checkbox" label="TB Hotspots" />
           <Form.Check className="checkbox" label="Movement Lines" />

@@ -1,11 +1,4 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-  LayersControl,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON, Tooltip } from "react-leaflet";
 import { Icon, divIcon, icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
@@ -13,82 +6,11 @@ import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
 import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
-import "./leaflet.shpfile";
-import shp from "shpjs";
-import JSZip from "jszip";
 
-const RiskAreas = () => {
-  const map = useMap();
-  const [riskAreaLayer, setRiskAreaLayer] = useState(null);
-
-  const riskAreaCols = (area) => {
-    switch (area) {
-      case "High Risk Area":
-      case "High TB Area":
-        return "#C62828";
-      case "Intermediate TB Area":
-      case "Edge Area":
-        return "orange";
-      case "Low Risk Area":
-      case "Low TB Area":
-        return "#00C853";
-      case "TB Free Area":
-        return "#CFD8DC";
-      default:
-        return "#000000";
-    }
-  };
-
-  const styleRiskAreaPoly = (feature) => {
-    return {
-      fillColor: riskAreaCols(feature.properties.TB_Area),
-      weight: 1.5,
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.5,
-    };
-  };
-
-  useEffect(() => {
-    const loadShapefile = async () => {
-      try {
-        const response = await fetch("/RiskAreas.zip");
-        console.log(response);
-        const arrayBuffer = await response.arrayBuffer();
-        console.log(arrayBuffer);
-        const zip = await JSZip.loadAsync(arrayBuffer);
-        console.log(zip);
-        const shapefileData = await zip
-          .file("RiskAreas.shp")
-          .async("arraybuffer");
-        console.log(shapefileData);
-        const geojson = await shp(shapefileData);
-        const layer = L.geoJSON(geojson, { style: styleRiskAreaPoly }).addTo(
-          map
-        );
-        setRiskAreaLayer(layer);
-      } catch (error) {
-        console.error("Error loading shapefile:", error);
-      }
-    };
-
-    loadShapefile();
-
-    return () => {
-      if (riskAreaLayer) {
-        map.removeLayer(riskAreaLayer);
-      }
-    };
-  }, [map]);
-
-  return null;
-};
-
-const CattleMovementMap = ({ jsonData }) => {
+const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }) => {
   // Check if jsonData is null or undefined, return null or a loading indicator until data is fetched
   if (!jsonData || Object.keys(jsonData).length === 0) {
     return null;
@@ -158,7 +80,9 @@ const CattleMovementMap = ({ jsonData }) => {
       symbol: L.Symbol.arrowHead({
         pixelSize: 15,
         polygon: true,
-        pathOptions: { stroke: true },
+        pathOptions: {
+          stroke: true,
+        },
       }),
     },
   ];
@@ -173,8 +97,12 @@ const CattleMovementMap = ({ jsonData }) => {
       if (!map) return;
 
       //Create new polyline & decorators and add it to the map
-      const polyline = L.polyline(position, { color }).addTo(map);
-      const decorators = L.polylineDecorator(polyline, { patterns }).addTo(map);
+      const polyline = L.polyline(position, {
+        color,
+      }).addTo(map);
+      const decorators = L.polylineDecorator(polyline, {
+        patterns,
+      }).addTo(map);
 
       // Get the bounds of the polyline & fit the map to the polyline bounds
       const bounds = polyline.getBounds();
@@ -194,29 +122,28 @@ const CattleMovementMap = ({ jsonData }) => {
     });
   };
 
+  const onEachFeature = (feature, layer) => {
+    {
+      layer.bindTooltip(feature.properties.TB_Area, {
+        sticky: true,
+        className: "custom-tooltip",
+      });
+    }
+  };
+
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      {showRiskAreas && <GeoJSON data={riskAreas} style={styleRiskArea} onEachFeature={onEachFeature} />}
+      <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {/* <TileLayer
       attribution="Esri WorldImagery"
       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
-      <RiskAreas />
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={createCustomClusterIcon}
-      >
+      <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon}>
         {linePts.map((position, index) => (
-          <Marker
-            key={index}
-            position={position}
-            icon={renderIcon(movArr[index])}
-          >
+          <Marker key={index} position={position} icon={renderIcon(movArr[index])}>
             <Popup>
               <div className="fs-5 fw-bold">{jsonData.identifier}</div>
               <br />
@@ -251,14 +178,9 @@ const CattleMovementMap = ({ jsonData }) => {
                             <td>
                               {movArr[index].stay_length <= 30
                                 ? `${movArr[index].stay_length} days`
-                                : movArr[index].stay_length > 30 &&
-                                  movArr[index].stay_length <= 365
-                                ? `${(movArr[index].stay_length / 7).toFixed(
-                                    0
-                                  )} weeks`
-                                : `${(movArr[index].stay_length / 365).toFixed(
-                                    1
-                                  )} years`}
+                                : movArr[index].stay_length > 30 && movArr[index].stay_length <= 365
+                                ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks`
+                                : `${(movArr[index].stay_length / 365).toFixed(1)} years`}
                             </td>
                           </tr>
                           <tr>
@@ -277,11 +199,7 @@ const CattleMovementMap = ({ jsonData }) => {
                             <td>
                               <strong>Species:</strong>
                             </td>
-                            <td>
-                              {jsonData.species === "COW"
-                                ? "Bovine"
-                                : jsonData.species}
-                            </td>
+                            <td>{jsonData.species === "COW" ? "Bovine" : jsonData.species}</td>
                           </tr>
                           <tr>
                             <td>
@@ -323,9 +241,7 @@ const CattleMovementMap = ({ jsonData }) => {
                             <td>
                               <strong>Out of Home Range:</strong>
                             </td>
-                            <td>
-                              {jsonData.out_of_homerange === "N" ? "No" : "Yes"}
-                            </td>
+                            <td>{jsonData.out_of_homerange === "N" ? "No" : "Yes"}</td>
                           </tr>
                           <tr>
                             <td>
@@ -361,13 +277,7 @@ const CattleMovementMap = ({ jsonData }) => {
                             <td>
                               <strong>Sex:</strong>
                             </td>
-                            <td>
-                              {jsonData.sex == `F`
-                                ? `Female`
-                                : jsonData.sex == `M`
-                                ? `Male`
-                                : `Unknown`}
-                            </td>
+                            <td>{jsonData.sex == `F` ? `Female` : jsonData.sex == `M` ? `Male` : `Unknown`}</td>
                           </tr>
                           <tr>
                             <td>
@@ -379,11 +289,7 @@ const CattleMovementMap = ({ jsonData }) => {
                             <td>
                               <strong>Import Country:</strong>
                             </td>
-                            <td>
-                              {jsonData.import_country == null
-                                ? `British`
-                                : `${jsonData.import_country}`}
-                            </td>
+                            <td>{jsonData.import_country == null ? `British` : `${jsonData.import_country}`}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -392,12 +298,7 @@ const CattleMovementMap = ({ jsonData }) => {
                 </Tab.Container>
               </div>
             </Popup>
-            <PolylineDecorator
-              key={`decorator-${index}`}
-              patterns={arrow}
-              color={"#0096FF"}
-              position={linePts}
-            />
+            <PolylineDecorator key={`decorator-${index}`} patterns={arrow} color={"#0096FF"} position={linePts} />
           </Marker>
         ))}
       </MarkerClusterGroup>
