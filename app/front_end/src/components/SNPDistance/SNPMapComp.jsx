@@ -25,7 +25,9 @@ const SNPMapComp = ({SNPMapDataset}) => {
         iconCreateFunction={createCustomClusterIcon}
       >
       {Object.keys(SNPMapDataset).filter(elem => elem !== "SOI").map((elem,index) => {
-          return <Marker icon={relatedMarker({...SNPMapDataset[elem],submission:elem},SNPMapDataset["SOI"])} key={index}
+          return <Marker 
+          icon={relatedMarker({...SNPMapDataset[elem],submission:elem},SNPMapDataset["SOI"])} 
+          key={index}
           position={[SNPMapDataset[elem].lat,SNPMapDataset[elem].lon ]}>
           </Marker>
         })}

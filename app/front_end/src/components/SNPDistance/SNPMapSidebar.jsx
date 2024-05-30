@@ -16,6 +16,10 @@ const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
     setsnpSearchInput(event.target.value);
   };
 
+  const handleSlider = (event) => {
+    setsnpDistance(event.target.value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     fetchSNPMapDataset(snpSearchInput,snpDistance);
@@ -38,7 +42,8 @@ const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
           <p style={{float: "right",display: "inline",
                     fontWeight : "bold",fontSize: "15px"}}>10</p>
           </div>
-          <Input className="snp-slider" type="range"></Input>
+          <Input className="snp-slider" type="range" onChange={handleSlider} step="1" 
+          default={1} max="10" min="0"/>
           <Button className="my-2" buttonColour="#00a33b">
           Plot Related Isolates
           </Button>
