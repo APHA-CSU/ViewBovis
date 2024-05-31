@@ -16,7 +16,6 @@ const MapSidebar = ({ setSearchSample, handleClick }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setSearchSample(searchInput);
-    setSearchInput("");
   };
 
   return (
@@ -43,11 +42,7 @@ const MapSidebar = ({ setSearchSample, handleClick }) => {
       <Row className="my-5">
         <Heading size="SMALL">LAYERS</Heading>
         <Form>
-          <Form.Check
-            className="checkbox"
-            label="Risk Areas"
-            onClick={handleClick}
-          />
+          <Form.Check className="checkbox" label="Risk Areas" onClick={handleClick} />
           <Form.Check className="checkbox" label="Counties" />
           <Form.Check className="checkbox" label="TB Hotspots" />
           <Form.Check className="checkbox" label="Movement Lines" />
