@@ -11,9 +11,13 @@ import L from "leaflet";
 import "leaflet-polylinedecorator";
 
 const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }) => {
-  // Check if jsonData is null or undefined, return null or a loading indicator until data is fetched
+  // if jsonData is null or undefined, return a placeholder map
   if (!jsonData || Object.keys(jsonData).length === 0) {
-    return null;
+    return (
+      <MapContainer center={[53.3781, -1]} zoom={6}>
+        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      </MapContainer>
+    );
   }
 
   // Extract movement data from json object into an array
@@ -124,10 +128,16 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
 
   const onEachFeature = (feature, layer) => {
     {
-      layer.bindTooltip(feature.properties.TB_Area, {
-        sticky: true,
-        className: "custom-tooltip",
-      });
+      layer.bindTooltip(
+        `<div className="custom-tooltip">
+          <div>${feature.properties.TB_Area}</div>
+        <div style="font-size: 12px">${feature.properties.Testing_In}</div>
+        </div>`,
+        {
+          sticky: true,
+          className: "custom-tooltip",
+        }
+      );
     }
   };
 
@@ -141,11 +151,7 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={createCustomClusterIcon}
-        maxClusterRadius={0}
-      >
+      <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon} maxClusterRadius={0}>
         {linePts.map((position, index) => (
           <Marker key={index} position={position} icon={renderIcon(movArr[index])}>
             <Popup>
