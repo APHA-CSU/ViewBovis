@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
+import "./CattleMovement.css"
 
 const CattleMovement = ({ riskAreas, styleRiskArea }) => {
   const [searchSample, setSearchSample] = useState("");

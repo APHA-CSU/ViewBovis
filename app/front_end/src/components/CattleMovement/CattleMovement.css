@@ -1,0 +1,63 @@
+/* CATTLE MOVEMENT CSS */
+
+#custom-container {
+  /* border: solid; */
+  height: 88vh;
+  padding: 0%;
+}
+
+.leaflet-container {
+  height: 88vh;
+  /* border: solid; */
+}
+
+.sidebar.col-3 {
+  height: 88vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#enter-sample-container {
+  background: #d1d1d1;
+  padding: 10px;
+  margin-bottom: 1px;
+}
+
+.accordion-button {
+  font-weight: bold;
+}
+
+.checkbox {
+  font-family: GDS Transport, arial, sans-serif;
+  font-size: 1.1875rem;
+  padding-left: 15%;
+  margin-top: 4%;
+}
+
+.form-check-input {
+  border: solid;
+  border-radius: 0 !important;
+}
+
+.cluster-icon {
+  background-color: #00a33b;
+  color: #ffffff;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.custom-tooltip {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.cattlePopup {
+  height: 220px;
+  overflow-y: scroll;
+}

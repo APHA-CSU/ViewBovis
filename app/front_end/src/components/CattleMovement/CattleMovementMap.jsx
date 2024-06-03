@@ -171,7 +171,7 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                       </Nav.Link>
                     </Nav.Item>
                   </Nav>
-                  <Tab.Content>
+                  <Tab.Content className="cattlePopup">
                     <Tab.Pane eventKey="summary">
                       <table className="table table-striped">
                         <tbody>
