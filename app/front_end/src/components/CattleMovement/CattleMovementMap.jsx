@@ -1,4 +1,12 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, GeoJSON } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  LayersControl,
+  GeoJSON,
+} from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
@@ -6,16 +14,25 @@ import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
 import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
+import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
 
-const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }) => {
+const CattleMovementMap = ({
+  jsonData,
+  riskAreas,
+  styleRiskArea,
+  showRiskAreas,
+}) => {
   // if jsonData is null or undefined, return a placeholder map
   if (!jsonData || Object.keys(jsonData).length === 0) {
     return (
       <MapContainer center={[53.3781, -1]} zoom={6}>
-        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
       </MapContainer>
     );
   }
@@ -77,6 +94,55 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
     });
   };
 
+  //Icons legend
+  const CattleIconsLegend = () => {
+    const map = useMap();
+    useEffect(() => {
+      const cattleIconsLegend = L.control({ position: "topright" });
+
+      cattleIconsLegend.onAdd = () => {
+        const div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+        div.insertAdjacentHTML(
+          "afterbegin",
+          `<div class="icons-legend"> <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+            <span style="display: flex; align-items: center;">
+            <img src=${holdingImg} class="legend-marker-img">
+            <span>Holding</span>
+          </span>
+          <span style="display: flex; align-items: center;">
+          <img src=${marketImg} class="legend-marker-img">
+          <span>Market</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+        <img src=${showgroundImg} class="legend-marker-img">
+        <span>Showground</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+      <img src=${slaughterhouseImg} class="legend-marker-img">
+      <span>Slaughterhouse</span>
+      </span>
+      <span style="display: flex; align-items: center;">
+      <img src=${movementClusterImg} class="legend-marker-img">
+      <span>Movement cluster</span>
+      </span>
+      <span style="display: flex; align-items: center;">
+      <svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#0096FF" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+      </svg>
+      <span  style="padding-left:10px;">Cattle movement lines</span>
+    </span>
+          </div>`
+        );
+        return div;
+      };
+      cattleIconsLegend.addTo(map);
+      // Cleanup function to remove the legend when the component unmounts
+      return () => {
+        map.removeControl(cattleIconsLegend);
+      };
+    });
+  };
+
   // Leaflet polylineDecorator patterns
   const arrow = [
     {
@@ -126,6 +192,7 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
     });
   };
 
+  //Tooltip on each TB area
   const onEachFeature = (feature, layer) => {
     {
       layer.bindTooltip(
@@ -143,17 +210,35 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      {showRiskAreas && <GeoJSON data={riskAreas} style={styleRiskArea} onEachFeature={onEachFeature} />}
-      <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {showRiskAreas && (
+        <GeoJSON
+          data={riskAreas}
+          style={styleRiskArea}
+          onEachFeature={onEachFeature}
+        />
+      )}
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
       {/* <TileLayer
       attribution="Esri WorldImagery"
       url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       /> */}
       {/* <LayersControl position="topright">
       <LayersControl.Overlay name="Marker with popup"> */}
-      <MarkerClusterGroup chunkedLoading iconCreateFunction={createCustomClusterIcon} maxClusterRadius={0}>
+      <CattleIconsLegend />
+      <MarkerClusterGroup
+        chunkedLoading
+        iconCreateFunction={createCustomClusterIcon}
+        maxClusterRadius={0}
+      >
         {linePts.map((position, index) => (
-          <Marker key={index} position={position} icon={renderIcon(movArr[index])}>
+          <Marker
+            key={index}
+            position={position}
+            icon={renderIcon(movArr[index])}
+          >
             <Popup>
               <div className="fs-5 fw-bold">{jsonData.identifier}</div>
               <br />
@@ -188,9 +273,14 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                             <td>
                               {movArr[index].stay_length <= 30
                                 ? `${movArr[index].stay_length} days`
-                                : movArr[index].stay_length > 30 && movArr[index].stay_length <= 365
-                                ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks`
-                                : `${(movArr[index].stay_length / 365).toFixed(1)} years`}
+                                : movArr[index].stay_length > 30 &&
+                                  movArr[index].stay_length <= 365
+                                ? `${(movArr[index].stay_length / 7).toFixed(
+                                    0
+                                  )} weeks`
+                                : `${(movArr[index].stay_length / 365).toFixed(
+                                    1
+                                  )} years`}
                             </td>
                           </tr>
                           <tr>
@@ -209,7 +299,11 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                             <td>
                               <strong>Species:</strong>
                             </td>
-                            <td>{jsonData.species === "COW" ? "Bovine" : jsonData.species}</td>
+                            <td>
+                              {jsonData.species === "COW"
+                                ? "Bovine"
+                                : jsonData.species}
+                            </td>
                           </tr>
                           <tr>
                             <td>
@@ -251,7 +345,9 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                             <td>
                               <strong>Out of Home Range:</strong>
                             </td>
-                            <td>{jsonData.out_of_homerange === "N" ? "No" : "Yes"}</td>
+                            <td>
+                              {jsonData.out_of_homerange === "N" ? "No" : "Yes"}
+                            </td>
                           </tr>
                           <tr>
                             <td>
@@ -287,7 +383,13 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                             <td>
                               <strong>Sex:</strong>
                             </td>
-                            <td>{jsonData.sex == `F` ? `Female` : jsonData.sex == `M` ? `Male` : `Unknown`}</td>
+                            <td>
+                              {jsonData.sex == `F`
+                                ? `Female`
+                                : jsonData.sex == `M`
+                                ? `Male`
+                                : `Unknown`}
+                            </td>
                           </tr>
                           <tr>
                             <td>
@@ -299,7 +401,11 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                             <td>
                               <strong>Import Country:</strong>
                             </td>
-                            <td>{jsonData.import_country == null ? `British` : `${jsonData.import_country}`}</td>
+                            <td>
+                              {jsonData.import_country == null
+                                ? `British`
+                                : `${jsonData.import_country}`}
+                            </td>
                           </tr>
                         </tbody>
                       </table>
@@ -308,7 +414,12 @@ const CattleMovementMap = ({ jsonData, riskAreas, styleRiskArea, showRiskAreas }
                 </Tab.Container>
               </div>
             </Popup>
-            <PolylineDecorator key={`decorator-${index}`} patterns={arrow} color={"#0096FF"} position={linePts} />
+            <PolylineDecorator
+              key={`decorator-${index}`}
+              patterns={arrow}
+              color={"#0096FF"}
+              position={linePts}
+            />
           </Marker>
         ))}
       </MarkerClusterGroup>

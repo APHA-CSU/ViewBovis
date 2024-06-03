@@ -61,3 +61,15 @@
   height: 220px;
   overflow-y: scroll;
 }
+
+.icons-legend {
+  height: 268px;
+  width: 150px;
+  background: white;
+  padding-top: 5px;
+}
+
+.legend-marker-img {
+  width: 40px;
+  height: 40px;
+}
