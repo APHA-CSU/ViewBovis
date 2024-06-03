@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import MapSidebar from "../MapSidebar/MapSidebar";
+import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
+import "./CattleMovement.css"
 
 const CattleMovement = ({ riskAreas, styleRiskArea }) => {
   const [searchSample, setSearchSample] = useState("");

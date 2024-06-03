@@ -6,7 +6,7 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const MapSidebar = ({ setSearchSample, handleClick }) => {
+const CattlMovMapSidebar = ({ setSearchSample, handleClick }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleChange = (event) => {
@@ -52,4 +52,4 @@ const MapSidebar = ({ setSearchSample, handleClick }) => {
     </div>
   );
 };
-export default MapSidebar;
+export default CattlMovMapSidebar;
