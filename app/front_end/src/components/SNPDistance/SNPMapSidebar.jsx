@@ -6,7 +6,6 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 import "./SNPMap.css"
-import "bootstrap"
 
 const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");
@@ -37,13 +36,14 @@ const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
           Select SNP Distance
           </Heading>
           <div style={{marginTop:"20px"}}>
-          <p style={{float: "left",display: "inline",
-                    fontWeight : "bold",fontSize: "15px"}}>0</p>
-          <p style={{float: "right",display: "inline",
-                    fontWeight : "bold",fontSize: "15px"}}>10</p>
+          <p className="display-value-fixed" style={{float: "left"}}>0</p>
+          <p className="display-value-fixed" style={{float: "right"}}>10</p>
           </div>
-          <Input className="snp-slider" type="range" onChange={handleSlider} step="1" 
-          default={1} max="10" min="0"/>
+          <input className="snp-slider" type="range" onChange={handleSlider} step="1" 
+          defaultValue="1" max="10" min="0"/>
+          <br/>
+          SNP Distance: {snpDistance}
+          <br/>
           <Button className="my-2" buttonColour="#00a33b">
           Plot Related Isolates
           </Button>
