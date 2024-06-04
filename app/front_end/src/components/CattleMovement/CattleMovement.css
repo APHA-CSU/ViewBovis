@@ -65,11 +65,20 @@
 .icons-legend {
   height: 268px;
   width: 150px;
-  background: white;
+  background: rgba(255,255,255,0.8);
   padding-top: 5px;
 }
 
 .legend-marker-img {
   width: 40px;
   height: 40px;
+}
+
+.TBinfoBox {
+  padding: 6px 8px;
+  width: 150px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
 }
