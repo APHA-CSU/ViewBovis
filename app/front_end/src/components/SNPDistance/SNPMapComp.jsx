@@ -24,14 +24,25 @@ const SNPMapComp = ({SNPMapDataset}) => {
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
       >
-      {Object.keys(SNPMapDataset).filter(elem => elem !== "SOI").map((elem,index) => {
+      {Object.keys(SNPMapDataset).filter(elem => { 
+        return elem !== "SOI" && elem !== SNPMapDataset["SOI"]})
+        .map((elem,index) => {
           return <Marker 
           icon={relatedMarker({...SNPMapDataset[elem],submission:elem},SNPMapDataset["SOI"])} 
-          key={index}
+          key={"snp_related_marker_"+index}
           position={[SNPMapDataset[elem].lat,SNPMapDataset[elem].lon ]}>
           </Marker>
         })}
         </MarkerClusterGroup>
+        {Object.keys(SNPMapDataset).filter(elem => { 
+        return elem === SNPMapDataset["SOI"]})
+        .map((elem,index) => {
+          return <Marker 
+          icon={relatedMarker({...SNPMapDataset[elem],submission:elem},SNPMapDataset["SOI"])} 
+          key={"snp_related_marker_"+index}
+          position={[SNPMapDataset[elem].lat,SNPMapDataset[elem].lon ]}>
+          </Marker>
+        })}
     </MapContainer>
   );
 };
