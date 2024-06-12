@@ -6,7 +6,7 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const CattlMovMapSidebar = ({ setSearchSample, handleRiskBoxClick, handleHRABoxCLick, showRiskAreas, showHRA }) => {
+const CattlMovMapSidebar = ({ setSearchSample, handleRiskBoxClick, handleHRABoxCLick, showRiskAreas, handleCheckboxes }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const handleChange = (event) => {
@@ -47,8 +47,7 @@ const CattlMovMapSidebar = ({ setSearchSample, handleRiskBoxClick, handleHRABoxC
       <Form.Check
         className="checkbox"
         label="Risk Areas"
-        checked={showRiskAreas}
-        onClick={handleRiskBoxClick}
+        onClick={(e) => handleCheckboxes(0,e.target.value)}
       />
     </Accordion.Header>
     <Accordion.Body>
@@ -57,13 +56,12 @@ const CattlMovMapSidebar = ({ setSearchSample, handleRiskBoxClick, handleHRABoxC
         <Form.Check
           className="checkbox"
           label="HRA"
-          checked={showHRA}
-          onClick={handleHRABoxCLick}
+          onClick={(e) => {handleCheckboxes(1,e.target.value)}}
         />
         <Form.Check
           className="checkbox"
           label="LRA"
-          // onChange={}
+          onChange={handleCheckboxes}
         />
         <Form.Check
           className="checkbox"

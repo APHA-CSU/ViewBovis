@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { relatedMarker } from "./SNPLayers";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { divIcon } from "leaflet";
+import Layers from "../Layers/Layers";
 
 const SNPMapComp = ({SNPMapDataset}) => {
     //SNP map cluster icon
@@ -13,6 +14,7 @@ const SNPMapComp = ({SNPMapDataset}) => {
         iconSize: [30, 30],
       });
     };
+    const checkedLayers = {"showAllRA" : true}
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
@@ -20,6 +22,7 @@ const SNPMapComp = ({SNPMapDataset}) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <Layers checkedLayers={checkedLayers}/>
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}

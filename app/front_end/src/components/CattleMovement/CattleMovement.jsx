@@ -6,7 +6,7 @@ import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import allRiskAreas from "../../data/riskAreas.json";
-import highRiskAreas from "../../data/highRiskArea.json";
+import highRiskAreas from "../../data/riskAreas.json";
 
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
@@ -14,7 +14,48 @@ const CattleMovement = () => {
   const [riskAreas, setRiskAreas] = useState([]); //change to showAllriskareas
   const [showRiskAreas, setShowRiskAreas] = useState(false); //change to showAllriskareas
   // const [highRiskAreas, setHighRiskAreas] = useState([])
-  const [showHRA, setShowHRA] = useState(false);
+  const [checkedLayersState, setcheckedLayersState] = useState({})
+  let showAllRA = false
+  let showHRA = false
+  let showLRA = false
+  let showEdgeRA= false
+  let showHTBA = false
+  let showITBA = false
+  let showLTBA = false
+  let showTBFA = false
+  let checkedLayers = {}
+
+  const handleCheckboxes = (index) => {
+    if(index === 0){
+      showAllRA = !(showAllRA)
+      checkedLayers["showAllRA"] =  showAllRA
+    } 
+    if (index === 1) {
+      showHRA = !(showHRA)
+      checkedLayers["showHRA"] =  showHRA
+    }
+    if (showLRA) {
+      checkedLayers.push([{"showLRA": true}])
+    }
+    if (showEdgeRA) {
+      checkedLayers.push([{"showEdgeRA": true}])
+    }
+    if (showHTBA) {
+      checkedLayers.push(prevArr => [...prevArr,{"showHTBA": true}])
+    }
+    if (showLTBA) {
+      checkedLayers(prevArr => [...prevArr,{"showLTBA": true}])
+    }
+    if (showITBA) {
+      checkedLayers(prevArr => [...prevArr,{"showITBA": true}])
+    }
+    if (showTBFA) {
+      checkedLayers(prevArr => [...prevArr,{"showTBFA": true}])
+    }
+    console.log(checkedLayers)
+    setcheckedLayersState({...checkedLayers})
+  }
+
 
   //Fetch sample data and store in jsonData
   useEffect(() => {
@@ -82,7 +123,7 @@ const CattleMovement = () => {
   };
 
   const handleHRABoxCLick = () => {
-    setShowHRA(!showHRA);
+    //setShowHRA(!showHRA);
   };
 
   return (
@@ -94,7 +135,9 @@ const CattleMovement = () => {
             handleRiskBoxClick={handleRiskBoxClick}
             handleHRABoxCLick={handleHRABoxCLick}
             showRiskAreas={showRiskAreas}
-            showHRA={showHRA}
+            handleCheckboxes = {handleCheckboxes}
+            showAllRA = {showAllRA}
+            showHRA = {showHRA}
           />
         </Col>
         <Col>
@@ -103,6 +146,7 @@ const CattleMovement = () => {
             showRiskAreas={showRiskAreas}
             riskAreas={showRiskAreas || showHRA ? riskAreas : null}
             styleRiskArea={showRiskAreas || showHRA ? styleRiskArea : null}
+            checkedLayers={checkedLayersState}
           />
         </Col>
       </Row>

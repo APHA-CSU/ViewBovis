@@ -18,13 +18,16 @@ import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
+import Layers from "./../Layers/Layers";
 
 const CattleMovementMap = ({
   jsonData,
   riskAreas,
   styleRiskArea,
   showRiskAreas,
+  checkedLayers
 }) => {
+  useEffect(()=> {console.log("movementMap",checkedLayers)},[checkedLayers])
   // if jsonData is null or undefined, return a placeholder map
   if (!jsonData || Object.keys(jsonData).length === 0) {
     return (
@@ -316,13 +319,7 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      {showRiskAreas && (
-        <GeoJSON
-          data={riskAreas}
-          style={styleRiskArea}
-          onEachFeature={onEachFeatureCombined}
-        />
-      )}
+      <Layers checkedLayers={checkedLayers}/>
       {showRiskAreas && <RiskAreaLegend />}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
