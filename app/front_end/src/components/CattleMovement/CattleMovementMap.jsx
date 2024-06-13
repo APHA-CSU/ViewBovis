@@ -20,10 +20,17 @@ import Layers from "./../Layers/Layers";
 
 const CattleMovementMap = ({
   jsonData,
+  secondJsonData,
   checkedLayers
 }) => {
-  // if jsonData is null or undefined, return a placeholder map
-  if (!jsonData || Object.keys(jsonData).length === 0) {
+  // if jsonData or secondJsonData is null or undefined, return a placeholder map
+  if (
+    (!jsonData && !secondJsonData) ||
+    (jsonData &&
+      Object.keys(jsonData).length === 0 &&
+      secondJsonData &&
+      Object.keys(secondJsonData).length === 0)
+  ) {
     return (
       <MapContainer center={[53.3781, -1]} zoom={6}>
         <TileLayer
@@ -34,9 +41,13 @@ const CattleMovementMap = ({
     );
   }
 
-  // Extract movement data from json object into an array
+  // Extract movement data from json objects into arrays
   const movArr = Object.values(jsonData.move);
   const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
+  const secondMovArr = secondJsonData.move
+    ? Object.values(secondJsonData.move)
+    : [];
+  const secondLinePts = secondMovArr.map((arr) => [arr.lat, arr.lon]);
 
   //Object to store marker icons
   const customIcon = {
@@ -141,7 +152,7 @@ const CattleMovementMap = ({
   };
 
   // Leaflet polylineDecorator patterns
-  const arrow = [
+  const createArrowPattern = (color) => [
     {
       repeat: 100,
       symbol: L.Symbol.arrowHead({
@@ -149,10 +160,14 @@ const CattleMovementMap = ({
         polygon: true,
         pathOptions: {
           stroke: true,
+          color: color,
         },
       }),
     },
   ];
+
+  const firstMovArrow = createArrowPattern("#0096FF");
+  const secondMovArrow = createArrowPattern("#cb181d");
 
   //Function for movement lines, arrows, and map bounds
   const PolylineDecorator = ({ patterns, color, position }) => {
@@ -391,9 +406,206 @@ const CattleMovementMap = ({
             </Popup>
             <PolylineDecorator
               key={`decorator-${index}`}
-              patterns={arrow}
+              patterns={firstMovArrow}
               color={"#0096FF"}
               position={linePts}
+            />
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
+      <MarkerClusterGroup
+        chunkedLoading
+        iconCreateFunction={createCustomClusterIcon}
+        maxClusterRadius={0}
+      >
+        {secondLinePts.map((position, index) => (
+          <Marker
+            key={index}
+            position={position}
+            icon={renderIcon(secondMovArr[index])}
+          >
+            <Popup autoClose={false}>
+              <div className="fs-5 fw-bold">{secondJsonData.identifier}</div>
+              <br />
+              <div>
+                <Tab.Container id="popupTabs" defaultActiveKey="summary">
+                  <Nav variant="tabs">
+                    <Nav.Item>
+                      <Nav.Link eventKey="summary" title="Summary">
+                        Summary
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="animal" title="Animal">
+                        Animal
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                  <Tab.Content className="cattlePopup">
+                    <Tab.Pane eventKey="summary">
+                      <table className="table table-striped">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <strong>Movement:</strong>
+                            </td>
+                            <td>{`${index + 1} of ${secondMovArr.length}`}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Duration of Stay:</strong>
+                            </td>
+                            <td>
+                              {secondMovArr[index].stay_length <= 30
+                                ? `${secondMovArr[index].stay_length} days`
+                                : secondMovArr[index].stay_length > 30 &&
+                                  secondMovArr[index].stay_length <= 365
+                                ? `${(
+                                    secondMovArr[index].stay_length / 7
+                                  ).toFixed(0)} weeks`
+                                : `${(
+                                    secondMovArr[index].stay_length / 365
+                                  ).toFixed(1)} years`}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Date of Arrival:</strong>
+                            </td>
+                            <td>{secondMovArr[index].on_date}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Date of Departure:</strong>
+                            </td>
+                            <td>{secondMovArr[index].off_date}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Species:</strong>
+                            </td>
+                            <td>
+                              {secondJsonData.species === "COW"
+                                ? "Bovine"
+                                : secondJsonData.species}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Precise Location:</strong>
+                            </td>
+                            <td>{secondMovArr[index].cph}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Precise Location Type:</strong>
+                            </td>
+                            <td>{secondMovArr[index].type}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>OS Map Reference:</strong>
+                            </td>
+                            <td>{secondMovArr[index].os_map_ref}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Submission:</strong>
+                            </td>
+                            <td>{secondJsonData.submission}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>County:</strong>
+                            </td>
+                            <td>{secondMovArr[index].county}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Clade:</strong>
+                            </td>
+                            <td>{secondJsonData.clade}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Out of Home Range:</strong>
+                            </td>
+                            <td>
+                              {secondJsonData.out_of_homerange === "N"
+                                ? "No"
+                                : "Yes"}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Risk Area:</strong>
+                            </td>
+                            <td>{secondMovArr[index].risk_area_current}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="animal">
+                      <table className="table table-striped">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <strong>Birth Location:</strong>
+                            </td>
+                            <td>{secondMovArr[0].cph}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Date of Birth:</strong>
+                            </td>
+                            <td>{secondJsonData.dob}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Slaughter Date:</strong>
+                            </td>
+                            <td>{secondJsonData.slaughter_date}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Sex:</strong>
+                            </td>
+                            <td>
+                              {secondJsonData.sex == `F`
+                                ? `Female`
+                                : secondJsonData.sex == `M`
+                                ? `Male`
+                                : `Unknown`}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Disclosing Test Type:</strong>
+                            </td>
+                            <td>{secondJsonData.disclosing_test}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <strong>Import Country:</strong>
+                            </td>
+                            <td>
+                              {secondJsonData.import_country == null
+                                ? `British`
+                                : `${secondJsonData.import_country}`}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Tab.Container>
+              </div>
+            </Popup>
+            <PolylineDecorator
+              key={`second-decorator-${index}`}
+              patterns={secondMovArrow}
+              color={"#cb181d"}
+              position={secondLinePts}
             />
           </Marker>
         ))}

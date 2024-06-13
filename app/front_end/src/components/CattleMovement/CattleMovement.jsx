@@ -49,6 +49,11 @@ const CattleMovement = () => {
   }
 
 
+  const [searchSecondSample, setSearchSecondSample] = useState("");
+  const [secondJsonData, setSecondjsonData] = useState({});
+  const [riskAreas, setRiskAreas] = useState([]);
+  const [showRiskAreas, setShowRiskAreas] = useState(false); 
+  
   //Fetch sample data and store in jsonData
   useEffect(() => {
     if (searchSample)
@@ -61,12 +66,29 @@ const CattleMovement = () => {
         })
         .then((data) => {
           setjsonData(data);
-          // console.log(data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
   }, [searchSample]);
+
+  //Fetch second sample data and store in secondJsonData
+  useEffect(() => {
+    if (searchSecondSample)
+      fetch(`/sample/movements?sample_name=${searchSecondSample}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setSecondjsonData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+  }, [searchSecondSample]);
 
   return (
     <Container fluid id="custom-container" data-testid="cattlemovement-1">
@@ -76,12 +98,16 @@ const CattleMovement = () => {
             setSearchSample={setSearchSample}
             handleCheckboxes = {handleCheckboxes}
             checkedLayers={checkedLayers}
+            setSearchSecondSample={setSearchSecondSample}
+            handleRiskBoxClick={handleRiskBoxClick}
+            showRiskAreas={showRiskAreas}
           />
         </Col>
         <Col>
           <CattleMovementMap
             jsonData={jsonData}
             checkedLayers={checkedLayers}
+            secondJsonData={secondJsonData}
           />
         </Col>
       </Row>
