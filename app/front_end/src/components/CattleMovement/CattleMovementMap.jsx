@@ -4,8 +4,6 @@ import {
   Marker,
   Popup,
   useMap,
-  LayersControl,
-  GeoJSON,
 } from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -22,12 +20,8 @@ import Layers from "./../Layers/Layers";
 
 const CattleMovementMap = ({
   jsonData,
-  riskAreas,
-  styleRiskArea,
-  showRiskAreas,
   checkedLayers
 }) => {
-  useEffect(()=> {console.log("movementMap",checkedLayers)},[checkedLayers])
   // if jsonData is null or undefined, return a placeholder map
   if (!jsonData || Object.keys(jsonData).length === 0) {
     return (
@@ -195,132 +189,9 @@ const CattleMovementMap = ({
     });
   };
 
-  // Legend for Risk Areas
-  // https://leafletjs.com/examples/choropleth/
-  const RiskAreaLegend = () => {
-    const map = useMap();
-
-    useEffect(() => {
-      const riskareaLegend = L.control({ position: "bottomright" });
-
-      riskareaLegend.onAdd = () => {
-        const div = L.DomUtil.create("div", "info legend");
-        const levels = [
-          "High Risk Area",
-          "Edge Area",
-          "Low Risk Area",
-          "High TB Area",
-          "Intermediate TB Area",
-          "Low TB Area",
-          "TB Free Area",
-        ];
-        const colours = [
-          "#C62828",
-          "orange",
-          "#00C853",
-          "#C62828",
-          "orange",
-          "#00C853",
-          "#CFD8DC",
-        ];
-        const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
-
-        // Build legend: loop through levels and generate a label with a colored square
-
-        // England
-        div.insertAdjacentHTML("afterbegin", "<strong>England</strong><br>");
-        for (let i = 0; i < levels.length; i++)
-          if (country[i] === "ENG")
-            div.insertAdjacentHTML(
-              "beforeend",
-              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
-            );
-
-        div.insertAdjacentHTML("beforeend", "<br>");
-
-        // Wales
-        div.insertAdjacentHTML("beforeend", "<strong>Wales</strong><br>");
-        for (let i = 0; i < levels.length; i++)
-          if (country[i] === "WAL")
-            div.insertAdjacentHTML(
-              "beforeend",
-              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
-            );
-
-        div.insertAdjacentHTML("beforeend", "<br>");
-
-        // Scotland
-        div.insertAdjacentHTML("beforeend", "<strong>Scotland</strong><br>");
-        for (let i = 0; i < levels.length; i++)
-          if (country[i] === "SCO")
-            div.insertAdjacentHTML(
-              "beforeend",
-              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
-            );
-        return div;
-      };
-
-      riskareaLegend.addTo(map);
-
-      // Cleanup function to remove the legend when the component unmounts
-      return () => {
-        map.removeControl(riskareaLegend);
-      };
-    });
-
-    return null;
-  };
-
-  //Tooltip on each feature (TB area)
-  const onEachFeature = (feature, layer) => {
-    layer.bindTooltip(
-      `<div>
-        <div style="font-size: 14px">
-        ${feature.properties.Country} ${feature.properties.TB_Area}
-        </div>
-        <div style="font-size: 12px">
-        ${feature.properties.Testing__1} ${"months testing"}
-        </div>
-      </div>`,
-      {
-        sticky: true,
-        className: "custom-tooltip",
-      }
-    );
-  };
-
-  // Highlight each feature (TB area)
-  const highlightFeature = (e) => {
-    const layer = e.target;
-    layer.setStyle({
-      weight: 3,
-      dashArray: "",
-      fillOpacity: 0.7,
-    });
-  };
-
-  const resetHighlight = (e) => {
-    const layer = e.target;
-    const map = layer._map;
-    if (map.infoControl) {
-      map.infoControl.update();
-    }
-    layer.setStyle(styleRiskArea(layer.feature));
-  };
-
-//Combine Tooltip & Highlight features to apply in GeoJSON
-  const onEachFeatureCombined = (feature, layer) => {
-    onEachFeature(feature, layer);
-    layer.on({
-      mouseover: highlightFeature,
-      mouseout: resetHighlight,
-    });
-  };
-
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
       <Layers checkedLayers={checkedLayers}/>
-      {showRiskAreas && <RiskAreaLegend />}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

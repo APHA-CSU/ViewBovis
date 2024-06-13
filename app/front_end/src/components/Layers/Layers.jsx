@@ -1,48 +1,91 @@
-import { GeoJSON } from 'react-leaflet';
-import { useEffect, useState,useRef } from 'react';
-import FetchDataFiles from './ZipFiles';
-import dataJson from '../../data/riskAreas.json'
+import { GeoJSON, useMap } from 'react-leaflet';
+import { useEffect, useState } from 'react';
+import AllRA from '../../data/riskAreas.json'
+import L from 'leaflet'
 const Layers =  ({checkedLayers}) => {
-      const DataSet = FetchDataFiles()
-      console.log(DataSet)
       const [layers,setLayers] = useState([])
-      const AllRA = DataSet["allRA"]
       useEffect(()=>{
-          generateArrForRiskAreas(checkedLayers)
-          console.log("layers---->", checkedLayers)
-        },[checkedLayers])
-    
-    const generateArrForRiskAreas = async (checkedLayers) => {
-          console.log("generateArrForRisk", checkedLayers)
-            let arr = []
-            if(checkedLayers["showAllRA"]){
-                arr.push({data : AllRA, type : "risk",label:"showAllRA"})
-              } 
-              if (checkedLayers["showHRA"]) {
-                arr.push({data : AllRA, type : "risk", label: "showHRA"})
-              }
-              if (checkedLayers["showLRA"]) {
-                arr.push({data : AllRA, type : "risk",label:"showLRA"})
-              }
-              if (checkedLayers["showEdgeRA"]) {
-                arr.push({data : AllRA, type : "risk"})
-              }
-              if (checkedLayers["showHTBA"]) {
-                arr.push({data : AllRA, type : "risk"})
-              }
-              if (checkedLayers["showLTBA"]) {
-                arr.push({data : AllRA, type : "risk"})
-              }
-              if (checkedLayers["showITBA"]) {
-                arr.push({data : AllRA, type : "risk"})
-              }
-              if (checkedLayers["showTBFA"]) {
-                arr.push({data : AllRA, type : "risk"})
-              }
-              setLayers([...arr])
-        }
+         setLayers([...Object.keys(checkedLayers)
+          .filter(elem => checkedLayers[elem])])
 
+        },[checkedLayers])
+  // Legend for Risk Areas
+  // https://leafletjs.com/examples/choropleth/
+  const RiskAreaLegend = () => {
+    const map = useMap();
+
+    useEffect(() => {
+      const riskareaLegend = L.control({ position: "bottomright" });
+
+      riskareaLegend.onAdd = () => {
+        const div = L.DomUtil.create("div", "info legend");
+        const levels = [
+          "High Risk Area",
+          "Edge Area",
+          "Low Risk Area",
+          "High TB Area",
+          "Intermediate TB Area",
+          "Low TB Area",
+          "TB Free Area",
+        ];
+        const colours = [
+          "#C62828",
+          "orange",
+          "#00C853",
+          "#C62828",
+          "orange",
+          "#00C853",
+          "#CFD8DC",
+        ];
+        const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
+
+        // Build legend: loop through levels and generate a label with a colored square
+
+        // England
+        div.insertAdjacentHTML("afterbegin", "<strong>England</strong><br>");
+        for (let i = 0; i < levels.length; i++)
+          if (country[i] === "ENG")
+            div.insertAdjacentHTML(
+              "beforeend",
+              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
+            );
+
+        div.insertAdjacentHTML("beforeend", "<br>");
+
+        // Wales
+        div.insertAdjacentHTML("beforeend", "<strong>Wales</strong><br>");
+        for (let i = 0; i < levels.length; i++)
+          if (country[i] === "WAL")
+            div.insertAdjacentHTML(
+              "beforeend",
+              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
+            );
+
+        div.insertAdjacentHTML("beforeend", "<br>");
+
+        // Scotland
+        div.insertAdjacentHTML("beforeend", "<strong>Scotland</strong><br>");
+        for (let i = 0; i < levels.length; i++)
+          if (country[i] === "SCO")
+            div.insertAdjacentHTML(
+              "beforeend",
+              `<i style="background: ${colours[i]};"></i> ${levels[i]} <br>`
+            );
+        return div;
+      };
+
+      riskareaLegend.addTo(map);
+
+      // Cleanup function to remove the legend when the component unmounts
+      return () => {
+        map.removeControl(riskareaLegend);
+      };
+    });
+
+    return null;
+  };
         const onEachFeatureCombined = (feature, layer) => {
+          const area = feature.properties.TB_Area;
             onEachFeature(feature, layer);
             layer.on({
               mouseover: highlightFeature,
@@ -63,7 +106,13 @@ const Layers =  ({checkedLayers}) => {
           // Function to set custom styles for Risk Area polygons. "feature" object obtained from GeoJSON react-leaflet component used in CattleMovementMap.jsx.
           const styleRiskArea = (feature) => {
             const area = feature.properties.TB_Area;
-        
+            if (layers.indexOf(area) < 0 ) {
+              return {
+              fillColor : "#00000000",
+              opacity: 0,
+              fillOpacity:0 }
+            } else {
+
             return {
               fillColor: riskAreaCols(area),
               weight: 1.5,
@@ -72,6 +121,7 @@ const Layers =  ({checkedLayers}) => {
               dashArray: "3",
               fillOpacity: 0.5,
             };
+          }
           };
 
           const onEachFeature = (feature, layer) => {
@@ -108,13 +158,13 @@ const Layers =  ({checkedLayers}) => {
             layer.setStyle(styleRiskArea(layer.feature));
           };
     
-    
         return  (
         <>
-        {layers.map(layer => <GeoJSON
-          data={layer.data}
+        {layers.length > 0 && <GeoJSON
+          data={AllRA}
           style={styleRiskArea}
-        />)}
+        />}
+        {layers.length > 0 && <RiskAreaLegend />}
         </>
       )
 }
