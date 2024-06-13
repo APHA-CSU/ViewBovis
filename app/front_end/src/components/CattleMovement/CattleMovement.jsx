@@ -99,8 +99,6 @@ const CattleMovement = () => {
             handleCheckboxes = {handleCheckboxes}
             checkedLayers={checkedLayers}
             setSearchSecondSample={setSearchSecondSample}
-            handleRiskBoxClick={handleRiskBoxClick}
-            showRiskAreas={showRiskAreas}
           />
         </Col>
         <Col>
