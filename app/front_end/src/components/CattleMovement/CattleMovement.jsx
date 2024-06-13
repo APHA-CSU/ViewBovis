@@ -5,11 +5,50 @@ import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
-import allRiskAreas from "../../data/riskAreas.json";
 
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
   const [jsonData, setjsonData] = useState({});
+  const [checkedLayers, setCheckedLayers] = useState({})
+
+  const handleCheckboxes = (index) => {
+    switch(index) {
+      case 0:
+        checkedLayers["showAllRA"] = !checkedLayers["showAllRA"]
+        checkedLayers["High Risk Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Low Risk Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Edge Area"] = checkedLayers["showAllRA"];
+        checkedLayers["High TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Intermediate TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Low TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["TB Free Area"] = checkedLayers["showAllRA"];
+        break;
+      case 1:
+        checkedLayers["High Risk Area"] =  !checkedLayers["High Risk Area"];
+        break;
+      case 2:
+        checkedLayers["Low Risk Area"] =  !checkedLayers["Low Risk Area"];
+        break;
+      case 3:
+        checkedLayers["Edge Area"] = !checkedLayers["Edge Area"];
+        break;
+      case 4:
+        checkedLayers["High TB Area"] = !checkedLayers["High TB Area"];
+        break;
+      case 5:
+        checkedLayers["Intermediate TB Area"] = !checkedLayers["Intermediate TB Area"];
+        break;
+      case 6:
+        checkedLayers["Low TB Area"] = !checkedLayers["Low TB Area"];
+        break;
+      case 7:
+        checkedLayers["TB Free Area"] = !checkedLayers["TB Free Area"];
+        break;
+  }
+    setCheckedLayers({...checkedLayers})
+  }
+
+
   const [searchSecondSample, setSearchSecondSample] = useState("");
   const [secondJsonData, setSecondjsonData] = useState({});
   const [riskAreas, setRiskAreas] = useState([]);
@@ -51,64 +90,22 @@ const CattleMovement = () => {
         });
   }, [searchSecondSample]);
 
-  class LoadAreasTask {
-    load = (setState) => {
-      setState(allRiskAreas);
-    };
-  }
-
-  useEffect(() => {
-    const loadAreasTask = new LoadAreasTask();
-    loadAreasTask.load(setRiskAreas);
-  });
-
-  // Function to set polygon colours for Risk Areas
-  const riskAreaCols = (area) => {
-    if (area === "High Risk Area" || area === "High TB Area") return "#C62828";
-    else if (area === "Intermediate TB Area" || area === "Edge Area")
-      return "orange";
-    else if (area === "Low Risk Area" || area === "Low TB Area")
-      return "#00C853";
-    else if (area === "TB Free Area") return "#CFD8DC";
-    return "#CFD8DC";
-  };
-
-  // Function to set custom styles for Risk Area polygons. "feature" object obtained from GeoJSON react-leaflet component used in CattleMovementMap.jsx.
-  const styleRiskArea = (feature) => {
-    const area = feature.properties.TB_Area;
-
-    return {
-      fillColor: riskAreaCols(area),
-      weight: 1.5,
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.5,
-    };
-  };
-
-  const handleRiskBoxClick = () => {
-    setShowRiskAreas(!showRiskAreas);
-  };
-
   return (
     <Container fluid id="custom-container" data-testid="cattlemovement-1">
       <Row>
         <Col className="sidebar col-3">
           <MapSidebar
             setSearchSample={setSearchSample}
+            handleCheckboxes = {handleCheckboxes}
+            checkedLayers={checkedLayers}
             setSearchSecondSample={setSearchSecondSample}
-            handleRiskBoxClick={handleRiskBoxClick}
-            showRiskAreas={showRiskAreas}
           />
         </Col>
         <Col>
           <CattleMovementMap
             jsonData={jsonData}
+            checkedLayers={checkedLayers}
             secondJsonData={secondJsonData}
-            showRiskAreas={showRiskAreas}
-            riskAreas={showRiskAreas ? riskAreas : null}
-            styleRiskArea={showRiskAreas ? styleRiskArea : null}
           />
         </Col>
       </Row>

@@ -6,7 +6,7 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const CattlMovMapSidebar = ({ setSearchSample, setSearchSecondSample, handleRiskBoxClick, showRiskAreas }) => {
+const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, setSearchSecondSample }) => {
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
 
@@ -65,8 +65,8 @@ const CattlMovMapSidebar = ({ setSearchSample, setSearchSecondSample, handleRisk
       <Form.Check
         className="checkbox"
         label="Risk Areas"
-        checked={showRiskAreas}
-        onClick={handleRiskBoxClick}
+        checked={checkedLayers["showAllRA"]}
+        onChange={(e) => handleCheckboxes(0,e.target.value)}
       />
     </Accordion.Header>
     <Accordion.Body>
@@ -75,16 +75,20 @@ const CattlMovMapSidebar = ({ setSearchSample, setSearchSecondSample, handleRisk
         <Form.Check
           className="checkbox"
           label="HRA"
+          checked={checkedLayers["High Risk Area"]}
+          onChange={() => {handleCheckboxes(1)}}
         />
         <Form.Check
           className="checkbox"
           label="LRA"
-          // onChange={}
+          onChange={() => handleCheckboxes(2)}
+          checked={checkedLayers["Low Risk Area"]}
         />
         <Form.Check
           className="checkbox"
           label="Edge"
-          // onChange={}
+          onChange={() => handleCheckboxes(3)}
+          checked={checkedLayers["Edge Area"]}
         />
       </div>
       <div>
@@ -92,17 +96,20 @@ const CattlMovMapSidebar = ({ setSearchSample, setSearchSecondSample, handleRisk
         <Form.Check
           className="checkbox"
           label="HTBA"
-          // onChange={}
+          onChange={() => handleCheckboxes(4)}
+          checked={checkedLayers["High TB Area"]}
         />
         <Form.Check
           className="checkbox"
           label="ITBA"
-          // onChange={}
+          onChange={() => handleCheckboxes(5)}
+          checked={checkedLayers["Intermediate TB Area"]}
         />
         <Form.Check
           className="checkbox"
           label="LTBA"
-          // onChange={}
+          onChange={() => handleCheckboxes(6)}
+          checked={checkedLayers["Low TB Area"]}
         />
       </div>
       <div>
@@ -110,7 +117,8 @@ const CattlMovMapSidebar = ({ setSearchSample, setSearchSecondSample, handleRisk
         <Form.Check
           className="checkbox"
           label="TBFA"
-          // onChange={}
+          onChange={() => handleCheckboxes(7)}
+          checked={checkedLayers["TB Free Area"]}
         />
       </div>
     </Accordion.Body>
