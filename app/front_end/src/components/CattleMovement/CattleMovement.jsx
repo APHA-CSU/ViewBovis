@@ -6,16 +6,15 @@ import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import allRiskAreas from "../../data/riskAreas.json";
-import highRiskAreas from "../../data/highRiskArea.json";
 
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
   const [jsonData, setjsonData] = useState({});
-  const [riskAreas, setRiskAreas] = useState([]); //change to showAllriskareas
-  const [showRiskAreas, setShowRiskAreas] = useState(false); //change to showAllriskareas
-  // const [highRiskAreas, setHighRiskAreas] = useState([])
-  const [showHRA, setShowHRA] = useState(false);
-
+  const [searchSecondSample, setSearchSecondSample] = useState("");
+  const [secondJsonData, setSecondjsonData] = useState({});
+  const [riskAreas, setRiskAreas] = useState([]);
+  const [showRiskAreas, setShowRiskAreas] = useState(false); 
+  
   //Fetch sample data and store in jsonData
   useEffect(() => {
     if (searchSample)
@@ -28,29 +27,40 @@ const CattleMovement = () => {
         })
         .then((data) => {
           setjsonData(data);
-          // console.log(data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
   }, [searchSample]);
 
+  //Fetch second sample data and store in secondJsonData
+  useEffect(() => {
+    if (searchSecondSample)
+      fetch(`/sample/movements?sample_name=${searchSecondSample}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setSecondjsonData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+  }, [searchSecondSample]);
+
   class LoadAreasTask {
-    load = (setState, showRiskAreas, showHRA) => {
-      if (showRiskAreas) {
-        setState(allRiskAreas);
-      } else if (showHRA) {
-        setState(highRiskAreas);
-      } else {
-        setState([]);
-      }
+    load = (setState) => {
+      setState(allRiskAreas);
     };
   }
 
   useEffect(() => {
     const loadAreasTask = new LoadAreasTask();
-    loadAreasTask.load(setRiskAreas, showRiskAreas, showHRA);
-  }, [showRiskAreas, showHRA]);
+    loadAreasTask.load(setRiskAreas);
+  });
 
   // Function to set polygon colours for Risk Areas
   const riskAreaCols = (area) => {
@@ -81,28 +91,24 @@ const CattleMovement = () => {
     setShowRiskAreas(!showRiskAreas);
   };
 
-  const handleHRABoxCLick = () => {
-    setShowHRA(!showHRA);
-  };
-
   return (
     <Container fluid id="custom-container" data-testid="cattlemovement-1">
       <Row>
         <Col className="sidebar col-3">
           <MapSidebar
             setSearchSample={setSearchSample}
+            setSearchSecondSample={setSearchSecondSample}
             handleRiskBoxClick={handleRiskBoxClick}
-            handleHRABoxCLick={handleHRABoxCLick}
             showRiskAreas={showRiskAreas}
-            showHRA={showHRA}
           />
         </Col>
         <Col>
           <CattleMovementMap
             jsonData={jsonData}
+            secondJsonData={secondJsonData}
             showRiskAreas={showRiskAreas}
-            riskAreas={showRiskAreas || showHRA ? riskAreas : null}
-            styleRiskArea={showRiskAreas || showHRA ? styleRiskArea : null}
+            riskAreas={showRiskAreas ? riskAreas : null}
+            styleRiskArea={showRiskAreas ? styleRiskArea : null}
           />
         </Col>
       </Row>
