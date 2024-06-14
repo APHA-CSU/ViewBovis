@@ -23,16 +23,55 @@ const SNPMap = () => {
     console.error("Error fetching data:", error);
   });
   }
-  // const [jsonData, setjsonData] = useState({});
+
+  const [checkedLayers, setCheckedLayers] = useState({})
+
+  const handleCheckboxes = (index) => {
+    switch(index) {
+      case 0:
+        checkedLayers["showAllRA"] = !checkedLayers["showAllRA"]
+        checkedLayers["High Risk Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Low Risk Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Edge Area"] = checkedLayers["showAllRA"];
+        checkedLayers["High TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Intermediate TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["Low TB Area"] = checkedLayers["showAllRA"];
+        checkedLayers["TB Free Area"] = checkedLayers["showAllRA"];
+        break;
+      case 1:
+        checkedLayers["High Risk Area"] =  !checkedLayers["High Risk Area"];
+        break;
+      case 2:
+        checkedLayers["Low Risk Area"] =  !checkedLayers["Low Risk Area"];
+        break;
+      case 3:
+        checkedLayers["Edge Area"] = !checkedLayers["Edge Area"];
+        break;
+      case 4:
+        checkedLayers["High TB Area"] = !checkedLayers["High TB Area"];
+        break;
+      case 5:
+        checkedLayers["Intermediate TB Area"] = !checkedLayers["Intermediate TB Area"];
+        break;
+      case 6:
+        checkedLayers["Low TB Area"] = !checkedLayers["Low TB Area"];
+        break;
+      case 7:
+        checkedLayers["TB Free Area"] = !checkedLayers["TB Free Area"];
+        break;
+  }
+    setCheckedLayers({...checkedLayers})
+  }
 
   return (
     <Container fluid id="custom-container">
       <Row>
         <Col className="sidebar col-3">
-          <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} />
+          <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} checkedLayers={checkedLayers} 
+          handleCheckboxes={handleCheckboxes}/>
         </Col>
         <Col>
-          <SNPMapComp SNPMapDataset={SNPMapDataset} />
+          <SNPMapComp SNPMapDataset={SNPMapDataset} checkedLayers={checkedLayers} />
         </Col>
       </Row>
     </Container>

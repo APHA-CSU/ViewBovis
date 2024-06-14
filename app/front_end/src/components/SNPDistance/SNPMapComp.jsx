@@ -5,7 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { divIcon } from "leaflet";
 import Layers from "../Layers/Layers";
 
-const SNPMapComp = ({SNPMapDataset}) => {
+const SNPMapComp = ({SNPMapDataset, checkedLayers}) => {
     //SNP map cluster icon
     const createCustomClusterIcon = (cluster) => {
       return new divIcon({
@@ -14,7 +14,6 @@ const SNPMapComp = ({SNPMapDataset}) => {
         iconSize: [30, 30],
       });
     };
-    const checkedLayers = {"showAllRA" : true}
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>

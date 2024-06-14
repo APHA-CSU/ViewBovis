@@ -51,8 +51,6 @@ const CattleMovement = () => {
 
   const [searchSecondSample, setSearchSecondSample] = useState("");
   const [secondJsonData, setSecondjsonData] = useState({});
-  const [riskAreas, setRiskAreas] = useState([]);
-  const [showRiskAreas, setShowRiskAreas] = useState(false); 
   
   //Fetch sample data and store in jsonData
   useEffect(() => {

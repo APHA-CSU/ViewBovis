@@ -66,7 +66,7 @@ const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, s
         className="checkbox"
         label="Risk Areas"
         checked={checkedLayers["showAllRA"]}
-        onChange={(e) => handleCheckboxes(0,e.target.value)}
+        onChange={() => handleCheckboxes(0)}
       />
     </Accordion.Header>
     <Accordion.Body>

@@ -7,7 +7,7 @@ import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 import "./SNPMap.css"
 
-const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
+const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");
   const [snpDistance, setsnpDistance] = useState(1);
 
@@ -52,7 +52,72 @@ const SNPMapSidebar = ({ fetchSNPMapDataset }) => {
       <Row className="my-5">
         <Heading size="SMALL">LAYERS</Heading>
         <Form>
-          <Form.Check className="checkbox" label="Risk Areas" />
+        <Accordion>
+  <Accordion.Item eventKey="1">
+    <Accordion.Header>
+      <Form.Check
+        className="checkbox"
+        label="Risk Areas"
+        checked={checkedLayers["showAllRA"]}
+        onChange={() => handleCheckboxes(0)}
+      />
+    </Accordion.Header>
+    <Accordion.Body>
+      <div>
+        <strong>England</strong>
+        <Form.Check
+          className="checkbox"
+          label="HRA"
+          checked={checkedLayers["High Risk Area"]}
+          onChange={() => {handleCheckboxes(1)}}
+        />
+        <Form.Check
+          className="checkbox"
+          label="LRA"
+          onChange={() => handleCheckboxes(2)}
+          checked={checkedLayers["Low Risk Area"]}
+        />
+        <Form.Check
+          className="checkbox"
+          label="Edge"
+          onChange={() => handleCheckboxes(3)}
+          checked={checkedLayers["Edge Area"]}
+        />
+      </div>
+      <div>
+        <strong>Wales</strong>
+        <Form.Check
+          className="checkbox"
+          label="HTBA"
+          onChange={() => handleCheckboxes(4)}
+          checked={checkedLayers["High TB Area"]}
+        />
+        <Form.Check
+          className="checkbox"
+          label="ITBA"
+          onChange={() => handleCheckboxes(5)}
+          checked={checkedLayers["Intermediate TB Area"]}
+        />
+        <Form.Check
+          className="checkbox"
+          label="LTBA"
+          onChange={() => handleCheckboxes(6)}
+          checked={checkedLayers["Low TB Area"]}
+        />
+      </div>
+      <div>
+        <strong>Scotland</strong>
+        <Form.Check
+          className="checkbox"
+          label="TBFA"
+          onChange={() => handleCheckboxes(7)}
+          checked={checkedLayers["TB Free Area"]}
+        />
+      </div>
+    </Accordion.Body>
+  </Accordion.Item>
+</Accordion>
+        
           <Form.Check className="checkbox" label="Counties" />
           <Form.Check className="checkbox" label="TB Hotspots" />
           <Form.Check className="checkbox" label="Movement Lines" />
