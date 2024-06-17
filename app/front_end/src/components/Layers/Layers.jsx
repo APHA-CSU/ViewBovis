@@ -1,18 +1,24 @@
 import { GeoJSON, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import AllRA from '../../data/riskAreas.json'
-import L from 'leaflet'
+import L, { geoJSON } from 'leaflet'
 const Layers =  ({checkedLayers}) => {
+      const map = useMap();
       const [layers,setLayers] = useState([])
+      const [geoJson,setGeoJson] = useState(AllRA)
       useEffect(()=>{
-         setLayers([...Object.keys(checkedLayers)
+        setLayers([...Object.keys(checkedLayers)
           .filter(elem => checkedLayers[elem])])
-
         },[checkedLayers])
+
+      useEffect(()=> {
+        const selectedFeatures = AllRA["features"].filter(feature => layers.indexOf(feature["properties"]["TB_Area"]) >= 0 )
+        setGeoJson({...geoJson,"features" : selectedFeatures})
+      },[layers])
+
   // Legend for Risk Areas
   // https://leafletjs.com/examples/choropleth/
   const RiskAreaLegend = () => {
-    const map = useMap();
 
     useEffect(() => {
       const riskareaLegend = L.control({ position: "bottomright" });
@@ -106,12 +112,6 @@ const Layers =  ({checkedLayers}) => {
           // Function to set custom styles for Risk Area polygons. "feature" object obtained from GeoJSON react-leaflet component used in CattleMovementMap.jsx.
           const styleRiskArea = (feature) => {
             const area = feature.properties.TB_Area;
-            if (layers.indexOf(area) < 0 ) {
-              return {
-              fillColor : "#00000000",
-              opacity: 0,
-              fillOpacity:0 }
-            } else {
 
             return {
               fillColor: riskAreaCols(area),
@@ -121,7 +121,6 @@ const Layers =  ({checkedLayers}) => {
               dashArray: "3",
               fillOpacity: 0.5,
             };
-          }
           };
 
           const onEachFeature = (feature, layer) => {
@@ -157,16 +156,23 @@ const Layers =  ({checkedLayers}) => {
             }
             layer.setStyle(styleRiskArea(layer.feature));
           };
-    
-        return  (
-        <>
-        {layers.length > 0 && <GeoJSON
-          data={AllRA}
-          style={styleRiskArea}
-        />}
-        {layers.length > 0 && <RiskAreaLegend />}
-        </>
-      )
+
+          useEffect(()=>{
+            const geoJsonLayer = L.geoJSON(geoJson , {
+              style : styleRiskArea,
+              onEachFeature: onEachFeatureCombined
+            })
+            geoJsonLayer.addTo(map);
+            return() => {
+              map.removeLayer(geoJsonLayer)
+            }
+          }, [geoJson])
+
+          return (
+          <>
+            {layers.length > 0 && <RiskAreaLegend />}
+          </>
+          )
 }
 
 export default Layers;
