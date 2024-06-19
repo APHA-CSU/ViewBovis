@@ -293,7 +293,7 @@ const riskAreaCols2 = function(area) {
 // Function to set custom styles for Risk Area polygons
 const styleRiskAreaPoly2 = function(feature){
     return {
-      fillColor: riskAreaCols(feature.properties.TB_Area),
+      fillColor: riskAreaCols2(feature.properties.TB_Area),
       weight: 1.5,  
       opacity: 1,
       color: "white",
