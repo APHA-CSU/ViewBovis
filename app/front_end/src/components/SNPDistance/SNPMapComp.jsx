@@ -3,9 +3,10 @@ import "leaflet/dist/leaflet.css";
 import { relatedMarker } from "./SNPLayers";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { divIcon } from "leaflet";
-import Layers from "../Layers/Layers";
+import RiskLayers from "../Layers/RiskLayers";
+import CountyLayers from "../Layers/CountyLayers";
 
-const SNPMapComp = ({SNPMapDataset, checkedLayers}) => {
+const SNPMapComp = ({SNPMapDataset, checkedLayers, useCountyLayers}) => {
     //SNP map cluster icon
     const createCustomClusterIcon = (cluster) => {
       return new divIcon({
@@ -21,7 +22,8 @@ const SNPMapComp = ({SNPMapDataset, checkedLayers}) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Layers checkedLayers={checkedLayers}/>
+      <RiskLayers checkedLayers={checkedLayers}/>
+      <CountyLayers isChecked={useCountyLayers}/>
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}

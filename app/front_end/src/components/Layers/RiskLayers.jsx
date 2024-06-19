@@ -1,8 +1,8 @@
-import { GeoJSON, useMap } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import AllRA from '../../data/riskAreas.json'
-import L, { geoJSON } from 'leaflet'
-const Layers =  ({checkedLayers}) => {
+import L from 'leaflet'
+const RiskLayers =  ({checkedLayers}) => {
       const map = useMap();
       const [layers,setLayers] = useState([])
       const [geoJson,setGeoJson] = useState(AllRA)
@@ -175,4 +175,4 @@ const Layers =  ({checkedLayers}) => {
           )
 }
 
-export default Layers;
+export default RiskLayers;

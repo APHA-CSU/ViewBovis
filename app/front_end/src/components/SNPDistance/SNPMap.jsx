@@ -7,6 +7,7 @@ import SNPMapComp from "./SNPMapComp";
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({})
+  const [countyLayers, setCountyLayers] = useState(false)
 
   const fetchSNPMapDataset = (search_sample,snp_distance) => {
   fetch(`/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`)
@@ -68,10 +69,10 @@ const SNPMap = () => {
       <Row>
         <Col className="sidebar col-3">
           <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} checkedLayers={checkedLayers} 
-          handleCheckboxes={handleCheckboxes}/>
+          handleCheckboxes={handleCheckboxes} countyLayers={countyLayers} setCountyLayers={setCountyLayers} />
         </Col>
         <Col>
-          <SNPMapComp SNPMapDataset={SNPMapDataset} checkedLayers={checkedLayers} />
+          <SNPMapComp SNPMapDataset={SNPMapDataset} checkedLayers={checkedLayers} useCountyLayers={countyLayers} />
         </Col>
       </Row>
     </Container>

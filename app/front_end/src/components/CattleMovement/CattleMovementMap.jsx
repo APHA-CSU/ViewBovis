@@ -16,7 +16,7 @@ import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
-import Layers from "./../Layers/Layers";
+import RiskLayers from "./../Layers/RiskLayers";
 
 const CattleMovementMap = ({
   jsonData,
@@ -206,7 +206,7 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      <Layers checkedLayers={checkedLayers}/>
+      <RiskLayers checkedLayers={checkedLayers}/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

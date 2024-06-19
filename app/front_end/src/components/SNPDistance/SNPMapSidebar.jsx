@@ -7,7 +7,7 @@ import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 import "./SNPMap.css"
 
-const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers }) => {
+const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers,countyLayers,setCountyLayers }) => {
   const [snpSearchInput, setsnpSearchInput] = useState("");
   const [snpDistance, setsnpDistance] = useState(1);
 
@@ -117,10 +117,10 @@ const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers }) =>
     </Accordion.Body>
   </Accordion.Item>
 </Accordion>
-        
-          <Form.Check className="checkbox" label="Counties" />
+          <Form.Check className="checkbox" label="Counties" 
+          checked={countyLayers}
+          onChange={() => {setCountyLayers(!countyLayers)}}/>
           <Form.Check className="checkbox" label="TB Hotspots" />
-          <Form.Check className="checkbox" label="Movement Lines" />
         </Form>
       </Row>
       <hr></hr>
