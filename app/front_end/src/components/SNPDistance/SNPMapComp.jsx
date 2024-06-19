@@ -22,8 +22,8 @@ const SNPMapComp = ({SNPMapDataset, checkedLayers, useCountyLayers}) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <RiskLayers checkedLayers={checkedLayers}/>
       <CountyLayers isChecked={useCountyLayers}/>
+      <RiskLayers checkedLayers={checkedLayers}/>
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}

@@ -1,8 +1,7 @@
 import L from 'leaflet'
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet'
-import countyJSON from '../../data/countiesMerged.json'
-import countyZip from '../../data/AHVLACounties_Merged.zip'
+import countyJSON from '../../data/AHVLA_Counties_GEOJSON.json'
 
 
 const CountyLayers = ({isChecked}) => {

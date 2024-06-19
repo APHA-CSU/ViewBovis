@@ -6,7 +6,7 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, setSearchSecondSample }) => {
+const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, setSearchSecondSample, countyLayers, setCountyLayers }) => {
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
 
@@ -126,7 +126,9 @@ const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, s
 </Accordion>
 
         <Form>
-          <Form.Check className="checkbox" label="Counties" />
+          <Form.Check className="checkbox" label="Counties" 
+          checked={countyLayers}
+          onChange={()=>setCountyLayers(!countyLayers)}/>
         </Form>
         <Form>
           <Form.Check className="checkbox" label="TB Hotspots" />

@@ -17,11 +17,13 @@ import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
+import CountyLayers from "../Layers/CountyLayers";
 
 const CattleMovementMap = ({
   jsonData,
   secondJsonData,
-  checkedLayers
+  checkedLayers,
+  useCountyLayers
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
   if (
@@ -206,6 +208,7 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
+      <CountyLayers isChecked={useCountyLayers}/>
       <RiskLayers checkedLayers={checkedLayers}/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

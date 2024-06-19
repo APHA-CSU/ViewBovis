@@ -9,6 +9,7 @@ import "./CattleMovement.css";
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
   const [jsonData, setjsonData] = useState({});
+  const [countyLayers, setCountyLayers] = useState(false)
   const [checkedLayers, setCheckedLayers] = useState({})
 
   const handleCheckboxes = (index) => {
@@ -97,6 +98,7 @@ const CattleMovement = () => {
             handleCheckboxes = {handleCheckboxes}
             checkedLayers={checkedLayers}
             setSearchSecondSample={setSearchSecondSample}
+            countyLayers={countyLayers} setCountyLayers={setCountyLayers}
           />
         </Col>
         <Col>
@@ -104,6 +106,7 @@ const CattleMovement = () => {
             jsonData={jsonData}
             checkedLayers={checkedLayers}
             secondJsonData={secondJsonData}
+            useCountyLayers={countyLayers}
           />
         </Col>
       </Row>
