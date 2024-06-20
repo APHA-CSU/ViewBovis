@@ -14,7 +14,7 @@ const markerNumberIcon = (number) => {
   justify-content: center;
   align-items: center;
 "><img src="${SNPrelated}" alt="${number}" width="30" height="30"/>
-<i style="position: absolute;">${number}</i><div/>`
+<a style="position: absolute;">${number}</a><div/>`
 }
 
 const relatedMarker = (props, SOI) => { 

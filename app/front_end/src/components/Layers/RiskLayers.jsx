@@ -102,6 +102,7 @@ const RiskLayers = ({ checkedLayers }) => {
       onEachFeature: onEachFeatureCombined,
     });
     geoJsonLayer.addTo(map);
+    geoJsonLayer.bringToBack();
     return () => {
       map.removeLayer(geoJsonLayer);
     };
