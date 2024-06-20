@@ -40,3 +40,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
 input[type="range"]::-webkit-slider-thumb:active {
     transform: scale(0.95);
 }
+
+/* Leaflet popups: related markers */
+.relatedPopupOptions .leaflet-popup-tip,
+.relatedPopupOptions .leaflet-popup-content-wrapper {
+    background: white;
+    opacity: 0.85;
+    color: black;
+}
