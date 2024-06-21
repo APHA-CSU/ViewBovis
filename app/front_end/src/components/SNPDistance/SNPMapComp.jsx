@@ -1,12 +1,15 @@
-import { MapContainer, Marker, TileLayer} from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMap} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { relatedMarker } from "./SNPLayers";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { divIcon } from "leaflet";
 import RiskLayers from "../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
+import HotspotLayers from "../Layers/HotspotLayers";
+import { useEffect } from "react";
+import L from 'leaflet'
 
-const SNPMapComp = ({SNPMapDataset, checkedLayers, useCountyLayers}) => {
+const SNPMapComp = ({SNPMapDataset, checkedLayers,useCountyandHotspotLayers}) => {
     //SNP map cluster icon
     const createCustomClusterIcon = (cluster) => {
       return new divIcon({
@@ -88,14 +91,17 @@ const SNPMapComp = ({SNPMapDataset, checkedLayers, useCountyLayers}) => {
     };
 
     return (
-      <MapContainer center={[53.3781, -1]} zoom={6}>
+      <MapContainer center={[53.3781, -1]} zoom={6} 
+      zoomAnimation={true} zoomAnimationThreshold={20}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">
           OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <CountyLayers isChecked={useCountyLayers}/>
+        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]}/>
+        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]}/>
         <RiskLayers checkedLayers={checkedLayers}/>
+        <FitMapToBounds SNPMapDataset={SNPMapDataset}/>
         <MarkerClusterGroup
           chunkedLoading
           iconCreateFunction={createCustomClusterIcon}
@@ -129,5 +135,15 @@ const SNPMapComp = ({SNPMapDataset, checkedLayers, useCountyLayers}) => {
       </MapContainer>
     );
 };
+const FitMapToBounds = ({SNPMapDataset}) => {
+  const map = useMap()
+  useEffect(()=>{
+    const latLon = Object.keys(SNPMapDataset).filter(elem => { 
+      return SNPMapDataset[elem]?.lat && SNPMapDataset[elem]?.lon})
+      .map(elem => [SNPMapDataset[elem].lat,SNPMapDataset[elem].lon ])
+    if(latLon?.length > 0) map.fitBounds(L.latLngBounds(latLon).pad(0.10))
+  },[SNPMapDataset])
+  return <></>
+}
 
 export default SNPMapComp;

@@ -7,16 +7,17 @@ import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 import "./SNPMap.css"
 
-const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers,countyLayers,setCountyLayers }) => {
-  const [snpSearchInput, setsnpSearchInput] = useState("");
-  const [snpDistance, setsnpDistance] = useState(1);
+const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers, 
+  countyAndHotspotLayers,setCountyAndHotspotLayers }) => {
+  const [snpSearchInput, setSnpSearchInput] = useState("");
+  const [snpDistance, setSnpDistance] = useState(1);
 
   const handleChange = (event) => {
-    setsnpSearchInput(event.target.value);
+    setSnpSearchInput(event.target.value);
   };
 
   const handleSlider = (event) => {
-    setsnpDistance(event.target.value);
+    setSnpDistance(event.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -117,10 +118,18 @@ const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers,count
     </Accordion.Body>
   </Accordion.Item>
 </Accordion>
-          <Form.Check className="checkbox" label="Counties" 
-          checked={countyLayers}
-          onChange={() => {setCountyLayers(!countyLayers)}}/>
-          <Form.Check className="checkbox" label="TB Hotspots" />
+<Form>
+  <Form.Check className="checkbox" label="Counties" 
+    checked={countyAndHotspotLayers["countyLayers"]}
+    onChange={() => {setCountyAndHotspotLayers({...countyAndHotspotLayers,
+      "countyLayers" : !(countyAndHotspotLayers["countyLayers"])})}}/>
+</Form>
+<Form>
+    <Form.Check className="checkbox" label="TB Hotspots"
+      checked={countyAndHotspotLayers["hotspotLayers"]} 
+      onChange={() => {setCountyAndHotspotLayers({...countyAndHotspotLayers,
+        "hotspotLayers" : !(countyAndHotspotLayers["hotspotLayers"])})}}/>
+</Form>
         </Form>
       </Row>
       <hr></hr>

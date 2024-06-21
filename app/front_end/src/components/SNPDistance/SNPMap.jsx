@@ -7,8 +7,9 @@ import SNPMapComp from "./SNPMapComp";
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({})
-  const [countyLayers, setCountyLayers] = useState(false)
-
+  const [countyAndHotspotLayers,setCountyAndHotspotLayers] = useState({
+    "hotspotLayers":false,"countyLayers":false})
+  const [checkedLayers, setCheckedLayers] = useState({})
   const fetchSNPMapDataset = (search_sample,snp_distance) => {
   fetch(`/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`)
   .then(res => {
@@ -25,7 +26,6 @@ const SNPMap = () => {
   });
   }
 
-  const [checkedLayers, setCheckedLayers] = useState({})
 
   const handleCheckboxes = (index) => {
     switch(index) {
@@ -68,11 +68,15 @@ const SNPMap = () => {
     <Container fluid id="custom-container">
       <Row>
         <Col className="sidebar col-3">
-          <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} checkedLayers={checkedLayers} 
-          handleCheckboxes={handleCheckboxes} countyLayers={countyLayers} setCountyLayers={setCountyLayers} />
+          <SNPMapSidebar fetchSNPMapDataset={fetchSNPMapDataset} 
+          checkedLayers={checkedLayers} 
+          handleCheckboxes={handleCheckboxes}
+          countyAndHotspotLayers={countyAndHotspotLayers} 
+          setCountyAndHotspotLayers={setCountyAndHotspotLayers} />
         </Col>
         <Col>
-          <SNPMapComp SNPMapDataset={SNPMapDataset} checkedLayers={checkedLayers} useCountyLayers={countyLayers} />
+          <SNPMapComp SNPMapDataset={SNPMapDataset} checkedLayers={checkedLayers} 
+          useCountyandHotspotLayers={countyAndHotspotLayers} />
         </Col>
       </Row>
     </Container>

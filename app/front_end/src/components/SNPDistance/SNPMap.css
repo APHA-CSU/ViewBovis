@@ -48,3 +48,7 @@ input[type="range"]::-webkit-slider-thumb:active {
     opacity: 0.85;
     color: black;
 }
+
+.leaflet-container {
+    transition: transform 0.3s ease;
+}
