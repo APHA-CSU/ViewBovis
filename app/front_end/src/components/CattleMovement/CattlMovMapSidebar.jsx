@@ -6,7 +6,8 @@ import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
 
-const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, setSearchSecondSample, countyLayers, setCountyLayers }) => {
+const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, 
+  setSearchSecondSample, countyAndHotspotLayers,setCountyAndHotspotLayers}) => {
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
 
@@ -124,15 +125,18 @@ const CattlMovMapSidebar = ({ setSearchSample, handleCheckboxes,checkedLayers, s
     </Accordion.Body>
   </Accordion.Item>
 </Accordion>
-
-        <Form>
-          <Form.Check className="checkbox" label="Counties" 
-          checked={countyLayers}
-          onChange={()=>setCountyLayers(!countyLayers)}/>
-        </Form>
-        <Form>
-          <Form.Check className="checkbox" label="TB Hotspots" />
-        </Form>
+<Form>
+  <Form.Check className="checkbox" label="Counties" 
+    checked={countyAndHotspotLayers["countyLayers"]}
+    onChange={() => {setCountyAndHotspotLayers({...countyAndHotspotLayers,
+      "countyLayers" : !(countyAndHotspotLayers["countyLayers"])})}}/>
+</Form>
+<Form>
+    <Form.Check className="checkbox" label="TB Hotspots"
+      checked={countyAndHotspotLayers["hotspotLayers"]} 
+      onChange={() => {setCountyAndHotspotLayers({...countyAndHotspotLayers,
+        "hotspotLayers" : !(countyAndHotspotLayers["hotspotLayers"])})}}/>
+</Form>
         <Form>
           <Form.Check className="checkbox" label="Movement Lines" />
         </Form>

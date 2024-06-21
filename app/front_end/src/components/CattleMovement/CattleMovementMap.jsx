@@ -12,6 +12,7 @@ import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
+import HotspotLayers from "../Layers/HotspotLayers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/js/dist/tab";
 
@@ -19,7 +20,7 @@ const CattleMovementMap = ({
   jsonData,
   secondJsonData,
   checkedLayers,
-  useCountyLayers
+  useCountyandHotspotLayers
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
   if (
@@ -334,7 +335,8 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      <CountyLayers isChecked={useCountyLayers} />
+      <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]}/>
+      <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
