@@ -1,10 +1,4 @@
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { Tab, Nav } from "react-bootstrap";
@@ -18,6 +12,8 @@ import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/js/dist/tab";
 
 const CattleMovementMap = ({
   jsonData,
@@ -104,6 +100,136 @@ const CattleMovementMap = ({
     });
   };
 
+  //Function to create HTML popup content using template literal
+  const popupContent = function (data, movArr, index, lineIndex) {
+    return `
+    <div class="fs-5 fw-bold">${data.identifier}</div><br>
+    <div>
+      <nav>
+        <div class="nav nav-tabs" id="popupNav" role="tablist">
+          <button class="nav-link active" id="navSummary" data-bs-toggle="tab" data-bs-target="#navSummaryContent${index}${lineIndex}" type="button" role="tab" aria-controls="navSummaryContent" aria-selected="true">Summary</button>
+          <button class="nav-link" id="navInfo" data-bs-toggle="tab" data-bs-target="#navInfoContent${index}${lineIndex}" type="button" role="tab" aria-controls="navInfoContent" aria-selected="false">Animal</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="popTabContent">     
+        <div class="tab-pane fade show active" id="navSummaryContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navSummary" tabindex="0">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td><strong>Movement:</strong></td>
+                <td>${`${index + 1} of ${movArr.length}`}</td>
+              </tr>
+              <tr>
+                <td><strong>Duration of Stay:</strong></td>
+                <td>${
+                  movArr[index].stay_length <= 30
+                    ? `${movArr[index].stay_length} days`
+                    : movArr[index].stay_length > 30 &&
+                      movArr[index].stay_length <= 365
+                    ? `${(movArr[index].stay_length / 7).toFixed(0)} weeks`
+                    : `${(movArr[index].stay_length / 365).toFixed(1)} years`
+                }
+                </td> 
+              </tr>
+              <tr>
+                <td><strong>Date of Arrival:</strong></td>
+                <td>${movArr[index].on_date}</td> 
+              </tr>
+              <tr>
+                <td><strong>Date of Departure:</strong></td>
+                <td>${movArr[index].off_date}</td> 
+              </tr>
+              <tr>
+                <td><strong>Species:</strong></td>
+                <td>${data.species === "COW" ? "Bovine" : data.species}</td>
+              </tr>
+              <tr>
+                <td><strong>Precise Location:</strong></td>
+                <td>${movArr[index].cph}</td>
+              </tr>
+              <tr>
+                <td><strong>Precise Location Type:</strong></td>
+                <td>${movArr[index].type}</td>
+              </tr>
+              <tr>
+                <td><strong>OS Map Reference:</strong></td>
+                <td>${movArr[index].os_map_ref}</td>
+              </tr>
+              <tr>
+                <td><strong>Submission:</strong></td>
+                <td>${data.submission}</td> 
+              </tr>
+              <tr>
+                <td><strong>County:</strong></td>
+                <td>${movArr[index].county}</td>
+              </tr>
+              <tr>
+                <td><strong>Clade:</strong></td>
+                <td>${data.clade}</td>
+              </tr>
+              <tr>
+                <td><strong>Out of Home Range:</strong></td>
+                <td>${data.out_of_homerange === "N" ? "No" : "Yes"}</td>
+              </tr>
+              <tr>
+                <td><strong>Risk Area:</strong></td>
+                <td>${movArr[index].risk_area_current}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade show" id="navInfoContent${index}${lineIndex}" role="tabpanel" aria-labelledby="navInfo" tabindex="0">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td><strong>Birth Location:</strong></td>
+                <td>${movArr[0].cph}</td>
+              </tr>
+              <tr>
+                <td><strong>Date of Birth:</strong></td>
+                <td>${data.dob}</td>
+              </tr>
+              <tr>
+                <td><strong>Slaughter Date:</strong></td>
+                <td>${data.slaughter_date}</td>
+              </tr>
+              <tr>
+                <td><strong>Sex:</strong></td>
+                <td>${
+                  data.sex == `F`
+                    ? `Female`
+                    : data.sex == `M`
+                    ? `Male`
+                    : `Unknown`
+                }</td>
+              </tr> 
+              <tr>
+                <td><strong>Disclosing Test Type:</strong></td>
+                <td>${data.disclosing_test}</td>
+              </tr> 
+              <tr>
+                <td><strong>Import Country:</strong></td>
+                <td>${
+                  data.import_country == null
+                    ? `British`
+                    : `${data.import_country}`
+                }</td>
+              </tr> 
+            </tbody>
+          </table>
+        </div>
+      </div>           
+    `;
+  };
+
+  // Custom popup options (https://leafletjs.com/reference.html#popup)
+  const samplePopupOptions = {
+    maxWidth: 400, // in pixels
+    className: "cattlePopup",
+    autoClose: false,
+    closeOnClick: false,
+  };
+
   //Icons legend
   const CattleIconsLegend = () => {
     const map = useMap();
@@ -167,7 +293,7 @@ const CattleMovementMap = ({
       }),
     },
   ];
-
+  //
   const firstMovArrow = createArrowPattern("#0096FF");
   const secondMovArrow = createArrowPattern("#cb181d");
 
@@ -208,8 +334,8 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      <CountyLayers isChecked={useCountyLayers}/>
-      <RiskLayers checkedLayers={checkedLayers}/>
+      <CountyLayers isChecked={useCountyLayers} />
+      <RiskLayers checkedLayers={checkedLayers} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -228,185 +354,16 @@ const CattleMovementMap = ({
       >
         {linePts.map((position, index) => (
           <Marker
-            key={index}
+            ref={(ref) =>
+              ref?.bindPopup(
+                popupContent(jsonData, movArr, index, `firstMov-${index}`),
+                samplePopupOptions
+              )
+            }
+            key={`firstMov-${index}`}
             position={position}
             icon={renderIcon(movArr[index])}
           >
-            <Popup>
-              <div className="fs-5 fw-bold">{jsonData.identifier}</div>
-              <br />
-              <div>
-                <Tab.Container id="popupTabs" defaultActiveKey="summary">
-                  <Nav variant="tabs">
-                    <Nav.Item>
-                      <Nav.Link eventKey="summary" title="Summary">
-                        Summary
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="animal" title="Animal">
-                        Animal
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                  <Tab.Content className="cattlePopup">
-                    <Tab.Pane eventKey="summary">
-                      <table className="table table-striped">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <strong>Movement:</strong>
-                            </td>
-                            <td>{`${index + 1} of ${movArr.length}`}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Duration of Stay:</strong>
-                            </td>
-                            <td>
-                              {movArr[index].stay_length <= 30
-                                ? `${movArr[index].stay_length} days`
-                                : movArr[index].stay_length > 30 &&
-                                  movArr[index].stay_length <= 365
-                                ? `${(movArr[index].stay_length / 7).toFixed(
-                                    0
-                                  )} weeks`
-                                : `${(movArr[index].stay_length / 365).toFixed(
-                                    1
-                                  )} years`}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Arrival:</strong>
-                            </td>
-                            <td>{movArr[index].on_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Departure:</strong>
-                            </td>
-                            <td>{movArr[index].off_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Species:</strong>
-                            </td>
-                            <td>
-                              {jsonData.species === "COW"
-                                ? "Bovine"
-                                : jsonData.species}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Precise Location:</strong>
-                            </td>
-                            <td>{movArr[index].cph}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Precise Location Type:</strong>
-                            </td>
-                            <td>{movArr[index].type}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>OS Map Reference:</strong>
-                            </td>
-                            <td>{movArr[index].os_map_ref}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Submission:</strong>
-                            </td>
-                            <td>{jsonData.submission}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>County:</strong>
-                            </td>
-                            <td>{movArr[index].county}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Clade:</strong>
-                            </td>
-                            <td>{jsonData.clade}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Out of Home Range:</strong>
-                            </td>
-                            <td>
-                              {jsonData.out_of_homerange === "N" ? "No" : "Yes"}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Risk Area:</strong>
-                            </td>
-                            <td>{movArr[index].risk_area_current}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="animal">
-                      <table className="table table-striped">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <strong>Birth Location:</strong>
-                            </td>
-                            <td>{movArr[0].cph}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Birth:</strong>
-                            </td>
-                            <td>{jsonData.dob}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Slaughter Date:</strong>
-                            </td>
-                            <td>{jsonData.slaughter_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Sex:</strong>
-                            </td>
-                            <td>
-                              {jsonData.sex == `F`
-                                ? `Female`
-                                : jsonData.sex == `M`
-                                ? `Male`
-                                : `Unknown`}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Disclosing Test Type:</strong>
-                            </td>
-                            <td>{jsonData.disclosing_test}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Import Country:</strong>
-                            </td>
-                            <td>
-                              {jsonData.import_country == null
-                                ? `British`
-                                : `${jsonData.import_country}`}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </Tab.Pane>
-                  </Tab.Content>
-                </Tab.Container>
-              </div>
-            </Popup>
             <PolylineDecorator
               key={`decorator-${index}`}
               patterns={firstMovArrow}
@@ -423,187 +380,21 @@ const CattleMovementMap = ({
       >
         {secondLinePts.map((position, index) => (
           <Marker
-            key={index}
+            ref={(ref) =>
+              ref?.bindPopup(
+                popupContent(
+                  secondJsonData,
+                  secondMovArr,
+                  index,
+                  `secondMov-${index}`
+                ),
+                samplePopupOptions
+              )
+            }
+            key={`secondMov-${index}`}
             position={position}
             icon={renderIcon(secondMovArr[index])}
           >
-            <Popup autoClose={false}>
-              <div className="fs-5 fw-bold">{secondJsonData.identifier}</div>
-              <br />
-              <div>
-                <Tab.Container id="popupTabs" defaultActiveKey="summary">
-                  <Nav variant="tabs">
-                    <Nav.Item>
-                      <Nav.Link eventKey="summary" title="Summary">
-                        Summary
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="animal" title="Animal">
-                        Animal
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                  <Tab.Content className="cattlePopup">
-                    <Tab.Pane eventKey="summary">
-                      <table className="table table-striped">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <strong>Movement:</strong>
-                            </td>
-                            <td>{`${index + 1} of ${secondMovArr.length}`}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Duration of Stay:</strong>
-                            </td>
-                            <td>
-                              {secondMovArr[index].stay_length <= 30
-                                ? `${secondMovArr[index].stay_length} days`
-                                : secondMovArr[index].stay_length > 30 &&
-                                  secondMovArr[index].stay_length <= 365
-                                ? `${(
-                                    secondMovArr[index].stay_length / 7
-                                  ).toFixed(0)} weeks`
-                                : `${(
-                                    secondMovArr[index].stay_length / 365
-                                  ).toFixed(1)} years`}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Arrival:</strong>
-                            </td>
-                            <td>{secondMovArr[index].on_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Departure:</strong>
-                            </td>
-                            <td>{secondMovArr[index].off_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Species:</strong>
-                            </td>
-                            <td>
-                              {secondJsonData.species === "COW"
-                                ? "Bovine"
-                                : secondJsonData.species}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Precise Location:</strong>
-                            </td>
-                            <td>{secondMovArr[index].cph}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Precise Location Type:</strong>
-                            </td>
-                            <td>{secondMovArr[index].type}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>OS Map Reference:</strong>
-                            </td>
-                            <td>{secondMovArr[index].os_map_ref}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Submission:</strong>
-                            </td>
-                            <td>{secondJsonData.submission}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>County:</strong>
-                            </td>
-                            <td>{secondMovArr[index].county}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Clade:</strong>
-                            </td>
-                            <td>{secondJsonData.clade}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Out of Home Range:</strong>
-                            </td>
-                            <td>
-                              {secondJsonData.out_of_homerange === "N"
-                                ? "No"
-                                : "Yes"}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Risk Area:</strong>
-                            </td>
-                            <td>{secondMovArr[index].risk_area_current}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="animal">
-                      <table className="table table-striped">
-                        <tbody>
-                          <tr>
-                            <td>
-                              <strong>Birth Location:</strong>
-                            </td>
-                            <td>{secondMovArr[0].cph}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Date of Birth:</strong>
-                            </td>
-                            <td>{secondJsonData.dob}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Slaughter Date:</strong>
-                            </td>
-                            <td>{secondJsonData.slaughter_date}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Sex:</strong>
-                            </td>
-                            <td>
-                              {secondJsonData.sex == `F`
-                                ? `Female`
-                                : secondJsonData.sex == `M`
-                                ? `Male`
-                                : `Unknown`}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Disclosing Test Type:</strong>
-                            </td>
-                            <td>{secondJsonData.disclosing_test}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <strong>Import Country:</strong>
-                            </td>
-                            <td>
-                              {secondJsonData.import_country == null
-                                ? `British`
-                                : `${secondJsonData.import_country}`}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </Tab.Pane>
-                  </Tab.Content>
-                </Tab.Container>
-              </div>
-            </Popup>
             <PolylineDecorator
               key={`second-decorator-${index}`}
               patterns={secondMovArrow}
