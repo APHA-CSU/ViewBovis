@@ -8,6 +8,7 @@ import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
 
 const Nextstrain = () => {
   return (
+    <div className='container-fluid content'>
     <Container fluid>
       {/* <!-- Government BETA Banner --> */}
       <Row>
@@ -191,6 +192,7 @@ const Nextstrain = () => {
         </div>
       </Row>
     </Container>
+    </div>
   );
 };
 export default Nextstrain;

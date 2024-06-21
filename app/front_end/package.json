@@ -8,6 +8,7 @@
     "bootstrap": "^5.3.3",
     "buffer": "^6.0.3",
     "fs": "^0.0.1-security",
+    "govuk-frontend": "^5.4.0",
     "govuk-react": "^0.10.6",
     "jszip": "^3.10.1",
     "leaflet": "^1.9.4",

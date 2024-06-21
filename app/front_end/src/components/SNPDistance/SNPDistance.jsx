@@ -6,6 +6,8 @@ import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
 import snplogo from "../../imgs/SNPPageDNA_aphaGreen.svg";
 import { NavLink } from "react-router-dom";
+import './SNPMap.css'
+import './SNPMatrix.css'
 
 const SNPdistance = () => {
   return (

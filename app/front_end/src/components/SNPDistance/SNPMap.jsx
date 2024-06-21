@@ -64,7 +64,7 @@ const SNPMap = () => {
     setCheckedLayers({...checkedLayers})
   }
 
-  return (
+  return (<div className='container-fluid content'>
     <Container fluid id="custom-container">
       <Row>
         <Col className="sidebar col-3">
@@ -80,6 +80,7 @@ const SNPMap = () => {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };
 

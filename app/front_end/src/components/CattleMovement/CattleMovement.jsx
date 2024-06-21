@@ -91,6 +91,7 @@ const CattleMovement = () => {
   }, [searchSecondSample]);
 
   return (
+    <div className='container-fluid content'>
     <Container fluid id="custom-container" data-testid="cattlemovement-1">
       <Row>
         <Col className="sidebar col-3">
@@ -113,6 +114,7 @@ const CattleMovement = () => {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };
 

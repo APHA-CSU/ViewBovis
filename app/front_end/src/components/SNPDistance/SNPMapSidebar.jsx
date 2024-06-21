@@ -5,7 +5,6 @@ import Form from "react-bootstrap/Form";
 import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
-import "./SNPMap.css"
 
 const SNPMapSidebar = ({ fetchSNPMapDataset,handleCheckboxes,checkedLayers, 
   countyAndHotspotLayers,setCountyAndHotspotLayers }) => {

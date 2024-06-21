@@ -9,7 +9,7 @@ import img from "../../imgs/VBIcon16_APHAGreen.svg";
 import { NavLink } from "react-router-dom";
 
 const Home = () => {
-  return (
+  return (<div className='container-fluid content'>
     <Container fluid data-testid="home-1">
       {/* <!-- Government BETA Banner --> */}
       <Row>
@@ -184,6 +184,7 @@ const Home = () => {
         </div>
       </Row>
     </Container>
+    </div>
   );
 };
 
