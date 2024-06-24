@@ -73,7 +73,7 @@ const CattlMovMapSidebar = ({
       </Row>
       <Row className="my-5">
         <Heading size="SMALL">LAYERS</Heading>
-        <Accordion>
+        <Accordion className="accordion-container">
           <Accordion.Item eventKey="1">
             <Accordion.Header>
               <Form.Check

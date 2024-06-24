@@ -23,8 +23,12 @@
   margin-bottom: 1px;
 }
 
-.accordion-button {
+.my-4 .accordion-button {
   font-weight: bold;
+}
+
+.accordion-container {
+  padding-right: 100px;
 }
 
 .checkbox {
@@ -57,7 +61,8 @@
   font-size: 15px;
 }
 
-.cattlePopup .leaflet-popup-tip, .leaflet-popup-content-wrapper {
+.cattlePopup .leaflet-popup-tip,
+.cattlePopup .leaflet-popup-content-wrapper {
   opacity: 0.95;
   color: black;
   height: 300px;
