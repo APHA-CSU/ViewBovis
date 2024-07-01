@@ -1,7 +1,6 @@
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { Tab, Nav } from "react-bootstrap";
 import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
 import marketImg from "../../imgs/market.svg";
@@ -20,7 +19,7 @@ const CattleMovementMap = ({
   jsonData,
   secondJsonData,
   checkedLayers,
-  useCountyandHotspotLayers
+  useCountyandHotspotLayers,
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
   if (
@@ -315,10 +314,6 @@ const CattleMovementMap = ({
         patterns,
       }).addTo(map);
 
-      // Get the bounds of the polyline & fit the map to the polyline bounds
-      const bounds = polyline.getBounds();
-      map.fitBounds(bounds);
-
       // Update prevPolylineRef & prevDecoratorsRef values to the current polyline & decorators values
       prevPolylineRef.current = polyline;
       prevDecoratorsRef.current = decorators;
@@ -335,9 +330,10 @@ const CattleMovementMap = ({
 
   return (
     <MapContainer center={[53.3781, -1]} zoom={6}>
-      <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]}/>
+      <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
+      <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -411,5 +407,20 @@ const CattleMovementMap = ({
     </MapContainer>
   );
 };
-
+//Function to zoom in on the markers and add padding so all points visible
+const FitMapToBounds = ({ jsonData, secondJsonData }) => {
+  const map = useMap();
+  const firstLatLon = Object.values(jsonData.move).map((arr) => [
+    arr.lat,
+    arr.lon,
+  ]);
+  const secondLatLon = secondJsonData.move
+    ? Object.values(secondJsonData.move).map((arr) => [arr.lat, arr.lon])
+    : [];
+   const combinedLatLon = [...firstLatLon, ...secondLatLon];
+  useEffect(() => {
+    map.fitBounds(L.latLngBounds(combinedLatLon).pad(0.1));
+  }, [jsonData, secondJsonData]);
+  return <></>;
+};
 export default CattleMovementMap;
