@@ -1,8 +1,8 @@
 import { interpolateViridis } from "d3";
 import { init } from "echarts";
 import { useEffect, useRef } from "react";
-const SNPMatrixComp = ({ matrixSampleSelected, matrixSNPDistance,json }) => {
-  const chartRef = useRef()
+const SNPMatrixComp = ({ json }) => {
+  const heatMap = useRef()
   const renderSNPDistribution = function (matrix, minValue, maxValue) {
     // Subset all non-identical pairwise comparisons and extract their SNP distance values
     const uniqSNPComparisons = matrix
@@ -164,10 +164,9 @@ const SNPMatrixComp = ({ matrixSampleSelected, matrixSNPDistance,json }) => {
     maxValue
   ) {
     // Select element from DOM
-    const chartDom = document.getElementById("snpmatrix");
 
     // Initiate echarts instance
-    const echartInstance = init(chartDom);
+    const echartInstance = init(heatMap.current);
 
     // Generate an array of colors using d3.interpolateViridis
     const viridis = [...Array(maxValue + 1).keys()].map((d) =>
@@ -307,61 +306,53 @@ const SNPMatrixComp = ({ matrixSampleSelected, matrixSNPDistance,json }) => {
 
   // Async function that renders target samples and its related samples on map
   const showSNPMatrix = function () {
-      // First clear any error and warning text
-      document.getElementById("snpmatrix-warning-text").textContent = "";
-      if (
-        document.getElementById("snpmatrix-error-message")
-      ) {
-        document.getElementById("snpmatrix-error-message").remove();
-      }
-        // Remove spinner when fetch is complete
-        //document.getElementById("snpmatrix-spinner").classList.add("hidden");
+    // First clear any error and warning text
+    // Remove spinner when fetch is complete
+    //document.getElementById("snpmatrix-spinner").classList.add("hidden");
 
-        // If response contains a warning
-          // Extract the selected sample Submission number and Identifier
-          const selectedSampleSubmission = json.soi;
-          const selectedSampleIdentifier = json.identifier;
-          // console.log(selectedSampleIdentifier);
+    // If response contains a warning
+    // Extract the selected sample Submission number and Identifier
+    const selectedSampleSubmission = json.soi;
+    const selectedSampleIdentifier = json.identifier;
+    // console.log(selectedSampleIdentifier);
 
-          // Extract matrix from json array
-          const matrix = json.matrix;
-          // console.log(matrix);
+    // Extract matrix from json array
+    const matrix = json.matrix;
+    // console.log(matrix);
 
-          const sampleIDs = json.sampleIDs;
-          console.log(sampleIDs);
+    const sampleIDs = json.sampleIDs;
+    console.log(sampleIDs);
 
-          //================
-          // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
-          //================
+    //================
+    // POSSIBLE IDEA: BACKEND TO PROVIDE IDENTIFIERS INSTEAD OF AF NUMBERS?
+    //================
 
-          // Extract minimum and maximum SNP distance
-          const minValue = Math.min(...matrix.map((i) => i[2]));
-          const maxValue = Math.max(...matrix.map((i) => i[2]));
-          // console.log(minValue, maxValue);
+    // Extract minimum and maximum SNP distance
+    const minValue = Math.min(...matrix.map((i) => i[2]));
+    const maxValue = Math.max(...matrix.map((i) => i[2]));
+    // console.log(minValue, maxValue);
 
-          // Render SNP distribution plot
-          renderSNPDistribution(matrix, minValue, maxValue);
+    // Render SNP distribution plot
+    renderSNPDistribution(matrix, minValue, maxValue);
 
-          // Render SNP matrix
-          plotHeatmap(
-            matrix,
-            selectedSampleIdentifier,
-            selectedSampleSubmission,
-            sampleIDs,
-            minValue,
-            maxValue
-          );
+    // Render SNP matrix
+    plotHeatmap(
+      matrix,
+      selectedSampleIdentifier,
+      selectedSampleSubmission,
+      sampleIDs,
+      minValue,
+      maxValue
+    );
   };
 
   useEffect(() => {
-    showSNPMatrix();
-  }, [matrixSampleSelected, matrixSNPDistance]);
-
-  return (
-    <div className="col-9" id="snpmatrix-container">
-      <div id="snpmatrix" ref={chartRef} style={{ marginTop: "10px" }}></div>
-    </div>
-  );
+    if (Object.keys(json).length > 0) showSNPMatrix();
+  }, [json]);
+ 
+  return <div ref={heatMap}>
+  
+  </div>
 };
 
 export default SNPMatrixComp;

@@ -6,14 +6,16 @@ import SNPMatrixComp from "./SNPMatrixComp.jsx";
 import { useState } from "react";
 
 const SNPMatrix = () => {
-  const [matrixSNPDistance, setMatrixSNPDistance] = useState(1);
-  const [matrixSampleSelected, SetMatrixSampleSelected] = useState("");
+  const [snpMatrixOptions, setSNPMatrixOptions] = useState({
+    sample: "",
+    snp_distance: 1,
+  });
   const [matrixJson, setMatrixJson] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const handlePlotMatrix = async (sample, distance) => {
+  const handlePlotMatrix = async () => {
     // Fetch json data from backend
     const response = await fetch(
-      `/sample/matrix?sample_name=${matrixSampleSelected}&snp_distance=${matrixSNPDistance}`
+      `/sample/matrix?sample_name=${snpMatrixOptions["sample"]}&snp_distance=${snpMatrixOptions["snp_distance"]}`
     );
 
     if (!response.ok) {
@@ -39,12 +41,20 @@ const SNPMatrix = () => {
       <Container fluid id="custom-container">
         <Row>
           <Col className="sidebar col-3">
-            <SNPMatrixSideBar handlePlotMatrix={handlePlotMatrix} />
+            <SNPMatrixSideBar
+              handlePlotMatrix={handlePlotMatrix}
+              snpMatrixOptions={snpMatrixOptions}
+              setSNPMatrixOptions={setSNPMatrixOptions}
+            />
           </Col>
           <Col>
+            <div className="col-9" id="snpmatrix-container">
+              <div
+                id="snpmatrix"
+                style={{ marginTop: "10px" }}
+              ></div>
+            </div>
             <SNPMatrixComp
-              matrixSampleSelected={matrixSampleSelected}
-              matrixSNPDistance={matrixSNPDistance}
               json={matrixJson}
             />
           </Col>

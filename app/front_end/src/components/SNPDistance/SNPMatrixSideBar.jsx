@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-const SNPMatrixSideBar = ({handlePlotMatrix}) => {
-    const [matrixSample,SetMatrixSample] = useState("")
-    const [snpDistance,SetSNPDistance] = useState(1)
+const SNPMatrixSideBar = ({handlePlotMatrix, snpMatrixOptions, setSNPMatrixOptions}) => {
   return (
     <>
       <br />
@@ -20,8 +18,8 @@ const SNPMatrixSideBar = ({handlePlotMatrix}) => {
             data-bs-placement="top"
             data-bs-custom-class="input-tooltip"
             title="Identifier or Submission Number"
-            value={matrixSample}
-            onChange={(e) => SetMatrixSample(e.target.value)}
+            value={snpMatrixOptions["sample"]}
+            onChange={(e) => setSNPMatrixOptions({...snpMatrixOptions,"sample":(e.target.value).replace(/ /g,"")})}
           />
         </p>
       </div>
@@ -46,14 +44,14 @@ const SNPMatrixSideBar = ({handlePlotMatrix}) => {
             min="0"
             max="10"
             step="1"
-            value={snpDistance}
-            onChange={(e) => SetSNPDistance(e.target.value)}
+            value={snpMatrixOptions["snp_distance"]}
+            onChange={(e) => setSNPMatrixOptions({...snpMatrixOptions,"snp_distance":e.target.value})}
           />
           <br />
           <span style={{ fontSize: "20px" }}>
             SNP Distance:{" "}
             <p class="display-value">
-            {snpDistance}
+            {snpMatrixOptions["snp_distance"]}
             </p>
           </span>
 
@@ -64,7 +62,7 @@ const SNPMatrixSideBar = ({handlePlotMatrix}) => {
             id="btn__plot-snpmatrix"
             aria-disabled="true"
             data-module="govuk-button"
-            onClick={()=>{handlePlotMatrix(matrixSample,snpDistance)}}
+            onClick={handlePlotMatrix}
           >
             Plot SNP Matrix
           </button>
