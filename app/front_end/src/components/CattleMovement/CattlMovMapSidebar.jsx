@@ -166,9 +166,6 @@ const CattlMovMapSidebar = ({
             }}
           />
         </Form>
-        <Form>
-          <Form.Check className="checkbox" label="Movement Lines" />
-        </Form>
       </Row>
       <hr></hr>
     </div>

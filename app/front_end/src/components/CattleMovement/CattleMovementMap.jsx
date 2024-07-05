@@ -35,6 +35,9 @@ const CattleMovementMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
+        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
+        <RiskLayers checkedLayers={checkedLayers} />
       </MapContainer>
     );
   }
@@ -417,7 +420,7 @@ const FitMapToBounds = ({ jsonData, secondJsonData }) => {
   const secondLatLon = secondJsonData.move
     ? Object.values(secondJsonData.move).map((arr) => [arr.lat, arr.lon])
     : [];
-   const combinedLatLon = [...firstLatLon, ...secondLatLon];
+  const combinedLatLon = [...firstLatLon, ...secondLatLon];
   useEffect(() => {
     map.fitBounds(L.latLngBounds(combinedLatLon).pad(0.1));
   }, [jsonData, secondJsonData]);
