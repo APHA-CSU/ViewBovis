@@ -4,6 +4,8 @@
 #ignore node modulus of the react app version
 /app/front_end/node_modules/
 
+/app/front_end/auspice
+
 .vscode/
 data/
 /app/front_end/node_modules
