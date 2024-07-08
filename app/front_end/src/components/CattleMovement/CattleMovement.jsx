@@ -96,7 +96,7 @@ const CattleMovement = () => {
     <div className="container-fluid content">
       <Container fluid id="custom-container" data-testid="cattlemovement-1">
         <Row>
-          <Col className="sidebar col-3">
+          <Col className="sidebar col-3" id="content2-column1-container">
             <MapSidebar
               setSearchSample={setSearchSample}
               handleCheckboxes={handleCheckboxes}

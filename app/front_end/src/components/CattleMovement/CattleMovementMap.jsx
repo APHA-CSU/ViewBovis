@@ -14,6 +14,7 @@ import CountyLayers from "../Layers/CountyLayers";
 import HotspotLayers from "../Layers/HotspotLayers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/js/dist/tab";
+import HideSidebar from "../MapControls/HideSidebar";
 
 const CattleMovementMap = ({
   jsonData,
@@ -38,6 +39,7 @@ const CattleMovementMap = ({
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
         <RiskLayers checkedLayers={checkedLayers} />
+        <HideSidebar/>
       </MapContainer>
     );
   }
@@ -337,6 +339,7 @@ const CattleMovementMap = ({
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
+      <HideSidebar/>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
