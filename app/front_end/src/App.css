@@ -131,6 +131,7 @@ a.nav-link:hover {
 .nextstrain-box {
   background-color: #f2f2f2;
   border-top: 10px solid #00a33b;
+  height: 100%;
   padding: 10px;
   padding-top: 0;
   font-size: 17px;
