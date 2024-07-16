@@ -159,23 +159,27 @@ const Nextstrain = () => {
                           <br></br>
                           <p>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B111">
+                              <a className="text-hyperlink" id="clade-B111"
+                              onClick={()=>{setNextstrainURL(`B1-11?p=grid&tl=Identifier`)}}>
                                 B1-11
                               </a>
                             </span>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B613">
+                              <a className="text-hyperlink" id="clade-B613"
+                              onClick={()=>{setNextstrainURL(`B6-13?p=grid&tl=Identifier`)}}>
                                 B6-13
                               </a>
                             </span>
                             <br></br>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B671">
+                              <a className="text-hyperlink" id="clade-B671"
+                              onClick={()=>{setNextstrainURL(`B6-71?p=grid&tl=Identifier`)}}>
                                 B6-71
                               </a>
                             </span>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B691">
+                              <a className="text-hyperlink" id="clade-B691"
+                              onClick={()=>{setNextstrainURL(`B6-91?p=grid&tl=Identifier`)}}>
                                 B6-91
                               </a>
                             </span>

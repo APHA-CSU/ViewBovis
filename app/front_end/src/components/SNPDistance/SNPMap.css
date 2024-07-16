@@ -52,3 +52,72 @@ input[type="range"]::-webkit-slider-thumb:active {
 .leaflet-container {
     transition: transform 0.3s ease;
 }
+
+/* ---------------------- */
+/* Other CSS */
+/* ---------------------- */
+
+#snpmap-spinner-container {
+    display: inline-flex;
+    margin-top: 4px;
+    padding-left: 20px;
+}
+
+#btn__plot-related-isolates {
+    margin-bottom: 10px;
+}
+
+#snpmap-warning-text {
+    color: var(--apha-orange);
+    font-size: 20px;
+}
+
+.snp-table-toggle {
+    width: 147px !important;
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 16px;
+    padding-left: 16px;
+}
+
+#snpmap-content-container {
+    padding-right: 0;
+}
+
+#table-content-container {
+    max-height: 63%;
+}
+
+#table-content-container.tabulator {
+    font-size: 0.8em;
+}
+
+#table-content-container input {
+    padding: 0 !important;
+    margin-top: 4px !important;
+    font-size: 0.9em;
+}
+
+#table-content-container input:focus-visible {
+    outline-offset: 0;
+}
+
+.btn-snptable {
+    width: fit-content;
+    height: 30px;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
+.snp-cluster-icon {
+    background-color:#00A33B;
+    color: #ffffff; 
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px; 
+  }

@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
+import Collapse from "react-bootstrap/Collapse";
 
 const CattleMovement = () => {
   const [searchSample, setSearchSample] = useState("");
@@ -13,6 +14,7 @@ const CattleMovement = () => {
     hotspotLayers: false,
     countyLayers: false,
   });
+  const [openSideBar, setOpenSideBar] = useState(true);
   const [checkedLayers, setCheckedLayers] = useState({});
 
   const handleCheckboxes = (index) => {
@@ -96,22 +98,26 @@ const CattleMovement = () => {
     <div className="container-fluid content">
       <Container fluid id="custom-container" data-testid="cattlemovement-1">
         <Row>
-          <Col className="sidebar col-3" id="content2-column1-container">
-            <MapSidebar
-              setSearchSample={setSearchSample}
-              handleCheckboxes={handleCheckboxes}
-              checkedLayers={checkedLayers}
-              setSearchSecondSample={setSearchSecondSample}
-              countyAndHotspotLayers={countyAndHotspotLayers}
-              setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-            />
-          </Col>
+          <Collapse in={openSideBar}>
+            <Col className="sidebar col-3">
+              <MapSidebar
+                setSearchSample={setSearchSample}
+                handleCheckboxes={handleCheckboxes}
+                checkedLayers={checkedLayers}
+                setSearchSecondSample={setSearchSecondSample}
+                countyAndHotspotLayers={countyAndHotspotLayers}
+                setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+              />
+            </Col>
+          </Collapse>
           <Col>
             <CattleMovementMap
               jsonData={jsonData}
               checkedLayers={checkedLayers}
               secondJsonData={secondJsonData}
               useCountyandHotspotLayers={countyAndHotspotLayers}
+              setOpenSideBar={setOpenSideBar}
+              openSideBar={openSideBar}
             />
           </Col>
         </Row>

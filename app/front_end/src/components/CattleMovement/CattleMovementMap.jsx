@@ -21,6 +21,8 @@ const CattleMovementMap = ({
   secondJsonData,
   checkedLayers,
   useCountyandHotspotLayers,
+  setOpenSideBar,
+  openSideBar,
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
   if (
@@ -39,7 +41,10 @@ const CattleMovementMap = ({
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
         <RiskLayers checkedLayers={checkedLayers} />
-        <HideSidebar/>
+        <HideSidebar
+          setOpenSideBar={setOpenSideBar}
+          openSideBar={openSideBar}
+        />
       </MapContainer>
     );
   }
@@ -339,7 +344,7 @@ const CattleMovementMap = ({
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
-      <HideSidebar/>
+      <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
