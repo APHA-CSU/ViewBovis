@@ -9,6 +9,7 @@ import HotspotLayers from "../Layers/HotspotLayers";
 import { useEffect } from "react";
 import L from "leaflet";
 import HideSidebar from "../MapControls/HideSidebar";
+import MeasurementTool from "../MapControls/MeasurementTool";
 
 const SNPMapComp = ({
   SNPMapDataset,
@@ -119,6 +120,7 @@ const SNPMapComp = ({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
+      <MeasurementTool />
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />

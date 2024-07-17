@@ -144,3 +144,7 @@ a.nav-link:hover {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+.leaflet-container{
+  outline: none !important;
+}

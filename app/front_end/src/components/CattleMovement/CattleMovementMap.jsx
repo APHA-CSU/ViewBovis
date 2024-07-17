@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import { Icon, divIcon } from "leaflet";
+import { Icon, divIcon, L } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
@@ -7,7 +7,6 @@ import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
-import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
@@ -15,7 +14,7 @@ import HotspotLayers from "../Layers/HotspotLayers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/js/dist/tab";
 import HideSidebar from "../MapControls/HideSidebar";
-
+import MeasurementTool from "../MapControls/MeasurementTool";
 const CattleMovementMap = ({
   jsonData,
   secondJsonData,
@@ -45,6 +44,7 @@ const CattleMovementMap = ({
           setOpenSideBar={setOpenSideBar}
           openSideBar={openSideBar}
         />
+        <MeasurementTool />
       </MapContainer>
     );
   }
@@ -345,6 +345,7 @@ const CattleMovementMap = ({
       <RiskLayers checkedLayers={checkedLayers} />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
+      <MeasurementTool />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
