@@ -121,3 +121,7 @@ input[type="range"]::-webkit-slider-thumb:active {
     text-align: center;
     line-height: 30px; 
   }
+
+.marker-SOI {
+    z-index: 906 !important;
+}

@@ -20,7 +20,7 @@ const markerNumberIcon = (number) => {
 const relatedMarker = (props, SOI) => { 
 if(props.submission === SOI) {
   return new L.Icon({
-    className: `number-marker marker-${props.submission}`,
+    className: `number-marker marker-SOI`,
     iconUrl: SNPsoi,
     iconSize: [40, 40],
     iconAnchor: [20, 35],

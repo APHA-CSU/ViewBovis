@@ -10,6 +10,10 @@ import { useEffect } from "react";
 import L from "leaflet";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
+import ResetView from "../MapControls/ResetView";
+import SNPsoi from "../../imgs/SNPsoi.svg";
+import SNPrelated from "../../imgs/SNPrelated.svg";
+import movementClusterImg from "../../imgs/movementCluster.svg";
 
 const SNPMapComp = ({
   SNPMapDataset,
@@ -119,12 +123,13 @@ const SNPMapComp = ({
           OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <ResetView />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
       <MeasurementTool />
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
-      <FitMapToBounds SNPMapDataset={SNPMapDataset} />
+      <LegendTableAction SNPMapDataset={SNPMapDataset} />
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
@@ -179,7 +184,7 @@ const SNPMapComp = ({
     </MapContainer>
   );
 };
-const FitMapToBounds = ({ SNPMapDataset }) => {
+const LegendTableAction = ({ SNPMapDataset }) => {
   const map = useMap();
   const btnShowTable = new L.Control({
     position: "topright",
@@ -196,6 +201,36 @@ const FitMapToBounds = ({ SNPMapDataset }) => {
     );
     return divContainer;
   };
+  const markerLegend = new L.control({ position: "topright" });
+  markerLegend.onAdd = function (map) {
+    let div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+    div.style.width = "150px";
+    div.style.background = "white";
+
+    // Build legend with HTML
+    div.insertAdjacentHTML(
+      "afterbegin",
+      `
+    <div style="padding-top:5px;">
+        <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+        <span style="display: flex; align-items: center; padding-bottom: 5px;">
+          <img src=${SNPsoi} class="legend-marker-img">
+          <span class="legend-marker-title">Sample</span>
+        </span>
+        <span style="display: flex; align-items: center; padding-bottom: 5px;padding-left: 8px;">
+        <img src=${SNPrelated} width="25" height="25">
+          <span class="legend-marker-title">SNP Relatedness</span>
+        </span>
+        <span style="display: flex; align-items: center;">
+        <img src=${movementClusterImg} class="legend-marker-img">
+        <span class="legend-marker-title">Geographic Group</span>
+        </span>
+      </div>
+    `
+    );
+
+    return div;
+  };
   useEffect(() => {
     btnShowTable.addTo(map);
     const latLon = Object.keys(SNPMapDataset)
@@ -204,13 +239,14 @@ const FitMapToBounds = ({ SNPMapDataset }) => {
       })
       .map((elem) => [SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]);
     if (latLon?.length > 0) {
+      markerLegend.addTo(map);
       map.fitBounds(L.latLngBounds(latLon).pad(0.1));
     }
     return () => {
-      map.removeControl(btnShowTable);
+      btnShowTable.remove();
+      markerLegend.remove();
     };
   }, [SNPMapDataset]);
-  return <></>;
 };
 
 export default SNPMapComp;

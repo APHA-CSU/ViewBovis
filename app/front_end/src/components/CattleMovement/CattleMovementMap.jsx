@@ -11,10 +11,11 @@ import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
 import HotspotLayers from "../Layers/HotspotLayers";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/js/dist/tab";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
+import ResetView from "../MapControls/ResetView";
+
 const CattleMovementMap = ({
   jsonData,
   secondJsonData,
@@ -40,6 +41,7 @@ const CattleMovementMap = ({
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
         <RiskLayers checkedLayers={checkedLayers} />
+        <ResetView />
         <HideSidebar
           setOpenSideBar={setOpenSideBar}
           openSideBar={openSideBar}
@@ -344,6 +346,7 @@ const CattleMovementMap = ({
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
+      <ResetView />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
       <MeasurementTool />
       <TileLayer
