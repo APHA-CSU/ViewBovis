@@ -15,6 +15,7 @@ import "bootstrap/js/dist/tab";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
 import ResetView from "../MapControls/ResetView";
+import BaseMaps from "../MapControls/Basemaps";
 
 const CattleMovementMap = ({
   jsonData,
@@ -38,6 +39,7 @@ const CattleMovementMap = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <BaseMaps />
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
         <RiskLayers checkedLayers={checkedLayers} />
@@ -345,6 +347,7 @@ const CattleMovementMap = ({
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
+      <BaseMaps />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
       <ResetView />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />

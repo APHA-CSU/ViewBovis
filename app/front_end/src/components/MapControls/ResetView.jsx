@@ -10,7 +10,7 @@ const ResetView = () => {
     const resetView = new L.Control({
       position: "topleft",
     });
-
+    const scaleControl = new L.control.scale({imperial: false})
     resetView.onAdd = function() {
         const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
         divContainer.onclick = () => {
@@ -28,8 +28,10 @@ const ResetView = () => {
         return divContainer;
     }
     resetView.addTo(map);
+    scaleControl.addTo(map)
     return () => {
         resetView.remove();
+        scaleControl.remove();
     };
   }, []);
 };

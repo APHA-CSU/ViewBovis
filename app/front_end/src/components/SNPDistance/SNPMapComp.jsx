@@ -14,6 +14,7 @@ import ResetView from "../MapControls/ResetView";
 import SNPsoi from "../../imgs/SNPsoi.svg";
 import SNPrelated from "../../imgs/SNPrelated.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
+import BaseMaps from "../MapControls/Basemaps";
 
 const SNPMapComp = ({
   SNPMapDataset,
@@ -123,6 +124,7 @@ const SNPMapComp = ({
           OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <BaseMaps />
       <ResetView />
       <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
       <MeasurementTool />
