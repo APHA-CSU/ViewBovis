@@ -22,6 +22,8 @@ const SNPMapComp = ({
   useCountyandHotspotLayers,
   setOpenSideBar,
   openSideBar,
+  setOpenTable,
+  openTable,
 }) => {
   //SNP map cluster icon
   const createCustomClusterIcon = (cluster) => {
@@ -131,7 +133,11 @@ const SNPMapComp = ({
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
-      <LegendTableAction SNPMapDataset={SNPMapDataset} />
+      <LegendTableAction
+        SNPMapDataset={SNPMapDataset}
+        setOpenTable={setOpenTable}
+        openTable={openTable}
+      />
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
@@ -186,7 +192,8 @@ const SNPMapComp = ({
     </MapContainer>
   );
 };
-const LegendTableAction = ({ SNPMapDataset }) => {
+
+const LegendTableAction = ({ SNPMapDataset, setOpenTable, openTable }) => {
   const map = useMap();
   const btnShowTable = new L.Control({
     position: "topright",
@@ -194,13 +201,19 @@ const LegendTableAction = ({ SNPMapDataset }) => {
   btnShowTable.onAdd = function (map) {
     const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
     divContainer.setAttribute("id", "btn__show-table");
-
-    divContainer.insertAdjacentHTML(
-      "afterbegin",
-      `
-          <a class="snp-table-toggle btn-show-table" data-bs-toggle="collapse" id="show-table" href="#table-sidebar-container">Show Table</a>
-        `
-    );
+    divContainer.onclick = function () {
+      setOpenTable((bool) => !bool);
+    };
+    if (!openTable)
+      divContainer.insertAdjacentHTML(
+        "afterbegin",
+        `<a class="snp-table-toggle btn-show-table">Show Table</a>`
+      );
+    else
+      divContainer.insertAdjacentHTML(
+        "afterbegin",
+        `<a class="snp-table-toggle btn-show-table">Hide Table</a>`
+      );
     return divContainer;
   };
   const markerLegend = new L.control({ position: "topright" });
@@ -234,7 +247,6 @@ const LegendTableAction = ({ SNPMapDataset }) => {
     return div;
   };
   useEffect(() => {
-    btnShowTable.addTo(map);
     const latLon = Object.keys(SNPMapDataset)
       .filter((elem) => {
         return SNPMapDataset[elem]?.lat && SNPMapDataset[elem]?.lon;
@@ -245,10 +257,16 @@ const LegendTableAction = ({ SNPMapDataset }) => {
       map.fitBounds(L.latLngBounds(latLon).pad(0.1));
     }
     return () => {
-      btnShowTable.remove();
       markerLegend.remove();
     };
   }, [SNPMapDataset]);
+
+  useEffect(() => {
+    btnShowTable.addTo(map);
+    return () => {
+      btnShowTable.remove();
+    };
+  }, [openTable]);
 };
 
 export default SNPMapComp;

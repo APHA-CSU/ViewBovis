@@ -5,9 +5,11 @@ import Col from "react-bootstrap/Col";
 import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
 import SNPMapComp from "./SNPMapComp";
 import Collapse from "react-bootstrap/Collapse";
+import SNPTable from "./SNPTable";
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
+  const [openTable,setOpenTable] = useState(false)
   const [openSideBar, setOpenSideBar] = useState(true);
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
     hotspotLayers: false,
@@ -92,8 +94,17 @@ const SNPMap = () => {
               useCountyandHotspotLayers={countyAndHotspotLayers}
               setOpenSideBar={setOpenSideBar}
               openSideBar={openSideBar}
+              setOpenTable={setOpenTable}
+              openTable={openTable}
             />
           </Col>
+          <Collapse in={openTable}>
+           <Col className="col-4">
+           <SNPTable
+                json={SNPMapDataset}
+              />
+           </Col>
+          </Collapse>
         </Row>
       </Container>
     </div>

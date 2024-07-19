@@ -20,13 +20,13 @@ const markerNumberIcon = (number) => {
 const relatedMarker = (props, SOI) => { 
 if(props.submission === SOI) {
   return new L.Icon({
-    className: `number-marker marker-SOI`,
+    className: `number-marker marker-SOI marker-${props.submission}`,
     iconUrl: SNPsoi,
     iconSize: [40, 40],
     iconAnchor: [20, 35],
   })} else {
     return new L.DivIcon({
-      className : "number-marker-related",
+      className : `number-marker-related marker-${props.submission}`,
       html : markerNumberIcon(props.snp_distance),
       styles : {border: "none",
       background: "transparent", display : "flex"},
