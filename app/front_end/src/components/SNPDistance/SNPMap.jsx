@@ -99,10 +99,10 @@ const SNPMap = () => {
             />
           </Col>
           <Collapse in={openTable}>
-           <Col className="col-4">
-           <SNPTable
+           <Col className="sidebar-table col-4">
+           {Object.keys(SNPMapDataset).length > 0 && <SNPTable
                 json={SNPMapDataset}
-              />
+              />}
            </Col>
           </Collapse>
         </Row>
