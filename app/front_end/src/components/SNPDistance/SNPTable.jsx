@@ -25,21 +25,21 @@ class SNPTable extends React.Component {
         field: "cph",
         headerFilter: "input",
         sorter: "string",
-        width: 200,
+        width: 150,
       },
       {
         title: "Identifier",
         field: "animal_id",
         headerFilter: "input",
         sorter: "string",
-        width: 200,
+        width: 150,
       },
       {
         title: "Submission",
         field: "submission",
         headerFilter: "input",
         sorter: "string",
-        width: 200,
+        width: 150,
         formatter: function (cell) {
           const cellValue = cell.getValue();
           if (cellValue === soi) {
@@ -54,7 +54,7 @@ class SNPTable extends React.Component {
         headerFilter: "input",
         hozAlign: "right",
         sorter: "number",
-        width: 150,
+        width: 100,
       },
       {
         title: "Miles",
@@ -62,14 +62,14 @@ class SNPTable extends React.Component {
         headerFilter: "input",
         hozAlign: "right",
         sorter: "number",
-        width: 150,
+        width: 100,
       },
       {
         title: "Slaughter Date",
         field: "slaughter_date",
         headerFilter: "input",
         sorter: "date",
-        width: 200,
+        width: 150,
       },
     ];
 
@@ -79,9 +79,11 @@ class SNPTable extends React.Component {
         // Get the row submission
         const rowSubmissionSelect = row.getData().submission;
         const marker = document.querySelector(`.marker-${rowSubmissionSelect}`);
-        if (marker)
+        if (marker) {
           marker.style.filter =
             "drop-shadow(0 0 6px #ffbe33) drop-shadow(0 0 6px #ffbe33) drop-shadow(0 0 8px #ffbe33)";
+          marker.style["z-index"] = 950;
+        }
       }
     };
     const handleRowDeselect = (row) => {
@@ -92,7 +94,10 @@ class SNPTable extends React.Component {
         const marker = document.querySelector(
           `.marker-${rowSubmissionDeselect}`
         );
-        if (marker) marker.style.filter = "none";
+        if (marker) {
+          marker.style.filter = "none";
+          marker.style["z-index"] = 900;
+        }
       }
     };
 
@@ -106,7 +111,7 @@ class SNPTable extends React.Component {
     return (
       <>
         {Object.keys(json).length > 1 && (
-          <div style={{direction:"ltr",padding:"5px"}}>
+          <div style={{ direction: "ltr", padding: "5px" }}>
             <div>
               <h4>{soi}</h4>
               <p>
@@ -138,9 +143,10 @@ class SNPTable extends React.Component {
                 Download CSV
               </button>
             </div>
-            <div style={{ overflowX: "scroll" }}>
-              <div style={{ width: "1100.5px" }}>
+            <div style={{ overflowX: "scroll", border: "1px solid black" }}>
+              <div style={{ width: "800.5px" }}>
                 <ReactTabulator
+                  style={{ fontSize: "13px" }}
                   columns={columns}
                   data={tabledata}
                   columnDefaults={{

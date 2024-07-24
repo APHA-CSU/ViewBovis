@@ -138,7 +138,7 @@ const SNPMapComp = ({
         setOpenTable={setOpenTable}
         openTable={openTable}
       />
-      <MarkerClusterGroup
+      {!(openTable) && <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={createCustomClusterIcon}
       >
@@ -164,7 +164,29 @@ const SNPMapComp = ({
               ></Marker>
             );
           })}
-      </MarkerClusterGroup>
+      </MarkerClusterGroup>}
+      {openTable && <>{Object.keys(SNPMapDataset)
+          .filter((elem) => {
+            return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
+          })
+          .map((elem, index) => {
+            return (
+              <Marker
+                ref={(ref) => {
+                  ref?.bindPopup(
+                    popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
+                    popupOptions
+                  );
+                }}
+                icon={relatedMarker(
+                  { ...SNPMapDataset[elem], submission: elem },
+                  SNPMapDataset["SOI"]
+                )}
+                key={"snp_related_marker_" + index}
+                position={[SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]}
+              ></Marker>
+            );
+          })}</>}
       {Object.keys(SNPMapDataset)
         .filter((elem) => {
           return elem === SNPMapDataset["SOI"];
@@ -207,12 +229,12 @@ const LegendTableAction = ({ SNPMapDataset, setOpenTable, openTable }) => {
     if (!openTable)
       divContainer.insertAdjacentHTML(
         "afterbegin",
-        `<a class="snp-table-toggle btn-show-table">Show Table</a>`
+        `<a class="snp-table-toggle">Show Table</a>`
       );
     else
       divContainer.insertAdjacentHTML(
         "afterbegin",
-        `<a class="snp-table-toggle btn-show-table">Hide Table</a>`
+        `<a class="snp-table-toggle">Hide Table</a>`
       );
     return divContainer;
   };
