@@ -6,15 +6,17 @@ import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
 import SNPMapComp from "./SNPMapComp";
 import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable";
+import {useSelector} from 'react-redux'
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const [openTable,setOpenTable] = useState(false)
-  const [openSideBar, setOpenSideBar] = useState(true);
+  const [OpenSideBar, setOpenSideBar] = useState(true);
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
     hotspotLayers: false,
     countyLayers: false,
   });
+  const openSNPSidebar = useSelector((state)=> state.counter.openSNPSidebar)
   const [checkedLayers, setCheckedLayers] = useState({});
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
     fetch(
@@ -76,7 +78,7 @@ const SNPMap = () => {
     <div className="container-fluid content">
       <Container fluid id="custom-container">
         <Row>
-          <Collapse in={openSideBar} dimension={"width"}>
+          <Collapse in={openSNPSidebar} dimension={"width"}>
             <Col className="sidebar col-3">
               <SNPMapSidebar
                 fetchSNPMapDataset={fetchSNPMapDataset}
@@ -93,7 +95,7 @@ const SNPMap = () => {
               checkedLayers={checkedLayers}
               useCountyandHotspotLayers={countyAndHotspotLayers}
               setOpenSideBar={setOpenSideBar}
-              openSideBar={openSideBar}
+              openSideBar={OpenSideBar}
               setOpenTable={setOpenTable}
               openTable={openTable}
             />
