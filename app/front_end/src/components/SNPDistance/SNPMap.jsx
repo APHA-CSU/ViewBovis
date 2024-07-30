@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -6,10 +6,14 @@ import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
 import SNPMapComp from "./SNPMapComp";
 import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable";
+import './SNPMap.css'
 import {useSelector} from 'react-redux'
+
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
+  const snpSearchInput = useSelector(state => state.counter.snpSearchInput)
+  const snpDistance = useSelector(state => state.counter.snpDistance)
   const [openTable,setOpenTable] = useState(false)
   const [OpenSideBar, setOpenSideBar] = useState(true);
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
@@ -29,7 +33,8 @@ const SNPMap = () => {
         } else return res.json();
       })
       .then((res) => {
-        if (res) setSNPMapDataset(res);
+        if (res) {
+          setSNPMapDataset(res)};
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -73,6 +78,10 @@ const SNPMap = () => {
     }
     setCheckedLayers({ ...checkedLayers });
   };
+
+  useEffect(()=>{
+    if(snpSearchInput) fetchSNPMapDataset(snpSearchInput,snpDistance)
+  },[snpSearchInput,snpDistance])
 
   return (
     <div className="container-fluid content">

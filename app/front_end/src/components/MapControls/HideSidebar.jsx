@@ -4,11 +4,11 @@ import { useMap } from "react-leaflet";
 import {useDispatch} from 'react-redux'
 import {toggleSNPsidebar} from './../../features/counter/counterSlice.js'
 
-const HideSidebar = ({ setOpenSideBar, openSideBar }) => {
+const HideSidebar = ({ setOpenSideBar, openSideBar ,type}) => {
   const map = useMap();
   const dispatch = useDispatch()
   const handleToggle = () => {
-    dispatch(toggleSNPsidebar())
+    if(type = "snp_map") dispatch(toggleSNPsidebar())
   }
     useEffect(() => {
     const hideSidebarButton = new L.Control({

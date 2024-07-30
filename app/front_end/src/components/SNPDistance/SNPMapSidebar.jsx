@@ -1,5 +1,6 @@
-import { useState } from "react";
 import LayersCheckbox from "../Layers/LayersCheckbox";
+import {useSelector, useDispatch} from 'react-redux'
+import {setSNPsample,setSNPdistance} from './../../features/counter/counterSlice'
 
 const SNPMapSidebar = ({
   fetchSNPMapDataset,
@@ -8,20 +9,20 @@ const SNPMapSidebar = ({
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
-  const [snpSearchInput, setSnpSearchInput] = useState("");
-  const [snpDistance, setSnpDistance] = useState(1);
-
+  const snpSearchInput = useSelector(state => state.counter.snpSearchInput)
+  const snpDistance = useSelector(state => state.counter.snpDistance)
+  const dispatch = useDispatch()
   const handleChange = (event) => {
-    setSnpSearchInput(event.target.value);
+   dispatch(setSNPsample(event.target.value));
   };
 
   const handleSlider = (event) => {
-    setSnpDistance(event.target.value);
+    dispatch(setSNPdistance(event.target.value));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchSNPMapDataset(snpSearchInput, snpDistance);
+    fetchSNPMapDataset(snpSearchInput,snpDistance)
   };
 
   return (
@@ -34,7 +35,6 @@ const SNPMapSidebar = ({
           <input
             type="text"
             className="input__sampleID"
-            id="input__sampleID_temp--1"
             placeholder="e.g. UK705113600438"
             name="Name"
             title="Identifier or Submission Number"
