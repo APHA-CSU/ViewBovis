@@ -92,20 +92,12 @@ const Home = () => {
               View SNP distance visualisations:<br></br>
               <Button
                 as={NavLink}
-                to="/snpdistance/snpmap"
+                to="/snpmap"
                 className="home-govuk-buttons"
                 buttonColour="#00a33b"
               >
                 SNP Distance Map
               </Button>{" "}
-              <Button
-                as={NavLink}
-                to="/snpdistance/snpmatrix"
-                className="home-govuk-buttons"
-                buttonColour="#00a33b"
-              >
-                SNP Matrix
-              </Button>
             </p>
             <p className="text-center">
               View interactive phylogenetic tree:<br></br>
