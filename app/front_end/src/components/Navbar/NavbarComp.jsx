@@ -29,8 +29,8 @@ const NavbarComp = () => {
             <Nav.Link as={NavLink} to="/cattlemovement">
               Cattle Movement
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/snpdistance">
-              SNP Distance
+            <Nav.Link as={NavLink} to="/snpmap">
+              SNP Map
             </Nav.Link>
             <Nav.Link as={NavLink} to="/nextstrain">
               Nextstrain
