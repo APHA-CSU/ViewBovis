@@ -1,29 +1,40 @@
 import LayersCheckbox from "../Layers/LayersCheckbox";
-import {useSelector, useDispatch} from 'react-redux'
-import {setSNPsample,setSNPdistance} from './../../features/counter/counterSlice'
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setSNPsample,
+  setSNPdistance
+} from "./../../features/counter/counterSlice";
+import { useEffect, useState } from "react";
 
 const SNPMapSidebar = ({
-  fetchSNPMapDataset,
   handleCheckboxes,
   checkedLayers,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
-  const snpSearchInput = useSelector(state => state.counter.snpSearchInput)
-  const snpDistance = useSelector(state => state.counter.snpDistance)
-  const dispatch = useDispatch()
+  const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
+  const snpDistance = useSelector((state) => state.counter.snpDistance);
+  const [sample, setSample] = useState();
+  const [distance, setDistance] = useState();
+  const dispatch = useDispatch();
   const handleChange = (event) => {
-   dispatch(setSNPsample(event.target.value));
+    setSample(event.target.value);
   };
 
   const handleSlider = (event) => {
-    dispatch(setSNPdistance(event.target.value));
+    setDistance(event.target.value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchSNPMapDataset(snpSearchInput,snpDistance)
+    dispatch(setSNPsample(sample));
+    dispatch(setSNPdistance(distance));
   };
+
+  useEffect(() => {
+    setSample(snpSearchInput);
+    setDistance(snpDistance);
+  }, [snpSearchInput, snpDistance]);
 
   return (
     <div>
@@ -38,7 +49,7 @@ const SNPMapSidebar = ({
             placeholder="e.g. UK705113600438"
             name="Name"
             title="Identifier or Submission Number"
-            value={snpSearchInput}
+            value={sample}
             onChange={handleChange}
           />
           <br></br>
@@ -66,7 +77,7 @@ const SNPMapSidebar = ({
           <br></br>
           <span style={{ fontSize: "20px" }}>
             {" "}
-            <b>SNP Distance:</b> {snpDistance}{" "}
+            <b>SNP Distance:</b> {distance}{" "}
           </span>
           <br></br>
           <br></br>
@@ -79,10 +90,12 @@ const SNPMapSidebar = ({
           </button>
         </div>
       </form>
-      <LayersCheckbox checkedLayers={checkedLayers} 
-      countyAndHotspotLayers={countyAndHotspotLayers}
-      handleCheckboxes={handleCheckboxes}
-      setCountyAndHotspotLayers={setCountyAndHotspotLayers} />
+      <LayersCheckbox
+        checkedLayers={checkedLayers}
+        countyAndHotspotLayers={countyAndHotspotLayers}
+        handleCheckboxes={handleCheckboxes}
+        setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+      />
     </div>
   );
 };

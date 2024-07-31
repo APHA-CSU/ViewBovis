@@ -8,7 +8,7 @@ const HideSidebar = ({ setOpenSideBar, openSideBar ,type}) => {
   const map = useMap();
   const dispatch = useDispatch()
   const handleToggle = () => {
-    if(type = "snp_map") dispatch(toggleSNPsidebar())
+    if(type == "snp_map") dispatch(toggleSNPsidebar())
   }
     useEffect(() => {
     const hideSidebarButton = new L.Control({

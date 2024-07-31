@@ -15,16 +15,18 @@ import SNPsoi from "../../imgs/SNPsoi.svg";
 import SNPrelated from "../../imgs/SNPrelated.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
 import BaseMaps from "../MapControls/Basemaps";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSNPTable } from "./../../features/counter/counterSlice.js";
+
 const SNPMapComp = ({
   checkedLayers,
   useCountyandHotspotLayers,
   setOpenSideBar,
   openSideBar,
-  setOpenTable,
-  openTable,
   SNPMapDataset,
 }) => {
   //SNP map cluster icon
+  const openTable = useSelector((state) => state.counter.openSNPTable);
   const createCustomClusterIcon = (cluster) => {
     return new divIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
@@ -136,11 +138,7 @@ const SNPMapComp = ({
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       <RiskLayers checkedLayers={checkedLayers} />
-      <LegendTableAction
-        SNPMapDataset={SNPMapDataset}
-        setOpenTable={setOpenTable}
-        openTable={openTable}
-      />
+      <LegendTableAction SNPMapDataset={SNPMapDataset} openTable={openTable} />
       {!openTable && (
         <MarkerClusterGroup
           chunkedLoading
@@ -224,7 +222,8 @@ const SNPMapComp = ({
   );
 };
 
-const LegendTableAction = ({ SNPMapDataset, setOpenTable, openTable }) => {
+const LegendTableAction = ({ SNPMapDataset, openTable }) => {
+  const dispatch = useDispatch();
   const map = useMap();
   const btnShowTable = new L.Control({
     position: "topright",
@@ -233,7 +232,7 @@ const LegendTableAction = ({ SNPMapDataset, setOpenTable, openTable }) => {
     const divContainer = L.DomUtil.create("div", "leaflet-control leaflet-bar");
     divContainer.setAttribute("id", "btn__show-table");
     divContainer.onclick = function () {
-      setOpenTable((bool) => !bool);
+      dispatch(toggleSNPTable());
     };
     if (!openTable)
       divContainer.insertAdjacentHTML(

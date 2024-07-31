@@ -6,21 +6,20 @@ import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
 import SNPMapComp from "./SNPMapComp";
 import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable";
-import './SNPMap.css'
-import {useSelector} from 'react-redux'
-
+import "./SNPMap.css";
+import { useSelector,useDispatch } from "react-redux";
+import {setSNPmapCheckedLayers} from "./../../features/counter/counterSlice.js"
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
-  const snpSearchInput = useSelector(state => state.counter.snpSearchInput)
-  const snpDistance = useSelector(state => state.counter.snpDistance)
-  const [openTable,setOpenTable] = useState(false)
+  const dispatch = useDispatch()
+  const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
+  const snpDistance = useSelector((state) => state.counter.snpDistance);
+  const snpCheckedLayers = useSelector(state => state.counter.snpmapCheckedLayers)
+  const openTable = useSelector((state) => state.counter.openSNPTable);
   const [OpenSideBar, setOpenSideBar] = useState(true);
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
-    hotspotLayers: false,
-    countyLayers: false,
-  });
-  const openSNPSidebar = useSelector((state)=> state.counter.openSNPSidebar)
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
+  const openSNPSidebar = useSelector((state) => state.counter.openSNPSidebar);
   const [checkedLayers, setCheckedLayers] = useState({});
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
     fetch(
@@ -34,7 +33,8 @@ const SNPMap = () => {
       })
       .then((res) => {
         if (res) {
-          setSNPMapDataset(res)};
+          setSNPMapDataset(res);
+        }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -79,9 +79,14 @@ const SNPMap = () => {
     setCheckedLayers({ ...checkedLayers });
   };
 
-  useEffect(()=>{
-    if(snpSearchInput) fetchSNPMapDataset(snpSearchInput,snpDistance)
-  },[snpSearchInput,snpDistance])
+  useEffect(() => {
+    if (snpSearchInput) fetchSNPMapDataset(snpSearchInput, snpDistance);
+  }, [snpSearchInput, snpDistance]);
+
+  useEffect(()=> {
+    if(Object.keys(checkedLayers).length < 1) setCheckedLayers({...snpCheckedLayers})
+  else dispatch(setSNPmapCheckedLayers({...checkedLayers}))
+  },[checkedLayers])
 
   return (
     <div className="container-fluid content">
@@ -105,16 +110,14 @@ const SNPMap = () => {
               useCountyandHotspotLayers={countyAndHotspotLayers}
               setOpenSideBar={setOpenSideBar}
               openSideBar={OpenSideBar}
-              setOpenTable={setOpenTable}
-              openTable={openTable}
             />
           </Col>
           <Collapse in={openTable}>
-           <Col className="sidebar-table col-4">
-           {Object.keys(SNPMapDataset).length > 0 && <SNPTable
-                json={SNPMapDataset}
-              />}
-           </Col>
+            <Col className="sidebar-table col-4">
+              {Object.keys(SNPMapDataset).length > 0 && (
+                <SNPTable json={SNPMapDataset} />
+              )}
+            </Col>
           </Collapse>
         </Row>
       </Container>
