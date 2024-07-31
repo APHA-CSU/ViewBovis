@@ -8,11 +8,12 @@ import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable";
 import "./SNPMap.css";
 import { useSelector,useDispatch } from "react-redux";
-import {setSNPmapCheckedLayers} from "./../../features/counter/counterSlice.js"
+import {setSNPmapCheckedLayers, setSNPmapCountyandHotspotLayers} from "./../../features/counter/counterSlice.js"
 
 const SNPMap = () => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const dispatch = useDispatch()
+  const snpCountyandHotspotLayers = useSelector(state => state.counter.snpCountyandHotspotLayers)
   const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
   const snpDistance = useSelector((state) => state.counter.snpDistance);
   const snpCheckedLayers = useSelector(state => state.counter.snpmapCheckedLayers)
@@ -87,6 +88,11 @@ const SNPMap = () => {
     if(Object.keys(checkedLayers).length < 1) setCheckedLayers({...snpCheckedLayers})
   else dispatch(setSNPmapCheckedLayers({...checkedLayers}))
   },[checkedLayers])
+
+  useEffect(()=> {
+    if(Object.keys(countyAndHotspotLayers).length < 1) setCountyAndHotspotLayers({...snpCountyandHotspotLayers})
+      else dispatch(setSNPmapCountyandHotspotLayers(countyAndHotspotLayers))
+  },[countyAndHotspotLayers])
 
   return (
     <div className="container-fluid content">

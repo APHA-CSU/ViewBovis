@@ -9,10 +9,7 @@ export const snpMapSlice = createSlice({
     snpDistance: 1,
     openSNPTable: false,
     snpmapCheckedLayers : {},
-    snpCountyandHotspotLayers: {
-      hotspotLayers: false,
-      countyLayers: false,
-    }
+    snpCountyandHotspotLayers: {}
   },
   reducers: {
     toggleSNPsidebar: (state) => {
@@ -34,7 +31,7 @@ export const snpMapSlice = createSlice({
       state.snpmapCheckedLayers = {...state.snpmapCheckedLayers,...action.payload}
     },
     setSNPmapCountyandHotspotLayers: (state,action) => {
-      state.snpCountyandHotspotLayers = {...state.snpmapCheckedLayers,...action.payload}
+      state.snpCountyandHotspotLayers = {...action.payload}
     }
   },
 });
