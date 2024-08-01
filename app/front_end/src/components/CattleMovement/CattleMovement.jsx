@@ -6,9 +6,10 @@ import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
+import { useSelector} from "react-redux"
 
 const CattleMovement = () => {
-  const [searchSample, setSearchSample] = useState("");
+const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
   const [jsonData, setjsonData] = useState({});
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
     hotspotLayers: false,
@@ -60,8 +61,8 @@ const CattleMovement = () => {
 
   //Fetch sample data and store in jsonData
   useEffect(() => {
-    if (searchSample)
-      fetch(`/sample/movements?sample_name=${searchSample}`)
+    if (cattleSearchInput)
+      fetch(`/sample/movements?sample_name=${cattleSearchInput}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -74,7 +75,7 @@ const CattleMovement = () => {
         .catch((error) => {
           console.error("Error fetching data:", error);
         });
-  }, [searchSample]);
+  }, [cattleSearchInput]);
 
   //Fetch second sample data and store in secondJsonData
   useEffect(() => {
@@ -101,7 +102,6 @@ const CattleMovement = () => {
           <Collapse in={openSideBar}>
             <Col className="sidebar col-3">
               <MapSidebar
-                setSearchSample={setSearchSample}
                 handleCheckboxes={handleCheckboxes}
                 checkedLayers={checkedLayers}
                 setSearchSecondSample={setSearchSecondSample}

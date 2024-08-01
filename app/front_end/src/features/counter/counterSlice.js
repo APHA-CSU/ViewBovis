@@ -9,7 +9,8 @@ export const snpMapSlice = createSlice({
     snpDistance: 1,
     openSNPTable: false,
     snpmapCheckedLayers : {},
-    snpCountyandHotspotLayers: {}
+    snpCountyandHotspotLayers: {},
+    cattleSearchInput: "",
   },
   reducers: {
     toggleSNPsidebar: (state) => {
@@ -32,9 +33,13 @@ export const snpMapSlice = createSlice({
     },
     setSNPmapCountyandHotspotLayers: (state,action) => {
       state.snpCountyandHotspotLayers = {...action.payload}
-    }
+    },
+    setCattleSearchInput: (state, action) => {
+      state.cattleSearchInput = action.payload
+    },
   },
 });
+
 
 // Action creators are generated for each case reducer function
 export const {
@@ -44,7 +49,8 @@ export const {
   setSNPdistance,
   toggleSNPTable,
   setSNPmapCheckedLayers,
-  setSNPmapCountyandHotspotLayers
+  setSNPmapCountyandHotspotLayers,
+  setCattleSearchInput,
 } = snpMapSlice.actions;
 
-export default snpMapSlice.reducer;
+export default snpMapSlice.reducer; 

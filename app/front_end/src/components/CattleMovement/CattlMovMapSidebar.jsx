@@ -1,21 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Accordion from "react-bootstrap/Accordion";
 import LayersCheckbox from "../Layers/LayersCheckbox";
 import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
+import {setCattleSearchInput} from "./../../features/counter/counterSlice"
+import { useSelector, useDispatch } from "react-redux";
 
 const CattlMovMapSidebar = ({
-  setSearchSample,
   handleCheckboxes,
   checkedLayers,
   setSearchSecondSample,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
+  const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     setSearchInput(event.target.value.toUpperCase().replace(/ /g, ""));
@@ -23,7 +26,7 @@ const CattlMovMapSidebar = ({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSearchSample(searchInput);
+    dispatch(setCattleSearchInput(searchInput));
   };
 
   const handleSecondChange = (event) => {
@@ -34,6 +37,10 @@ const CattlMovMapSidebar = ({
     event.preventDefault();
     setSearchSecondSample(secondSearchInput);
   };
+
+  useEffect(() => {
+    setSearchInput(cattleSearchInput);
+  }, [cattleSearchInput]);
 
   return (
     <div>
