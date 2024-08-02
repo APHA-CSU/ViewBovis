@@ -5,7 +5,7 @@ import LayersCheckbox from "../Layers/LayersCheckbox";
 import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
-import {setCattleSearchInput} from "./../../features/counter/counterSlice"
+import {setCattleSearchInput,setCattleMovementDataset} from "./../../features/counter/movementSlice"
 import { useSelector, useDispatch } from "react-redux";
 
 const CattlMovMapSidebar = ({
@@ -15,7 +15,7 @@ const CattlMovMapSidebar = ({
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
-  const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
+  const cattleSearchInput = useSelector(state => state.movement.cattleSearchInput)
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
   const dispatch = useDispatch();
@@ -27,6 +27,20 @@ const CattlMovMapSidebar = ({
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(setCattleSearchInput(searchInput));
+    if (searchInput)
+      fetch(`/sample/movements?sample_name=${searchInput}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(setCattleMovementDataset(data));
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
   };
 
   const handleSecondChange = (event) => {

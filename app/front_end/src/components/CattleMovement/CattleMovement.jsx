@@ -6,10 +6,12 @@ import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
-import { useSelector} from "react-redux"
+import { useSelector } from "react-redux";
 
 const CattleMovement = () => {
-const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
+  const movementData = useSelector(
+    (state) => state.movement.cattleMovementDataset
+  );
   const [jsonData, setjsonData] = useState({});
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
     hotspotLayers: false,
@@ -59,23 +61,6 @@ const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
   const [searchSecondSample, setSearchSecondSample] = useState("");
   const [secondJsonData, setSecondjsonData] = useState({});
 
-  //Fetch sample data and store in jsonData
-  useEffect(() => {
-    if (cattleSearchInput)
-      fetch(`/sample/movements?sample_name=${cattleSearchInput}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setjsonData(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-  }, [cattleSearchInput]);
 
   //Fetch second sample data and store in secondJsonData
   useEffect(() => {
@@ -94,6 +79,10 @@ const cattleSearchInput = useSelector(state => state.counter.cattleSearchInput)
           console.error("Error fetching data:", error);
         });
   }, [searchSecondSample]);
+
+  useEffect(()=> {
+    setjsonData(movementData);
+  },[movementData])
 
   return (
     <div className="container-fluid content">
