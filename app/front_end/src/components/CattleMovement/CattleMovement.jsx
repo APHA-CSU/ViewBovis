@@ -12,11 +12,11 @@ const CattleMovement = () => {
   const movementData = useSelector(
     (state) => state.movement.cattleMovementDataset
   );
+  const secondMovementData = useSelector(
+    (state) => state.movement.secondMovementDataset
+  );
   const [jsonData, setjsonData] = useState({});
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
-    hotspotLayers: false,
-    countyLayers: false,
-  });
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
   const [openSideBar, setOpenSideBar] = useState(true);
   const [checkedLayers, setCheckedLayers] = useState({});
 
@@ -58,31 +58,16 @@ const CattleMovement = () => {
     setCheckedLayers({ ...checkedLayers });
   };
 
-  const [searchSecondSample, setSearchSecondSample] = useState("");
   const [secondJsonData, setSecondjsonData] = useState({});
 
-
-  //Fetch second sample data and store in secondJsonData
   useEffect(() => {
-    if (searchSecondSample)
-      fetch(`/sample/movements?sample_name=${searchSecondSample}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setSecondjsonData(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-        });
-  }, [searchSecondSample]);
+    if (Object.keys(movementData).length > 0) setjsonData(movementData);
+  }, [movementData]);
 
-  useEffect(()=> {
-    if(Object.keys(movementData).length > 0) setjsonData(movementData);
-  },[movementData])
+  useEffect(() => {
+    if (Object.keys(secondMovementData).length > 0)
+      setSecondjsonData(secondMovementData);
+  }, [secondMovementData]);
 
   return (
     <div className="container-fluid content">
@@ -93,7 +78,6 @@ const CattleMovement = () => {
               <MapSidebar
                 handleCheckboxes={handleCheckboxes}
                 checkedLayers={checkedLayers}
-                setSearchSecondSample={setSearchSecondSample}
                 countyAndHotspotLayers={countyAndHotspotLayers}
                 setCountyAndHotspotLayers={setCountyAndHotspotLayers}
               />

@@ -5,17 +5,26 @@ import LayersCheckbox from "../Layers/LayersCheckbox";
 import Button from "@govuk-react/button";
 import Heading from "@govuk-react/heading";
 import Input from "@govuk-react/input";
-import {setCattleSearchInput,setCattleMovementDataset} from "./../../features/counter/movementSlice"
+import {
+  setCattleSearchInput,
+  setCattleMovementDataset,
+  setCattleSecondInput,
+  setSecondMovementDataset,
+} from "./../../features/counter/movementSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const CattlMovMapSidebar = ({
   handleCheckboxes,
   checkedLayers,
-  setSearchSecondSample,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
-  const cattleSearchInput = useSelector(state => state.movement.cattleSearchInput)
+  const cattleSearchInput = useSelector(
+    (state) => state.movement.cattleSearchInput
+  );
+  const cattleSecondInput = useSelector(
+    (state) => state.movement.cattleSecondInput
+  );
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
   const dispatch = useDispatch();
@@ -49,12 +58,30 @@ const CattlMovMapSidebar = ({
 
   const handleSecondSubmit = (event) => {
     event.preventDefault();
-    setSearchSecondSample(secondSearchInput);
+    dispatch(setCattleSecondInput(secondSearchInput));
+    if (secondSearchInput)
+      fetch(`/sample/movements?sample_name=${secondSearchInput}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          dispatch(setSecondMovementDataset(data));
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
   };
 
   useEffect(() => {
     setSearchInput(cattleSearchInput);
   }, [cattleSearchInput]);
+
+  useEffect(() => {
+    setSecondSearchInput(cattleSecondInput);
+  }, [cattleSecondInput]);
 
   return (
     <div>
@@ -92,10 +119,12 @@ const CattlMovMapSidebar = ({
           </Accordion>
         </form>
       </Row>
-      <LayersCheckbox checkedLayers={checkedLayers} 
-      countyAndHotspotLayers={countyAndHotspotLayers}
-      handleCheckboxes={handleCheckboxes}
-      setCountyAndHotspotLayers={setCountyAndHotspotLayers} />
+      <LayersCheckbox
+        checkedLayers={checkedLayers}
+        countyAndHotspotLayers={countyAndHotspotLayers}
+        handleCheckboxes={handleCheckboxes}
+        setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+      />
     </div>
   );
 };

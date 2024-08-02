@@ -43,7 +43,7 @@ const CattleMovementMap = ({
         <BaseMaps />
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-        <RiskLayers checkedLayers={checkedLayers} />
+        {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
         <ResetView />
         <HideSidebar
           setOpenSideBar={setOpenSideBar}
@@ -347,7 +347,7 @@ const CattleMovementMap = ({
     <MapContainer center={[53.3781, -1]} zoom={6}>
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-      <RiskLayers checkedLayers={checkedLayers} />
+      {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
       <BaseMaps />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
       <ResetView />

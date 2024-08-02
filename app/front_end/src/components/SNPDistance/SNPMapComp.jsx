@@ -137,7 +137,7 @@ const SNPMapComp = ({
       <MeasurementTool />
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-      <RiskLayers checkedLayers={checkedLayers} />
+      {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
       <LegendTableAction SNPMapDataset={SNPMapDataset} openTable={openTable} />
       {!openTable && (
         <MarkerClusterGroup
