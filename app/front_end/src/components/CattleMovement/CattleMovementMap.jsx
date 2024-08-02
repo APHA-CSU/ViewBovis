@@ -55,7 +55,7 @@ const CattleMovementMap = ({
   }
 
   // Extract movement data from json objects into arrays
-  const movArr = Object.values(jsonData.move);
+  const movArr = jsonData.move ? Object.values(jsonData.move) : [];
   const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
   const secondMovArr = secondJsonData.move
     ? Object.values(secondJsonData.move)

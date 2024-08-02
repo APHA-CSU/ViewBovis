@@ -16,8 +16,6 @@ export const movementSlice = createSlice({
   },
 });
 
-
-// Action creators are generated for each case reducer function
 export const {
   setCattleMovementDataset,setCattleSearchInput
 } = movementSlice.actions;

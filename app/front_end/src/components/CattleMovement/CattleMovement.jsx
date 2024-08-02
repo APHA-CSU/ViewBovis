@@ -81,7 +81,7 @@ const CattleMovement = () => {
   }, [searchSecondSample]);
 
   useEffect(()=> {
-    setjsonData(movementData);
+    if(Object.keys(movementData).length > 0) setjsonData(movementData);
   },[movementData])
 
   return (
