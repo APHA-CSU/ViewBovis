@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import { Icon, divIcon} from "leaflet";
+import { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
@@ -7,7 +7,7 @@ import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
-import L from 'leaflet'
+import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
@@ -43,11 +43,14 @@ const CattleMovementMap = ({
         <BaseMaps />
         <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
         <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-        {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
+        {Object.keys(checkedLayers).length > 0 && (
+          <RiskLayers checkedLayers={checkedLayers} />
+        )}
         <ResetView />
         <HideSidebar
           setOpenSideBar={setOpenSideBar}
           openSideBar={openSideBar}
+          type={"movement"}
         />
         <MeasurementTool />
       </MapContainer>
@@ -347,11 +350,17 @@ const CattleMovementMap = ({
     <MapContainer center={[53.3781, -1]} zoom={6}>
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-      {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
+      {Object.keys(checkedLayers).length > 0 && (
+        <RiskLayers checkedLayers={checkedLayers} />
+      )}
       <BaseMaps />
       <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
       <ResetView />
-      <HideSidebar setOpenSideBar={setOpenSideBar} openSideBar={openSideBar} />
+      <HideSidebar
+        setOpenSideBar={setOpenSideBar}
+        openSideBar={openSideBar}
+        type={"movement"}
+      />
       <MeasurementTool />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

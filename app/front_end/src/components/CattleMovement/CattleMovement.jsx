@@ -6,19 +6,37 @@ import MapSidebar from "./CattlMovMapSidebar";
 import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setMovementCheckedLayers,
+  setMovementCountyandHotspotLayers,
+} from "./../../features/counter/movementSlice.js";
 
 const CattleMovement = () => {
   const movementData = useSelector(
     (state) => state.movement.cattleMovementDataset
   );
+  const openMovementSidebar = useSelector(
+    (state) => state.movement.openMovementSidebar
+  );
   const secondMovementData = useSelector(
     (state) => state.movement.secondMovementDataset
   );
+  const movementCheckedLayers = useSelector(
+    (state) => state.movement.movementCheckedLayers
+  );
+  const movementCountyandHotspotLayers = useSelector(
+    (state) => state.movement.movementCountyandHotspotLayers
+  );
   const [jsonData, setjsonData] = useState({});
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
+    ...movementCountyandHotspotLayers,
+  });
   const [openSideBar, setOpenSideBar] = useState(true);
-  const [checkedLayers, setCheckedLayers] = useState({});
+  const [checkedLayers, setCheckedLayers] = useState({
+    ...movementCheckedLayers,
+  });
+  const dispatch = useDispatch();
 
   const handleCheckboxes = (index) => {
     switch (index) {
@@ -69,11 +87,19 @@ const CattleMovement = () => {
       setSecondjsonData(secondMovementData);
   }, [secondMovementData]);
 
+  useEffect(() => {
+    dispatch(setMovementCheckedLayers({ ...checkedLayers }));
+  }, [checkedLayers]);
+
+  useEffect(() => {
+    dispatch(setMovementCountyandHotspotLayers({ ...countyAndHotspotLayers }));
+  }, [countyAndHotspotLayers]);
+
   return (
     <div className="container-fluid content">
       <Container fluid id="custom-container" data-testid="cattlemovement-1">
         <Row>
-          <Collapse in={openSideBar}>
+          <Collapse in={openMovementSidebar}>
             <Col className="sidebar col-3">
               <MapSidebar
                 handleCheckboxes={handleCheckboxes}

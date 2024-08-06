@@ -26,9 +26,9 @@ const SNPMap = () => {
   );
   const openTable = useSelector((state) => state.counter.openSNPTable);
   const [OpenSideBar, setOpenSideBar] = useState(true);
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({ ...snpCountyandHotspotLayers });
   const openSNPSidebar = useSelector((state) => state.counter.openSNPSidebar);
-  const [checkedLayers, setCheckedLayers] = useState({});
+  const [checkedLayers, setCheckedLayers] = useState({...snpCheckedLayers});
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
     fetch(
       `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
@@ -89,8 +89,6 @@ const SNPMap = () => {
 
 
   useEffect(() => {
-    setCheckedLayers({ ...snpCheckedLayers });
-    setCountyAndHotspotLayers({ ...snpCountyandHotspotLayers });
     if(snpSearchInput) fetchSNPMapDataset(snpSearchInput, snpDistance);
   }, []);
 

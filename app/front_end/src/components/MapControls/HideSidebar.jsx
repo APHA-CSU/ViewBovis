@@ -1,16 +1,18 @@
 import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import {useDispatch} from 'react-redux'
-import {toggleSNPsidebar} from './../../features/counter/counterSlice.js'
+import { useDispatch } from "react-redux";
+import { toggleSNPsidebar } from "./../../features/counter/counterSlice.js";
+import { toggleMovementSidebar } from "./../../features/counter/movementSlice.js";
 
-const HideSidebar = ({ setOpenSideBar, openSideBar ,type}) => {
+const HideSidebar = ({ setOpenSideBar, openSideBar, type }) => {
   const map = useMap();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleToggle = () => {
-    if(type == "snp_map") dispatch(toggleSNPsidebar())
-  }
-    useEffect(() => {
+    if (type === "snp_map") dispatch(toggleSNPsidebar());
+    else if (type === "movement") dispatch(toggleMovementSidebar());
+  };
+  useEffect(() => {
     const hideSidebarButton = new L.Control({
       position: "topleft",
     });
@@ -20,7 +22,7 @@ const HideSidebar = ({ setOpenSideBar, openSideBar ,type}) => {
       div.setAttribute("id", "btn__map-fullscreen");
       div.onclick = function () {
         setOpenSideBar(!openSideBar);
-        handleToggle()
+        handleToggle();
         map.invalidateSize();
       };
       if (openSideBar)
