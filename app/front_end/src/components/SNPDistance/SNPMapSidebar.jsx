@@ -11,6 +11,7 @@ const SNPMapSidebar = ({
   checkedLayers,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
+  fetchSNPMapDataset
 }) => {
   const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
   const snpDistance = useSelector((state) => state.counter.snpDistance);
@@ -29,12 +30,13 @@ const SNPMapSidebar = ({
     event.preventDefault();
     dispatch(setSNPsample(sample));
     dispatch(setSNPdistance(distance));
+    fetchSNPMapDataset(sample,distance)
   };
 
   useEffect(() => {
     setSample(snpSearchInput);
     setDistance(snpDistance);
-  }, [snpSearchInput, snpDistance]);
+  }, []);
 
   return (
     <div>
