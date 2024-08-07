@@ -1,9 +1,6 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+
 const NextstrainIframe = ({ url, setNextstrainURL }) => {
-  useEffect(() => {
-    console.log(url);
-  }, [url]);
   return (
     <>
       <div>

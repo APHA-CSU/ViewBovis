@@ -5,15 +5,31 @@ import PhaseBanner from "@govuk-react/phase-banner";
 import Link from "@govuk-react/link";
 import SearchBox from "@govuk-react/search-box";
 import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NextstrainTable from "./NextstrainTable";
 import NextstrainIframe from "./NextstrainIframe";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setNextstrainSearchSample,
+  setNextstrainDataset,
+  setNextstrainIframeURL,
+} from "./../../features/counter/nextstrainSlice.js";
 
 const Nextstrain = () => {
-  const [identifier, setIdentifier] = useState("");
+  const nextstrainSearchSample = useSelector(
+    (state) => state.nextstrain.nextstrainSearchSample
+  );
+  const nextStrainDataset = useSelector(
+    (state) => state.nextstrain.nextStrainDataset
+  );
+  const nextStrainIframeURL = useSelector(
+    (state) => state.nextstrain.nextStrainIframeURL
+  );
+  const dispatch = useDispatch();
+  const [identifier, setIdentifier] = useState(nextstrainSearchSample);
   const [errorMessage, setErrorMessage] = useState("");
-  const [tableData, setTableData] = useState({});
-  const [nextstrainURL, setNextstrainURL] = useState(null);
+  const [tableData, setTableData] = useState({ ...nextStrainDataset });
+  const [nextstrainURL, setNextstrainURL] = useState(nextStrainIframeURL);
 
   const fetchNextstrainData = async () => {
     const response = await fetch(`/sample?sample_name=${identifier}`);
@@ -45,6 +61,18 @@ const Nextstrain = () => {
       }
     }
   };
+
+  useEffect(() => {
+    dispatch(setNextstrainSearchSample(identifier));
+  }, [identifier]);
+
+  useEffect(() => {
+    dispatch(setNextstrainDataset({ ...tableData }));
+  }, [tableData]);
+
+  useEffect(() => {
+    dispatch(setNextstrainIframeURL(nextstrainURL));
+  }, [nextstrainURL]);
 
   return (
     <div className="container-fluid content">
@@ -159,27 +187,55 @@ const Nextstrain = () => {
                           <br></br>
                           <p>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B111"
-                              onClick={()=>{setNextstrainURL(`B1-11?p=grid&tl=Identifier`)}}>
+                              <a
+                                className="text-hyperlink"
+                                id="clade-B111"
+                                onClick={() => {
+                                  setNextstrainURL(
+                                    `B1-11?p=grid&tl=Identifier`
+                                  );
+                                }}
+                              >
                                 B1-11
                               </a>
                             </span>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B613"
-                              onClick={()=>{setNextstrainURL(`B6-13?p=grid&tl=Identifier`)}}>
+                              <a
+                                className="text-hyperlink"
+                                id="clade-B613"
+                                onClick={() => {
+                                  setNextstrainURL(
+                                    `B6-13?p=grid&tl=Identifier`
+                                  );
+                                }}
+                              >
                                 B6-13
                               </a>
                             </span>
                             <br></br>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B671"
-                              onClick={()=>{setNextstrainURL(`B6-71?p=grid&tl=Identifier`)}}>
+                              <a
+                                className="text-hyperlink"
+                                id="clade-B671"
+                                onClick={() => {
+                                  setNextstrainURL(
+                                    `B6-71?p=grid&tl=Identifier`
+                                  );
+                                }}
+                              >
                                 B6-71
                               </a>
                             </span>
                             <span className="fw-bold fs-4 px-2">
-                              <a className="text-hyperlink" id="clade-B691"
-                              onClick={()=>{setNextstrainURL(`B6-91?p=grid&tl=Identifier`)}}>
+                              <a
+                                className="text-hyperlink"
+                                id="clade-B691"
+                                onClick={() => {
+                                  setNextstrainURL(
+                                    `B6-91?p=grid&tl=Identifier`
+                                  );
+                                }}
+                              >
                                 B6-91
                               </a>
                             </span>

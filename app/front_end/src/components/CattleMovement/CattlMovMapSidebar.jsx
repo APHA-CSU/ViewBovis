@@ -87,17 +87,38 @@ const CattlMovMapSidebar = ({
     <div>
       <form className="sample-search" onSubmit={handleSubmit}>
         <div>
-          <Heading id="enter-sample-container" size="MEDIUM">
+          <div class="govuk-heading-m " id="enter-sample-container">
             Enter Identifier or Submission
-          </Heading>
-          <Input
-            value={searchInput}
-            onChange={handleChange}
-            placeholder="e.g. UK705113600438"
-          />
-          <Button className="my-2" buttonColour="#00a33b">
+          </div>
+          <div>
+            <p>
+              <input
+                type="text"
+                class="input__sampleID"
+                value={searchInput}
+                onChange={handleChange}
+                placeholder="e.g. UK705113600438"
+                name="Name"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-custom-class="input-tooltip"
+                title="Identifier or Submission Number"
+              />
+            </p>
+            <div id="cattle-warning-text"></div>
+          </div>
+          <button className="my-2 govuk-button" style={{ marginBottom: "10px" }}>
             Show Cattle Movement
-          </Button>
+          </button>
+          <div class="text-center" id="cattle-spinner-container">
+              <div
+                class="spinner-border text-secondary hidden"
+                id="cattle-spinner"
+                role="status"
+              >
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
         </div>
       </form>
       <Row className="my-4">
