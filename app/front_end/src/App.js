@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import "./App.css";
 import Home from "./components/Home/Home";
@@ -8,10 +7,12 @@ import SNPMap from "./components/SNPDistance/SNPMap";
 import Nextstrain from "./components/Nextstrain/Nextstrain";
 import HelpSupport from "./components/HelpSupport/HelpSupport";
 import NavbarComp from "./components/Navbar/NavbarComp";
+import SecurityModal from "./components/SecurityModal/SecurityModal";
 
 function App() {
   return (
     <Container fluid className="app">
+      <SecurityModal />
       <NavbarComp />
       <Routes>
         <Route path="/" element={<Home />} />
