@@ -7,17 +7,12 @@ const SecurityModal = () => {
   const showModal = useSelector((state) => state.security.showModal);
   const [checked, setChecked] = useState(!showModal);
   const dispatch = useDispatch();
-  
-  useEffect(()=>{
-    document.body.style.overflow = "hidden";
-  },[])
 
   useEffect(() => {
-    if (checked) {
-      dispatch(hideModal());
-      document.body.style.overflow = "auto";
-    }
-  }, [checked]);
+    document.body.style.overflow = "hidden";
+  }, []);
+
+
   return (
     <div
       role="alertdialog"
@@ -25,7 +20,7 @@ const SecurityModal = () => {
       className="modal fade show"
       style={{
         display: showModal ? "block" : "none",
-        backgroundColor: "rgba(0,0,0,0.7)",
+        backgroundColor: "rgba(0,0,0,0.9)",
       }}
     >
       <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -79,7 +74,12 @@ const SecurityModal = () => {
                         checked={checked}
                         onChange={() => {
                           setChecked(true);
+                          setTimeout(()=>{
+                            dispatch(hideModal())
+                            document.body.style.overflow = "auto";
+                          },2000)
                         }}
+                        disabled={checked}
                       />
                       <label
                         class="govuk-label govuk-checkboxes__label"
