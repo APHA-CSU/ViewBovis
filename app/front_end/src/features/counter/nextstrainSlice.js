@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const movementSlice = createSlice({
+export const nextstrainSlice = createSlice({
   name: "nextstrain",
   initialState: {
     nextstrainSearchSample: "",
@@ -24,6 +24,6 @@ export const {
   setNextstrainSearchSample,
   setNextstrainDataset,
   setNextstrainIframeURL,
-} = movementSlice.actions;
+} = nextstrainSlice.actions;
 
-export default movementSlice.reducer;
+export default nextstrainSlice.reducer;
