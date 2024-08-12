@@ -6,7 +6,7 @@ import { divIcon } from "leaflet";
 import RiskLayers from "../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
 import HotspotLayers from "../Layers/HotspotLayers";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
@@ -27,6 +27,7 @@ const SNPMapComp = ({
 }) => {
   //SNP map cluster icon
   const openTable = useSelector((state) => state.counter.openSNPTable);
+  const mapRef = useRef(null);
   const createCustomClusterIcon = (cluster) => {
     return new divIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
@@ -116,115 +117,132 @@ const SNPMapComp = ({
   };
 
   return (
-    <MapContainer
-      center={[53.3781, -1]}
-      zoom={6}
-      zoomAnimation={true}
-      zoomAnimationThreshold={20}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">
+    <div ref={mapRef}>
+      <MapContainer
+        center={[53.3781, -1]}
+        zoom={6}
+        zoomAnimation={true}
+        zoomAnimationThreshold={20}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">
           OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <BaseMaps />
-      <ResetView />
-      <HideSidebar
-        setOpenSideBar={setOpenSideBar}
-        openSideBar={openSideBar}
-        type={"snp_map"}
-      />
-      <MeasurementTool />
-      <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
-      <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-      {Object.keys(checkedLayers).length > 0 && <RiskLayers checkedLayers={checkedLayers} />}
-      <LegendTableAction SNPMapDataset={SNPMapDataset} openTable={openTable} />
-      {!openTable && (
-        <MarkerClusterGroup
-          chunkedLoading
-          iconCreateFunction={createCustomClusterIcon}
-        >
-          {Object.keys(SNPMapDataset)
-            .filter((elem) => {
-              return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
-            })
-            .map((elem, index) => {
-              return (
-                <Marker
-                  ref={(ref) => {
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <BaseMaps />
+        <ResetView />
+        <HideSidebar
+          setOpenSideBar={setOpenSideBar}
+          openSideBar={openSideBar}
+          type={"snp_map"}
+        />
+        <MeasurementTool />
+        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
+        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
+        {Object.keys(checkedLayers).length > 0 && (
+          <RiskLayers checkedLayers={checkedLayers} />
+        )}
+        <LegendTableAction
+          SNPMapDataset={SNPMapDataset}
+          openTable={openTable}
+          mapRef={mapRef}
+        />
+        {!openTable && (
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createCustomClusterIcon}
+          >
+            {Object.keys(SNPMapDataset)
+              .filter((elem) => {
+                return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
+              })
+              .map((elem, index) => {
+                return (
+                  <Marker
+                    ref={(ref) => {
+                      ref?.bindPopup(
+                        popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
+                        popupOptions
+                      );
+                    }}
+                    icon={relatedMarker(
+                      { ...SNPMapDataset[elem], submission: elem },
+                      SNPMapDataset["SOI"]
+                    )}
+                    key={"snp_related_marker_" + index}
+                    position={[
+                      SNPMapDataset[elem].lat,
+                      SNPMapDataset[elem].lon,
+                    ]}
+                  ></Marker>
+                );
+              })}
+          </MarkerClusterGroup>
+        )}
+        {openTable && (
+          <>
+            {Object.keys(SNPMapDataset)
+              .filter((elem) => {
+                return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
+              })
+              .map((elem, index) => {
+                return (
+                  <Marker
+                    ref={(ref) => {
+                      ref?.bindPopup(
+                        popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
+                        popupOptions
+                      );
+                    }}
+                    icon={relatedMarker(
+                      { ...SNPMapDataset[elem], submission: elem },
+                      SNPMapDataset["SOI"]
+                    )}
+                    key={"snp_related_marker_" + index}
+                    position={[
+                      SNPMapDataset[elem].lat,
+                      SNPMapDataset[elem].lon,
+                    ]}
+                  ></Marker>
+                );
+              })}
+          </>
+        )}
+        {Object.keys(SNPMapDataset)
+          .filter((elem) => {
+            return elem === SNPMapDataset["SOI"];
+          })
+          .map((elem, index) => {
+            return (
+              <Marker
+                ref={(ref) => {
+                  {
                     ref?.bindPopup(
                       popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
                       popupOptions
                     );
-                  }}
-                  icon={relatedMarker(
-                    { ...SNPMapDataset[elem], submission: elem },
-                    SNPMapDataset["SOI"]
-                  )}
-                  key={"snp_related_marker_" + index}
-                  position={[SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]}
-                ></Marker>
-              );
-            })}
-        </MarkerClusterGroup>
-      )}
-      {openTable && (
-        <>
-          {Object.keys(SNPMapDataset)
-            .filter((elem) => {
-              return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
-            })
-            .map((elem, index) => {
-              return (
-                <Marker
-                  ref={(ref) => {
-                    ref?.bindPopup(
-                      popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
-                      popupOptions
-                    );
-                  }}
-                  icon={relatedMarker(
-                    { ...SNPMapDataset[elem], submission: elem },
-                    SNPMapDataset["SOI"]
-                  )}
-                  key={"snp_related_marker_" + index}
-                  position={[SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]}
-                ></Marker>
-              );
-            })}
-        </>
-      )}
-      {Object.keys(SNPMapDataset)
-        .filter((elem) => {
-          return elem === SNPMapDataset["SOI"];
-        })
-        .map((elem, index) => {
-          return (
-            <Marker
-              ref={(ref) => {
-                {
-                  ref?.bindPopup(
-                    popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
-                    popupOptions
-                  );
-                }
-              }}
-              icon={relatedMarker(
-                { ...SNPMapDataset[elem], submission: elem },
-                SNPMapDataset["SOI"]
-              )}
-              key={"snp_related_marker_" + index}
-              position={[SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]}
-            ></Marker>
-          );
-        })}
-    </MapContainer>
+                  }
+                }}
+                icon={relatedMarker(
+                  { ...SNPMapDataset[elem], submission: elem },
+                  SNPMapDataset["SOI"]
+                )}
+                key={"snp_related_marker_" + index}
+                position={[SNPMapDataset[elem].lat, SNPMapDataset[elem].lon]}
+              ></Marker>
+            );
+          })}
+      </MapContainer>
+    </div>
   );
 };
 
-const LegendTableAction = ({ SNPMapDataset, openTable }) => {
+const LegendTableAction = ({ SNPMapDataset, openTable, mapRef }) => {
   const dispatch = useDispatch();
   const map = useMap();
+  const resizeObserver = new ResizeObserver(() => {
+    if (map && mapRef.current) map.invalidateSize();
+  });
   const btnShowTable = new L.Control({
     position: "topright",
   });
@@ -297,6 +315,13 @@ const LegendTableAction = ({ SNPMapDataset, openTable }) => {
       btnShowTable.remove();
     };
   }, [openTable]);
+
+  useEffect(() => {
+    if(mapRef.current) resizeObserver.observe(mapRef.current);
+    return () => {
+      resizeObserver.disconnect()
+    };
+  }, []);
 };
 
 export default SNPMapComp;

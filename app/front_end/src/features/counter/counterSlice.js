@@ -4,7 +4,7 @@ export const snpMapSlice = createSlice({
   name: "snpmap",
   initialState: {
     openSNPSidebar: true,
-    SNPMapDataset: {},
+    snpMapJSON: {},
     snpSearchInput: "",
     snpDistance: 1,
     openSNPTable: false,
@@ -15,7 +15,7 @@ export const snpMapSlice = createSlice({
     toggleSNPsidebar: (state) => {
       state.openSNPSidebar = !state.openSNPSidebar;
     },
-    setSNPmapDataset: (state, action) => {
+    setSNPMapJson: (state, action) => {
       state.SNPMapDataset = action.payload;
     },
     setSNPsample: (state, action) => {
@@ -40,7 +40,7 @@ export const snpMapSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   toggleSNPsidebar,
-  setSNPmapDataset,
+  setSNPMapJson,
   setSNPsample,
   setSNPdistance,
   toggleSNPTable,
@@ -49,25 +49,4 @@ export const {
   setCattleSearchInput,
 } = snpMapSlice.actions;
 
-export default snpMapSlice.reducer; 
-
-
-export const movementSlice = createSlice({
-  name: "movement",
-  initialState: {
-    cattleMovementDataset: "",
-  },
-  reducers: {
-    setCattleMovementDataset: (state, action) => {
-      state.cattleMovementDataset = action.payload
-    },
-  },
-});
-
-
-// Action creators are generated for each case reducer function
-export const {
-  setCattleMovementDataset,
-} = movementSlice.actions;
-
-//export default movementSlice.reducer; 
+export default snpMapSlice.reducer;

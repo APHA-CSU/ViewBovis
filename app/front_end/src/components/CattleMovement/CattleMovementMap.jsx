@@ -27,6 +27,7 @@ const CattleMovementMap = ({
   openSideBar,
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
+  const mapRef = useRef()
   if (
     (!jsonData && !secondJsonData) ||
     (jsonData &&
@@ -347,7 +348,9 @@ const CattleMovementMap = ({
   };
 
   return (
+    <div ref={mapRef}>
     <MapContainer center={[53.3781, -1]} zoom={6}>
+      <ActionResizeObserver mapRef={mapRef}/>
       <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
       <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
       {Object.keys(checkedLayers).length > 0 && (
@@ -433,6 +436,7 @@ const CattleMovementMap = ({
       {/* </LayersControl.Overlay>
             </LayersControl> */}
     </MapContainer>
+    </div>
   );
 };
 //Function to zoom in on the markers and add padding so all points visible
@@ -451,4 +455,18 @@ const FitMapToBounds = ({ jsonData, secondJsonData }) => {
   }, [jsonData, secondJsonData]);
   return <></>;
 };
+
+const ActionResizeObserver = ({mapRef}) => {
+  const map = useMap();
+  const resizeObserver = new ResizeObserver(()=>{
+    if(map && mapRef.current) map.invalidateSize()
+  })
+
+  useEffect(()=>{
+    if(mapRef.current) resizeObserver.observe(mapRef.current);
+    return () => {
+      resizeObserver.disconnect()
+    };
+  },[])
+}
 export default CattleMovementMap;
