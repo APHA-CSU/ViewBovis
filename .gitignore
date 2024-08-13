@@ -5,6 +5,7 @@
 /app/front_end/node_modules/
 
 /app/front_end/auspice
+/app/front_end/build
 
 .vscode/
 data/
