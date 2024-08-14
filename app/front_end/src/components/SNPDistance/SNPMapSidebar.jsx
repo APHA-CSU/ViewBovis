@@ -26,8 +26,7 @@ const SNPMapSidebar = ({
     setDistance(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     dispatch(setSNPsample(sample));
     dispatch(setSNPdistance(distance));
     fetchSNPMapDataset(sample,distance)
