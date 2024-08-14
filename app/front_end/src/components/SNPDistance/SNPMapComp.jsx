@@ -2,7 +2,6 @@ import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { relatedMarker } from "./SNPLayers";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { divIcon } from "leaflet";
 import RiskLayers from "../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
 import HotspotLayers from "../Layers/HotspotLayers";
@@ -29,7 +28,7 @@ const SNPMapComp = ({
   const openTable = useSelector((state) => state.counter.openSNPTable);
   const mapRef = useRef(null);
   const createCustomClusterIcon = (cluster) => {
-    return new divIcon({
+    return new L.DivIcon({
       html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
       className: "cluster-icon",
       iconSize: [30, 30],

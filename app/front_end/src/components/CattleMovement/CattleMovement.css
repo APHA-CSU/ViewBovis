@@ -1,17 +1,3 @@
-/* CATTLE MOVEMENT CSS */
-
-#custom-container {
-  /* border: solid; */
-  height: 88vh;
-  padding: 0%;
-}
-
-.leaflet-container {
-  height: 88vh;
-  /* border: solid; */
-}
-
-
 #enter-sample-container {
   background: #d1d1d1;
   padding: 10px;

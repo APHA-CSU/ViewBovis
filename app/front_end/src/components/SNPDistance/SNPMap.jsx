@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
-import SNPMapComp from "./SNPMapComp";
 import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable";
 import "./SNPMap.css";
@@ -13,7 +12,7 @@ import {
   setSNPmapCountyandHotspotLayers,
 } from "./../../features/counter/counterSlice.js";
 
-const SNPMap = () => {
+const SNPMap = ({ SNPMapComp }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const dispatch = useDispatch();
   const snpCountyandHotspotLayers = useSelector(
@@ -26,9 +25,11 @@ const SNPMap = () => {
   );
   const openTable = useSelector((state) => state.counter.openSNPTable);
   const [OpenSideBar, setOpenSideBar] = useState(true);
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({ ...snpCountyandHotspotLayers });
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
+    ...snpCountyandHotspotLayers,
+  });
   const openSNPSidebar = useSelector((state) => state.counter.openSNPSidebar);
-  const [checkedLayers, setCheckedLayers] = useState({...snpCheckedLayers});
+  const [checkedLayers, setCheckedLayers] = useState({ ...snpCheckedLayers });
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
     fetch(
       `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
@@ -87,9 +88,8 @@ const SNPMap = () => {
     setCheckedLayers({ ...checkedLayers });
   };
 
-
   useEffect(() => {
-    if(snpSearchInput) fetchSNPMapDataset(snpSearchInput, snpDistance);
+    if (snpSearchInput) fetchSNPMapDataset(snpSearchInput, snpDistance);
   }, []);
 
   useEffect(() => {
@@ -103,35 +103,37 @@ const SNPMap = () => {
   return (
     <div className="container-fluid content">
       <Container fluid id="custom-container">
-        <Row>
-          <Collapse in={openSNPSidebar} dimension={"width"}>
-            <Col className="sidebar col-3">
-              <SNPMapSidebar
-                fetchSNPMapDataset={fetchSNPMapDataset}
+        <Suspense fallback={<>Loading...</>}>
+          <Row>
+            <Collapse in={openSNPSidebar} dimension={"width"}>
+              <Col className="sidebar col-3">
+                <SNPMapSidebar
+                  fetchSNPMapDataset={fetchSNPMapDataset}
+                  checkedLayers={checkedLayers}
+                  handleCheckboxes={handleCheckboxes}
+                  countyAndHotspotLayers={countyAndHotspotLayers}
+                  setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+                />
+              </Col>
+            </Collapse>
+            <Col>
+              <SNPMapComp
+                SNPMapDataset={SNPMapDataset}
                 checkedLayers={checkedLayers}
-                handleCheckboxes={handleCheckboxes}
-                countyAndHotspotLayers={countyAndHotspotLayers}
-                setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+                useCountyandHotspotLayers={countyAndHotspotLayers}
+                setOpenSideBar={setOpenSideBar}
+                openSideBar={OpenSideBar}
               />
             </Col>
-          </Collapse>
-          <Col>
-            <SNPMapComp
-              SNPMapDataset={SNPMapDataset}
-              checkedLayers={checkedLayers}
-              useCountyandHotspotLayers={countyAndHotspotLayers}
-              setOpenSideBar={setOpenSideBar}
-              openSideBar={OpenSideBar}
-            />
-          </Col>
-          <Collapse in={openTable}>
-            <Col className="sidebar-table col-4">
-              {Object.keys(SNPMapDataset).length > 0 && (
-                <SNPTable json={SNPMapDataset} />
-              )}
-            </Col>
-          </Collapse>
-        </Row>
+            <Collapse in={openTable}>
+              <Col className="sidebar-table col-4">
+                {Object.keys(SNPMapDataset).length > 0 && (
+                  <SNPTable json={SNPMapDataset} />
+                )}
+              </Col>
+            </Collapse>
+          </Row>
+        </Suspense>
       </Container>
     </div>
   );

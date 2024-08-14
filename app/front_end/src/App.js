@@ -8,16 +8,19 @@ import Nextstrain from "./components/Nextstrain/Nextstrain";
 import HelpSupport from "./components/HelpSupport/HelpSupport";
 import NavbarComp from "./components/Navbar/NavbarComp";
 import SecurityModal from "./components/SecurityModal/SecurityModal";
+import { lazy } from "react";
 
 function App() {
+  const SNPMapComp = lazy(()=> import("./components/SNPDistance/SNPMapComp"))
+  const CattleMovementMap = lazy(()=> import("./components/CattleMovement/CattleMovementMap"))
   return (
     <Container fluid className="app">
       <SecurityModal />
       <NavbarComp />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/cattlemovement" element={<CattleMovement />} />
-        <Route path="/snpmap" element={<SNPMap />} />
+        <Route path="/cattlemovement" element={<CattleMovement CattleMovementMap={CattleMovementMap} />} />
+        <Route path="/snpmap" element={<SNPMap SNPMapComp={SNPMapComp}/>} />
         <Route path="/nextstrain" element={<Nextstrain />} />
         <Route path="/helpsupport" element={<HelpSupport />} />
       </Routes>

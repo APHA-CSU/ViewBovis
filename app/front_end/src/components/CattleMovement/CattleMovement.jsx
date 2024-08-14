@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
+import { Suspense, useEffect, useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
-import CattleMovementMap from "./CattleMovementMap";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,7 +10,7 @@ import {
   setMovementCountyandHotspotLayers,
 } from "./../../features/counter/movementSlice.js";
 
-const CattleMovement = () => {
+const CattleMovement = ({CattleMovementMap}) => {
   const movementData = useSelector(
     (state) => state.movement.cattleMovementDataset
   );
@@ -97,7 +95,7 @@ const CattleMovement = () => {
 
   return (
     <div className="container-fluid content">
-      <Container fluid id="custom-container" data-testid="cattlemovement-1">
+      <Suspense fallback={<></>}>
         <Row>
           <Collapse in={openMovementSidebar}>
             <Col className="sidebar col-3">
@@ -120,7 +118,7 @@ const CattleMovement = () => {
             />
           </Col>
         </Row>
-      </Container>
+        </Suspense>
     </div>
   );
 };

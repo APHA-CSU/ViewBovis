@@ -17,6 +17,7 @@ import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
 import ResetView from "../MapControls/ResetView";
 import BaseMaps from "../MapControls/Basemaps";
+import "leaflet/dist/leaflet.css";
 
 const CattleMovementMap = ({
   jsonData,
@@ -27,37 +28,7 @@ const CattleMovementMap = ({
   openSideBar,
 }) => {
   // if jsonData or secondJsonData is null or undefined, return a placeholder map
-  const mapRef = useRef()
-  if (
-    (!jsonData && !secondJsonData) ||
-    (jsonData &&
-      Object.keys(jsonData).length === 0 &&
-      secondJsonData &&
-      Object.keys(secondJsonData).length === 0)
-  ) {
-    return (
-      <MapContainer center={[53.3781, -1]} zoom={6}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <BaseMaps />
-        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
-        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-        {Object.keys(checkedLayers).length > 0 && (
-          <RiskLayers checkedLayers={checkedLayers} />
-        )}
-        <ResetView />
-        <HideSidebar
-          setOpenSideBar={setOpenSideBar}
-          openSideBar={openSideBar}
-          type={"movement"}
-        />
-        <MeasurementTool />
-      </MapContainer>
-    );
-  }
-
+  const mapRef = useRef();
   // Extract movement data from json objects into arrays
   const movArr = jsonData.move ? Object.values(jsonData.move) : [];
   const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
@@ -349,124 +320,116 @@ const CattleMovementMap = ({
 
   return (
     <div ref={mapRef}>
-    <MapContainer center={[53.3781, -1]} zoom={6}>
-      <ActionResizeObserver mapRef={mapRef}/>
-      <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
-      <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-      {Object.keys(checkedLayers).length > 0 && (
-        <RiskLayers checkedLayers={checkedLayers} />
-      )}
-      <BaseMaps />
-      <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
-      <ResetView />
-      <HideSidebar
-        setOpenSideBar={setOpenSideBar}
-        openSideBar={openSideBar}
-        type={"movement"}
-      />
-      <MeasurementTool />
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {/* <TileLayer
-      attribution="Esri WorldImagery"
-      url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-      /> */}
-      {/* <LayersControl position="topright">
-      <LayersControl.Overlay name="Marker with popup"> */}
-      <CattleIconsLegend />
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={createCustomClusterIcon}
-        maxClusterRadius={0}
-      >
-        {linePts.map((position, index) => (
-          <Marker
-            ref={(ref) =>
-              ref?.bindPopup(
-                popupContent(jsonData, movArr, index, `firstMov-${index}`),
-                samplePopupOptions
-              )
-            }
-            key={`firstMov-${index}`}
-            position={position}
-            icon={renderIcon(movArr[index])}
-          >
-            <PolylineDecorator
-              key={`decorator-${index}`}
-              patterns={firstMovArrow}
-              color={"#0096FF"}
-              position={linePts}
-            />
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={createCustomClusterIcon}
-        maxClusterRadius={0}
-      >
-        {secondLinePts.map((position, index) => (
-          <Marker
-            ref={(ref) =>
-              ref?.bindPopup(
-                popupContent(
-                  secondJsonData,
-                  secondMovArr,
-                  index,
-                  `secondMov-${index}`
-                ),
-                samplePopupOptions
-              )
-            }
-            key={`secondMov-${index}`}
-            position={position}
-            icon={renderIcon(secondMovArr[index])}
-          >
-            <PolylineDecorator
-              key={`second-decorator-${index}`}
-              patterns={secondMovArrow}
-              color={"#cb181d"}
-              position={secondLinePts}
-            />
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-      {/* </LayersControl.Overlay>
-            </LayersControl> */}
-    </MapContainer>
+      <MapContainer center={[53.3781, -1]} zoom={6}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <ActionResizeObserver mapRef={mapRef} />
+        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
+        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
+        {Object.keys(checkedLayers).length > 0 && (
+          <RiskLayers checkedLayers={checkedLayers} />
+        )}
+        <BaseMaps />
+        <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
+        <ResetView />
+        <HideSidebar
+          setOpenSideBar={setOpenSideBar}
+          openSideBar={openSideBar}
+          type={"movement"}
+        />
+        <MeasurementTool />
+        <CattleIconsLegend />
+        <MarkerClusterGroup
+          chunkedLoading
+          iconCreateFunction={createCustomClusterIcon}
+          maxClusterRadius={0}
+        >
+          {linePts.map((position, index) => (
+            <Marker
+              ref={(ref) =>
+                ref?.bindPopup(
+                  popupContent(jsonData, movArr, index, `firstMov-${index}`),
+                  samplePopupOptions
+                )
+              }
+              key={`firstMov-${index}`}
+              position={position}
+              icon={renderIcon(movArr[index])}
+            >
+              <PolylineDecorator
+                key={`decorator-${index}`}
+                patterns={firstMovArrow}
+                color={"#0096FF"}
+                position={linePts}
+              />
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+        <MarkerClusterGroup
+          chunkedLoading
+          iconCreateFunction={createCustomClusterIcon}
+          maxClusterRadius={0}
+        >
+          {secondLinePts.map((position, index) => (
+            <Marker
+              ref={(ref) =>
+                ref?.bindPopup(
+                  popupContent(
+                    secondJsonData,
+                    secondMovArr,
+                    index,
+                    `secondMov-${index}`
+                  ),
+                  samplePopupOptions
+                )
+              }
+              key={`secondMov-${index}`}
+              position={position}
+              icon={renderIcon(secondMovArr[index])}
+            >
+              <PolylineDecorator
+                key={`second-decorator-${index}`}
+                patterns={secondMovArrow}
+                color={"#cb181d"}
+                position={secondLinePts}
+              />
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+      </MapContainer>
     </div>
   );
 };
 //Function to zoom in on the markers and add padding so all points visible
 const FitMapToBounds = ({ jsonData, secondJsonData }) => {
   const map = useMap();
-  const firstLatLon = Object.values(jsonData.move).map((arr) => [
-    arr.lat,
-    arr.lon,
-  ]);
+  const firstLatLon = jsonData.move
+    ? Object.values(jsonData.move).map((arr) => [arr.lat, arr.lon])
+    : [];
   const secondLatLon = secondJsonData.move
     ? Object.values(secondJsonData.move).map((arr) => [arr.lat, arr.lon])
     : [];
   const combinedLatLon = [...firstLatLon, ...secondLatLon];
   useEffect(() => {
-    map.fitBounds(L.latLngBounds(combinedLatLon).pad(0.1));
+    if (combinedLatLon.length > 0)
+      map.fitBounds(L.latLngBounds(combinedLatLon).pad(0.1));
   }, [jsonData, secondJsonData]);
   return <></>;
 };
 
-const ActionResizeObserver = ({mapRef}) => {
+const ActionResizeObserver = ({ mapRef }) => {
   const map = useMap();
-  const resizeObserver = new ResizeObserver(()=>{
-    if(map && mapRef.current) map.invalidateSize()
-  })
+  const resizeObserver = new ResizeObserver(() => {
+    if (map && mapRef.current) map.invalidateSize();
+  });
 
-  useEffect(()=>{
-    if(mapRef.current) resizeObserver.observe(mapRef.current);
+  useEffect(() => {
+    if (mapRef.current) resizeObserver.observe(mapRef.current);
     return () => {
-      resizeObserver.disconnect()
+      resizeObserver.disconnect();
     };
-  },[])
-}
+  }, []);
+};
 export default CattleMovementMap;
