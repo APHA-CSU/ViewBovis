@@ -1,19 +1,17 @@
 import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import "leaflet";
+// https://leaflet-extras.github.io/leaflet-providers/preview/
+//Basemaps
+
 const BaseMaps = () => {
   const map = useMap();
-  // Tiles
-  // https://leaflet-extras.github.io/leaflet-providers/preview/
-
-  // OpenStreetMap tiles
   const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution:
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   });
-  // Esri grey canvas
+
   const Esri_WorldGrayCanvas = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     {
@@ -21,7 +19,7 @@ const BaseMaps = () => {
       maxZoom: 16,
     }
   );
-  // Esri world imagery
+
   const Esri_WorldImagery = L.tileLayer(
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
@@ -48,10 +46,11 @@ const BaseMaps = () => {
     );
     const inputTab = divContainer.querySelectorAll("input")[0];
     inputTab.setAttribute("checked", "true");
+    osm.addTo(map)
 
     return () => {
       layerControl.remove();
     };
-  });
+  }, []);
 };
 export default BaseMaps;
