@@ -9,8 +9,9 @@ import {
   setMovementCheckedLayers,
   setMovementCountyandHotspotLayers,
 } from "./../../features/counter/movementSlice.js";
+import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
-const CattleMovement = ({CattleMovementMap}) => {
+const CattleMovement = ({ CattleMovementMap }) => {
   const movementData = useSelector(
     (state) => state.movement.cattleMovementDataset
   );
@@ -95,7 +96,7 @@ const CattleMovement = ({CattleMovementMap}) => {
 
   return (
     <div className="container-fluid content">
-      <Suspense fallback={<></>}>
+      <Suspense fallback={<LoadingScreen />}>
         <Row>
           <Collapse in={openMovementSidebar}>
             <Col className="sidebar col-3">
@@ -118,7 +119,7 @@ const CattleMovement = ({CattleMovementMap}) => {
             />
           </Col>
         </Row>
-        </Suspense>
+      </Suspense>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
   setSNPmapCheckedLayers,
   setSNPmapCountyandHotspotLayers,
 } from "./../../features/counter/counterSlice.js";
+import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
 const SNPMap = ({ SNPMapComp }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
@@ -103,7 +104,7 @@ const SNPMap = ({ SNPMapComp }) => {
   return (
     <div className="container-fluid content">
       <Container fluid id="custom-container">
-        <Suspense fallback={<>Loading...</>}>
+        <Suspense fallback={<LoadingScreen />}>
           <Row>
             <Collapse in={openSNPSidebar} dimension={"width"}>
               <Col className="sidebar col-3">
