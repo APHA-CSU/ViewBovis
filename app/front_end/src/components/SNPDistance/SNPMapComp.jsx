@@ -5,7 +5,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import RiskLayers from "../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
 import HotspotLayers from "../Layers/HotspotLayers";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
@@ -17,7 +17,7 @@ import BaseMaps from "../MapControls/Basemaps";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleSNPTable } from "./../../features/counter/counterSlice.js";
 
-const SNPMapComp = ({
+const SNPMapComp = React.memo(({
   checkedLayers,
   useCountyandHotspotLayers,
   setOpenSideBar,
@@ -234,7 +234,7 @@ const SNPMapComp = ({
       </MapContainer>
     </div>
   );
-};
+})
 
 const LegendTableAction = ({ SNPMapDataset, openTable, mapRef }) => {
   const dispatch = useDispatch();

@@ -19,80 +19,81 @@ import ResetView from "../MapControls/ResetView";
 import BaseMaps from "../MapControls/Basemaps";
 import "leaflet/dist/leaflet.css";
 
-const CattleMovementMap = ({
-  jsonData,
-  secondJsonData,
-  checkedLayers,
-  useCountyandHotspotLayers,
-  setOpenSideBar,
-  openSideBar,
-}) => {
-  // if jsonData or secondJsonData is null or undefined, return a placeholder map
-  const mapRef = useRef();
-  // Extract movement data from json objects into arrays
-  const movArr = jsonData.move ? Object.values(jsonData.move) : [];
-  const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
-  const secondMovArr = secondJsonData.move
-    ? Object.values(secondJsonData.move)
-    : [];
-  const secondLinePts = secondMovArr.map((arr) => [arr.lat, arr.lon]);
+const CattleMovementMap = React.memo(
+  ({
+    jsonData,
+    secondJsonData,
+    checkedLayers,
+    useCountyandHotspotLayers,
+    setOpenSideBar,
+    openSideBar,
+  }) => {
+    // if jsonData or secondJsonData is null or undefined, return a placeholder map
+    const mapRef = useRef();
+    // Extract movement data from json objects into arrays
+    const movArr = jsonData.move ? Object.values(jsonData.move) : [];
+    const linePts = movArr.map((arr) => [arr.lat, arr.lon]);
+    const secondMovArr = secondJsonData.move
+      ? Object.values(secondJsonData.move)
+      : [];
+    const secondLinePts = secondMovArr.map((arr) => [arr.lat, arr.lon]);
 
-  //Object to store marker icons
-  const customIcon = {
-    holding: new Icon({
-      iconUrl: holdingImg,
-      iconSize: [40, 40],
-      iconAnchor: [20, 35],
-    }),
-    showground: new Icon({
-      iconUrl: showgroundImg,
-      iconSize: [40, 40],
-      iconAnchor: [20, 35],
-    }),
-    market: new Icon({
-      iconUrl: marketImg,
-      iconSize: [40, 40],
-      iconAnchor: [20, 35],
-    }),
-    slaughterhouse: new Icon({
-      iconUrl: slaughterhouseImg,
-      iconSize: [40, 40],
-      iconAnchor: [20, 35],
-    }),
-  };
+    //Object to store marker icons
+    const customIcon = {
+      holding: new Icon({
+        iconUrl: holdingImg,
+        iconSize: [40, 40],
+        iconAnchor: [20, 35],
+      }),
+      showground: new Icon({
+        iconUrl: showgroundImg,
+        iconSize: [40, 40],
+        iconAnchor: [20, 35],
+      }),
+      market: new Icon({
+        iconUrl: marketImg,
+        iconSize: [40, 40],
+        iconAnchor: [20, 35],
+      }),
+      slaughterhouse: new Icon({
+        iconUrl: slaughterhouseImg,
+        iconSize: [40, 40],
+        iconAnchor: [20, 35],
+      }),
+    };
 
-  //Function to render the correct marker icon
-  const renderIcon = (move) => {
-    // Extract location type from movement array
-    let moveType = move.type;
+    //Function to render the correct marker icon
+    const renderIcon = (move) => {
+      // Extract location type from movement array
+      let moveType = move.type;
 
-    // Return the correct cow icon given the location type
-    const iconToReturn =
-      moveType === "Agricultural Holding"
-        ? customIcon.holding
-        : moveType === "Market"
-        ? customIcon.market
-        : moveType === "Slaughterhouse (Red Meat)"
-        ? customIcon.slaughterhouse
-        : moveType === "Showground"
-        ? customIcon.showground
-        : customIcon.holding;
+      // Return the correct cow icon given the location type
+      const iconToReturn =
+        moveType === "Agricultural Holding"
+          ? customIcon.holding
+          : moveType === "Market"
+          ? customIcon.market
+          : moveType === "Slaughterhouse (Red Meat)"
+          ? customIcon.slaughterhouse
+          : moveType === "Showground"
+          ? customIcon.showground
+          : customIcon.holding;
 
-    return iconToReturn;
-  };
+      return iconToReturn;
+    };
 
-  //Movement cluster icon
-  const createCustomClusterIcon = (cluster) => {
-    return new divIcon({
-      html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
-      className: "cluster-icon",
-      iconSize: [30, 30],
-    });
-  };
+    //Movement cluster icon
+    const createCustomClusterIcon = (cluster) => {
+      return new divIcon({
+        html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
+        className: "cluster-icon",
+        iconSize: [30, 30],
+      });
+    };
 
-  //Function to create HTML popup content using template literal
-  const popupContent = function (data, movArr, index, lineIndex) {
-    return `
+    //Function to create HTML popup content using template literal
+    const popupContent = function (data, movArr, index, lineIndex) {
+      return `
     <div class="fs-5 fw-bold">${data.identifier}</div><br>
     <div>
       <nav>
@@ -210,27 +211,27 @@ const CattleMovementMap = ({
         </div>
       </div>           
     `;
-  };
+    };
 
-  // Custom popup options (https://leafletjs.com/reference.html#popup)
-  const samplePopupOptions = {
-    maxWidth: 400, // in pixels
-    className: "cattlePopup",
-    autoClose: false,
-    closeOnClick: false,
-  };
+    // Custom popup options (https://leafletjs.com/reference.html#popup)
+    const samplePopupOptions = {
+      maxWidth: 400, // in pixels
+      className: "cattlePopup",
+      autoClose: false,
+      closeOnClick: false,
+    };
 
-  //Icons legend
-  const CattleIconsLegend = () => {
-    const map = useMap();
-    useEffect(() => {
-      const cattleIconsLegend = L.control({ position: "topright" });
+    //Icons legend
+    const CattleIconsLegend = () => {
+      const map = useMap();
+      useEffect(() => {
+        const cattleIconsLegend = L.control({ position: "topright" });
 
-      cattleIconsLegend.onAdd = () => {
-        const div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
-        div.insertAdjacentHTML(
-          "afterbegin",
-          `<div class="icons-legend"> <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
+        cattleIconsLegend.onAdd = () => {
+          const div = L.DomUtil.create("div", "leaflet-control leaflet-bar");
+          div.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="icons-legend"> <span class="fs-6" style="padding-left:6px;"><strong>Legend</strong></span>
             <span style="display: flex; align-items: center;">
             <img src=${holdingImg} class="legend-marker-img">
             <span>Holding</span>
@@ -258,150 +259,153 @@ const CattleMovementMap = ({
       <span  style="padding-left:10px;">Cattle movement lines</span>
     </span>
           </div>`
-        );
-        return div;
-      };
-      cattleIconsLegend.addTo(map);
-      // Cleanup function to remove the legend when the component unmounts
-      return () => {
-        map.removeControl(cattleIconsLegend);
-      };
-    });
-  };
+          );
+          return div;
+        };
+        cattleIconsLegend.addTo(map);
+        // Cleanup function to remove the legend when the component unmounts
+        return () => {
+          map.removeControl(cattleIconsLegend);
+        };
+      });
+    };
 
-  // Leaflet polylineDecorator patterns
-  const createArrowPattern = (color) => [
-    {
-      repeat: 100,
-      symbol: L.Symbol.arrowHead({
-        pixelSize: 15,
-        polygon: true,
-        pathOptions: {
-          stroke: true,
-          color: color,
-        },
-      }),
-    },
-  ];
-  //
-  const firstMovArrow = createArrowPattern("#0096FF");
-  const secondMovArrow = createArrowPattern("#cb181d");
+    // Leaflet polylineDecorator patterns
+    const createArrowPattern = (color) => [
+      {
+        repeat: 100,
+        symbol: L.Symbol.arrowHead({
+          pixelSize: 15,
+          polygon: true,
+          pathOptions: {
+            stroke: true,
+            color: color,
+          },
+        }),
+      },
+    ];
+    //
+    const firstMovArrow = createArrowPattern("#0096FF");
+    const secondMovArrow = createArrowPattern("#cb181d");
 
-  //Function for movement lines, arrows, and map bounds
-  const PolylineDecorator = ({ patterns, color, position }) => {
-    const map = useMap();
-    const prevPolylineRef = useRef(null);
-    const prevDecoratorsRef = useRef([]);
+    //Function for movement lines, arrows, and map bounds
+    const PolylineDecorator = ({ patterns, color, position }) => {
+      const map = useMap();
+      const prevPolylineRef = useRef(null);
+      const prevDecoratorsRef = useRef([]);
 
-    useEffect(() => {
-      if (!map) return;
+      useEffect(() => {
+        if (!map) return;
 
-      //Create new polyline & decorators and add it to the map
-      const polyline = L.polyline(position, {
-        color,
-      }).addTo(map);
-      const decorators = L.polylineDecorator(polyline, {
-        patterns,
-      }).addTo(map);
+        //Create new polyline & decorators and add it to the map
+        const polyline = L.polyline(position, {
+          color,
+        }).addTo(map);
+        const decorators = L.polylineDecorator(polyline, {
+          patterns,
+        }).addTo(map);
 
-      // Update prevPolylineRef & prevDecoratorsRef values to the current polyline & decorators values
-      prevPolylineRef.current = polyline;
-      prevDecoratorsRef.current = decorators;
+        // Update prevPolylineRef & prevDecoratorsRef values to the current polyline & decorators values
+        prevPolylineRef.current = polyline;
+        prevDecoratorsRef.current = decorators;
 
-      // Remove previous polyline and decorators on component re-render (new sample search)
-      return () => {
-        if (prevPolylineRef.current) {
-          map.removeLayer(prevPolylineRef.current);
-          map.removeLayer(prevDecoratorsRef.current);
-        }
-      };
-    });
-  };
+        // Remove previous polyline and decorators on component re-render (new sample search)
+        return () => {
+          if (prevPolylineRef.current) {
+            map.removeLayer(prevPolylineRef.current);
+            map.removeLayer(prevDecoratorsRef.current);
+          }
+        };
+      });
+    };
 
-  return (
-    <div ref={mapRef}>
-      <MapContainer center={[53.3781, -1]} zoom={6}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <ActionResizeObserver mapRef={mapRef} />
-        <HotspotLayers isChecked={useCountyandHotspotLayers["hotspotLayers"]} />
-        <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-        {Object.keys(checkedLayers).length > 0 && (
-          <RiskLayers checkedLayers={checkedLayers} />
-        )}
-        <BaseMaps />
-        <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
-        <ResetView />
-        <HideSidebar
-          setOpenSideBar={setOpenSideBar}
-          openSideBar={openSideBar}
-          type={"movement"}
-        />
-        <MeasurementTool />
-        <CattleIconsLegend />
-        <MarkerClusterGroup
-          chunkedLoading
-          iconCreateFunction={createCustomClusterIcon}
-          maxClusterRadius={0}
-        >
-          {linePts.map((position, index) => (
-            <Marker
-              ref={(ref) =>
-                ref?.bindPopup(
-                  popupContent(jsonData, movArr, index, `firstMov-${index}`),
-                  samplePopupOptions
-                )
-              }
-              key={`firstMov-${index}`}
-              position={position}
-              icon={renderIcon(movArr[index])}
-            >
-              <PolylineDecorator
-                key={`decorator-${index}`}
-                patterns={firstMovArrow}
-                color={"#0096FF"}
-                position={linePts}
-              />
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
-        <MarkerClusterGroup
-          chunkedLoading
-          iconCreateFunction={createCustomClusterIcon}
-          maxClusterRadius={0}
-        >
-          {secondLinePts.map((position, index) => (
-            <Marker
-              ref={(ref) =>
-                ref?.bindPopup(
-                  popupContent(
-                    secondJsonData,
-                    secondMovArr,
-                    index,
-                    `secondMov-${index}`
-                  ),
-                  samplePopupOptions
-                )
-              }
-              key={`secondMov-${index}`}
-              position={position}
-              icon={renderIcon(secondMovArr[index])}
-            >
-              <PolylineDecorator
-                key={`second-decorator-${index}`}
-                patterns={secondMovArrow}
-                color={"#cb181d"}
-                position={secondLinePts}
-              />
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
-      </MapContainer>
-    </div>
-  );
-};
+    return (
+      <div ref={mapRef}>
+        <MapContainer center={[53.3781, -1]} zoom={6}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <ActionResizeObserver mapRef={mapRef} />
+          <HotspotLayers
+            isChecked={useCountyandHotspotLayers["hotspotLayers"]}
+          />
+          <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
+          {Object.keys(checkedLayers).length > 0 && (
+            <RiskLayers checkedLayers={checkedLayers} />
+          )}
+          <BaseMaps />
+          <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
+          <ResetView />
+          <HideSidebar
+            setOpenSideBar={setOpenSideBar}
+            openSideBar={openSideBar}
+            type={"movement"}
+          />
+          <MeasurementTool />
+          <CattleIconsLegend />
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createCustomClusterIcon}
+            maxClusterRadius={0}
+          >
+            {linePts.map((position, index) => (
+              <Marker
+                ref={(ref) =>
+                  ref?.bindPopup(
+                    popupContent(jsonData, movArr, index, `firstMov-${index}`),
+                    samplePopupOptions
+                  )
+                }
+                key={`firstMov-${index}`}
+                position={position}
+                icon={renderIcon(movArr[index])}
+              >
+                <PolylineDecorator
+                  key={`decorator-${index}`}
+                  patterns={firstMovArrow}
+                  color={"#0096FF"}
+                  position={linePts}
+                />
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createCustomClusterIcon}
+            maxClusterRadius={0}
+          >
+            {secondLinePts.map((position, index) => (
+              <Marker
+                ref={(ref) =>
+                  ref?.bindPopup(
+                    popupContent(
+                      secondJsonData,
+                      secondMovArr,
+                      index,
+                      `secondMov-${index}`
+                    ),
+                    samplePopupOptions
+                  )
+                }
+                key={`secondMov-${index}`}
+                position={position}
+                icon={renderIcon(secondMovArr[index])}
+              >
+                <PolylineDecorator
+                  key={`second-decorator-${index}`}
+                  patterns={secondMovArrow}
+                  color={"#cb181d"}
+                  position={secondLinePts}
+                />
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+        </MapContainer>
+      </div>
+    );
+  }
+);
 //Function to zoom in on the markers and add padding so all points visible
 const FitMapToBounds = ({ jsonData, secondJsonData }) => {
   const map = useMap();

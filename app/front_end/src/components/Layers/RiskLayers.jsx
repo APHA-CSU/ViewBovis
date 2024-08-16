@@ -3,8 +3,19 @@ import { useEffect, useState } from "react";
 import AllRA from "../../data/riskAreas.json";
 import L from "leaflet";
 const RiskLayers = ({ checkedLayers }) => {
+  return (
+    <>
+      {Object.values(checkedLayers).length > 0 &&
+        Object.values(checkedLayers).filter((layer) => layer).length > 0 && (
+          <RiskLayersModel checkedLayers={checkedLayers} />
+        )}
+    </>
+  );
+};
+
+const RiskLayersModel = ({ checkedLayers }) => {
   const [layers, setLayers] = useState([]);
-  const [geoJson, setGeoJson] = useState(AllRA);
+  const [geoJson, setGeoJson] = useState({});
 
   const map = useMap();
 
@@ -97,15 +108,18 @@ const RiskLayers = ({ checkedLayers }) => {
 
   //Create GeoJSON layer using Leaflets' `L.geoJSON` method & geoJson data
   useEffect(() => {
-    const geoJsonLayer = L.geoJSON(geoJson, {
-      style: styleRiskArea,
-      onEachFeature: onEachFeatureCombined,
-    });
-    geoJsonLayer.addTo(map);
-    geoJsonLayer.bringToBack();
+    if (Object.keys(geoJson).length > 0) {
+      const geoJsonLayer = L.geoJSON(geoJson, {
+        style: styleRiskArea,
+        onEachFeature: onEachFeatureCombined,
+      });
+      geoJsonLayer.addTo(map);
+      geoJsonLayer.bringToBack();
+    
     return () => {
       map.removeLayer(geoJsonLayer);
     };
+  }
   }, [geoJson]);
 
   // Legend for Risk Areas (https://leafletjs.com/examples/choropleth/)
