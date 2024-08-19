@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setSNPmapCheckedLayers,
   setSNPmapCountyandHotspotLayers,
+  setSNPmapWarnings,
 } from "./../../features/counter/counterSlice.js";
 import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
@@ -32,23 +33,40 @@ const SNPMap = ({ SNPMapComp }) => {
   const openSNPSidebar = useSelector((state) => state.counter.openSNPSidebar);
   const [checkedLayers, setCheckedLayers] = useState({ ...snpCheckedLayers });
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
-    fetch(
-      `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
-    )
-      .then((res) => {
-        if (!res.ok) {
-          console.error(res);
-          return null;
-        } else return res.json();
-      })
-      .then((res) => {
-        if (res) {
-          setSNPMapDataset(res);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    if (search_sample.length > 0) {
+      fetch(
+        `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
+      )
+        .then((res) => {
+          if (!res.ok) {
+            console.error(res);
+            return null;
+          } else return res.json();
+        })
+        .then((res) => {
+          if (res) {
+            if (res["warnings"]) {
+              setSNPMapDataset({});
+              dispatch(setSNPmapWarnings(res["warning"]));
+            } else {
+              setSNPMapDataset(res);
+              dispatch(setSNPmapWarnings(null));
+            }
+          } else {
+            setSNPMapDataset({});
+            dispatch(
+              setSNPmapWarnings(
+                "Something went wrong: Report the sample and snp distance"
+              )
+            );
+          }
+        })
+        .catch((error) => {
+          setSNPMapDataset({});
+          dispatch(setSNPmapWarnings("Request failed"));
+          console.error("Error fetching data:", error);
+        });
+    }
   };
 
   const handleCheckboxes = (index) => {

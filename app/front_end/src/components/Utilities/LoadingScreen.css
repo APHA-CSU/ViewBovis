@@ -36,7 +36,7 @@
 }
 
 .loading-dots span {
-  animation: blink 1.5s infinite step-start;
+  animation: blink 0.45s infinite step-start;
   opacity: 0;
 }
 
@@ -45,21 +45,22 @@
 }
 
 .loading-dots span:nth-child(2) {
-  animation-delay: 0.5s;
+  animation-delay: 0.15s;
 }
 
 .loading-dots span:nth-child(3) {
-  animation-delay: 1s;
+  animation-delay: 0.3s;
 }
 
 @keyframes blink {
   0% {
     opacity: 0;
   }
-  50% {
+  75% {
     opacity: 1;
   }
-  100% {
-    opacity: 0;
-  }
+}
+
+.loading-text {
+  font-size: large;
 }

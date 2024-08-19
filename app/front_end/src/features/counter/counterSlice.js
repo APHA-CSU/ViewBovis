@@ -8,8 +8,9 @@ export const snpMapSlice = createSlice({
     snpSearchInput: "",
     snpDistance: 1,
     openSNPTable: false,
-    snpmapCheckedLayers : {},
+    snpmapCheckedLayers: {},
     snpCountyandHotspotLayers: {},
+    snpmapWarnings: null,
   },
   reducers: {
     toggleSNPsidebar: (state) => {
@@ -27,17 +28,21 @@ export const snpMapSlice = createSlice({
     toggleSNPTable: (state) => {
       state.openSNPTable = !state.openSNPTable;
     },
-    setSNPmapCheckedLayers: (state,action) => {
-      state.snpmapCheckedLayers = {...state.snpmapCheckedLayers,...action.payload}
+    setSNPmapCheckedLayers: (state, action) => {
+      state.snpmapCheckedLayers = {
+        ...state.snpmapCheckedLayers,
+        ...action.payload,
+      };
     },
-    setSNPmapCountyandHotspotLayers: (state,action) => {
-      state.snpCountyandHotspotLayers = {...action.payload}
-    }
+    setSNPmapCountyandHotspotLayers: (state, action) => {
+      state.snpCountyandHotspotLayers = { ...action.payload };
+    },
+    setSNPmapWarnings: (state, action) => {
+      state.snpmapWarnings = action.payload;
+    },
   },
 });
 
-
-// Action creators are generated for each case reducer function
 export const {
   toggleSNPsidebar,
   setSNPMapJson,
@@ -47,6 +52,7 @@ export const {
   setSNPmapCheckedLayers,
   setSNPmapCountyandHotspotLayers,
   setCattleSearchInput,
+  setSNPmapWarnings,
 } = snpMapSlice.actions;
 
 export default snpMapSlice.reducer;
