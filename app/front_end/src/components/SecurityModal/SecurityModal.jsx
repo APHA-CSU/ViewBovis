@@ -32,22 +32,22 @@ const SecurityModal = () => {
             width: "fit-content",
           }}
         >
-          <div class="modal-body">
-            <div class="govuk-notification-banner govuk-notification-banner--success">
-              <div class="govuk-notification-banner__header">
+          <div className="modal-body">
+            <div className="govuk-notification-banner govuk-notification-banner--success">
+              <div className="govuk-notification-banner__header">
                 <h2
-                  class="govuk-notification-banner__title"
+                  className="govuk-notification-banner__title"
                   id="govuk-notification-banner-title"
                 >
                   Important Information
                 </h2>
               </div>
-              <div class="govuk-notification-banner__content">
-                <div class="govuk-warning-text">
-                  <span class="govuk-warning-text__icon" aria-hidden="true">
+              <div className="govuk-notification-banner__content">
+                <div className="govuk-warning-text">
+                  <span className="govuk-warning-text__icon" aria-hidden="true">
                     !
                   </span>
-                  <strong class="govuk-warning-text__text">
+                  <strong className="govuk-warning-text__text">
                     Do not share login details between users
                   </strong>
                 </div>
@@ -59,17 +59,17 @@ const SecurityModal = () => {
                     due to mishandling of Official Sensitive data.
                   </p>
                 </div>
-                <div class="govuk-form-group">
+                <div className="govuk-form-group">
                   <div
-                    class="govuk-checkboxes govuk-checkboxes--small"
+                    className="govuk-checkboxes govuk-checkboxes--small"
                     data-module="govuk-checkboxes"
                   >
                     <div
-                      class="govuk-checkboxes__item"
+                      className="govuk-checkboxes__item"
                       style={{ marginLeft: "33%" }}
                     >
                       <input
-                        class="govuk-checkboxes__input"
+                        className="govuk-checkboxes__input"
                         type="checkbox"
                         checked={checked}
                         onChange={() => {
@@ -82,7 +82,7 @@ const SecurityModal = () => {
                         disabled={checked}
                       />
                       <label
-                        class="govuk-label govuk-checkboxes__label"
+                        className="govuk-label govuk-checkboxes__label"
                         for="checkbox--agree"
                       >
                         I agree to the above
