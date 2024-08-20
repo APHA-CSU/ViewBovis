@@ -343,7 +343,7 @@ const CattleMovementMap = React.memo(
             type={"movement"}
           />
           <MeasurementTool />
-          <CattleIconsLegend />
+          {linePts.concat(secondLinePts).length > 0 && <CattleIconsLegend />}
           <MarkerClusterGroup
             chunkedLoading
             iconCreateFunction={createCustomClusterIcon}

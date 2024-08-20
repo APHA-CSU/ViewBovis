@@ -10,6 +10,8 @@ export const movementSlice = createSlice({
     cattleSecondInput: "",
     movementCheckedLayers: {},
     movementCountyandHotspotLayers: {},
+    movementWarnings: null,
+    secondMovementWarnings: null,
   },
   reducers: {
     toggleMovementSidebar: (state) => {
@@ -33,6 +35,12 @@ export const movementSlice = createSlice({
     setMovementCountyandHotspotLayers: (state, action) => {
       state.movementCountyandHotspotLayers = { ...action.payload };
     },
+    setMovementWarnings: (state, action) => {
+      state.movementWarnings = action.payload;
+    },
+    setSecondMovementWarnings: (state, action) => {
+      state.secondMovementWarnings = action.payload;
+    },
   },
 });
 
@@ -43,7 +51,9 @@ export const {
   setSecondMovementDataset,
   setMovementCheckedLayers,
   setMovementCountyandHotspotLayers,
-  toggleMovementSidebar
+  toggleMovementSidebar,
+  setMovementWarnings,
+  setSecondMovementWarnings
 } = movementSlice.actions;
 
 export default movementSlice.reducer;

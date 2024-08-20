@@ -80,3 +80,9 @@
   margin-right: 8px;
   opacity: 0.7;
 }
+
+#cattle-spinner-container {
+  display: inline-flex;
+  margin-top: 15px;
+  padding-left: 20px;
+}
