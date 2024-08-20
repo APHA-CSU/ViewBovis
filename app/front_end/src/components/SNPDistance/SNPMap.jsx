@@ -16,6 +16,7 @@ import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
 const SNPMap = ({ SNPMapComp }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
+  const [spinner, setSpinner] = useState(false);
   const dispatch = useDispatch();
   const snpCountyandHotspotLayers = useSelector(
     (state) => state.counter.snpCountyandHotspotLayers
@@ -34,17 +35,18 @@ const SNPMap = ({ SNPMapComp }) => {
   const [checkedLayers, setCheckedLayers] = useState({ ...snpCheckedLayers });
   const fetchSNPMapDataset = (search_sample, snp_distance) => {
     if (search_sample.length > 0) {
+      setSpinner(true);
       fetch(
         `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
       )
         .then((res) => {
           if (!res.ok) {
             console.error(res);
-            return null;
+            return {};
           } else return res.json();
         })
         .then((res) => {
-          if (res) {
+          if (Object.keys(res).length > 0) {
             if (res["warnings"]) {
               setSNPMapDataset({});
               dispatch(setSNPmapWarnings(res["warning"]));
@@ -56,13 +58,17 @@ const SNPMap = ({ SNPMapComp }) => {
             setSNPMapDataset({});
             dispatch(
               setSNPmapWarnings(
-                "Something went wrong: Report the sample and snp distance"
+                "Something went wrong: Please report the sample and snp distance <a referrerpolicy='no-referrer' target='_blank' href='https://teams.microsoft.com/l/channel/19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/General?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId='>here</a>"
               )
             );
           }
         })
+        .then(() => {
+          setSpinner(false);
+        })
         .catch((error) => {
           setSNPMapDataset({});
+          setSpinner(false);
           dispatch(setSNPmapWarnings("Request failed"));
           console.error("Error fetching data:", error);
         });
@@ -132,6 +138,7 @@ const SNPMap = ({ SNPMapComp }) => {
                   handleCheckboxes={handleCheckboxes}
                   countyAndHotspotLayers={countyAndHotspotLayers}
                   setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+                  spinner={spinner}
                 />
               </Col>
             </Collapse>
