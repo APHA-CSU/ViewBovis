@@ -6,13 +6,16 @@ import Link from "@govuk-react/link";
 import Button from "@govuk-react/button";
 import img from "../../imgs/VBIcon16_APHAGreen.svg";
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setLatestDate } from "./../../features/counter/securitySlice.js";
 
 const Home = () => {
-  const [latestDate, setLatestDate] = useState("null");
+  const latestDate = useSelector((state) => state.security.latestDate);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch(`/sample/lastupdate`)
+    if(latestDate !== "N/A") fetch(`/sample/lastupdate`)
       .then((res) => {
         if (!res.ok) {
           console.error(res);
@@ -22,7 +25,7 @@ const Home = () => {
         }
       })
       .then((res) => {
-        if (res) setLatestDate(res["date"]);
+        if (res) dispatch(setLatestDate(res["date"]));
       })
       .catch((error) => {
         console.error("Error fetching data:", error);

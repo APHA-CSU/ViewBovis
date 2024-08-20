@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const securitySlice = createSlice({
-  name: "nextstrain",
+  name: "home",
   initialState: {
-    showModal : true
+    showModal: true,
+    latestDate: "N/A",
   },
   reducers: {
-    hideModal : (state) => {
+    hideModal: (state) => {
       state.showModal = false;
-    }
+    },
+    setLatestDate: (state, action) => {
+      state.latestDate = action.payload;
+    },
   },
 });
 
-export const {
-hideModal
-} = securitySlice.actions;
+export const { hideModal, setLatestDate } = securitySlice.actions;
 
 export default securitySlice.reducer;
