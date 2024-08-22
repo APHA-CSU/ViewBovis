@@ -29,7 +29,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
         {url && (
           <iframe
             title="nextstrain-viewbovis"
-            src={"http://localhost:4001/" + url}
+            src={"https://hosting.int.sce.network/http/nextstrain-beta.int.sce.network/" + url}
             id="nextstrain-iframe"
             height={"100%"}
             width={"100%"}
