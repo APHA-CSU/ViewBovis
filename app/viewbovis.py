@@ -8,7 +8,7 @@ from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
                            MatrixTooLargeException
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='build/static',template_folder='build')
 csrf = CSRFProtect(app)
 
 def get_id_no_whitespace():
@@ -44,11 +44,7 @@ def disconnect_db(exception):
 
 @app.route("/")
 def home():
-    with open(os.path.join(app.data_path, "metadata.json")) as f:
-        metadata = json.load(f)
-    return render_template("index.html",
-                           data_update_date=datetime.strptime(metadata["today"],
-                                                              '%d%b%y').strftime("%d/%m/%Y"))
+    return render_template("index.html")
 
 @app.route("/sample/lastupdate", methods=["GET"])
 def last_update_date():
