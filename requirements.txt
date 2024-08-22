@@ -6,3 +6,5 @@ requests==2.31.0
 pytest==7.4.2
 Flask-WTF==1.2.1
 numpy==1.26.3
+node==20.12.2
+npm==10.5.0

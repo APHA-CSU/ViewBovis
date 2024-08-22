@@ -34,7 +34,8 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN python3.10 -m pip install -r requirements.txt
 
 #Install React dependencies
-
+RUN cd front_end
+RUN npm install
 ################### ENTRY ##############################
 
 WORKDIR "/ViewBovis/app"
