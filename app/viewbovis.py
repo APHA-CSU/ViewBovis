@@ -50,6 +50,11 @@ def home():
                            data_update_date=datetime.strptime(metadata["today"],
                                                               '%d%b%y').strftime("%d/%m/%Y"))
 
+@app.route("/sample/lastupdate", methods=["GET"])
+def last_update_date():
+    with open(os.path.join(app.data_path, "metadata.json")) as f:
+        metadata = json.load(f)
+    return jsonify({"date" : datetime.strptime(metadata["today"],'%d%b%y').strftime("%d/%m/%Y")})
 
 @app.route("/sample", methods=["GET"])
 def sample():

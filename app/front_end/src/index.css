@@ -1,0 +1,83 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont,GDS Transport, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas,GDS Transport, 'Courier New',
+    monospace;
+}
+
+/* ================================ */
+/*
+/* APP GLOBAL CSS */
+/*
+/* ================================ */
+
+:root {
+  /* APHA official green */
+  /* http://aphaintranet/how-do-I/communications-press/Pages/findandusetheAPHAlogo.aspx */
+  --apha-green: #00A33B;
+  --apha-blue: #007CBA;
+  --apha-red: #D9262E;
+  --apha-orange: #FF9E16;
+}
+
+html {
+  font-family: Arial;
+  color: black;
+}
+
+body {
+  background-color: white;
+}
+
+p {
+  color: black;
+}
+
+.hidden {
+  display: none;
+}
+
+a:hover {
+  /* All links have the pointer (hand) on mouse hover */
+  cursor:pointer;
+}
+
+.text-green {
+  /* APHA green text */
+  color: var(--apha-green);
+}
+
+.text-hyperlink {
+  /* Blue hyperlink text */
+  color: #0000EE;
+}
+
+.govuk-button {
+  background-color: var(--apha-green);
+}
+
+.govuk-button--secondary {
+  background-color: #f3f2f1;;
+}
+
+.warning-text {
+  color: var(--apha-orange);
+  font-size: 20px;
+}
+
+.error-text {
+  color: var(--apha-red);
+  font-size: 20px;
+}
+
+.govuk-warning-text__icon {
+  color: white;
+  background: red;
+}
