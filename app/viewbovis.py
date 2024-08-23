@@ -43,6 +43,10 @@ def disconnect_db(exception):
 
 
 @app.route("/")
+@app.route("/cattlemovement")
+@app.route("/snpmap")
+@app.route("/nextstrain")
+@app.route("/helpsupport")
 def home():
     return render_template("index.html")
 
