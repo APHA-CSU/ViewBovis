@@ -187,9 +187,9 @@ const CattleMovementMap = React.memo(
               <tr>
                 <td><strong>Sex:</strong></td>
                 <td>${
-                  data.sex == `F`
+                  data.sex === `F`
                     ? `Female`
-                    : data.sex == `M`
+                    : data.sex === `M`
                     ? `Male`
                     : `Unknown`
                 }</td>

@@ -11,7 +11,6 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
     cellsPerTable: [],
   });
   let currHeader = -1;
-  let currCell = -1;
   const [tableWidth, setTableWidth] = useState();
   const tableArr = ["eartag", "af", "cph", "county", "clade"];
   const headerArr = [
@@ -48,7 +47,6 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
 
     return () => {
       window.removeEventListener("resize", () => {
-        setTableWidth(nextStrainTableRef?.current?.offsetWidth);
       });
     };
   }, []);

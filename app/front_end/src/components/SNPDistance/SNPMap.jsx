@@ -109,6 +109,8 @@ const SNPMap = ({ SNPMapComp }) => {
       case 7:
         checkedLayers["TB Free Area"] = !checkedLayers["TB Free Area"];
         break;
+      default:
+        break;
     }
     setCheckedLayers({ ...checkedLayers });
   };

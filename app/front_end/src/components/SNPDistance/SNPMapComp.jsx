@@ -80,9 +80,9 @@ const SNPMapComp = React.memo(({
               <tr>
                 <td><strong>Sex:</strong></td>
                 <td>${
-                  data.sex == `F`
+                  data.sex === `F`
                     ? `Female`
-                    : data.sex == `M`
+                    : data.sex === `M`
                     ? `Male`
                     : `Unknown`
                 }
@@ -215,12 +215,10 @@ const SNPMapComp = React.memo(({
             return (
               <Marker
                 ref={(ref) => {
-                  {
                     ref?.bindPopup(
                       popupContentSNPMap({ ...SNPMapDataset[elem] }, elem),
                       popupOptions
                     );
-                  }
                 }}
                 icon={relatedMarker(
                   { ...SNPMapDataset[elem], submission: elem },
