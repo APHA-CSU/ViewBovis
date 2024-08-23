@@ -6,6 +6,7 @@ export const nextstrainSlice = createSlice({
     nextstrainSearchSample: "",
     nextStrainDataset: {},
     nextStrainIframeURL: null,
+    nextStrainWarnings: null,
   },
   reducers: {
     setNextstrainSearchSample: (state, action) => {
@@ -17,6 +18,9 @@ export const nextstrainSlice = createSlice({
     setNextstrainIframeURL: (state, action) => {
       state.nextStrainIframeURL = action.payload;
     },
+    setNextStrainWarnings: (state, action) => {
+      state.nextStrainWarnings = action.payload;
+    },
   },
 });
 
@@ -24,6 +28,7 @@ export const {
   setNextstrainSearchSample,
   setNextstrainDataset,
   setNextstrainIframeURL,
+  setNextStrainWarnings,
 } = nextstrainSlice.actions;
 
 export default nextstrainSlice.reducer;
