@@ -6,12 +6,7 @@
     "@reduxjs/toolkit": "^2.2.6",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",
-    "auspice": "^2.56.0",
     "bootstrap": "^5.3.3",
-    "buffer": "^6.0.3",
-    "d3": "^7.9.0",
-    "echarts": "^5.5.0",
-    "fs": "^0.0.1-security",
     "govuk-frontend": "^5.4.0",
     "govuk-react": "^0.10.6",
     "leaflet": "^1.9.4",
@@ -26,7 +21,6 @@
     "react-tabulator": "^0.19.0",
     "redux": "^4.2.1",
     "shpjs": "^5.0.1",
-    "stream-browserify": "^3.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
