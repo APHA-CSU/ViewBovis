@@ -15,7 +15,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(latestDate !== "N/A") fetch(`/sample/lastupdate`)
+    if(latestDate === "N/A") fetch(`/sample/lastupdate`)
       .then((res) => {
         if (!res.ok) {
           console.error(res);
