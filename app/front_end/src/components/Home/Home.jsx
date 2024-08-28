@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLatestDate } from "./../../features/counter/securitySlice.js";
+import "./Home.css"
 
 const Home = () => {
   const latestDate = useSelector((state) => state.security.latestDate);

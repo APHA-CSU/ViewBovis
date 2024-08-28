@@ -18,7 +18,7 @@ const NavbarComp = () => {
           />
         </a>
         <Navbar.Brand id="nav-main-title">
-          ViewBovis [Official Sensitive]
+          <strong>ViewBovis [Official Sensitive]</strong>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -50,6 +50,13 @@ const NavbarComp = () => {
             </div>
           </Nav>
         </Navbar.Collapse>
+        <a
+          className="text-end text-decoration-underline text-hyperlink px-3"
+          href="https://hosting.int.sce.network/global-protect/logout.esp?code=0"
+          target="_self"
+        >
+          Log out
+        </a>
       </Container>
     </Navbar>
   );
