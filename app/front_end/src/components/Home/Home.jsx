@@ -1,11 +1,8 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import PhaseBanner from "@govuk-react/phase-banner";
-import Link from "@govuk-react/link";
-import Button from "@govuk-react/button";
 import img from "../../imgs/VBIcon16_APHAGreen.svg";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLatestDate } from "./../../features/counter/securitySlice.js";
@@ -15,41 +12,59 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(latestDate === "N/A") fetch(`/sample/lastupdate`)
-      .then((res) => {
-        if (!res.ok) {
-          console.error(res);
-          return null;
-        } else {
-          return res.json();
-        }
-      })
-      .then((res) => {
-        if (res) dispatch(setLatestDate(res["date"]));
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    if (latestDate === "N/A")
+      fetch(`/sample/lastupdate`)
+        .then((res) => {
+          if (!res.ok) {
+            console.error(res);
+            return null;
+          } else {
+            return res.json();
+          }
+        })
+        .then((res) => {
+          if (res) dispatch(setLatestDate(res["date"]));
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
   }, []);
 
   return (
     <div className="container-fluid content">
       <Container fluid data-testid="home-1">
         {/* <!-- Government BETA Banner --> */}
-        <Row>
-          <PhaseBanner level="beta">
-            This is a new service - your{" "}
-            <Link href="https://forms.office.com/e/RXTi1RzGnF" target="_blank">
-              feedback
-            </Link>{" "}
-            will help us to improve it.
-          </PhaseBanner>
-        </Row>
+        <div className="row alpha-side-margin">
+          <div className="govuk-phase-banner ">
+            <div>
+              <strong className="govuk-tag govuk-phase-banner__content__tag">
+                BETA
+              </strong>
+              <span>
+                This is a new service &ndash; your{" "}
+                <a
+                  className="text-hyperlink"
+                  href="https://forms.office.com/e/RXTi1RzGnF"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  feedback
+                </a>{" "}
+                will help us to improve it.
+              </span>
+            </div>
+          </div>
+        </div>
         {/* <!-- ViewBovis Logo and Description --> */}
         <Row className="align-items-center">
           {/* <!-- Column: logo --> */}
           <Col className="col-1">
-            <img src={img} className="home-logo" alt="ViewBovis_logo"></img>
+            <img
+              src={img}
+              className="home-logo"
+              alt="ViewBovis_logo"
+              loading="lazy"
+            ></img>
           </Col>
           {/* <!-- Column: description --> */}
           <Col className="col-8">
@@ -60,13 +75,13 @@ const Home = () => {
                 from <em>Mycobacterium bovis</em>. By linking genetic
                 relatedness with geographical neighbourhood, you will be able to
                 understand the transmission of this disease in both bovine and
-                non-bovine animals.
+                non-bovine animals.{""}
                 <b>
                   {" "}
                   Please note the scheduled downtime for ViewBovis is from
                   10pm-8am daily
                 </b>
-                .
+                {""}.
               </p>
             </div>
           </Col>
@@ -128,14 +143,11 @@ const Home = () => {
               </p>
               {/* <br> */}
               <div className="text-center">
-                <Button
-                  as={NavLink}
-                  to="/cattlemovement"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  Cattle Movement Map
-                </Button>
+                <Link to="/cattlemovement">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    Cattle Movement Map
+                  </button>
+                </Link>
               </div>
             </div>
           </Col>
@@ -149,25 +161,19 @@ const Home = () => {
               </p>
               <p className="text-center">
                 View SNP distance visualisations:<br></br>
-                <Button
-                  as={NavLink}
-                  to="/snpmap"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  SNP Distance Map
-                </Button>{" "}
+                <Link to="/snpmap">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    SNP Map
+                  </button>
+                </Link>{" "}
               </p>
               <p className="text-center">
                 View interactive phylogenetic tree:<br></br>
-                <Button
-                  as={NavLink}
-                  to="/nextstrain"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  Nextstrain
-                </Button>
+                <Link to="/nextstrain">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    NextStrain
+                  </button>
+                </Link>
               </p>
             </div>
           </Col>
@@ -180,32 +186,23 @@ const Home = () => {
                 content of ViewBovis and access support.
               </p>
               <p className="text-center">
-                <Button
-                  as={NavLink}
-                  to="/helpsupport"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  About The Data & Data Dictionary
-                </Button>
+                <Link to="/helpsupport">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    About The Data & Data Dictionary
+                  </button>
+                </Link>
                 <br></br>
-                <Button
-                  as={NavLink}
-                  to="/helpsupport"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  Training Resources
-                </Button>
+                <Link to="/helpsupport">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    Training Resources
+                  </button>
+                </Link>
                 <br></br>
-                <Button
-                  as={NavLink}
-                  to="/helpsupport"
-                  className="home-govuk-buttons"
-                  buttonColour="#00a33b"
-                >
-                  Missing Samples Report
-                </Button>
+                <Link to="/helpsupport">
+                  <button className="btn govuk-button custom-govuk-button-home">
+                    Missing Samples Report
+                  </button>
+                </Link>
               </p>
             </div>
           </Col>

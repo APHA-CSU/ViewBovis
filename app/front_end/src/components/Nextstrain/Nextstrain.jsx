@@ -1,9 +1,6 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import PhaseBanner from "@govuk-react/phase-banner";
-import Link from "@govuk-react/link";
-import SearchBox from "@govuk-react/search-box";
 import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
 import { useEffect, useState } from "react";
 import NextstrainTable from "./NextstrainTable";
@@ -83,19 +80,28 @@ const Nextstrain = () => {
       <Container fluid>
         {!nextstrainURL && (
           <>
-            <Row>
-              <PhaseBanner level="beta">
-                This is a new service - your{" "}
-                <Link
-                  href="https://forms.office.com/e/RXTi1RzGnF"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  feedback
-                </Link>{" "}
-                will help us to improve it.
-              </PhaseBanner>
-            </Row>
+            {/* <!-- Government BETA Banner --> */}
+            <div className="row alpha-side-margin">
+              <div className="govuk-phase-banner ">
+                <div>
+                  <strong className="govuk-tag govuk-phase-banner__content__tag">
+                    BETA
+                  </strong>
+                  <span>
+                    This is a new service &ndash; your{" "}
+                    <a
+                      className="text-hyperlink"
+                      href="https://forms.office.com/e/RXTi1RzGnF"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      feedback
+                    </a>{" "}
+                    will help us to improve it.
+                  </span>
+                </div>
+              </div>
+            </div>
             {/* <!-- Nextstrain Logo and Description -->     */}
             <Row className="align-items-center">
               <Col className="col-3 text-center">
@@ -173,17 +179,36 @@ const Nextstrain = () => {
                             <em>UK262728200982</em>) OR Submission (AF number:{" "}
                             <em>AF-21-08014-22</em>).
                           </p>
-                          <SearchBox>
+                          {/*<!-- Nextstrain Input Search Box -->*/}
+                          <div className="govuk-input__wrapper">
                             <input
-                              type="text"
-                              placeholder="e.g. AF-10-125-125"
                               value={identifier}
                               onChange={(e) => setIdentifier(e.target.value)}
-                              className="input__sampleID"
-                              style={{ marginRight: "10px" }}
+                              className="govuk-input fs-5"
+                              id="nextstrain-input"
+                              type="text"
+                              placeholder="e.g. AF-10-125-125"
                             />
-                            <SearchBox.Button onClick={fetchNextstrainData} />
-                          </SearchBox>
+                            <div
+                              className="govuk-input__suffix"
+                              aria-hidden="true"
+                              style={{cursor: "pointer"}}
+                              onClick={fetchNextstrainData}
+                            >
+                              <span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  fill="currentColor"
+                                  className="bi bi-search"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
                           <br></br>
                         </Col>
                         {/* <!-- Popular clades shortcut --> */}

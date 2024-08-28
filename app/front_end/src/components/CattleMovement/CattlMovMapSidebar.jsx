@@ -133,14 +133,14 @@ const CattlMovMapSidebar = ({
     <div>
       <form className="sample-search" onSubmit={handleSubmit}>
         <div>
-          <div class="govuk-heading-m " id="enter-sample-container">
+          <div className="govuk-heading-m " id="enter-sample-container">
             Enter Identifier or Submission
           </div>
           <div>
             <p>
               <input
                 type="text"
-                class="input__sampleID"
+                className="input__sampleID"
                 value={searchInput}
                 onChange={handleChange}
                 placeholder="e.g. UK705113600438"
@@ -185,11 +185,11 @@ const CattlMovMapSidebar = ({
         </span>
       )}
       <br></br>
-      <div class="row">
-        <div class="accordion" id="accordionExample">
-          <div class="accordion-item">
+      <div className="row">
+        <div className="accordion" id="accordionExample">
+          <div className="accordion-item">
             <button
-              class="accordion-button collapsed"
+              className="accordion-button collapsed"
               id="btn__cattle-movement--1"
               type="button"
               data-bs-toggle="collapse"
@@ -205,18 +205,18 @@ const CattlMovMapSidebar = ({
             </button>
             <div
               id="collapseOne"
-              class="accordion-collapse collapse"
+              className="accordion-collapse collapse"
               aria-labelledby="headingOne"
               data-bs-parent="#accordionExample"
             >
-              <div class="accordion-body" id="accordion__secondMovement">
+              <div className="accordion-body" id="accordion__secondMovement">
                 <div>
                   <p>
                     <input
                       value={secondSearchInput}
                       onChange={handleSecondChange}
                       type="text"
-                      class="input__sampleID"
+                      className="input__sampleID"
                       placeholder="e.g. UK705113600438"
                       name="Name"
                       data-bs-toggle="tooltip"
@@ -227,7 +227,7 @@ const CattlMovMapSidebar = ({
                   </p>
                   <button
                     type="button"
-                    class="govuk-button"
+                    className="govuk-button"
                     data-module="govuk-button"
                     style={{ marginBottom: "10px", width: "160px" }}
                     onClick={handleSecondSubmit}

@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import { Icon, divIcon } from "leaflet";
+import L, { Icon, divIcon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import holdingImg from "../../imgs/holding.svg";
 import showgroundImg from "../../imgs/showground.svg";
@@ -7,7 +7,6 @@ import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
 import React, { useEffect, useRef } from "react";
-import L from "leaflet";
 import "leaflet-polylinedecorator";
 import RiskLayers from "./../Layers/RiskLayers";
 import CountyLayers from "../Layers/CountyLayers";
