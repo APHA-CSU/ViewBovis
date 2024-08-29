@@ -9,6 +9,7 @@ import {
   setSecondMovementWarnings,
 } from "./../../features/counter/movementSlice";
 import { useSelector, useDispatch } from "react-redux";
+import LoadingScreen from "./../Utilities/LoadingScreen";
 
 const CattlMovMapSidebar = ({
   handleCheckboxes,
@@ -28,6 +29,7 @@ const CattlMovMapSidebar = ({
   const cattleSecondInput = useSelector(
     (state) => state.movement.cattleSecondInput
   );
+  const showLayers = useSelector((state) => state.security.showLayers);
   const [searchInput, setSearchInput] = useState("");
   const [secondSearchInput, setSecondSearchInput] = useState("");
   const [spinner, setSpinner] = useState(false);
@@ -267,12 +269,16 @@ const CattlMovMapSidebar = ({
           </div>
         </div>
       </div>
-      <LayersCheckbox
-        checkedLayers={checkedLayers}
-        countyAndHotspotLayers={countyAndHotspotLayers}
-        handleCheckboxes={handleCheckboxes}
-        setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-      />
+      {showLayers ? (
+        <LayersCheckbox
+          checkedLayers={checkedLayers}
+          countyAndHotspotLayers={countyAndHotspotLayers}
+          handleCheckboxes={handleCheckboxes}
+          setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+        />
+      ) : (
+        <LoadingScreen message="Loading Layers" />
+      )}
     </div>
   );
 };

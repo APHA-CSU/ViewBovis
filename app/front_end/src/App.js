@@ -8,19 +8,53 @@ import Nextstrain from "./components/Nextstrain/Nextstrain";
 import HelpSupport from "./components/HelpSupport/HelpSupport";
 import NavbarComp from "./components/Navbar/NavbarComp";
 import SecurityModal from "./components/SecurityModal/SecurityModal";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setShowLayers } from "./features/counter/securitySlice";
 
 function App() {
-  const SNPMapComp = lazy(()=> import("./components/SNPDistance/SNPMapComp"))
-  const CattleMovementMap = lazy(()=> import("./components/CattleMovement/CattleMovementMap"))
+  /* Lazy loading the layers*/
+  const dispatch = useDispatch()
+  const RiskLayers = lazy(() => import("./components/Layers/RiskLayers"));
+  const CountyLayers = lazy(() => import("./components/Layers/CountyLayers"));
+  const HotspotLayers = lazy(() => import("./components/Layers/HotspotLayers"));
+
+  useEffect(() => {
+    /* Preload the layers on mount*/
+    (async () => {
+      await import("./components/Layers/RiskLayers");
+      await import("./components/Layers/CountyLayers");
+      await import("./components/Layers/HotspotLayers");
+      dispatch(setShowLayers(true))
+    })();
+  }, []);
+
   return (
     <Container fluid className="app">
       <SecurityModal />
       <NavbarComp />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/cattlemovement" element={<CattleMovement CattleMovementMap={CattleMovementMap} />} />
-        <Route path="/snpmap" element={<SNPMap SNPMapComp={SNPMapComp}/>} />
+        <Route
+          path="/cattlemovement"
+          element={
+            <CattleMovement
+              RiskLayers={RiskLayers}
+              CountyLayers={CountyLayers}
+              HotspotLayers={HotspotLayers}
+            />
+          }
+        />
+        <Route
+          path="/snpmap"
+          element={
+            <SNPMap
+              RiskLayers={RiskLayers}
+              CountyLayers={CountyLayers}
+              HotspotLayers={HotspotLayers}
+            />
+          }
+        />
         <Route path="/nextstrain" element={<Nextstrain />} />
         <Route path="/helpsupport" element={<HelpSupport />} />
       </Routes>

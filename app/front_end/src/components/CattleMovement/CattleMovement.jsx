@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
@@ -9,9 +9,9 @@ import {
   setMovementCheckedLayers,
   setMovementCountyandHotspotLayers,
 } from "./../../features/counter/movementSlice.js";
-import LoadingScreen from "../Utilities/LoadingScreen.jsx";
+import CattleMovementMap from "./CattleMovementMap.jsx";
 
-const CattleMovement = ({ CattleMovementMap }) => {
+const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   const movementData = useSelector(
     (state) => state.movement.cattleMovementDataset
   );
@@ -98,30 +98,31 @@ const CattleMovement = ({ CattleMovementMap }) => {
 
   return (
     <div className="container-fluid content">
-      <Suspense fallback={<LoadingScreen />}>
-        <Row>
-          <Collapse in={openMovementSidebar}>
-            <Col className="sidebar col-3">
-              <MapSidebar
-                handleCheckboxes={handleCheckboxes}
-                checkedLayers={checkedLayers}
-                countyAndHotspotLayers={countyAndHotspotLayers}
-                setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-              />
-            </Col>
-          </Collapse>
-          <Col>
-            <CattleMovementMap
-              jsonData={jsonData}
+      <Row>
+        <Collapse in={openMovementSidebar}>
+          <Col className="sidebar col-3">
+            <MapSidebar
+              handleCheckboxes={handleCheckboxes}
               checkedLayers={checkedLayers}
-              secondJsonData={secondJsonData}
-              useCountyandHotspotLayers={countyAndHotspotLayers}
-              setOpenSideBar={setOpenSideBar}
-              openSideBar={openSideBar}
+              countyAndHotspotLayers={countyAndHotspotLayers}
+              setCountyAndHotspotLayers={setCountyAndHotspotLayers}
             />
           </Col>
-        </Row>
-      </Suspense>
+        </Collapse>
+        <Col>
+          <CattleMovementMap
+            jsonData={jsonData}
+            checkedLayers={checkedLayers}
+            secondJsonData={secondJsonData}
+            useCountyandHotspotLayers={countyAndHotspotLayers}
+            setOpenSideBar={setOpenSideBar}
+            openSideBar={openSideBar}
+            RiskLayers={RiskLayers}
+            CountyLayers={CountyLayers}
+            HotspotLayers={HotspotLayers}
+          />
+        </Col>
+      </Row>
     </div>
   );
 };

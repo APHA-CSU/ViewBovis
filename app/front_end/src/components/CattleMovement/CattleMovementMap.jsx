@@ -6,11 +6,8 @@ import showgroundImg from "../../imgs/showground.svg";
 import marketImg from "../../imgs/market.svg";
 import slaughterhouseImg from "../../imgs/slaughterhouse.svg";
 import movementClusterImg from "../../imgs/movementCluster.svg";
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import "leaflet-polylinedecorator";
-import RiskLayers from "./../Layers/RiskLayers";
-import CountyLayers from "../Layers/CountyLayers";
-import HotspotLayers from "../Layers/HotspotLayers";
 import "bootstrap/js/dist/tab";
 import HideSidebar from "../MapControls/HideSidebar";
 import MeasurementTool from "../MapControls/MeasurementTool";
@@ -26,8 +23,10 @@ const CattleMovementMap = React.memo(
     useCountyandHotspotLayers,
     setOpenSideBar,
     openSideBar,
+    RiskLayers,
+    CountyLayers,
+    HotspotLayers,
   }) => {
-    // if jsonData or secondJsonData is null or undefined, return a placeholder map
     const mapRef = useRef();
     // Extract movement data from json objects into arrays
     const movArr = jsonData.move ? Object.values(jsonData.move) : [];
@@ -326,13 +325,17 @@ const CattleMovementMap = React.memo(
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <ActionResizeObserver mapRef={mapRef} />
-          <HotspotLayers
-            isChecked={useCountyandHotspotLayers["hotspotLayers"]}
-          />
-          <CountyLayers isChecked={useCountyandHotspotLayers["countyLayers"]} />
-          {Object.keys(checkedLayers).length > 0 && (
-            <RiskLayers checkedLayers={checkedLayers} />
-          )}
+          <Suspense fallback={<></>}>
+            <HotspotLayers
+              isChecked={useCountyandHotspotLayers["hotspotLayers"]}
+            />
+            <CountyLayers
+              isChecked={useCountyandHotspotLayers["countyLayers"]}
+            />
+            {Object.keys(checkedLayers).length > 0 && (
+              <RiskLayers checkedLayers={checkedLayers} />
+            )}
+          </Suspense>
           <BaseMaps />
           <FitMapToBounds jsonData={jsonData} secondJsonData={secondJsonData} />
           <ResetView />

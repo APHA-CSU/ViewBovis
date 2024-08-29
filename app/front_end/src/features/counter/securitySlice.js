@@ -5,6 +5,7 @@ export const securitySlice = createSlice({
   initialState: {
     showModal: true,
     latestDate: "N/A",
+    showLayers: false,
   },
   reducers: {
     hideModal: (state) => {
@@ -13,9 +14,13 @@ export const securitySlice = createSlice({
     setLatestDate: (state, action) => {
       state.latestDate = action.payload;
     },
+    setShowLayers: (state, action) => {
+      state.showLayers = action.payload;
+    },
   },
 });
 
-export const { hideModal, setLatestDate } = securitySlice.actions;
+export const { hideModal, setLatestDate, setShowLayers } =
+  securitySlice.actions;
 
 export default securitySlice.reducer;

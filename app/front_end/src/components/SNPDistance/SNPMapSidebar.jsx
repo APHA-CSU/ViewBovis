@@ -5,6 +5,7 @@ import {
   setSNPdistance,
 } from "./../../features/counter/counterSlice";
 import { useState } from "react";
+import LoadingScreen from "./../Utilities/LoadingScreen";
 
 const SNPMapSidebar = ({
   handleCheckboxes,
@@ -17,6 +18,7 @@ const SNPMapSidebar = ({
   const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
   const snpDistance = useSelector((state) => state.counter.snpDistance);
   const snpWarnings = useSelector((state) => state.counter.snpmapWarnings);
+  const showLayers = useSelector((state) => state.security.showLayers);
   const [sample, setSample] = useState(snpSearchInput);
   const [distance, setDistance] = useState(snpDistance);
   const dispatch = useDispatch();
@@ -113,12 +115,16 @@ const SNPMapSidebar = ({
           )}
         </div>
       </form>
-      <LayersCheckbox
-        checkedLayers={checkedLayers}
-        countyAndHotspotLayers={countyAndHotspotLayers}
-        handleCheckboxes={handleCheckboxes}
-        setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-      />
+      {showLayers ? (
+        <LayersCheckbox
+          checkedLayers={checkedLayers}
+          countyAndHotspotLayers={countyAndHotspotLayers}
+          handleCheckboxes={handleCheckboxes}
+          setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+        />
+      ) : (
+        <LoadingScreen message="Loading Layers" />
+      )}
     </div>
   );
 };

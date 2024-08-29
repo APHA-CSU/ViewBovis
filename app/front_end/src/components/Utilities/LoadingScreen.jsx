@@ -1,10 +1,12 @@
-import "./LoadingScreen.css"
-const LoadingScreen = () => {
+import "./LoadingScreen.css";
+import PropTypes from "prop-types";
+const LoadingScreen = ({ message }) => {
   return (
     <div className="loading-screen">
       <div className="loading-spinner"></div>
       <p className="loading-text">
-        Loading Leaflet maps{""}
+        {message}
+        {""}
         <span className="loading-dots">
           <span>.</span>
           <span>.</span>
@@ -14,5 +16,7 @@ const LoadingScreen = () => {
     </div>
   );
 };
-
+LoadingScreen.propTypes = {
+  message: PropTypes.string.isRequired,
+};
 export default LoadingScreen;

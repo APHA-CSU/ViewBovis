@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -12,9 +12,9 @@ import {
   setSNPmapCountyandHotspotLayers,
   setSNPmapWarnings,
 } from "./../../features/counter/counterSlice.js";
-import LoadingScreen from "../Utilities/LoadingScreen.jsx";
+import SNPMapComp from "./SNPMapComp.jsx";
 
-const SNPMap = ({ SNPMapComp }) => {
+const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const [spinner, setSpinner] = useState(false);
   const dispatch = useDispatch();
@@ -130,38 +130,39 @@ const SNPMap = ({ SNPMapComp }) => {
   return (
     <div className="container-fluid content">
       <Container fluid id="custom-container">
-        <Suspense fallback={<LoadingScreen />}>
-          <Row>
-            <Collapse in={openSNPSidebar} dimension={"width"}>
-              <Col className="sidebar col-3">
-                <SNPMapSidebar
-                  fetchSNPMapDataset={fetchSNPMapDataset}
-                  checkedLayers={checkedLayers}
-                  handleCheckboxes={handleCheckboxes}
-                  countyAndHotspotLayers={countyAndHotspotLayers}
-                  setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-                  spinner={spinner}
-                />
-              </Col>
-            </Collapse>
-            <Col>
-              <SNPMapComp
-                SNPMapDataset={SNPMapDataset}
+        <Row>
+          <Collapse in={openSNPSidebar} dimension={"width"}>
+            <Col className="sidebar col-3">
+              <SNPMapSidebar
+                fetchSNPMapDataset={fetchSNPMapDataset}
                 checkedLayers={checkedLayers}
-                useCountyandHotspotLayers={countyAndHotspotLayers}
-                setOpenSideBar={setOpenSideBar}
-                openSideBar={OpenSideBar}
+                handleCheckboxes={handleCheckboxes}
+                countyAndHotspotLayers={countyAndHotspotLayers}
+                setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+                spinner={spinner}
               />
             </Col>
-            <Collapse in={openTable}>
-              <Col className="sidebar-table col-4">
-                {Object.keys(SNPMapDataset).length > 0 && (
-                  <SNPTable json={SNPMapDataset} />
-                )}
-              </Col>
-            </Collapse>
-          </Row>
-        </Suspense>
+          </Collapse>
+          <Col>
+            <SNPMapComp
+              SNPMapDataset={SNPMapDataset}
+              checkedLayers={checkedLayers}
+              useCountyandHotspotLayers={countyAndHotspotLayers}
+              setOpenSideBar={setOpenSideBar}
+              openSideBar={OpenSideBar}
+              RiskLayers={RiskLayers}
+              CountyLayers={CountyLayers}
+              HotspotLayers={HotspotLayers}
+            />
+          </Col>
+          <Collapse in={openTable}>
+            <Col className="sidebar-table col-4">
+              {Object.keys(SNPMapDataset).length > 0 && (
+                <SNPTable json={SNPMapDataset} />
+              )}
+            </Col>
+          </Collapse>
+        </Row>
       </Container>
     </div>
   );
