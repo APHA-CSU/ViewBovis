@@ -6,8 +6,7 @@
 /app/front_end/build
 
 .vscode/
-data/
-static/data/
+/app/static/data
 .github/CODEOWNERS
 bin
 lib
