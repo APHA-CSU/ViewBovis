@@ -12,6 +12,7 @@ import {
   setNextstrainIframeURL,
   setNextStrainWarnings,
 } from "./../../features/counter/nextstrainSlice.js";
+import "./Nextstrain.css"
 
 const Nextstrain = () => {
   const nextstrainSearchSample = useSelector(

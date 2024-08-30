@@ -1,0 +1,24 @@
+.nextstrain-backbutton-container {
+  position: fixed;
+  left: 0;
+  height: 100%;
+}
+
+.nextstrain-backbutton {
+  font-size: 14px !important;
+  height: 100%;
+  width: 5px !important;
+}
+
+.nextstrain-backbutton-contents{
+    display: inline-block;
+    white-space: nowrap;
+    transform: rotate(-90deg);
+    width: 5px;
+}
+
+.nextstrain-iframe-container{
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
