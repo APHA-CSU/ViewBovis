@@ -1,9 +1,22 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const NextstrainIframe = ({ url, setNextstrainURL }) => {
+  const navbarHeight = useSelector((state) => state.security.navbarHeight);
+
   return (
-    <>
-      <div className="nextstrain-backbutton-container">
+    <div
+      className="container-fluid"
+      style={{
+        height: `max(60vh,${0.985 * (window.innerHeight - navbarHeight)}px)`,
+        display: "flex",
+        alignItems: "stretch"
+      }}
+    >
+      <div
+        className="nextstrain-backbutton-container row"
+      >
         <button
           className="govuk-button nextstrain-backbutton"
           onClick={() => {
@@ -26,7 +39,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
           </span>
         </button>
       </div>
-      <div className="nextstrain-iframe-container">
+      <div className="nextstrain-iframe-container row">
         {url && (
           <iframe
             title="nextstrain-viewbovis"
@@ -40,7 +53,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
           ></iframe>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

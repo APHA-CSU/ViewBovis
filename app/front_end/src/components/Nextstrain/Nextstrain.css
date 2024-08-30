@@ -1,7 +1,5 @@
 .nextstrain-backbutton-container {
-  position: fixed;
-  left: 0;
-  height: 100%;
+  padding-right: 13.5px;
 }
 
 .nextstrain-backbutton {
@@ -19,6 +17,5 @@
 
 .nextstrain-iframe-container{
     height: 100%;
-    position: fixed;
     width: 100%;
 }

@@ -3,10 +3,27 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { NavLink } from "react-router-dom";
 import logo from "../../imgs/APHA_logo_svg.svg";
-
+import { useEffect, useRef } from "react";
+import { setNavbarHeight } from "../../features/counter/securitySlice";
+import { useDispatch } from "react-redux";
 const NavbarComp = () => {
+  const navbarRef = useRef(null);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const navbarObserver = new ResizeObserver(() => {
+      if (navbarRef?.current?.offsetHeight) {
+        dispatch(setNavbarHeight(navbarRef.current.offsetHeight));
+      }
+    });
+    navbarObserver.observe(navbarRef.current);
+
+    return () => {
+      navbarObserver.disconnect();
+    };
+  }, []);
+
   return (
-    <Navbar expand="lg" className="navbarcomp">
+    <Navbar expand="lg" className="navbarcomp" ref={navbarRef}>
       <Container fluid>
         <a className="navbar-brand" href="/">
           <img

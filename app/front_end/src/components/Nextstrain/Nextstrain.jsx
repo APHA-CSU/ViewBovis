@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
@@ -77,8 +76,7 @@ const Nextstrain = () => {
   }, [nextstrainURL]);
 
   return (
-    <div className="container-fluid content">
-      <Container fluid>
+    <div>
         {!nextstrainURL && (
           <>
             {/* <!-- Government BETA Banner --> */}
@@ -380,7 +378,6 @@ const Nextstrain = () => {
             setNextstrainURL={setNextstrainURL}
           />
         )}
-      </Container>
     </div>
   );
 };

@@ -6,6 +6,7 @@ export const securitySlice = createSlice({
     showModal: true,
     latestDate: "N/A",
     showLayers: false,
+    navbarHeight: 90,
   },
   reducers: {
     hideModal: (state) => {
@@ -17,10 +18,13 @@ export const securitySlice = createSlice({
     setShowLayers: (state, action) => {
       state.showLayers = action.payload;
     },
+    setNavbarHeight: (state, action) => {
+      state.navbarHeight = action.payload;
+    },
   },
 });
 
-export const { hideModal, setLatestDate, setShowLayers } =
+export const { hideModal, setLatestDate, setShowLayers, setNavbarHeight } =
   securitySlice.actions;
 
 export default securitySlice.reducer;

@@ -83,7 +83,7 @@ const SecurityModal = () => {
                       />
                       <label
                         className="govuk-label govuk-checkboxes__label"
-                        for="checkbox--agree"
+                        htmlFor="checkbox--agree"
                       >
                         I agree to the above
                       </label>
