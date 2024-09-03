@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const NextstrainIframe = ({ url, setNextstrainURL }) => {
@@ -9,7 +8,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
     <div
       className="container-fluid"
       style={{
-        height: `max(60vh,${0.985 * (window.innerHeight - navbarHeight)}px)`,
+        height: `calc(99.5vh - ${navbarHeight}px)`,
         display: "flex",
         alignItems: "stretch"
       }}
