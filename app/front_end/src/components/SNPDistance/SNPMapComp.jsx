@@ -159,7 +159,12 @@ const SNPMapComp = React.memo(
             >
               {Object.keys(SNPMapDataset)
                 .filter((elem) => {
-                  return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
+                  return (
+                    elem !== "SOI" &&
+                    elem !== SNPMapDataset["SOI"] &&
+                    SNPMapDataset[elem]?.lat &&
+                    SNPMapDataset[elem]?.lon
+                  );
                 })
                 .map((elem, index) => {
                   return (
@@ -188,7 +193,12 @@ const SNPMapComp = React.memo(
             <>
               {Object.keys(SNPMapDataset)
                 .filter((elem) => {
-                  return elem !== "SOI" && elem !== SNPMapDataset["SOI"];
+                  return (
+                    elem !== "SOI" &&
+                    elem !== SNPMapDataset["SOI"] &&
+                    SNPMapDataset[elem]?.lat &&
+                    SNPMapDataset[elem]?.lon
+                  );
                 })
                 .map((elem, index) => {
                   return (
