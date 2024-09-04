@@ -38,7 +38,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
         className="nextstrain-iframe-container"
         key={url}
         src={
-          "http://localhost:4001/" +
+          "https://hosting.int.sce.network/http/nextstrain-beta.int.sce.network/" +
           url
         }
       ></iframe>
