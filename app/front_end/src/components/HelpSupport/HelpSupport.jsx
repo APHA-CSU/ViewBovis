@@ -35,7 +35,7 @@ const HelpSupport = () => {
         <Col>
           <div
             className="home-box"
-            style={{ marginTop: "20px", height: "405px" }}
+            style={{ marginTop: "20px", height: "100%" }}
           >
             <p className="fw-bold">Support Documents</p>
             <p>These support documents should be the first port of call:</p>
@@ -85,7 +85,7 @@ const HelpSupport = () => {
         <Col>
           <div
             className="home-box"
-            style={{ marginTop: "20px", height: "405px" }}
+            style={{ marginTop: "20px", height: "100%" }}
           >
             <p className="fw-bold">Training Videos</p>
             <p>These cover different aspects of learning and usability:</p>
@@ -145,7 +145,7 @@ const HelpSupport = () => {
         <Col>
           <div
             className="home-box"
-            style={{ marginTop: "20px", height: "405px" }}
+            style={{ marginTop: "20px", height: "100%" }}
           >
             <p className="fw-bold">Other links and tools</p>
             <p>Other associated tools which may be of use:</p>
@@ -219,7 +219,7 @@ const HelpSupport = () => {
         <Col>
           <div
             className="home-box"
-            style={{ marginTop: "20px", height: "405px" }}
+            style={{ marginTop: "20px", height: "100%" }}
           >
             <p className="fw-bold">Contact Us</p>
             <p>
