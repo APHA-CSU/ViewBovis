@@ -77,7 +77,7 @@ const Nextstrain = () => {
 
   return (
     <div>
-        {!nextstrainURL && (
+        {!nextstrainURL ? (
           <>
             {/* <!-- Government BETA Banner --> */}
             <div className="row alpha-side-margin">
@@ -371,8 +371,7 @@ const Nextstrain = () => {
               </div>
             </Row>
           </>
-        )}
-        {nextstrainURL && (
+        ) : (
           <NextstrainIframe
             url={nextstrainURL}
             setNextstrainURL={setNextstrainURL}
