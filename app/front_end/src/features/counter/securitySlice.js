@@ -7,6 +7,11 @@ export const securitySlice = createSlice({
     latestDate: "N/A",
     showLayers: false,
     navbarHeight: 90,
+    showHomePage: true,
+    showSNPmapPage: false,
+    showCattleMovementPage: false,
+    showNextStrainPage: false,
+    showHelpSupportPage: false,
   },
   reducers: {
     hideModal: (state) => {
@@ -21,10 +26,41 @@ export const securitySlice = createSlice({
     setNavbarHeight: (state, action) => {
       state.navbarHeight = action.payload;
     },
+    setShowPage: (state, action) => {
+      state.showHomePage = false;
+      state.showSNPmapPage = false;
+      state.showCattleMovementPage = false;
+      state.showNextStrainPage = false;
+      state.showHelpSupportPage = false;
+      switch (action.payload) {
+        case "home":
+          state.showHomePage = true;
+          break;
+        case "snpmap":
+          state.showSNPmapPage = true;
+          break;
+        case "cattlemovement":
+          state.showCattleMovementPage = true;
+          break;
+        case "nextstrain":
+          state.showNextStrainPage = true;
+          break;
+        case "helpsupport":
+          state.showHelpSupportPage = true;
+          break;
+        default:
+          break;
+      }
+    },
   },
 });
 
-export const { hideModal, setLatestDate, setShowLayers, setNavbarHeight } =
-  securitySlice.actions;
+export const {
+  hideModal,
+  setLatestDate,
+  setShowLayers,
+  setNavbarHeight,
+  setShowPage,
+} = securitySlice.actions;
 
 export default securitySlice.reducer;

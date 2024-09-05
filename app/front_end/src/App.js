@@ -1,4 +1,3 @@
-import { Routes, Route } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import "./App.css";
 import Home from "./components/Home/Home";
@@ -9,15 +8,18 @@ import HelpSupport from "./components/HelpSupport/HelpSupport";
 import NavbarComp from "./components/Navbar/NavbarComp";
 import SecurityModal from "./components/SecurityModal/SecurityModal";
 import { lazy, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setShowLayers } from "./features/counter/securitySlice";
 
 function App() {
   /* Lazy loading the layers*/
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const RiskLayers = lazy(() => import("./components/Layers/RiskLayers"));
   const CountyLayers = lazy(() => import("./components/Layers/CountyLayers"));
   const HotspotLayers = lazy(() => import("./components/Layers/HotspotLayers"));
+  const showHelpSupportPage = useSelector(
+    (state) => state.security.showHelpSupportPage
+  );
 
   useEffect(() => {
     /* Preload the layers on mount*/
@@ -25,7 +27,7 @@ function App() {
       await import("./components/Layers/RiskLayers");
       await import("./components/Layers/CountyLayers");
       await import("./components/Layers/HotspotLayers");
-      dispatch(setShowLayers(true))
+      dispatch(setShowLayers(true));
     })();
   }, []);
 
@@ -33,31 +35,19 @@ function App() {
     <Container fluid className="app">
       <SecurityModal />
       <NavbarComp />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/cattlemovement"
-          element={
-            <CattleMovement
-              RiskLayers={RiskLayers}
-              CountyLayers={CountyLayers}
-              HotspotLayers={HotspotLayers}
-            />
-          }
-        />
-        <Route
-          path="/snpmap"
-          element={
-            <SNPMap
-              RiskLayers={RiskLayers}
-              CountyLayers={CountyLayers}
-              HotspotLayers={HotspotLayers}
-            />
-          }
-        />
-        <Route path="/nextstrain" element={<Nextstrain />} />
-        <Route path="/helpsupport" element={<HelpSupport />} />
-      </Routes>
+      <Home />
+      <SNPMap
+        RiskLayers={RiskLayers}
+        CountyLayers={CountyLayers}
+        HotspotLayers={HotspotLayers}
+      />
+      <CattleMovement
+        RiskLayers={RiskLayers}
+        CountyLayers={CountyLayers}
+        HotspotLayers={HotspotLayers}
+      />
+      <Nextstrain />
+      {showHelpSupportPage && <HelpSupport />}
     </Container>
   );
 }

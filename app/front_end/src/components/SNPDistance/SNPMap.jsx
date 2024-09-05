@@ -17,6 +17,7 @@ import SNPMapComp from "./SNPMapComp.jsx";
 const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const [spinner, setSpinner] = useState(false);
+  const showSNPmapPage = useSelector((state) => state.security.showSNPmapPage);
   const dispatch = useDispatch();
   const snpCountyandHotspotLayers = useSelector(
     (state) => state.counter.snpCountyandHotspotLayers
@@ -128,7 +129,7 @@ const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   }, [checkedLayers]);
 
   return (
-    <div className="container-fluid content">
+    <div className={showSNPmapPage ? "container-fluid content" : "hidden"}>
       <Container fluid id="custom-container">
         <Row>
           <Collapse in={openSNPSidebar} dimension={"width"}>

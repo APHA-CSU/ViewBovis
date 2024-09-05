@@ -1,14 +1,17 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
 import logo from "../../imgs/APHA_logo_svg.svg";
-import { useEffect, useRef } from "react";
-import { setNavbarHeight } from "../../features/counter/securitySlice";
+import { useEffect, useRef, useState } from "react";
+import {
+  setNavbarHeight,
+  setShowPage,
+} from "../../features/counter/securitySlice";
 import { useDispatch } from "react-redux";
 const NavbarComp = () => {
   const navbarRef = useRef(null);
   const dispatch = useDispatch();
+  const [activeLink, setActiveLink] = useState("home");
   useEffect(() => {
     const navbarObserver = new ResizeObserver(() => {
       if (navbarRef?.current?.offsetHeight) {
@@ -41,27 +44,57 @@ const NavbarComp = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="navbar-nav">
             <div>
-              <Nav.Link as={NavLink} to="/">
+              <Nav.Link
+                onClick={() => {
+                  dispatch(setShowPage("home"));
+                  setActiveLink("home");
+                }}
+                className={activeLink === "home" ? "active" : ""}
+              >
                 Home
               </Nav.Link>
             </div>
             <div>
-              <Nav.Link as={NavLink} to="/cattlemovement">
+              <Nav.Link
+                onClick={() => {
+                  dispatch(setShowPage("cattlemovement"));
+                  setActiveLink("cattlemovement");
+                }}
+                className={activeLink === "cattlemovement" ? "active" : ""}
+              >
                 Cattle Movement
               </Nav.Link>
             </div>
             <div>
-              <Nav.Link as={NavLink} to="/snpmap">
+              <Nav.Link
+                onClick={() => {
+                  dispatch(setShowPage("snpmap"));
+                  setActiveLink("snpmap");
+                }}
+                className={activeLink === "snpmap" ? "active" : ""}
+              >
                 SNP Map
               </Nav.Link>
             </div>
             <div>
-              <Nav.Link as={NavLink} to="/nextstrain">
+              <Nav.Link
+                onClick={() => {
+                  dispatch(setShowPage("nextstrain"));
+                  setActiveLink("nextstrain");
+                }}
+                className={activeLink === "nextstrain" ? "active" : ""}
+              >
                 Nextstrain
               </Nav.Link>
             </div>
             <div>
-              <Nav.Link as={NavLink} to="/helpsupport">
+              <Nav.Link
+                onClick={() => {
+                  dispatch(setShowPage("helpsupport"));
+                  setActiveLink("helpsupport");
+                }}
+                className={activeLink === "helpsupport" ? "active" : ""}
+              >
                 Help and Support
               </Nav.Link>
             </div>

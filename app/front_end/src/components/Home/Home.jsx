@@ -10,6 +10,7 @@ import "./Home.css"
 
 const Home = () => {
   const latestDate = useSelector((state) => state.security.latestDate);
+  const showHomePage = useSelector((state) => state.security.showHomePage);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container-fluid content">
+    <div className={showHomePage ? "container-fluid content" : "hidden"}>
       <Container fluid data-testid="home-1">
         {/* <!-- Government BETA Banner --> */}
         <div className="row alpha-side-margin">

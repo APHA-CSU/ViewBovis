@@ -27,6 +27,9 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   const movementCountyandHotspotLayers = useSelector(
     (state) => state.movement.movementCountyandHotspotLayers
   );
+  const showCattleMovementPage = useSelector(
+    (state) => state.security.showCattleMovementPage
+  );
   const [jsonData, setjsonData] = useState({});
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
     ...movementCountyandHotspotLayers,
@@ -97,7 +100,7 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
   }, [countyAndHotspotLayers]);
 
   return (
-    <div className="container-fluid content">
+    <div className={showCattleMovementPage ? "container-fluid content" : "hidden"}>
       <Row>
         <Collapse in={openMovementSidebar}>
           <Col className="sidebar col-3">
