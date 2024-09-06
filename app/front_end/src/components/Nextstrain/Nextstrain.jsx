@@ -1,28 +1,14 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NextstrainTable from "./NextstrainTable";
 import NextstrainIframe from "./NextstrainIframe";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setNextstrainSearchSample,
-  setNextstrainDataset,
-  setNextstrainIframeURL,
-  setNextStrainWarnings,
-} from "./../../features/counter/nextstrainSlice.js";
+import { setNextStrainWarnings } from "./../../features/counter/nextstrainSlice.js";
 import "./Nextstrain.css";
 
 const Nextstrain = () => {
-  const nextstrainSearchSample = useSelector(
-    (state) => state.nextstrain.nextstrainSearchSample
-  );
-  const nextStrainDataset = useSelector(
-    (state) => state.nextstrain.nextStrainDataset
-  );
-  const nextStrainIframeURL = useSelector(
-    (state) => state.nextstrain.nextStrainIframeURL
-  );
   const nextStrainWarnings = useSelector(
     (state) => state.nextstrain.nextStrainWarnings
   );
@@ -30,9 +16,9 @@ const Nextstrain = () => {
     (state) => state.security.showNextStrainPage
   );
   const dispatch = useDispatch();
-  const [identifier, setIdentifier] = useState(nextstrainSearchSample);
-  const [tableData, setTableData] = useState({ ...nextStrainDataset });
-  const [nextstrainURL, setNextstrainURL] = useState(nextStrainIframeURL);
+  const [identifier, setIdentifier] = useState("");
+  const [tableData, setTableData] = useState({});
+  const [nextstrainURL, setNextstrainURL] = useState(null);
 
   const fetchNextstrainData = async () => {
     const response = await fetch(`/sample?sample_name=${identifier}`);
@@ -65,18 +51,6 @@ const Nextstrain = () => {
       }
     }
   };
-
-  useEffect(() => {
-    dispatch(setNextstrainSearchSample(identifier));
-  }, [identifier]);
-
-  useEffect(() => {
-    dispatch(setNextstrainDataset({ ...tableData }));
-  }, [tableData]);
-
-  useEffect(() => {
-    dispatch(setNextstrainIframeURL(nextstrainURL));
-  }, [nextstrainURL]);
 
   return (
     <div className={showNextStrainPage ? "" : "hidden"}>
