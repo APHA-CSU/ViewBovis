@@ -8,7 +8,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
     <div
       className="container-fluid"
       style={{
-        height: `calc(99.5vh - ${navbarHeight}px)`,
+        height: `calc(100vh - ${navbarHeight}px - 10px)`,
       }}
     >
       <button
@@ -35,8 +35,11 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
       </button>
       <iframe
         title="nextstrain-viewbovis"
-        className="nextstrain-iframe-container"
-        key={url}
+        width={"100%"}
+        height={"100%"}
+        id="nextstrain-iframe"
+        frameBorder={0}
+        allow="cross-origin"
         src={
           "https://hosting.int.sce.network/http/nextstrain-beta.int.sce.network/" +
           url
