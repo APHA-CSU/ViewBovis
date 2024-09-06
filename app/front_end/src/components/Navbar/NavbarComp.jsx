@@ -2,16 +2,16 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "../../imgs/APHA_logo_svg.svg";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   setNavbarHeight,
   setShowPage,
 } from "../../features/counter/securitySlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const NavbarComp = () => {
   const navbarRef = useRef(null);
   const dispatch = useDispatch();
-  const [activeLink, setActiveLink] = useState("home");
+  const activeLink = useSelector((state) => state.security.activeLink);
   useEffect(() => {
     const navbarObserver = new ResizeObserver(() => {
       if (navbarRef?.current?.offsetHeight) {
@@ -47,7 +47,6 @@ const NavbarComp = () => {
               <Nav.Link
                 onClick={() => {
                   dispatch(setShowPage("home"));
-                  setActiveLink("home");
                 }}
                 className={activeLink === "home" ? "active" : ""}
               >
@@ -58,7 +57,6 @@ const NavbarComp = () => {
               <Nav.Link
                 onClick={() => {
                   dispatch(setShowPage("cattlemovement"));
-                  setActiveLink("cattlemovement");
                 }}
                 className={activeLink === "cattlemovement" ? "active" : ""}
               >
@@ -69,7 +67,6 @@ const NavbarComp = () => {
               <Nav.Link
                 onClick={() => {
                   dispatch(setShowPage("snpmap"));
-                  setActiveLink("snpmap");
                 }}
                 className={activeLink === "snpmap" ? "active" : ""}
               >
@@ -80,7 +77,6 @@ const NavbarComp = () => {
               <Nav.Link
                 onClick={() => {
                   dispatch(setShowPage("nextstrain"));
-                  setActiveLink("nextstrain");
                 }}
                 className={activeLink === "nextstrain" ? "active" : ""}
               >
@@ -91,7 +87,6 @@ const NavbarComp = () => {
               <Nav.Link
                 onClick={() => {
                   dispatch(setShowPage("helpsupport"));
-                  setActiveLink("helpsupport");
                 }}
                 className={activeLink === "helpsupport" ? "active" : ""}
               >

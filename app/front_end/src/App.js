@@ -32,7 +32,7 @@ function App() {
   }, []);
 
   return (
-    <Container fluid className="app">
+    <>
       <SecurityModal />
       <NavbarComp />
       <Home />
@@ -48,7 +48,7 @@ function App() {
       />
       <Nextstrain />
       {showHelpSupportPage && <HelpSupport />}
-    </Container>
+    </>
   );
 }
 

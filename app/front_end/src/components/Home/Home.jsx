@@ -5,8 +5,11 @@ import img from "../../imgs/VBIcon16_APHAGreen.svg";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setLatestDate } from "./../../features/counter/securitySlice.js";
-import "./Home.css"
+import {
+  setLatestDate,
+  setShowPage,
+} from "./../../features/counter/securitySlice.js";
+import "./Home.css";
 
 const Home = () => {
   const latestDate = useSelector((state) => state.security.latestDate);
@@ -33,7 +36,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className={showHomePage ? "container-fluid content" : "hidden"}>
+    <div className={showHomePage ? "" : "hidden"}>
       <Container fluid data-testid="home-1">
         {/* <!-- Government BETA Banner --> */}
         <div className="row alpha-side-margin">
@@ -145,11 +148,14 @@ const Home = () => {
               </p>
               {/* <br> */}
               <div className="text-center">
-                <Link to="/cattlemovement">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    Cattle Movement Map
-                  </button>
-                </Link>
+                <button
+                  className="btn govuk-button custom-govuk-button-home"
+                  onClick={() => {
+                    dispatch(setShowPage("cattlemovement"));
+                  }}
+                >
+                  Cattle Movement Map
+                </button>
               </div>
             </div>
           </Col>
@@ -163,19 +169,25 @@ const Home = () => {
               </p>
               <p className="text-center">
                 View SNP distance visualisations:<br></br>
-                <Link to="/snpmap">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    SNP Map
-                  </button>
-                </Link>{" "}
+                <button
+                  onClick={() => {
+                    dispatch(setShowPage("snpmap"));
+                  }}
+                  className="btn govuk-button custom-govuk-button-home"
+                >
+                  SNP Map
+                </button>
               </p>
               <p className="text-center">
                 View interactive phylogenetic tree:<br></br>
-                <Link to="/nextstrain">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    NextStrain
-                  </button>
-                </Link>
+                <button
+                  onClick={() => {
+                    dispatch(setShowPage("nextstrain"));
+                  }}
+                  className="btn govuk-button custom-govuk-button-home"
+                >
+                  NextStrain
+                </button>
               </p>
             </div>
           </Col>
@@ -188,23 +200,32 @@ const Home = () => {
                 content of ViewBovis and access support.
               </p>
               <p className="text-center">
-                <Link to="/helpsupport">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    About The Data & Data Dictionary
-                  </button>
-                </Link>
+                <button
+                  onClick={() => {
+                    dispatch(setShowPage("helpsupport"));
+                  }}
+                  className="btn govuk-button custom-govuk-button-home"
+                >
+                  About The Data & Data Dictionary
+                </button>
                 <br></br>
-                <Link to="/helpsupport">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    Training Resources
-                  </button>
-                </Link>
+                <button
+                  onClick={() => {
+                    dispatch(setShowPage("helpsupport"));
+                  }}
+                  className="btn govuk-button custom-govuk-button-home"
+                >
+                  Training Resources
+                </button>
                 <br></br>
-                <Link to="/helpsupport">
-                  <button className="btn govuk-button custom-govuk-button-home">
-                    Missing Samples Report
-                  </button>
-                </Link>
+                <button
+                  onClick={() => {
+                    dispatch(setShowPage("helpsupport"));
+                  }}
+                  className="btn govuk-button custom-govuk-button-home"
+                >
+                  Missing Samples Report
+                </button>
               </p>
             </div>
           </Col>

@@ -55,7 +55,7 @@ const Nextstrain = () => {
   return (
     <div className={showNextStrainPage ? "" : "hidden"}>
       {!nextstrainURL ? (
-        <>
+        <div className="container-fluid">
           {/* <!-- Government BETA Banner --> */}
           <div className="row alpha-side-margin">
             <div className="govuk-phase-banner ">
@@ -337,7 +337,7 @@ const Nextstrain = () => {
               </div>
             </div>
           </Row>
-        </>
+        </div>
       ) : (
         <NextstrainIframe
           url={nextstrainURL}

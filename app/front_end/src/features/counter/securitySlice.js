@@ -12,6 +12,7 @@ export const securitySlice = createSlice({
     showCattleMovementPage: false,
     showNextStrainPage: false,
     showHelpSupportPage: false,
+    activeLink: "home",
   },
   reducers: {
     hideModal: (state) => {
@@ -27,6 +28,7 @@ export const securitySlice = createSlice({
       state.navbarHeight = action.payload;
     },
     setShowPage: (state, action) => {
+      state.activeLink = action.payload
       state.showHomePage = false;
       state.showSNPmapPage = false;
       state.showCattleMovementPage = false;
@@ -51,7 +53,7 @@ export const securitySlice = createSlice({
         default:
           break;
       }
-    },
+    }
   },
 });
 
@@ -60,7 +62,7 @@ export const {
   setLatestDate,
   setShowLayers,
   setNavbarHeight,
-  setShowPage,
+  setShowPage
 } = securitySlice.actions;
 
 export default securitySlice.reducer;
