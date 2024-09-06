@@ -1,9 +1,5 @@
 import LayersCheckbox from "../Layers/LayersCheckbox";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setSNPsample,
-  setSNPdistance,
-} from "./../../features/counter/counterSlice";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 import LoadingScreen from "./../Utilities/LoadingScreen";
 
@@ -15,13 +11,10 @@ const SNPMapSidebar = ({
   fetchSNPMapDataset,
   spinner,
 }) => {
-  const snpSearchInput = useSelector((state) => state.counter.snpSearchInput);
-  const snpDistance = useSelector((state) => state.counter.snpDistance);
   const snpWarnings = useSelector((state) => state.counter.snpmapWarnings);
   const showLayers = useSelector((state) => state.security.showLayers);
-  const [sample, setSample] = useState(snpSearchInput);
-  const [distance, setDistance] = useState(snpDistance);
-  const dispatch = useDispatch();
+  const [sample, setSample] = useState("");
+  const [distance, setDistance] = useState(1);
   const handleChange = (event) => {
     setSample(event.target.value);
   };
@@ -32,8 +25,6 @@ const SNPMapSidebar = ({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(setSNPsample(sample));
-    dispatch(setSNPdistance(distance));
     fetchSNPMapDataset(sample, distance);
   };
 
