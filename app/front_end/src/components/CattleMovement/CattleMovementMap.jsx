@@ -14,11 +14,10 @@ import MeasurementTool from "../MapControls/MeasurementTool";
 import ResetView from "../MapControls/ResetView";
 import BaseMaps from "../MapControls/Basemaps";
 import "leaflet/dist/leaflet.css";
+import {useSelector} from "react-redux"
 
 const CattleMovementMap = React.memo(
   ({
-    jsonData,
-    secondJsonData,
     checkedLayers,
     useCountyandHotspotLayers,
     setOpenSideBar,
@@ -28,6 +27,8 @@ const CattleMovementMap = React.memo(
     HotspotLayers,
   }) => {
     const mapRef = useRef();
+    const jsonData = useSelector( state => state.movement.cattleMovementDataset)
+    const secondJsonData = useSelector( state => state.movement.secondMovementDataset)
     // Extract movement data from json objects into arrays
     const movArr = jsonData.move ? Object.values(jsonData.move) : [];
     const linePts = movArr.map((arr) => [arr.lat, arr.lon]);

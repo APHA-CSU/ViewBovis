@@ -1,44 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setMovementCheckedLayers,
-  setMovementCountyandHotspotLayers,
-} from "./../../features/counter/movementSlice.js";
+import { useSelector } from "react-redux";
 import CattleMovementMap from "./CattleMovementMap.jsx";
 
 const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
-  const movementData = useSelector(
-    (state) => state.movement.cattleMovementDataset
-  );
-  const openMovementSidebar = useSelector(
-    (state) => state.movement.openMovementSidebar
-  );
-  const secondMovementData = useSelector(
-    (state) => state.movement.secondMovementDataset
-  );
-  const movementCheckedLayers = useSelector(
-    (state) => state.movement.movementCheckedLayers
-  );
-  const movementCountyandHotspotLayers = useSelector(
-    (state) => state.movement.movementCountyandHotspotLayers
-  );
   const showCattleMovementPage = useSelector(
     (state) => state.security.showCattleMovementPage
   );
-  const [jsonData, setjsonData] = useState({});
-  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({
-    ...movementCountyandHotspotLayers,
-  });
+  const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
   const [openSideBar, setOpenSideBar] = useState(true);
-  const [checkedLayers, setCheckedLayers] = useState({
-    ...movementCheckedLayers,
-  });
-  const dispatch = useDispatch();
+  const [checkedLayers, setCheckedLayers] = useState({});
 
   const handleCheckboxes = (index) => {
     switch (index) {
@@ -80,29 +55,12 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
     setCheckedLayers({ ...checkedLayers });
   };
 
-  const [secondJsonData, setSecondjsonData] = useState({});
-
-  useEffect(() => {
-    if (Object.keys(movementData).length > 0) setjsonData(movementData);
-  }, [movementData]);
-
-  useEffect(() => {
-    if (Object.keys(secondMovementData).length > 0)
-      setSecondjsonData(secondMovementData);
-  }, [secondMovementData]);
-
-  useEffect(() => {
-    dispatch(setMovementCheckedLayers({ ...checkedLayers }));
-  }, [checkedLayers]);
-
-  useEffect(() => {
-    dispatch(setMovementCountyandHotspotLayers({ ...countyAndHotspotLayers }));
-  }, [countyAndHotspotLayers]);
-
   return (
-    <div className={showCattleMovementPage ? "container-fluid content" : "hidden"}>
+    <div
+      className={showCattleMovementPage ? "container-fluid content" : "hidden"}
+    >
       <Row>
-        <Collapse in={openMovementSidebar}>
+        <Collapse in={openSideBar}>
           <Col className="sidebar col-3">
             <MapSidebar
               handleCheckboxes={handleCheckboxes}
@@ -114,9 +72,7 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
         </Collapse>
         <Col>
           <CattleMovementMap
-            jsonData={jsonData}
             checkedLayers={checkedLayers}
-            secondJsonData={secondJsonData}
             useCountyandHotspotLayers={countyAndHotspotLayers}
             setOpenSideBar={setOpenSideBar}
             openSideBar={openSideBar}

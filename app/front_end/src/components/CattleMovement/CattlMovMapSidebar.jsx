@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LayersCheckbox from "../Layers/LayersCheckbox";
 import {
-  setCattleSearchInput,
   setCattleMovementDataset,
-  setCattleSecondInput,
   setSecondMovementDataset,
   setMovementWarnings,
   setSecondMovementWarnings,
@@ -17,17 +15,11 @@ const CattlMovMapSidebar = ({
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
 }) => {
-  const cattleSearchInput = useSelector(
-    (state) => state.movement.cattleSearchInput
-  );
   const movementWarnings = useSelector(
     (state) => state.movement.movementWarnings
   );
   const secondMovementWarnings = useSelector(
     (state) => state.movement.secondMovementWarnings
-  );
-  const cattleSecondInput = useSelector(
-    (state) => state.movement.cattleSecondInput
   );
   const showLayers = useSelector((state) => state.security.showLayers);
   const [searchInput, setSearchInput] = useState("");
@@ -42,7 +34,6 @@ const CattlMovMapSidebar = ({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(setCattleSearchInput(searchInput));
     if (searchInput.length === 0) {
       dispatch(setMovementWarnings("Please input a valid sample"));
       dispatch(setCattleMovementDataset({}));
@@ -85,7 +76,6 @@ const CattlMovMapSidebar = ({
   };
 
   const handleSecondSubmit = () => {
-    dispatch(setCattleSecondInput(secondSearchInput));
     if (secondSearchInput.length === 0) {
       dispatch(setSecondMovementWarnings("Please input a valid sample"));
       dispatch(setSecondMovementDataset({}));
@@ -122,14 +112,6 @@ const CattlMovMapSidebar = ({
         });
     }
   };
-
-  useEffect(() => {
-    setSearchInput(cattleSearchInput);
-  }, [cattleSearchInput]);
-
-  useEffect(() => {
-    setSecondSearchInput(cattleSecondInput);
-  }, [cattleSecondInput]);
 
   return (
     <div>

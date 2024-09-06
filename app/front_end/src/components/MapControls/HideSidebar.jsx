@@ -1,15 +1,9 @@
 import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import { useDispatch } from "react-redux";
-import { toggleMovementSidebar } from "./../../features/counter/movementSlice.js";
 
 const HideSidebar = ({ setOpenSideBar, openSideBar, type }) => {
   const map = useMap();
-  const dispatch = useDispatch();
-  const handleToggle = () => {
-    if (type === "movement") dispatch(toggleMovementSidebar());
-  };
   useEffect(() => {
     const hideSidebarButton = new L.Control({
       position: "topleft",
@@ -20,7 +14,6 @@ const HideSidebar = ({ setOpenSideBar, openSideBar, type }) => {
       div.setAttribute("id", "btn__map-fullscreen");
       div.onclick = function () {
         setOpenSideBar(!openSideBar);
-        handleToggle();
         map.invalidateSize();
       };
       if (openSideBar)
