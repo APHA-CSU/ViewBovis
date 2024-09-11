@@ -92,7 +92,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FWhat%20is%20Phylogeny%2Emp4&ga=1"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_What%20is%20Phylogeny.mp4?csf=1&web=1&e=FlgXcP"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -102,7 +102,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FHomepage%5Fv1%2E%2Emp4&ga=1"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Homepage_v1..mp4?csf=1&web=1&e=cvgnfB"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -112,7 +112,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FNextstrain%5Fv1%2Emp4&ga=1"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Nextstrain_v1.mp4?csf=1&web=1&e=gqk03Q"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -122,17 +122,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FSNPMatrix%5Fv1%2Emp4&ga=1"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                SNP Matrix usability and interpretation
-              </a>
-            </p>
-            <p>
-              <a
-                className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/_layouts/15/stream.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Videos%2FViewBovis%5FMaps%5Fv1%2Emp4&ga=1"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Maps_v1.mp4?csf=1&web=1&e=6p3CJW"
                 target="_blank"
                 rel="noreferrer noopener"
               >
