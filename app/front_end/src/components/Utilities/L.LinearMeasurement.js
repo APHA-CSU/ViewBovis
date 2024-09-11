@@ -55,7 +55,7 @@ const LinearMeasurement = L.Control.extend({
           color.charAt(1) +
           color.charAt(2) +
           color.charAt(2);
-      else if (color.length !== 6) throw "Invalid hex color: " + color;
+      else if (color.length !== 6) throw new Error("Invalid hex color: " + color);
       var rgb = [];
       for (var i = 0; i <= 2; i++)
         rgb[i] = parseInt(color.substr(i * 2, 2), 16);
@@ -326,10 +326,10 @@ const LinearMeasurement = L.Control.extend({
       type: type,
     };
 
-    var a = this.prevLatlng
+    var a = this.prevLatlng && this._map
         ? this._map.latLngToContainerPoint(this.prevLatlng)
         : null,
-      b = this._map.latLngToContainerPoint(latLng);
+      b = this._map ? this._map.latLngToContainerPoint(latLng) : null;
 
     if (type === "dot") {
       nodeCls = "node-label";

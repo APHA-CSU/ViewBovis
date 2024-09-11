@@ -2,7 +2,7 @@ import L from "leaflet";
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 
-const HideSidebar = ({ setOpenSideBar, openSideBar, type }) => {
+const HideSidebar = ({ setOpenSideBar, openSideBar }) => {
   const map = useMap();
   useEffect(() => {
     const hideSidebarButton = new L.Control({

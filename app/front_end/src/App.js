@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import "./App.css";
 import Home from "./components/Home/Home";
 import CattleMovement from "./components/CattleMovement/CattleMovement";
