@@ -43,6 +43,7 @@ const SNPMapSidebar = ({
             title="Identifier or Submission Number"
             value={sample}
             onChange={handleChange}
+            id="input__sampleID_temp--1"
           />
           <br></br>
           <br></br>
@@ -59,6 +60,7 @@ const SNPMapSidebar = ({
           </div>
           <input
             className="snp-slider"
+            id="snp-distance-value"
             type="range"
             onChange={handleSlider}
             step="1"

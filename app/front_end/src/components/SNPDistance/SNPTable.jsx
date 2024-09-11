@@ -144,7 +144,7 @@ class SNPTable extends React.Component {
               </button>
             </div>
             <div style={{ overflowX: "scroll", border: "1px solid black" }}>
-              <div style={{ width: "800.5px" }}>
+              <div style={{ width: "800.5px" }} id="table-sidebar-container">
                 <ReactTabulator
                   style={{ fontSize: "13px" }}
                   columns={columns}

@@ -80,6 +80,7 @@ const SecurityModal = () => {
                           },2000)
                         }}
                         disabled={checked}
+                        id="checkbox--agree"
                       />
                       <label
                         className="govuk-label govuk-checkboxes__label"
