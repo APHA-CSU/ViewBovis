@@ -41,7 +41,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
         frameBorder={0}
         allow="cross-origin"
         src={
-          "http/nextstrain-beta.int.sce.network/" +
+          "http://nextstrain-beta.int.sce.network/" +
           url
         }
       ></iframe>
