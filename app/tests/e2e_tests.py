@@ -58,7 +58,7 @@ class E2ETests(unittest.TestCase):
             self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
         # show the table
-        show_table_btn = self.driver.find_element(By.ID, "show-table")
+        show_table_btn = self.driver.find_element(By.ID, "btn__show-table")
         show_table_btn.click()
         # get table rows
         table = \
