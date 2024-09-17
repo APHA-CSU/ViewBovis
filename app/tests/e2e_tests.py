@@ -46,10 +46,8 @@ class E2ETests(unittest.TestCase):
         related_nonplots = ["e", "f"]
         distant_relations = ["g", "h"]
         # navigate to snp map
-        snp_dist_btn = self.driver.find_element(By.ID, "snp_distance_tab")
+        snp_dist_btn = self.wait.until(EC.element_to_be_clickable((By.ID,"snp_distance_tab")))
         snp_dist_btn.click()
-        snp_map_btn = self.wait.until(EC.element_to_be_clickable((By.ID,"btn-view-snpmap")))
-        snp_map_btn.click()
         # search for related samples within 5 SNP of "a_id"
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
         search_box.send_keys(f"{soi}_id")
