@@ -78,6 +78,7 @@ class E2ETests(unittest.TestCase):
                                            ".//div[@tabulator-field='submission']")
             rows_dict[sub_element.text] = row
         # assert distantly related isolates are not included
+        print(rows_dict)
         for sub in distant_relations:
             self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable
