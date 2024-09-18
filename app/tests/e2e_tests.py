@@ -41,6 +41,7 @@ class E2ETests(unittest.TestCase):
         self.driver.close()
 
     def test_snp_map(self):
+        time.sleep(10.0)
         soi = "a"
         related_plots = ["b", "c", "d"]
         related_nonplots = ["e", "f"]
