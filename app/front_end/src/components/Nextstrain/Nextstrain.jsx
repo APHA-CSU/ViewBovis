@@ -21,7 +21,7 @@ const Nextstrain = () => {
   const [nextstrainURL, setNextstrainURL] = useState(null);
 
   const fetchNextstrainData = async () => {
-    const response = await fetch(`/sample?sample_name=${identifier}`);
+    const response = await fetch(`/sample?sample_name=${identifier.toUpperCase().replace(/ /g, "")}`);
 
     if (!response.ok) {
       dispatch(
