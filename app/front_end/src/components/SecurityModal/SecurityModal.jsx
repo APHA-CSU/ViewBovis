@@ -40,25 +40,6 @@ const SecurityModal = () => {
                       className="govuk-notification-banner__title"
                       id="govuk-notification-banner-title"
                     >
-<<<<<<< HEAD
-                      <input
-                        className="govuk-checkboxes__input"
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => {
-                          setChecked(true);
-                          setTimeout(()=>{
-                            dispatch(hideModal())
-                            document.body.style.overflow = "auto";
-                          },2000)
-                        }}
-                        disabled={checked}
-                        id="checkbox--agree"
-                      />
-                      <label
-                        className="govuk-label govuk-checkboxes__label"
-                        htmlFor="checkbox--agree"
-=======
                       Important Information
                     </h2>
                   </div>
@@ -86,7 +67,6 @@ const SecurityModal = () => {
                       <div
                         className="govuk-checkboxes govuk-checkboxes--small"
                         data-module="govuk-checkboxes"
->>>>>>> prod-test
                       >
                         <div
                           className="govuk-checkboxes__item"
