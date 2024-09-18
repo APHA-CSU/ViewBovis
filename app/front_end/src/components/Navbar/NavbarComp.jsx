@@ -69,11 +69,7 @@ const NavbarComp = () => {
                   dispatch(setShowPage("snpmap"));
                 }}
                 className={activeLink === "snpmap" ? "active" : ""}
-<<<<<<< HEAD
-                id = "snp_distance_tab"
-=======
                 id="snp_distance_tab"
->>>>>>> prod-test
               >
                 SNP Map
               </Nav.Link>
