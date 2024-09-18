@@ -67,6 +67,7 @@ const SNPMapSidebar = ({
             max="10"
             min="0"
             value={distance}
+            id="snp-distance-value"
           />
           <br></br>
           <span style={{ fontSize: "20px" }}>
