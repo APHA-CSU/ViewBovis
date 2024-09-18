@@ -74,7 +74,7 @@ class SNPTable extends React.Component {
     ];
 
     const handleRowSelect = (row) => {
-      if (row.getData().submission === soi) return;
+      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionSelect = row.getData().submission;
@@ -87,7 +87,7 @@ class SNPTable extends React.Component {
       }
     };
     const handleRowDeselect = (row) => {
-      if (row.getData().submission === soi) return;
+      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionDeselect = row.getData().submission;
@@ -100,6 +100,15 @@ class SNPTable extends React.Component {
         }
       }
     };
+
+    const rowFormatter = (row) => {
+      const rowData = row.getData()
+      const rowElement = row.getElement()
+      if (rowData.submission === soi || !(rowData.lat) || !(rowData.lon)) {
+        rowElement.classList.remove("tabulator-selectable")
+        rowElement.classList.add("tabulator-unselectable")
+      }
+    }
 
     const handleCSVdownload = () => {
       const table = this.tableRef.current;
@@ -152,6 +161,7 @@ class SNPTable extends React.Component {
                   columnDefaults={{
                     resizable: false,
                   }}
+                  rowFormatter={rowFormatter}
                   key={"snp_table_" + soi}
                   movableColumns={true}
                   selectable={true}
