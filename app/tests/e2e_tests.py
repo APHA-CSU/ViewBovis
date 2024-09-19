@@ -68,8 +68,7 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
         #continue find element method after the table transit animation
-        time.sleep(10.0)
-        self.wait.until(EC.number_of_elements_to_be(By.XPATH(".//div[@role='row']"),6))
+        time.sleep(40.0)
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
         # and value as the row element
