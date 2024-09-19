@@ -36,6 +36,7 @@ class E2ETests(unittest.TestCase):
         security_modal = self.driver.find_element(By.ID, "checkbox--agree")
         security_modal.click()
         self.wait = WebDriverWait(self.driver, 10)
+        self.driver.execute_script("document.body.style.zoom='0.5'")
 
     def tearDown(self) -> None:
         self.driver.close()
@@ -67,7 +68,8 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
         #continue find element method after the table transit animation
-        time.sleep(30.0)
+        time.sleep(10.0)
+        self.wait.until(EC.numberOfElementsToBe(By.XPATH(".//div[@role='row']"),6))
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
         # and value as the row element
