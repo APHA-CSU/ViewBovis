@@ -37,7 +37,7 @@ const SNPMapComp = React.memo(
 
     const popupContentSNPMap = function (data, AFnumber) {
       return `
-      <div class="fs-5 fw-bold">${data.animal_id}</div><br>
+      <div id="popup_header_${data.animal_id}" class="fs-5 fw-bold">${data.animal_id}</div><br>
         <div id="popTabContent">     
           <table class="table table-striped">
             <tbody>

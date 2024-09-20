@@ -104,7 +104,7 @@ class E2ETests(unittest.TestCase):
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
                                          f"//div[@class='leaflet-marker-icon number-marker-related marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
-                # assert icon number is white, i.e. not selected
+                # assert that the filter is not applied to the marker icon
                 self.assertNotEqual("filter: 'drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 8px)';", map_sub_div_element.get_attribute("style"))
                 # hacky way to ensure that the row is clickable: will try to
                 # click 10 times over 1 second, if still not clickable on
@@ -122,9 +122,9 @@ class E2ETests(unittest.TestCase):
                 # click the map icon - make pop-up visible
                 map_sub_div_element.click()
                 # assert the pop-up contents
-                pop_up_header = \
-                    self.wait.until(EC.visibility_of_element_located((By.XPATH,
-                                                                    "//*[@id='map2']/div[1]/div[6]/div/div[1]/div/div[1]")))
+                pop_up_header = self.wait.until(
+                EC.visibility_of_element_located((By.ID,
+                                                  f"popup_header_{sub}_id")))
                 self.assertEqual(f"{sub}_id", pop_up_header.text)
                 # click the map icon - make pop-up go away
                 map_sub_div_element.click()
