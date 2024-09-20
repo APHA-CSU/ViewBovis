@@ -36,7 +36,6 @@ class E2ETests(unittest.TestCase):
         security_modal = self.driver.find_element(By.ID, "checkbox--agree")
         security_modal.click()
         self.wait = WebDriverWait(self.driver, 10)
-        self.driver.execute_script("document.body.style.zoom='0.5'")
 
     def tearDown(self) -> None:
         self.driver.close()
@@ -54,8 +53,10 @@ class E2ETests(unittest.TestCase):
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
         search_box.send_keys(f"{soi}_id")
         snp_distance = self.driver.find_element(By.ID, "snp-distance-value")
-        self.driver.execute_script("arguments[0].textContent = arguments[1];",
-                                   snp_distance, "5")
+        #Required value for snp_distance input slider is 5
+        #React slider state updates only on user actions
+        #click operation sets the snp distance to 5
+        snp_distance.click()
         plot_isolates_btn = \
             self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
@@ -68,11 +69,10 @@ class E2ETests(unittest.TestCase):
                 EC.visibility_of_element_located((By.ID,
                                                   "table-sidebar-container")))
         #continue find element method after the table transit animation
-        time.sleep(40.0)
+        time.sleep(10.0)
         rows = table.find_elements(By.XPATH, ".//div[@role='row']")
         # build a dictionary with key as the isolated submission number
         # and value as the row element
-        print(rows)
         rows_dict = {}
         # loop through rows
         for row in rows:
@@ -81,7 +81,6 @@ class E2ETests(unittest.TestCase):
                                            ".//div[@tabulator-field='submission']")
             rows_dict[sub_element.text] = row
         # assert distantly related isolates are not included
-        print(rows_dict)
         for sub in distant_relations:
             self.assertNotIn(f"{sub}_submission", rows_dict.keys())
         # assert the SOI row is not clickable

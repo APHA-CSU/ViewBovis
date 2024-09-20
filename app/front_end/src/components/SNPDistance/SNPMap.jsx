@@ -130,7 +130,7 @@ const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
             />
           </Col>
           <Collapse in={openTable}>
-            <Col className="sidebar-table col-4">
+            <Col className="sidebar-table col-4" id="table-sidebar-container">
               {Object.keys(SNPMapDataset).length > 0 && (
                 <SNPTable json={SNPMapDataset} />
               )}

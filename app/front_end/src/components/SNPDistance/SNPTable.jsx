@@ -120,7 +120,7 @@ class SNPTable extends React.Component {
     return (
       <>
         {Object.keys(json).length > 1 && (
-          <div style={{ direction: "ltr", padding: "5px" }} id="table-sidebar-container">
+          <div style={{ direction: "ltr", padding: "5px" }}>
             <div>
               <h4>{soi}</h4>
               <p>
