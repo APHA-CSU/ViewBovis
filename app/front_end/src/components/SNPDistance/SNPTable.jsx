@@ -12,12 +12,12 @@ class SNPTable extends React.Component {
   // Tabulator requires array of json objects
   render() {
     const { json } = this.props;
-    const tabledata = Object.values(json).filter(
-      (val) => typeof val != "string"
-    );
     const soi = json["SOI"];
+    const tableObj = {...json}
+    delete tableObj["SOI"]
+    const tabledata = Object.values(tableObj)
     tabledata.map(
-      (sample, index) => (sample.submission = Object.keys(json)[index])
+      (sample, index) => (sample.submission = Object.keys(tableObj)[index])
     );
     const columns = [
       {
