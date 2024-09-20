@@ -101,14 +101,11 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
-            #todo - test for clustered samples
-            if sub == "c":
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
-                                         f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
-                related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
+                                         f"//div[@class='leaflet-marker-icon number-marker-related marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
                 # assert icon number is white, i.e. not selected
-                self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
+                self.assertNotEqual("filter: 'drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 8px)';", map_sub_div_element.get_attribute("style"))
                 # hacky way to ensure that the row is clickable: will try to
                 # click 10 times over 1 second, if still not clickable on
                 # the 10th try an Exception is raised.
@@ -119,11 +116,8 @@ class E2ETests(unittest.TestCase):
                     except exceptions.ElementClickInterceptedException:
                         time.sleep(0.1)
                     rows_dict[f"{sub}_submission"].click()
-                # assert that the related isolate number has changed colour
-                related_icon_number = \
-                    map_sub_div_element.find_element(By.TAG_NAME, "i")
                 self.assertIn("rgb(255, 190, 51)",
-                            related_icon_number.get_attribute("style"),
+                            map_sub_div_element.get_attribute("style"),
                             "Correct map icon not highlighted!")
                 # click the map icon - make pop-up visible
                 map_sub_div_element.click()
@@ -141,7 +135,7 @@ class E2ETests(unittest.TestCase):
             try:
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
-                                             f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
+                                             f"//div[@class='leaflet-marker-icon number-marker-related marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
                 self.fail("Unexpected isolate plotted on map!")
             except exceptions.NoSuchElementException:
                 pass
