@@ -100,12 +100,13 @@ a.nav-link:hover {
   overflow-x: hidden;
 }
 
-.leaflet-container {
-  outline: none !important;
-  height: 88vh;
-}
-
 #custom-container {
   height: 88vh;
   padding: 0%;
+}
+
+/* Leaflet customisation */
+.leaflet-container {
+  outline: none !important;
+  height: 88vh;
 }

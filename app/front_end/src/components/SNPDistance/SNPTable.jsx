@@ -12,12 +12,12 @@ class SNPTable extends React.Component {
   // Tabulator requires array of json objects
   render() {
     const { json } = this.props;
-    const tabledata = Object.values(json).filter(
-      (val) => typeof val != "string"
-    );
     const soi = json["SOI"];
+    const tableObj = {...json}
+    delete tableObj["SOI"]
+    const tabledata = Object.values(tableObj)
     tabledata.map(
-      (sample, index) => (sample.submission = Object.keys(json)[index])
+      (sample, index) => (sample.submission = Object.keys(tableObj)[index])
     );
     const columns = [
       {
@@ -74,7 +74,7 @@ class SNPTable extends React.Component {
     ];
 
     const handleRowSelect = (row) => {
-      if (row.getData().submission === soi) return;
+      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionSelect = row.getData().submission;
@@ -87,7 +87,7 @@ class SNPTable extends React.Component {
       }
     };
     const handleRowDeselect = (row) => {
-      if (row.getData().submission === soi) return;
+      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionDeselect = row.getData().submission;
@@ -101,6 +101,15 @@ class SNPTable extends React.Component {
       }
     };
 
+    const rowFormatter = (row) => {
+      const rowData = row.getData()
+      const rowElement = row.getElement()
+      if (rowData.submission === soi || !(rowData.lat) || !(rowData.lon)) {
+        rowElement.classList.remove("tabulator-selectable")
+        rowElement.classList.add("tabulator-unselectable")
+      }
+    }
+
     const handleCSVdownload = () => {
       const table = this.tableRef.current;
       if (table) {
@@ -111,7 +120,7 @@ class SNPTable extends React.Component {
     return (
       <>
         {Object.keys(json).length > 1 && (
-          <div style={{ direction: "ltr", padding: "5px" }} id="table-sidebar-container">
+          <div style={{ direction: "ltr", padding: "5px" }}>
             <div>
               <h4>{soi}</h4>
               <p>
@@ -152,6 +161,7 @@ class SNPTable extends React.Component {
                   columnDefaults={{
                     resizable: false,
                   }}
+                  rowFormatter={rowFormatter}
                   key={"snp_table_" + soi}
                   movableColumns={true}
                   selectable={true}

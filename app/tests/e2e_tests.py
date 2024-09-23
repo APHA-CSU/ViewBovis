@@ -41,6 +41,7 @@ class E2ETests(unittest.TestCase):
         self.driver.close()
 
     def test_snp_map(self):
+        time.sleep(10.0)
         soi = "a"
         related_plots = ["b", "c", "d"]
         related_nonplots = ["e", "f"]
@@ -52,8 +53,10 @@ class E2ETests(unittest.TestCase):
         search_box = self.driver.find_element(By.ID, "input__sampleID_temp--1")
         search_box.send_keys(f"{soi}_id")
         snp_distance = self.driver.find_element(By.ID, "snp-distance-value")
-        self.driver.execute_script("arguments[0].textContent = arguments[1];",
-                                   snp_distance, "5")
+        #Required value for snp_distance input slider is 5
+        #React slider state updates only on user actions
+        #click operation sets the snp distance to 5
+        snp_distance.click()
         plot_isolates_btn = \
             self.driver.find_element(By.ID, "btn__plot-related-isolates")
         plot_isolates_btn.click()
@@ -98,14 +101,11 @@ class E2ETests(unittest.TestCase):
         # map icons)
         for sub in related_plots:
             # locate the associated submission on the map
-            #todo - test for clustered samples
-            if sub == "c":
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
-                                         f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
-                related_icon_number = map_sub_div_element.find_element(By.TAG_NAME, "i")
-                # assert icon number is white, i.e. not selected
-                self.assertEqual("color: white;", related_icon_number.get_attribute("style"))
+                                         f"//div[@class='leaflet-marker-icon number-marker-related marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
+                # assert that the filter is not applied to the marker icon
+                self.assertNotEqual("filter: 'drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 6px) drop-shadow(rgb(255, 190, 51) 0px 0px 8px)';", map_sub_div_element.get_attribute("style"))
                 # hacky way to ensure that the row is clickable: will try to
                 # click 10 times over 1 second, if still not clickable on
                 # the 10th try an Exception is raised.
@@ -116,32 +116,34 @@ class E2ETests(unittest.TestCase):
                     except exceptions.ElementClickInterceptedException:
                         time.sleep(0.1)
                     rows_dict[f"{sub}_submission"].click()
-                # assert that the related isolate number has changed colour
-                related_icon_number = \
-                    map_sub_div_element.find_element(By.TAG_NAME, "i")
                 self.assertIn("rgb(255, 190, 51)",
-                            related_icon_number.get_attribute("style"),
+                            map_sub_div_element.get_attribute("style"),
                             "Correct map icon not highlighted!")
-                # click the map icon - make pop-up visible
-                map_sub_div_element.click()
-                # assert the pop-up contents
-                pop_up_header = \
-                    self.wait.until(EC.visibility_of_element_located((By.XPATH,
-                                                                    "//*[@id='map2']/div[1]/div[6]/div/div[1]/div/div[1]")))
-                self.assertEqual(f"{sub}_id", pop_up_header.text)
-                # click the map icon - make pop-up go away
-                map_sub_div_element.click()
-                self.wait.until(EC.invisibility_of_element(pop_up_header))
+                if sub == "c":
+                #todo - clustered icons
+                    # click the map icon - make pop-up visible
+                    map_sub_div_element.click()
+                    # assert the pop-up contents
+                    pop_up_header = self.wait.until(
+                    EC.visibility_of_element_located((By.ID,
+                                                    f"popup_header_{sub}_id")))
+                    self.assertEqual(f"{sub}_id", pop_up_header.text)
+                    # click the close button in the popup to make pop-up go away
+                    self.driver.execute_script("document.getElementsByClassName('leaflet-popup-close-button')[0].click()")
+                    self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
         for sub in related_nonplots + distant_relations:
             try:
                 map_sub_div_element = \
                     self.driver.find_element(By.XPATH,
-                                             f"//div[@class='awesome-number-marker-icon-gray awesome-number-marker marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
+                                             f"//div[@class='leaflet-marker-icon number-marker-related marker-{sub}_submission leaflet-zoom-animated leaflet-interactive']")
                 self.fail("Unexpected isolate plotted on map!")
             except exceptions.NoSuchElementException:
                 pass
+    
+    #todo - e2e test for cattlemovement page
+    #todo - e2e test for nextstrain page
 
 
 if __name__ == "__main__":

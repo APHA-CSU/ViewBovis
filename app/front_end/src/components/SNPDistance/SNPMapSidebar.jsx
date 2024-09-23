@@ -25,7 +25,7 @@ const SNPMapSidebar = ({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchSNPMapDataset(sample, distance);
+    fetchSNPMapDataset(sample.toUpperCase().replace(/ /g, ""), distance);
   };
 
   return (

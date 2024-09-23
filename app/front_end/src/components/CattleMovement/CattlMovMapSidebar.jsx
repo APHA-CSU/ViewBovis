@@ -29,7 +29,7 @@ const CattlMovMapSidebar = ({
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    setSearchInput(event.target.value.toUpperCase().replace(/ /g, ""));
+    setSearchInput(event.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -39,7 +39,7 @@ const CattlMovMapSidebar = ({
       dispatch(setCattleMovementDataset({}));
     } else {
       setSpinner(true);
-      fetch(`/sample/movements?sample_name=${searchInput}`)
+      fetch(`/sample/movements?sample_name=${searchInput.toUpperCase().replace(/ /g, "")}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -72,7 +72,7 @@ const CattlMovMapSidebar = ({
   };
 
   const handleSecondChange = (event) => {
-    setSecondSearchInput(event.target.value.toUpperCase().replace(/ /g, ""));
+    setSecondSearchInput(event.target.value);
   };
 
   const handleSecondSubmit = () => {
@@ -81,7 +81,7 @@ const CattlMovMapSidebar = ({
       dispatch(setSecondMovementDataset({}));
     } else {
       setSecondSpinner(true);
-      fetch(`/sample/movements?sample_name=${secondSearchInput}`)
+      fetch(`/sample/movements?sample_name=${secondSearchInput.toUpperCase().replace(/ /g, "")}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
