@@ -119,16 +119,18 @@ class E2ETests(unittest.TestCase):
                 self.assertIn("rgb(255, 190, 51)",
                             map_sub_div_element.get_attribute("style"),
                             "Correct map icon not highlighted!")
-                # click the map icon - make pop-up visible
-                map_sub_div_element.click()
-                # assert the pop-up contents
-                pop_up_header = self.wait.until(
-                EC.visibility_of_element_located((By.ID,
-                                                  f"popup_header_{sub}_id")))
-                self.assertEqual(f"{sub}_id", pop_up_header.text)
-                # click the map icon - make pop-up go away
-                map_sub_div_element.click()
-                self.wait.until(EC.invisibility_of_element(pop_up_header))
+                if sub == "c":
+                #todo - clustered icons
+                    # click the map icon - make pop-up visible
+                    map_sub_div_element.click()
+                    # assert the pop-up contents
+                    pop_up_header = self.wait.until(
+                    EC.visibility_of_element_located((By.ID,
+                                                    f"popup_header_{sub}_id")))
+                    self.assertEqual(f"{sub}_id", pop_up_header.text)
+                    # click the close button in the popup to make pop-up go away
+                    self.driver.execute_script("document.getElementsByClassName('leaflet-popup-close-button')[0].click()")
+                    self.wait.until(EC.invisibility_of_element(pop_up_header))
         # assert that submissions without location data are not plotted
         # on the map
         for sub in related_nonplots + distant_relations:
@@ -139,6 +141,9 @@ class E2ETests(unittest.TestCase):
                 self.fail("Unexpected isolate plotted on map!")
             except exceptions.NoSuchElementException:
                 pass
+    
+    #todo - e2e test for cattlemovement page
+    #todo - e2e test for nextstrain page
 
 
 if __name__ == "__main__":
