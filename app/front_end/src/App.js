@@ -13,6 +13,12 @@ import { setShowLayers } from "./features/counter/securitySlice";
 function App() {
   /* Lazy loading the layers*/
   const dispatch = useDispatch();
+  const SNPMapComp = lazy(() =>
+    import("./components/SNPDistance/SNPMapComp.jsx")
+  );
+  const CattleMovementMap = lazy(() =>
+    import("./components/CattleMovement/CattleMovementMap.jsx")
+  );
   const RiskLayers = lazy(() => import("./components/Layers/RiskLayers"));
   const CountyLayers = lazy(() => import("./components/Layers/CountyLayers"));
   const HotspotLayers = lazy(() => import("./components/Layers/HotspotLayers"));
@@ -36,11 +42,13 @@ function App() {
       <NavbarComp />
       <Home />
       <SNPMap
+        SNPMapComp={SNPMapComp}
         RiskLayers={RiskLayers}
         CountyLayers={CountyLayers}
         HotspotLayers={HotspotLayers}
       />
       <CattleMovement
+        CattleMovementMap={CattleMovementMap}
         RiskLayers={RiskLayers}
         CountyLayers={CountyLayers}
         HotspotLayers={HotspotLayers}

@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import MapSidebar from "./CattlMovMapSidebar";
 import "./CattleMovement.css";
 import Collapse from "react-bootstrap/Collapse";
 import { useSelector } from "react-redux";
-import CattleMovementMap from "./CattleMovementMap.jsx";
+import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
-const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
+const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers, CattleMovementMap }) => {
   const showCattleMovementPage = useSelector(
     (state) => state.security.showCattleMovementPage
   );
@@ -59,6 +59,7 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
     <div
       className={showCattleMovementPage ? "container-fluid content" : "hidden"}
     >
+      <Suspense fallback={<LoadingScreen message="Loading map tiles"/>}>
       <Row>
         <Collapse in={openSideBar}>
           <Col className="sidebar col-3">
@@ -82,6 +83,7 @@ const CattleMovement = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
           />
         </Col>
       </Row>
+      </Suspense>
     </div>
   );
 };

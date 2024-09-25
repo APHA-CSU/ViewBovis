@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import SNPMapSidebar from "../SNPDistance/SNPMapSidebar";
+import SNPMapSidebar from "./SNPMapSidebar.jsx";
 import Collapse from "react-bootstrap/Collapse";
-import SNPTable from "./SNPTable";
+import SNPTable from "./SNPTable.jsx";
 import "./SNPMap.css";
 import { useSelector, useDispatch } from "react-redux";
-import { setSNPmapWarnings } from "./../../features/counter/counterSlice.js";
-import SNPMapComp from "./SNPMapComp.jsx";
+import { setSNPmapWarnings } from "../../features/counter/counterSlice.js";
+import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
-const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
+const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers, SNPMapComp }) => {
   const [SNPMapDataset, setSNPMapDataset] = useState({});
   const [spinner, setSpinner] = useState(false);
   const showSNPmapPage = useSelector((state) => state.security.showSNPmapPage);
@@ -103,41 +103,43 @@ const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers }) => {
 
   return (
     <div className={showSNPmapPage ? "container-fluid content" : "hidden"}>
-      <Container fluid id="custom-container">
-        <Row>
-          <Collapse in={OpenSideBar} dimension={"width"}>
-            <Col className="sidebar col-3">
-              <SNPMapSidebar
-                fetchSNPMapDataset={fetchSNPMapDataset}
+      <Suspense fallback={<LoadingScreen message="Loading map tiles" />}>
+        <Container fluid id="custom-container">
+          <Row>
+            <Collapse in={OpenSideBar} dimension={"width"}>
+              <Col className="sidebar col-3">
+                <SNPMapSidebar
+                  fetchSNPMapDataset={fetchSNPMapDataset}
+                  checkedLayers={checkedLayers}
+                  handleCheckboxes={handleCheckboxes}
+                  countyAndHotspotLayers={countyAndHotspotLayers}
+                  setCountyAndHotspotLayers={setCountyAndHotspotLayers}
+                  spinner={spinner}
+                />
+              </Col>
+            </Collapse>
+            <Col>
+              <SNPMapComp
+                SNPMapDataset={SNPMapDataset}
                 checkedLayers={checkedLayers}
-                handleCheckboxes={handleCheckboxes}
-                countyAndHotspotLayers={countyAndHotspotLayers}
-                setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-                spinner={spinner}
+                useCountyandHotspotLayers={countyAndHotspotLayers}
+                setOpenSideBar={setOpenSideBar}
+                openSideBar={OpenSideBar}
+                RiskLayers={RiskLayers}
+                CountyLayers={CountyLayers}
+                HotspotLayers={HotspotLayers}
               />
             </Col>
-          </Collapse>
-          <Col>
-            <SNPMapComp
-              SNPMapDataset={SNPMapDataset}
-              checkedLayers={checkedLayers}
-              useCountyandHotspotLayers={countyAndHotspotLayers}
-              setOpenSideBar={setOpenSideBar}
-              openSideBar={OpenSideBar}
-              RiskLayers={RiskLayers}
-              CountyLayers={CountyLayers}
-              HotspotLayers={HotspotLayers}
-            />
-          </Col>
-          <Collapse in={openTable}>
-            <Col className="sidebar-table col-4" id="table-sidebar-container">
-              {Object.keys(SNPMapDataset).length > 0 && (
-                <SNPTable json={SNPMapDataset} />
-              )}
-            </Col>
-          </Collapse>
-        </Row>
-      </Container>
+            <Collapse in={openTable}>
+              <Col className="sidebar-table col-4" id="table-sidebar-container">
+                {Object.keys(SNPMapDataset).length > 0 && (
+                  <SNPTable json={SNPMapDataset} />
+                )}
+              </Col>
+            </Collapse>
+          </Row>
+        </Container>
+      </Suspense>
     </div>
   );
 };
