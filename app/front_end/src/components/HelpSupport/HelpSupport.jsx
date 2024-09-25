@@ -162,7 +162,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="http://reports.cvlnt.vla.gov.uk/ReportGroup.aspx?ReportGroupId=da063b9e-fc87-43ff-9fc8-a88100e89f29"
+                href="https://app.powerbi.com/groups/me/reports/b3cec343-cd33-477d-a68e-e1e46acac500/ReportSectionc95f11ff06a200a919a4?experience=power-bi"
                 target="_blank"
                 rel="noreferrer noopener"
               >
