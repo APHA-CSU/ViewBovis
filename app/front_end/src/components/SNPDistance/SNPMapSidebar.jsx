@@ -1,7 +1,7 @@
 import LayersCheckbox from "../Layers/LayersCheckbox";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import LoadingScreen from "./../Utilities/LoadingScreen";
+import LoadingScreen from "../Utilities/LoadingScreen";
 
 const SNPMapSidebar = ({
   handleCheckboxes,
@@ -67,7 +67,6 @@ const SNPMapSidebar = ({
             max="10"
             min="0"
             value={distance}
-            id="snp-distance-value"
           />
           <br></br>
           <span style={{ fontSize: "20px" }}>

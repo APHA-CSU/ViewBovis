@@ -1,30 +1,29 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont,GDS Transport, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas,GDS Transport, 'Courier New',
-    monospace;
-}
-
 /* ================================ */
 /*
 /* APP GLOBAL CSS */
 /*
 /* ================================ */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, GDS Transport, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, GDS Transport,
+    "Courier New", monospace;
+}
 
 :root {
   /* APHA official green */
   /* http://aphaintranet/how-do-I/communications-press/Pages/findandusetheAPHAlogo.aspx */
-  --apha-green: #00A33B;
-  --apha-blue: #007CBA;
-  --apha-red: #D9262E;
-  --apha-orange: #FF9E16;
+  --apha-green: #00a33b;
+  --apha-blue: #007cba;
+  --apha-red: #d9262e;
+  --apha-orange: #ff9e16;
 }
 
 html {
@@ -46,7 +45,7 @@ p {
 
 a:hover {
   /* All links have the pointer (hand) on mouse hover */
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .text-green {
@@ -56,7 +55,7 @@ a:hover {
 
 .text-hyperlink {
   /* Blue hyperlink text */
-  color: #0000EE;
+  color: #0000ee;
 }
 
 .govuk-button {
@@ -64,7 +63,7 @@ a:hover {
 }
 
 .govuk-button--secondary {
-  background-color: #f3f2f1;;
+  background-color: #f3f2f1;
 }
 
 .warning-text {
