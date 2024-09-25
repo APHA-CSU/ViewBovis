@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, g
+from flask import Flask, jsonify, render_template, request, g, send_from_directory
 import os
 import json
 from datetime import datetime
@@ -43,12 +43,15 @@ def disconnect_db(exception):
 
 
 @app.route("/")
-@app.route("/cattlemovement")
-@app.route("/snpmap")
-@app.route("/nextstrain")
-@app.route("/helpsupport")
 def home():
     return render_template("index.html")
+
+@app.route("/<filename>")
+def serve_manifest(filename):
+    """ 
+        Serves ViewBovis favicon and manifest.json 
+    """
+    return send_from_directory('build',filename)
 
 @app.route("/sample/lastupdate", methods=["GET"])
 def last_update_date():
