@@ -13,9 +13,9 @@ class SNPTable extends React.Component {
   render() {
     const { json } = this.props;
     const soi = json["SOI"];
-    const tableObj = {...json}
-    delete tableObj["SOI"]
-    const tabledata = Object.values(tableObj)
+    const tableObj = { ...json };
+    delete tableObj["SOI"];
+    const tabledata = Object.values(tableObj);
     tabledata.map(
       (sample, index) => (sample.submission = Object.keys(tableObj)[index])
     );
@@ -74,7 +74,12 @@ class SNPTable extends React.Component {
     ];
 
     const handleRowSelect = (row) => {
-      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
+      if (
+        row.getData().submission === soi ||
+        !row.getData().lat ||
+        !row.getData().lon
+      )
+        return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionSelect = row.getData().submission;
@@ -87,7 +92,12 @@ class SNPTable extends React.Component {
       }
     };
     const handleRowDeselect = (row) => {
-      if (row.getData().submission === soi || !(row.getData().lat) || !(row.getData().lon)) return;
+      if (
+        row.getData().submission === soi ||
+        !row.getData().lat ||
+        !row.getData().lon
+      )
+        return;
       if (row.getData().cph != null) {
         // Get the row submission
         const rowSubmissionDeselect = row.getData().submission;
@@ -102,13 +112,13 @@ class SNPTable extends React.Component {
     };
 
     const rowFormatter = (row) => {
-      const rowData = row.getData()
-      const rowElement = row.getElement()
-      if (rowData.submission === soi || !(rowData.lat) || !(rowData.lon)) {
-        rowElement.classList.remove("tabulator-selectable")
-        rowElement.classList.add("tabulator-unselectable")
+      const rowData = row.getData();
+      const rowElement = row.getElement();
+      if (rowData.submission === soi || !rowData.lat || !rowData.lon) {
+        rowElement.classList.remove("tabulator-selectable");
+        rowElement.classList.add("tabulator-unselectable");
       }
-    }
+    };
 
     const handleCSVdownload = () => {
       const table = this.tableRef.current;
@@ -120,7 +130,13 @@ class SNPTable extends React.Component {
     return (
       <>
         {Object.keys(json).length > 1 && (
-          <div style={{ direction: "ltr", padding: "5px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: `calc(88vh - 10px)`,
+            }}
+          >
             <div>
               <h4>{soi}</h4>
               <p>
@@ -152,7 +168,14 @@ class SNPTable extends React.Component {
                 Download CSV
               </button>
             </div>
-            <div style={{ overflowX: "scroll", border: "1px solid black" }}>
+            <div
+              className="snptable-container"
+              style={{
+                overflowX: "scroll",
+                overflowY: "scroll",
+                border: "1px solid black",
+              }}
+            >
               <div style={{ width: "800.5px" }} id="table-sidebar-container">
                 <ReactTabulator
                   style={{ fontSize: "13px" }}
