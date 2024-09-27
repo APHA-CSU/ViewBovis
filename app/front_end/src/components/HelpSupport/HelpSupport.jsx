@@ -166,7 +166,7 @@ const HelpSupport = () => {
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                CRYSTAL
+                Lab Test Reports
               </a>
             </p>
             <p>
