@@ -5,6 +5,8 @@
 /app/front_end/node_modules
 /app/front_end/build
 
+/.pnp
+.pnp.js
 .vscode/
 /app/static/data
 .github/CODEOWNERS
