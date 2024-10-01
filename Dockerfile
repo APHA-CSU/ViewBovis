@@ -32,7 +32,6 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 # Install python dependencies
 RUN python3.10 -m pip install -r requirements.txt
-
 ################### ENTRY ##############################
 
 WORKDIR "/ViewBovis/app"

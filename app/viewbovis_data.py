@@ -397,12 +397,12 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "os_map_ref": None if not row["CPH"] else
-                        df_cph_2_osmapref["OSMapRef"][row["CPH"]],
-                     "lat": None if not row["CPH"] else
-                        df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": None if not row["CPH"] else
-                        df_cph_2_osmapref["Long"][row["CPH"]],
+                     "os_map_ref": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["OSMapRef"].get(row["CPH"],None) is None else df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["Lat"].get([row["CPH"]],None) is None else df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["Long"].get([row["CPH"]],None) is None else df_cph_2_osmapref["Long"][row["CPH"]],
                      "species": row["Host"],
                      "animal_type": row["Animal_Type"],
                      "snp_distance":
@@ -419,7 +419,9 @@ class Request:
                          self._transform_dateformat(
                             row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
-                     "distance": None if not row["CPH"] else
+                     "distance": None if not row["CPH"] else 
+                    None if df_cph_2_osmapref["x"].get(row["CPH"],None) is None else
+                    None if df_cph_2_osmapref["y"].get(row["CPH"],None) is None else
                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
                                             df_cph_2_osmapref["y"][row["CPH"]]
                                             ))}

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request, g
+from flask import Flask, jsonify, render_template, request, g, send_from_directory
 import os
 import json
 from datetime import datetime
@@ -8,7 +8,7 @@ from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
                            MatrixTooLargeException
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='build/static',template_folder='build')
 csrf = CSRFProtect(app)
 
 def get_id_no_whitespace():
@@ -44,12 +44,20 @@ def disconnect_db(exception):
 
 @app.route("/")
 def home():
+    return render_template("index.html")
+
+@app.route("/<filename>")
+def serve_manifest(filename):
+    """ 
+        Serves ViewBovis favicon and manifest.json 
+    """
+    return send_from_directory('build',filename)
+
+@app.route("/sample/lastupdate", methods=["GET"])
+def last_update_date():
     with open(os.path.join(app.data_path, "metadata.json")) as f:
         metadata = json.load(f)
-    return render_template("index.html",
-                           data_update_date=datetime.strptime(metadata["today"],
-                                                              '%d%b%y').strftime("%d/%m/%Y"))
-
+    return jsonify({"date" : datetime.strptime(metadata["today"],'%d%b%y').strftime("%d/%m/%Y")})
 
 @app.route("/sample", methods=["GET"])
 def sample():
