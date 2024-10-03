@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.3",
+    "css-select": "^5.1.0",
     "govuk-frontend": "^5.4.0",
     "leaflet": "^1.9.4",
     "leaflet-polylinedecorator": "^1.6.0",
@@ -16,11 +17,14 @@
     "react-leaflet": "^4.2.1",
     "react-leaflet-cluster": "^2.1.0",
     "react-router-dom": "^6.22.3",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-tabulator": "^0.19.0",
     "redux": "^4.2.1",
     "shpjs": "^5.0.1",
     "web-vitals": "^2.1.4"
+  },
+  "overrides": {
+    "nth-check":"^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
