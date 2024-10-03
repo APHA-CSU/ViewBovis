@@ -34,16 +34,14 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
         </span>
       </button>
       <iframe
+        loading="lazy"
         title="nextstrain-viewbovis"
         width={"100%"}
         height={"99.5%"}
         id="nextstrain-iframe"
         frameBorder={0}
         allow="cross-origin"
-        src={
-          "http://nextstrain-beta.int.sce.network/" +
-          url
-        }
+        src={"http://nextstrain-beta.int.sce.network/" + url}
       ></iframe>
     </div>
   );
