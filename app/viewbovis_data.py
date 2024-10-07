@@ -157,10 +157,7 @@ class Request:
             re.subn(rf'\b(?:{"|".join(month_mapper.keys())})\b',
                     lambda x: month_mapper[x.group()], date)
         try:
-            if date_transformed:
-                return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
-            else:
-                return None
+            return datetime.strptime(date_transformed, "%Y-%m-%d").strftime("%d/%m/%Y")
         except ValueError:
             return None
 
