@@ -24,7 +24,7 @@ RUN cd app
 RUN apt-get -y update
 
 # Install python3 
-RUN apt-get -y install python3.10
+RUN apt-get -y install python3 python3-pip
 
 ## Install pip
 RUN apt-get -y install curl
