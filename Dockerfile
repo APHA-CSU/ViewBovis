@@ -26,12 +26,8 @@ RUN apt-get -y update
 # Install python3 
 RUN apt-get -y install python3 python3-pip
 
-## Install pip
-RUN apt-get -y install curl
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 
-
 # Install python dependencies
-RUN python3.10 -m pip install -r requirements.txt
+RUN python3 -m pip install -r requirements.txt
 ################### ENTRY ##############################
 
 WORKDIR "/ViewBovis/app"
