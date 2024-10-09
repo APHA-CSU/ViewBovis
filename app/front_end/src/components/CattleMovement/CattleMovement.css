@@ -1,0 +1,88 @@
+#enter-sample-container {
+  background: #d1d1d1;
+  padding: 10px;
+  margin-bottom: 1px;
+}
+
+.my-4 .accordion-button {
+  font-weight: bold;
+}
+
+.accordion-container {
+  padding-right: 100px;
+}
+
+.checkbox {
+  font-family: GDS Transport, arial, sans-serif;
+  font-size: 1.1875rem;
+  padding-left: 15%;
+  margin-top: 4%;
+}
+
+.form-check-input {
+  border: solid;
+  border-radius: 0 !important;
+}
+
+.cluster-icon {
+  background-color: #00a33b;
+  color: #ffffff;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+}
+
+.custom-tooltip {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.cattlePopup .leaflet-popup-tip,
+.cattlePopup .leaflet-popup-content-wrapper {
+  opacity: 0.95;
+  color: black;
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.icons-legend {
+  height: 260px;
+  width: 150px;
+  background: rgba(255, 255, 255, 0.8);
+  padding-top: 2px;
+}
+
+.legend-marker-img {
+  width: 40px;
+  height: 40px;
+}
+
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  line-height: 18px;
+  color: #555;
+}
+
+.info.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+#cattle-spinner-container {
+  display: inline-flex;
+  margin-top: 15px;
+  padding-left: 20px;
+}

@@ -78,9 +78,10 @@ class Request:
             DataFrame containing metadata if it exists, otherwise
             returns an empty DataFrame
         """
-        query = f"""SELECT * FROM metadata WHERE Submission IN
-                    ({','.join('?' * len(ids))}) OR Identifier
-                    IN ({','.join('?' * len(ids))}) """
+        query = f"""SELECT * FROM metadata WHERE REPLACE(UPPER(Submission),' ','') IN
+                    ({','.join('?' * len(ids))}) OR REPLACE(UPPER(Identifier),' ','')
+                    IN ({','.join('?' * len(ids))})"""
+        ids = [elem.upper() for elem in ids]
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -92,7 +93,7 @@ class Request:
             containing WGS metadata if it exists, otherwise returns an
             empty DataFrame
         """
-        query = "SELECT * FROM wgs_metadata WHERE Submission=:id"
+        query = "SELECT * FROM wgs_metadata WHERE UPPER(Submission)=UPPER(:id)"
         return pd.read_sql_query(query,
                                  self._db,
                                  index_col="Submission",
@@ -106,7 +107,7 @@ class Request:
             in the list of excluded samples, None is returned
         """
         query = """SELECT Exclusion FROM excluded WHERE
-                   Submission=:submission"""
+                   UPPER(Submission)=UPPER(:submission)"""
         exclusion = pd.read_sql_query(query, self._db,
                                       params={"submission":
                                               self._submission})
@@ -120,7 +121,7 @@ class Request:
             Maps a submission number to sample name. Returns 'None' if
             there is no WGS metadata for the sample
         """
-        query = "SELECT * FROM wgs_metadata WHERE Sample=:sample"
+        query = "SELECT * FROM wgs_metadata WHERE UPPER(Sample)=UPPER(:sample)"
         df_wgs_sub = pd.read_sql_query(query, self._db,
                                        params={"sample": sample})
         if df_wgs_sub.empty:
@@ -135,7 +136,7 @@ class Request:
             Raises:
                 NoMetaDataException: for missing movement data
         """
-        query = "SELECT * FROM movements WHERE Submission=:submission"
+        query = "SELECT * FROM movements WHERE UPPER(Submission)=UPPER(:submission)"
         mov_data = pd.read_sql_query(query, self._db, index_col="Submission",
                                      params={"submission": submission})
         if mov_data.empty:
@@ -396,12 +397,12 @@ class Request:
         return \
             dict(**{index:
                     {"cph": row["CPH"],
-                     "os_map_ref": None if not row["CPH"] else
-                        df_cph_2_osmapref["OSMapRef"][row["CPH"]],
-                     "lat": None if not row["CPH"] else
-                        df_cph_2_osmapref["Lat"][row["CPH"]],
-                     "lon": None if not row["CPH"] else
-                        df_cph_2_osmapref["Long"][row["CPH"]],
+                     "os_map_ref": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["OSMapRef"].get(row["CPH"],None) is None else df_cph_2_osmapref["OSMapRef"][row["CPH"]],
+                     "lat": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["Lat"].get([row["CPH"]],None) is None else df_cph_2_osmapref["Lat"][row["CPH"]],
+                     "lon": None if not row["CPH"] else None if
+                        df_cph_2_osmapref["Long"].get([row["CPH"]],None) is None else df_cph_2_osmapref["Long"][row["CPH"]],
                      "species": row["Host"],
                      "animal_type": row["Animal_Type"],
                      "snp_distance":
@@ -418,7 +419,9 @@ class Request:
                          self._transform_dateformat(
                             row["wsdBirthDate"].split()[0]),
                      "import_country": row["Import_Country"],
-                     "distance": None if not row["CPH"] else
+                     "distance": None if not row["CPH"] else 
+                    None if df_cph_2_osmapref["x"].get(row["CPH"],None) is None else
+                    None if df_cph_2_osmapref["y"].get(row["CPH"],None) is None else
                         self._geo_distance((df_cph_2_osmapref["x"][row["CPH"]],
                                             df_cph_2_osmapref["y"][row["CPH"]]
                                             ))}

@@ -84,13 +84,6 @@ input[type="range"]::-webkit-slider-thumb:active {
     padding-right: 0;
 }
 
-#snpmap-sidebar-container {
-    height: auto;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding-right: 10px;
-}
-
 #table-content-container {
     max-height: 63%;
 }

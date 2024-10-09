@@ -293,7 +293,7 @@ const riskAreaCols2 = function(area) {
 // Function to set custom styles for Risk Area polygons
 const styleRiskAreaPoly2 = function(feature){
     return {
-      fillColor: riskAreaCols(feature.properties.TB_Area),
+      fillColor: riskAreaCols2(feature.properties.TB_Area),
       weight: 1.5,  
       opacity: 1,
       color: "white",
@@ -499,7 +499,8 @@ const stylePoly2 = function(color = "blue"){
 };
 
 // Toggle county polygons when checkbox is ticked or unticked
-countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", {style: stylePoly2("grey"), onEachFeature: onEachFeature2});
+countyPoly2 = new L.Shapefile("/static/data/AHVLACounties_Merged.zip", 
+  {style: stylePoly2("grey"), onEachFeature: onEachFeature2});
 countyBox2.addEventListener("change", toggleLayers2.bind(countyBox2, countyPoly2));
 
 // ------------------------ //
