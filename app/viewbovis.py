@@ -8,7 +8,7 @@ from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
                            MatrixTooLargeException
 
-app = Flask(__name__,static_folder='build/static',template_folder='build')
+app = Flask(__name__,static_folder='dist/assets',template_folder='dist')
 csrf = CSRFProtect(app)
 
 def get_id_no_whitespace():
@@ -51,7 +51,7 @@ def serve_manifest(filename):
     """ 
         Serves ViewBovis favicon and manifest.json 
     """
-    return send_from_directory('build',filename)
+    return send_from_directory('dist',filename)
 
 @app.route("/sample/lastupdate", methods=["GET"])
 def last_update_date():

@@ -3,9 +3,9 @@
 
 #ignore node modulus of the react app version
 node_modules
-/app/front_end/build
+/app/front_end/dist
 
-/.pnp
+.pnp
 .pnp.js
 .vscode/
 /app/static/data
@@ -23,6 +23,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-dist
+
 dist-ssr
 *.local
