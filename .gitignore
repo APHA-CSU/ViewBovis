@@ -2,7 +2,7 @@
 /app/tests/__pycache__/
 
 #ignore node modulus of the react app version
-/app/front_end/node_modules
+node_modules
 /app/front_end/build
 
 /.pnp
@@ -13,3 +13,16 @@
 bin
 lib
 pyvenv.cfg
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+dist
+dist-ssr
+*.local
