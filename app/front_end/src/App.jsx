@@ -7,7 +7,7 @@ import HelpSupport from "./components/HelpSupport/HelpSupport.jsx";
 import NavbarComp from "./components/Navbar/NavbarComp.jsx";
 import SecurityModal from "./components/SecurityModal/SecurityModal.jsx";
 import { lazy, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setShowLayers } from "./features/counter/securitySlice.js";
 
 function App() {
@@ -20,10 +20,11 @@ function App() {
     import("./components/CattleMovement/CattleMovementMap.jsx")
   );
   const RiskLayers = lazy(() => import("./components/Layers/RiskLayers.jsx"));
-  const CountyLayers = lazy(() => import("./components/Layers/CountyLayers.jsx"));
-  const HotspotLayers = lazy(() => import("./components/Layers/HotspotLayers.jsx"));
-  const showHelpSupportPage = useSelector(
-    (state) => state.security.showHelpSupportPage
+  const CountyLayers = lazy(() =>
+    import("./components/Layers/CountyLayers.jsx")
+  );
+  const HotspotLayers = lazy(() =>
+    import("./components/Layers/HotspotLayers.jsx")
   );
 
   useEffect(() => {
@@ -54,7 +55,7 @@ function App() {
         HotspotLayers={HotspotLayers}
       />
       <Nextstrain />
-      {showHelpSupportPage && <HelpSupport />}
+      <HelpSupport />
     </>
   );
 }
