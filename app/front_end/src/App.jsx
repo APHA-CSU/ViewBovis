@@ -9,6 +9,7 @@ import SecurityModal from "./components/SecurityModal/SecurityModal.jsx";
 import { lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setShowLayers } from "./features/counter/securitySlice.js";
+import CPHSearch from "./components/CPHSearch/CPHSearch.jsx";
 
 function App() {
   /* Lazy loading the layers*/
@@ -42,6 +43,7 @@ function App() {
       <SecurityModal />
       <NavbarComp />
       <Home />
+      <CPHSearch />
       <SNPMap
         SNPMapComp={SNPMapComp}
         RiskLayers={RiskLayers}
