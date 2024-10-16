@@ -6,7 +6,7 @@ from flask_wtf.csrf import CSRFProtect
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
-                           MatrixTooLargeException
+                           MatrixTooLargeException, SearchSample
 
 app = Flask(__name__,static_folder='build/assets',template_folder='build')
 csrf = CSRFProtect(app)
@@ -71,6 +71,12 @@ def sample():
     get_request_object(id)
     return jsonify(g.request.soi_metadata())
 
+@app.route("/sample/cphsearch", methods=["GET"])
+def cphsearch():
+    search_string = request.args.get("search_string")
+    if not hasattr(g, "request"):
+        g.request = SearchSample(app.data_path)
+    return jsonify(g.request.search_sample(search_string, "cph"))
 
 @app.route("/sample/movements", methods=["GET"])
 def movements():

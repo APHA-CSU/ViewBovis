@@ -511,3 +511,28 @@ class MatrixTooLargeException(NoDataException):
                         "isolates). Consider reducing the SNP distance "
                         "threshold or viewing the phylogenetic tree in "
                         "Nextstrain instead.")
+
+class SearchSample():
+    def __init__(self,data_path : str):
+        self._db_connect(data_path)
+        
+    def __del__(self):
+        self._db.close()
+
+    def _db_connect(self, data_path: str):
+        """
+            Connects to the database and assigns the connection objects
+            to attributes of the ViewBovisData class
+        """
+        self._matrix_dir = path.join(data_path, "snp_matrix")
+        db_path = path.join(data_path, "viewbovis.db")
+        self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        self._cursor = self._db.cursor()
+
+    def search_sample(self,search_string: str, by: str):
+        if by == "cph":
+            query = """SELECT * FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph), " ","")"""
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph": f'%{search_string}%'})
+            return df_cph_metadata.to_dict(orient="records")
