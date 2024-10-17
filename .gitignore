@@ -8,7 +8,7 @@ node_modules
 .pnp
 .pnp.js
 .vscode/
-/app/static/data
+data
 .github/CODEOWNERS
 bin
 lib
