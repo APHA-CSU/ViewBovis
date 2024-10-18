@@ -9,6 +9,25 @@ const CPHSearch = () => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
+  const [cphValue, setCPHValue] = useState();
+  const loadOptions = async (inputString) => {
+    if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
+    return fetch(
+      "/sample/cphsearch?search_string=" +
+        inputString.replace(/ /g, "").toUpperCase()
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        return json.map((cell) => {
+          cell["value"] = cell["CPH"];
+          cell["label"] = cell["CPH"];
+          return cell;
+        });
+      })
+      .catch((error) => {
+        return [];
+      });
+  };
   return (
     <div className={showCPHSearchPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
