@@ -531,8 +531,10 @@ class SearchSample():
 
     def search_sample(self,search_string: str, by: str):
         if by == "cph":
-            query = """SELECT * FROM metadata WHERE 
-            REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph), " ","")"""
+            query = """SELECT DISTINCT REPLACE(UPPER(CPH), " ", "") FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph_wildcard), " ","")
+            ORDER BY INSTR(REPLACE(UPPER(CPH), " ", ""),:cph)"""
             df_cph_metadata = pd.read_sql_query(query, self._db,
-                                        params={"cph": f'%{search_string}%'})
+                                        params={"cph_wildcard": f'%{search_string}%',
+                                                 "cph" : search_string})
             return df_cph_metadata.to_dict(orient="records")

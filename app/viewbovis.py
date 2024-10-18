@@ -76,7 +76,8 @@ def cphsearch():
     search_string = request.args.get("search_string")
     if not hasattr(g, "request"):
         g.request = SearchSample(app.data_path)
-    return jsonify(g.request.search_sample(search_string, "cph"))
+    cph_list = g.request.search_sample(search_string, "cph")
+    return jsonify(cph_list)
 
 @app.route("/sample/movements", methods=["GET"])
 def movements():
