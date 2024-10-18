@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import cphsearch_logo from "../../imgs/cphsearch_logo.svg";
 import AsyncSelect from "react-select/async";
 import "./CPHSearch.css";
+import { useState } from "react";
 
 const CPHSearch = () => {
   const showCPHSearchPage = useSelector(
@@ -52,6 +53,7 @@ const CPHSearch = () => {
           </div>
         </div>
       </div>
+      <br />
       {/* <!-- Nextstrain Logo and Description -->     */}
       <Row className="align-items-center">
         <Col className="col-3 text-center">
@@ -74,10 +76,17 @@ const CPHSearch = () => {
           </div>
         </Col>
       </Row>
+      <br />
       <div className="govuk-input__wrapper">
         <AsyncSelect
           type="text"
           placeholder="Search by CPH"
+          loadOptions={loadOptions}
+          value={cphValue}
+          onChange={(cph) => {
+            setCPHValue(cph);
+          }}
+          isClearable={true}
           styles={{
             control: (baseStyles, state) => ({
               ...baseStyles,
@@ -87,6 +96,7 @@ const CPHSearch = () => {
               height: "35px",
               boxShadow: "0 2px 0 #002d18",
               borderRadius: "0px",
+              maxWidth: "500px",
             }),
           }}
         />
