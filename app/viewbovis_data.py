@@ -529,9 +529,9 @@ class SearchSample():
         self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         self._cursor = self._db.cursor()
 
-    def search_sample(self,search_string: str, by: str):
+    def get_all_cph_matches(self,search_string: str, by: str):
         if by == "cph":
-            query = """SELECT DISTINCT REPLACE(UPPER(CPH), " ", "") FROM metadata WHERE 
+            query = """SELECT DISTINCT CPH FROM metadata WHERE 
             REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph_wildcard), " ","")
             ORDER BY INSTR(REPLACE(UPPER(CPH), " ", ""),:cph)"""
             df_cph_metadata = pd.read_sql_query(query, self._db,
