@@ -1,12 +1,15 @@
-import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormImg from "../../imgs/feedback_form.svg";
 import TeamsImg from "../../imgs/ms_teams.svg";
+import { useSelector } from "react-redux";
 
 const HelpSupport = () => {
+  const showHelpSupportPage = useSelector(
+    (state) => state.security.showHelpSupportPage
+  );
   return (
-    <Container fluid>
+    <div className={showHelpSupportPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
       <div className="row alpha-side-margin">
         <div className="govuk-phase-banner ">
@@ -299,7 +302,7 @@ const HelpSupport = () => {
           </div>
         </div>
       </Row>
-    </Container>
+    </div>
   );
 };
 
