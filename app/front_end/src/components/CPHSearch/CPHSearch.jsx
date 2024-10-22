@@ -5,11 +5,14 @@ import cphsearch_logo from "../../imgs/cphsearch_logo.svg";
 import AsyncSelect from "react-select/async";
 import "./CPHSearch.css";
 import { useState } from "react";
+import CPHTableComp from "./CPHTableComp"
 
 const CPHSearch = () => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
+  const [cphMetadata, setCPHMetadata] = useState([]);
+  const [cphWarnings, setCPHWarnings] = useState(null)
   const [cphValue, setCPHValue] = useState();
   const loadOptions = async (inputString) => {
     if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
@@ -28,6 +31,18 @@ const CPHSearch = () => {
       .catch((error) => {
         return [];
       });
+  };
+
+  const fetchCPHSamples = async () => {
+    if (cphValue?.CPH.length > 0) {
+      fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
+        .then((response) => response.json())
+        .then((metadata) => {
+          setCPHMetadata(metadata)}).catch((error)=>{
+
+        });
+    } else {
+    }
   };
   return (
     <div className={showCPHSearchPage ? "container-fluid" : "hidden"}>
@@ -104,6 +119,7 @@ const CPHSearch = () => {
           className="govuk-button"
           aria-hidden="true"
           style={{ cursor: "pointer" }}
+          onClick={() => fetchCPHSamples()}
         >
           <span>
             <svg
@@ -118,6 +134,9 @@ const CPHSearch = () => {
             </svg>
           </span>
         </div>
+      </div>
+      <div className="container-fluid">
+      <CPHTableComp samples={cphMetadata}/>
       </div>
     </div>
   );
