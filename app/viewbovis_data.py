@@ -538,3 +538,11 @@ class SearchSample():
                                         params={"cph_wildcard": f'%{search_string}%',
                                                  "cph" : search_string})
             return df_cph_metadata.to_dict(orient="records")
+    
+    def get_all_cph_samples(self,cph: str):
+            query = """SELECT * FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "")=REPLACE(UPPER(:cph), " ","")
+            """
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph" : cph})
+            return df_cph_metadata.to_dict(orient="records")
