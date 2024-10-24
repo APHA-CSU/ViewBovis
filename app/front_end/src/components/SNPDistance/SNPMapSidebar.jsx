@@ -1,18 +1,20 @@
 import LayersCheckbox from "../Layers/LayersCheckbox";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
 import LoadingScreen from "../Utilities/LoadingScreen";
-import { setSNPDistance, setSNPSample } from "../../features/counter/counterSlice";
+import {
+  setSNPDistance,
+  setSNPSample,
+  fetchSNPMapDataset,
+} from "../../features/counter/counterSlice";
 
 const SNPMapSidebar = ({
   handleCheckboxes,
   checkedLayers,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
-  fetchSNPMapDataset,
-  spinner,
 }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const spinner = useSelector((state) => state.counter.snpSidebarSpinner);
   const snpWarnings = useSelector((state) => state.counter.snpmapWarnings);
   const showLayers = useSelector((state) => state.security.showLayers);
   const sample = useSelector((state) => state.counter.snpSample);
@@ -22,12 +24,14 @@ const SNPMapSidebar = ({
   };
 
   const handleSlider = (event) => {
-    dispatch(setSNPDistance(event.target.value))
+    dispatch(setSNPDistance(event.target.value));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchSNPMapDataset(sample.toUpperCase().replace(/ /g, ""), distance);
+    dispatch(
+      fetchSNPMapDataset({snpSample : sample.toUpperCase().replace(/ /g, ""), snpDistance : distance})
+    );
   };
 
   return (

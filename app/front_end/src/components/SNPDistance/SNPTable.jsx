@@ -15,10 +15,9 @@ class SNPTable extends React.Component {
     const soi = json["SOI"];
     const tableObj = { ...json };
     delete tableObj["SOI"];
-    const tabledata = Object.values(tableObj);
-    tabledata.map(
-      (sample, index) => (sample.submission = Object.keys(tableObj)[index])
-    );
+    const tabledata = [...Object.values(tableObj)].map((sample, index) => {
+      return { ...sample, submission: Object.keys(tableObj)[index] };
+    });
     const columns = [
       {
         title: "Precise Location",
