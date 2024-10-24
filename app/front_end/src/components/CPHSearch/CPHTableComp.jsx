@@ -73,9 +73,12 @@ const CPHTableComp = ({ samples }) => {
       field: "tools",
       width: 200,
       formatter: (cell) => {
-        let list = document.createElement("div");
-        list.innerHTML =
-          "<ul><li>SNP Map</li><li>Cattle Movement Map</li><li>Nextstrain</li></ul>";
+        let data = cell.getValue()
+        let list = document.createElement("ul");
+        let snpmap = document.createElement("li")
+        snpmap.innerHTML = "SNP Map"
+        snpmap.addEventListener("click",data["snpmap"])
+        list.appendChild(snpmap)
         return list;
       },
     },
