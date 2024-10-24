@@ -45,13 +45,14 @@ export const {
 export default snpMapSlice.reducer;
 
 export const fetchSNPMapDataset = createAsyncThunk(
-  "sample/snpmap",
+  "snpmap/fetchSNPDataset",
   async (params, { dispatch }) => {
-    dispatch(snpMapSlice.actions.setSNPDataset({}));
-    let snpSample = params?.snpSample;
+    dispatch(setSNPDataset({}));
+    dispatch(setSNPmapWarnings(null));
+    let snpSample = params?.snpSample.replace(/ /g, "").toUpperCase();
     let snpDistance = params?.snpDistance;
     if (snpSample.length > 0) {
-      dispatch(snpMapSlice.actions.setSNPSpinner(true));
+      dispatch(setSNPSidebarSpinner(true));
       fetch(
         `/sample/related?sample_name=${snpSample}&snp_distance=${snpDistance}`
       )
@@ -64,34 +65,32 @@ export const fetchSNPMapDataset = createAsyncThunk(
         .then((res) => {
           if (Object.keys(res).length > 0) {
             if (res["warnings"]) {
-              dispatch(snpMapSlice.actions.setSNPDataset({}));
-              dispatch(snpMapSlice.actions.setSNPmapWarnings(res["warning"]));
+              dispatch(setSNPDataset({}));
+              dispatch(setSNPmapWarnings(res["warning"]));
             } else {
-              dispatch(snpMapSlice.actions.setSNPDataset(res));
-              dispatch(snpMapSlice.actions.setSNPmapWarnings(null));
+              dispatch(setSNPDataset(res));
+              dispatch(setSNPmapWarnings(null));
             }
           } else {
-            dispatch(snpMapSlice.actions.setSNPDataset({}));
+            dispatch(setSNPDataset({}));
             dispatch(
-              snpMapSlice.actions.setSNPmapWarnings(
+              setSNPmapWarnings(
                 "Something went wrong: Please report the sample and snp distance <a referrerpolicy='no-referrer' target='_blank' href='https://teams.microsoft.com/l/channel/19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/General?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId='>here</a>"
               )
             );
           }
         })
         .then(() => {
-          dispatch(snpMapSlice.actions.setSNPSpinner(false));
+          dispatch(setSNPSidebarSpinner(false));
         })
         .catch((error) => {
-          dispatch(snpMapSlice.actions.setSNPDataset({}));
-          dispatch(snpMapSlice.actions.setSNPSpinner(false));
-          dispatch(snpMapSlice.actions.setSNPmapWarnings("Request failed"));
+          dispatch(setSNPDataset({}));
+          dispatch(setSNPSidebarSpinner(false));
+          dispatch(setSNPmapWarnings("Request failed"));
           console.error("Error fetching data:", error);
         });
     } else {
-      dispatch(
-        snpMapSlice.actions.setSNPmapWarnings("Sample name cannot be empty")
-      );
+      dispatch(setSNPmapWarnings("Sample name cannot be empty"));
     }
   }
 );
