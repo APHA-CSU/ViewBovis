@@ -7,7 +7,12 @@ import "./CPHSearch.css";
 import { useState } from "react";
 import CPHTableComp from "./CPHTableComp";
 import { setShowPage } from "../../features/counter/securitySlice";
-import { setSNPSample,setSNPDistance,fetchSNPMapDataset } from "../../features/counter/counterSlice";
+import {
+  setSNPSample,
+  setSNPDistance,
+  fetchSNPMapDataset,
+} from "../../features/counter/counterSlice";
+import { fetchCattleMovementDataset, setFirstSearchSample } from "../../features/counter/movementSlice";
 
 const CPHSearch = ({}) => {
   const showCPHSearchPage = useSelector(
@@ -45,10 +50,20 @@ const CPHSearch = ({}) => {
           data.map((sample, index) => {
             sample["tools"] = {
               snpmap: () => {
-                dispatch(setSNPSample(sample["Submission"]))
-                dispatch(setSNPDistance(1))
-                dispatch(fetchSNPMapDataset({snpSample: sample["Submission"],snpDistance:1}))
+                dispatch(setSNPSample(sample["Submission"]));
+                dispatch(setSNPDistance(1));
+                dispatch(
+                  fetchSNPMapDataset({
+                    snpSample: sample["Submission"],
+                    snpDistance: 1,
+                  })
+                );
                 dispatch(setShowPage("snpmap"));
+              },
+              movement: () => {
+                dispatch(setFirstSearchSample(sample["Submission"]));
+                dispatch(fetchCattleMovementDataset({searchInput:sample["Submission"]}))
+                dispatch(setShowPage("cattlemovement"));
               },
             };
             return sample;

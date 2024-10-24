@@ -79,6 +79,10 @@ const CPHTableComp = ({ samples }) => {
         snpmap.innerHTML = "SNP Map"
         snpmap.addEventListener("click",data["snpmap"])
         list.appendChild(snpmap)
+        let cattlemovement = document.createElement("li")
+        cattlemovement.innerHTML = "Cattle Movement"
+        cattlemovement.addEventListener("click",data["movement"])
+        list.appendChild(cattlemovement)
         return list;
       },
     },
