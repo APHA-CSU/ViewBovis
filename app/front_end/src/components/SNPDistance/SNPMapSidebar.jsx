@@ -1,31 +1,37 @@
 import LayersCheckbox from "../Layers/LayersCheckbox";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import LoadingScreen from "../Utilities/LoadingScreen";
+import {
+  setSNPDistance,
+  setSNPSample,
+  fetchSNPMapDataset,
+} from "../../features/counter/counterSlice";
 
 const SNPMapSidebar = ({
   handleCheckboxes,
   checkedLayers,
   countyAndHotspotLayers,
   setCountyAndHotspotLayers,
-  fetchSNPMapDataset,
-  spinner,
 }) => {
+  const dispatch = useDispatch();
+  const spinner = useSelector((state) => state.counter.snpSidebarSpinner);
   const snpWarnings = useSelector((state) => state.counter.snpmapWarnings);
   const showLayers = useSelector((state) => state.security.showLayers);
-  const [sample, setSample] = useState("");
-  const [distance, setDistance] = useState(1);
+  const sample = useSelector((state) => state.counter.snpSample);
+  const distance = useSelector((state) => state.counter.snpDistance);
   const handleChange = (event) => {
-    setSample(event.target.value);
+    dispatch(setSNPSample(event.target.value));
   };
 
   const handleSlider = (event) => {
-    setDistance(event.target.value);
+    dispatch(setSNPDistance(event.target.value));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchSNPMapDataset(sample.toUpperCase().replace(/ /g, ""), distance);
+    dispatch(
+      fetchSNPMapDataset({snpSample : sample.toUpperCase().replace(/ /g, ""), snpDistance : distance})
+    );
   };
 
   return (

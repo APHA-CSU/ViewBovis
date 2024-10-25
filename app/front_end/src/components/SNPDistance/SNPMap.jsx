@@ -6,60 +6,16 @@ import SNPMapSidebar from "./SNPMapSidebar.jsx";
 import Collapse from "react-bootstrap/Collapse";
 import SNPTable from "./SNPTable.jsx";
 import "./SNPMap.css";
-import { useSelector, useDispatch } from "react-redux";
-import { setSNPmapWarnings } from "../../features/counter/counterSlice.js";
+import { useSelector } from "react-redux";
 import LoadingScreen from "../Utilities/LoadingScreen.jsx";
 
 const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers, SNPMapComp }) => {
-  const [SNPMapDataset, setSNPMapDataset] = useState({});
-  const [spinner, setSpinner] = useState(false);
+  const SNPMapDataset = useSelector((state) => state.counter.snpDataset);
   const showSNPmapPage = useSelector((state) => state.security.showSNPmapPage);
-  const dispatch = useDispatch();
   const openTable = useSelector((state) => state.counter.openSNPTable);
   const [OpenSideBar, setOpenSideBar] = useState(true);
   const [countyAndHotspotLayers, setCountyAndHotspotLayers] = useState({});
   const [checkedLayers, setCheckedLayers] = useState({});
-  const fetchSNPMapDataset = (search_sample, snp_distance) => {
-    if (search_sample.length > 0) {
-      setSpinner(true);
-      fetch(
-        `/sample/related?sample_name=${search_sample}&snp_distance=${snp_distance}`
-      )
-        .then((res) => {
-          if (!res.ok) {
-            console.error(res);
-            return {};
-          } else return res.json();
-        })
-        .then((res) => {
-          if (Object.keys(res).length > 0) {
-            if (res["warnings"]) {
-              setSNPMapDataset({});
-              dispatch(setSNPmapWarnings(res["warning"]));
-            } else {
-              setSNPMapDataset(res);
-              dispatch(setSNPmapWarnings(null));
-            }
-          } else {
-            setSNPMapDataset({});
-            dispatch(
-              setSNPmapWarnings(
-                "Something went wrong: Please report the sample and snp distance <a referrerpolicy='no-referrer' target='_blank' href='https://teams.microsoft.com/l/channel/19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/General?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId='>here</a>"
-              )
-            );
-          }
-        })
-        .then(() => {
-          setSpinner(false);
-        })
-        .catch((error) => {
-          setSNPMapDataset({});
-          setSpinner(false);
-          dispatch(setSNPmapWarnings("Request failed"));
-          console.error("Error fetching data:", error);
-        });
-    }
-  };
 
   const handleCheckboxes = (index) => {
     switch (index) {
@@ -109,12 +65,10 @@ const SNPMap = ({ RiskLayers, CountyLayers, HotspotLayers, SNPMapComp }) => {
             <Collapse in={OpenSideBar} dimension={"width"}>
               <Col className="sidebar col-3">
                 <SNPMapSidebar
-                  fetchSNPMapDataset={fetchSNPMapDataset}
                   checkedLayers={checkedLayers}
                   handleCheckboxes={handleCheckboxes}
                   countyAndHotspotLayers={countyAndHotspotLayers}
                   setCountyAndHotspotLayers={setCountyAndHotspotLayers}
-                  spinner={spinner}
                 />
               </Col>
             </Collapse>

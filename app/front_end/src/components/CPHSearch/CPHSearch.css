@@ -37,3 +37,12 @@
 .tabulator-header-contents {
   background-color: #00a33b !important;
 }
+
+.cphsearch-launch-tools {
+  text-decoration: underline;
+  color: blue;
+}
+
+.cphsearch-launch-tools:hover {
+  color: darkblue;
+}

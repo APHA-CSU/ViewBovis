@@ -1,18 +1,34 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import cphsearch_logo from "../../imgs/cphsearch_logo.svg";
 import AsyncSelect from "react-select/async";
 import "./CPHSearch.css";
 import { useState } from "react";
-import CPHTableComp from "./CPHTableComp"
+import CPHTableComp from "./CPHTableComp";
+import { setShowPage } from "../../features/counter/securitySlice";
+import {
+  setSNPSample,
+  setSNPDistance,
+  fetchSNPMapDataset,
+} from "../../features/counter/counterSlice";
+import {
+  fetchCattleMovementDataset,
+  setFirstSearchSample,
+} from "../../features/counter/movementSlice";
+import {
+  fetchNextstrainData,
+  setNextstrainIdentifier,
+  setNextstrainURL,
+} from "../../features/counter/nextstrainSlice";
 
-const CPHSearch = () => {
+const CPHSearch = ({}) => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
+  const dispatch = useDispatch();
   const [cphMetadata, setCPHMetadata] = useState([]);
-  const [cphWarnings, setCPHWarnings] = useState(null)
+  const [cphWarnings, setCPHWarnings] = useState(null);
   const [cphValue, setCPHValue] = useState();
   const loadOptions = async (inputString) => {
     if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
@@ -38,10 +54,51 @@ const CPHSearch = () => {
       fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
         .then((response) => response.json())
         .then((metadata) => {
-          setCPHMetadata(metadata)}).catch((error)=>{
-
-        });
+          let data = [...metadata];
+          data.map((sample, index) => {
+            sample["tools"] = {
+              snpmap: () => {
+                dispatch(setSNPSample(sample["Submission"]));
+                dispatch(setSNPDistance(1));
+                dispatch(
+                  fetchSNPMapDataset({
+                    snpSample: sample["Submission"],
+                    snpDistance: 1,
+                  })
+                );
+                dispatch(setShowPage("snpmap"));
+              },
+              movement: () => {
+                dispatch(setFirstSearchSample(sample["Submission"]));
+                dispatch(
+                  fetchCattleMovementDataset({
+                    searchInput: sample["Submission"],
+                  })
+                );
+                dispatch(setShowPage("cattlemovement"));
+              },
+              nextstrain: async () => {
+                dispatch(setNextstrainIdentifier(sample["Submission"]));
+                dispatch(
+                  fetchNextstrainData({ identifier: sample["Submission"] })
+                );
+                dispatch(
+                  setNextstrainURL(
+                    `${sample["Clade"]}?f_Submission=${sample[
+                      "Submission"
+                    ].replace(/ /g, "")}&p=grid`
+                  )
+                );
+                dispatch(setShowPage("nextstrain"));
+              },
+            };
+            return sample;
+          });
+          setCPHMetadata(data);
+        })
+        .catch((error) => {});
     } else {
+      setCPHMetadata([]);
     }
   };
   return (
@@ -136,7 +193,7 @@ const CPHSearch = () => {
         </div>
       </div>
       <div className="container-fluid">
-      <CPHTableComp samples={cphMetadata}/>
+        <CPHTableComp samples={cphMetadata} />
       </div>
     </div>
   );
