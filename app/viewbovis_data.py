@@ -511,3 +511,38 @@ class MatrixTooLargeException(NoDataException):
                         "isolates). Consider reducing the SNP distance "
                         "threshold or viewing the phylogenetic tree in "
                         "Nextstrain instead.")
+
+class SearchSample():
+    def __init__(self,data_path : str):
+        self._db_connect(data_path)
+        
+    def __del__(self):
+        self._db.close()
+
+    def _db_connect(self, data_path: str):
+        """
+            Connects to the database and assigns the connection objects
+            to attributes of the ViewBovisData class
+        """
+        self._matrix_dir = path.join(data_path, "snp_matrix")
+        db_path = path.join(data_path, "viewbovis.db")
+        self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        self._cursor = self._db.cursor()
+
+    def get_all_cph_matches(self,search_string: str, by: str):
+        if by == "cph":
+            query = """SELECT DISTINCT CPH FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph_wildcard), " ","")
+            ORDER BY INSTR(REPLACE(UPPER(CPH), " ", ""),:cph)"""
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph_wildcard": f'%{search_string}%',
+                                                 "cph" : search_string})
+            return df_cph_metadata.to_dict(orient="records")
+    
+    def get_all_cph_samples(self,cph: str):
+            query = """SELECT * FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "")=REPLACE(UPPER(:cph), " ","")
+            """
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph" : cph})
+            return df_cph_metadata.to_dict(orient="records")

@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-const NextstrainTable = ({ data,setNextstrainURL }) => {
+import { setNextstrainURL } from "../../features/counter/nextstrainSlice";
+import { useDispatch } from "react-redux";
+
+const NextstrainTable = ({ data }) => {
+  const dispatch = useDispatch();
   const tableOptions = {
     border: "1px solid #b1b4b6",
     padding: "10px",
@@ -20,23 +24,29 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
     "County",
     "Clade",
   ];
-  
+
   const getNextstrainIframe = (cellField, data) => {
-    const clade = data["clade"]
-    const cellValue = data[cellField]
+    const clade = data["clade"];
+    const cellValue = data[cellField];
     if (cellField === "clade")
-      setNextstrainURL(`${cellValue}?p=grid&tl=Identifier`);
+      dispatch(setNextstrainURL(`${cellValue}?p=grid&tl=Identifier`));
     if (cellField === "county")
-      setNextstrainURL(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`);
+      dispatch(
+        setNextstrainURL(`${clade}?f_County=${cellValue}&p=grid&tl=Identifier`)
+      );
     if (cellField === "af")
-      setNextstrainURL(`${clade}?f_Submission=${cellValue}&p=grid`);
+      dispatch(setNextstrainURL(`${clade}?f_Submission=${cellValue}&p=grid`));
     if (cellField === "eartag")
-      setNextstrainURL(
-        `${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`
+      dispatch(
+        setNextstrainURL(
+          `${clade}?f_Identifier=${cellValue}&p=grid&tl=Identifier`
+        )
       );
     if (cellField === "cph")
-      setNextstrainURL(
-        `${clade}?f_PreciseLocation=${cellValue}&p=grid&tl=Identifier`
+      dispatch(
+        setNextstrainURL(
+          `${clade}?f_PreciseLocation=${cellValue}&p=grid&tl=Identifier`
+        )
       );
   };
 
@@ -46,8 +56,7 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
     });
 
     return () => {
-      window.removeEventListener("resize", () => {
-      });
+      window.removeEventListener("resize", () => {});
     };
   }, []);
 
@@ -94,7 +103,7 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
                         5 ? (
                         <th
                           scope="col"
-                          className="govuk-table__header"
+                          className="nextstrain-table-header govuk-table__header"
                           key={"nextstrain-header-" + headerIndex}
                         >
                           {
@@ -115,31 +124,27 @@ const NextstrainTable = ({ data,setNextstrainURL }) => {
                         tableIndex * tableLayout.cellsPerTable.length <
                         5 ? (
                         <td
-                          className="govuk-table__cell"
+                          className="govuk-table__cell nextstrain-table-cell"
                           style={{ backgroundColor: "var(--bs-body-bg)" }}
                           key={"nextstrain-value-" + valIndex}
+                          onClick={() =>
+                            getNextstrainIframe(
+                              tableArr[
+                                valIndex +
+                                  tableIndex * tableLayout.cellsPerTable.length
+                              ],
+                              data[0]
+                            )
+                          }
                         >
-                          <a role="button"
-                            onClick={() =>
-                              getNextstrainIframe(
-                                tableArr[
-                                  valIndex +
-                                    tableIndex *
-                                      tableLayout.cellsPerTable.length
-                                ]
-                              ,data[0])
-                            }
-                          >
-                            {
-                              data[0][
-                                tableArr[
-                                  valIndex +
-                                    tableIndex *
-                                      tableLayout.cellsPerTable.length
-                                ]
+                          {
+                            data[0][
+                              tableArr[
+                                valIndex +
+                                  tableIndex * tableLayout.cellsPerTable.length
                               ]
-                            }
-                          </a>
+                            ]
+                          }
                         </td>
                       ) : null;
                     })}

@@ -56,6 +56,16 @@ const NavbarComp = () => {
             <div>
               <Nav.Link
                 onClick={() => {
+                  dispatch(setShowPage("cphsearch"));
+                }}
+                className={activeLink === "cphsearch" ? "active" : ""}
+              >
+                CPH Search
+              </Nav.Link>
+            </div>
+            <div>
+              <Nav.Link
+                onClick={() => {
                   dispatch(setShowPage("cattlemovement"));
                 }}
                 className={activeLink === "cattlemovement" ? "active" : ""}
