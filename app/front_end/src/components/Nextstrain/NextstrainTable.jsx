@@ -103,7 +103,7 @@ const NextstrainTable = ({ data }) => {
                         5 ? (
                         <th
                           scope="col"
-                          className="govuk-table__header"
+                          className="nextstrain-table-header govuk-table__header"
                           key={"nextstrain-header-" + headerIndex}
                         >
                           {
@@ -124,31 +124,27 @@ const NextstrainTable = ({ data }) => {
                         tableIndex * tableLayout.cellsPerTable.length <
                         5 ? (
                         <td
-                          className="govuk-table__cell"
+                          className="govuk-table__cell nextstrain-table-cell"
                           style={{ backgroundColor: "var(--bs-body-bg)" }}
                           key={"nextstrain-value-" + valIndex}
+                          onClick={() =>
+                            getNextstrainIframe(
+                              tableArr[
+                                valIndex +
+                                  tableIndex * tableLayout.cellsPerTable.length
+                              ],
+                              data[0]
+                            )
+                          }
                         >
-                          <a role="button"
-                            onClick={() =>
-                              getNextstrainIframe(
-                                tableArr[
-                                  valIndex +
-                                    tableIndex *
-                                      tableLayout.cellsPerTable.length
-                                ]
-                              ,data[0])
-                            }
-                          >
-                            {
-                              data[0][
-                                tableArr[
-                                  valIndex +
-                                    tableIndex *
-                                      tableLayout.cellsPerTable.length
-                                ]
+                          {
+                            data[0][
+                              tableArr[
+                                valIndex +
+                                  tableIndex * tableLayout.cellsPerTable.length
                               ]
-                            }
-                          </a>
+                            ]
+                          }
                         </td>
                       ) : null;
                     })}
