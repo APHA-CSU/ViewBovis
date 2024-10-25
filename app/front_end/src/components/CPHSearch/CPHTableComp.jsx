@@ -73,16 +73,23 @@ const CPHTableComp = ({ samples }) => {
       field: "tools",
       width: 200,
       formatter: (cell) => {
-        let data = cell.getValue()
+        let data = cell.getValue();
         let list = document.createElement("ul");
-        let snpmap = document.createElement("li")
-        snpmap.innerHTML = "SNP Map"
-        snpmap.addEventListener("click",data["snpmap"])
-        list.appendChild(snpmap)
-        let cattlemovement = document.createElement("li")
-        cattlemovement.innerHTML = "Cattle Movement"
-        cattlemovement.addEventListener("click",data["movement"])
-        list.appendChild(cattlemovement)
+        let snpmap = document.createElement("li");
+        snpmap.innerHTML = "SNP Map";
+        snpmap.addEventListener("click", data["snpmap"]);
+        snpmap.classList.add("cphsearch-launch-tools");
+        list.appendChild(snpmap);
+        let cattlemovement = document.createElement("li");
+        cattlemovement.innerHTML = "Cattle Movement";
+        cattlemovement.addEventListener("click", data["movement"]);
+        cattlemovement.classList.add("cphsearch-launch-tools");
+        list.appendChild(cattlemovement);
+        let nextstrain = document.createElement("li");
+        nextstrain.innerHTML = "Nextstrain";
+        nextstrain.addEventListener("click", data["nextstrain"]);
+        nextstrain.classList.add("cphsearch-launch-tools");
+        list.appendChild(nextstrain);
         return list;
       },
     },
@@ -101,7 +108,7 @@ const CPHTableComp = ({ samples }) => {
               border: "1px solid black",
             }}
           >
-            <div style={{ maxHeight: "50vh", width:"1280px" }}>
+            <div style={{ maxHeight: "50vh", width: "1280px" }}>
               <ReactTabulator
                 style={{ fontSize: "11px" }}
                 columns={columns}

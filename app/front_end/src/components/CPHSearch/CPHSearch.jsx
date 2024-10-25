@@ -12,7 +12,15 @@ import {
   setSNPDistance,
   fetchSNPMapDataset,
 } from "../../features/counter/counterSlice";
-import { fetchCattleMovementDataset, setFirstSearchSample } from "../../features/counter/movementSlice";
+import {
+  fetchCattleMovementDataset,
+  setFirstSearchSample,
+} from "../../features/counter/movementSlice";
+import {
+  fetchNextstrainData,
+  setNextstrainIdentifier,
+  setNextstrainURL,
+} from "../../features/counter/nextstrainSlice";
 
 const CPHSearch = ({}) => {
   const showCPHSearchPage = useSelector(
@@ -62,8 +70,26 @@ const CPHSearch = ({}) => {
               },
               movement: () => {
                 dispatch(setFirstSearchSample(sample["Submission"]));
-                dispatch(fetchCattleMovementDataset({searchInput:sample["Submission"]}))
+                dispatch(
+                  fetchCattleMovementDataset({
+                    searchInput: sample["Submission"],
+                  })
+                );
                 dispatch(setShowPage("cattlemovement"));
+              },
+              nextstrain: async () => {
+                dispatch(setNextstrainIdentifier(sample["Submission"]));
+                dispatch(
+                  fetchNextstrainData({ identifier: sample["Submission"] })
+                );
+                dispatch(
+                  setNextstrainURL(
+                    `${sample["Clade"]}?f_Submission=${sample[
+                      "Submission"
+                    ].replace(/ /g, "")}&p=grid`
+                  )
+                );
+                dispatch(setShowPage("nextstrain"));
               },
             };
             return sample;
