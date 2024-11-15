@@ -54,9 +54,7 @@ const CPHSearch = ({}) => {
       fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
         .then((response) => response.json())
         .then((metadata) => {
-          console.log(metadata)
           let data = [...metadata];
-          console.log(data)
           data.map((sample, index) => {
             sample["tools"] = {
               snpmap: () => {
