@@ -54,7 +54,9 @@ const CPHSearch = ({}) => {
       fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
         .then((response) => response.json())
         .then((metadata) => {
+          console.log(metadata)
           let data = [...metadata];
+          console.log(data)
           data.map((sample, index) => {
             sample["tools"] = {
               snpmap: () => {
@@ -138,9 +140,7 @@ const CPHSearch = ({}) => {
         <Col className="col-9">
           <div className="home-description-container">
             <p className="home-description fs-5">
-              <span className="text-green fw-bold">CPH Search</span> will allow
-              you to search by CPH and see all the samples that belong to that
-              CPH. You will be able to view the metadata that relates to a
+              <span className="text-green fw-bold">CPH Search</span> allows you to search by CPH and view samples with available WGS data. You will be able to view the metadata that relates to a
               sample and the location of that CPH. You can additionally launch
               the data visualisations for a particular sample from options
               available in the search table.
