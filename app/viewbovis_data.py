@@ -533,7 +533,7 @@ class SearchSample():
         if by == "cph":
             query = """SELECT DISTINCT CPH FROM metadata WHERE 
             REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph_wildcard), " ","")
-            ORDER BY INSTR(REPLACE(UPPER(CPH), " ", ""),:cph)"""
+            ORDER BY REPLACE(UPPER(CPH), " ", "") ASC"""
             df_cph_metadata = pd.read_sql_query(query, self._db,
                                         params={"cph_wildcard": f'%{search_string}%',
                                                  "cph" : search_string})
