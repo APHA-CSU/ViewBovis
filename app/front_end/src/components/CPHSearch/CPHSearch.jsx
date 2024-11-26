@@ -56,42 +56,48 @@ const CPHSearch = ({}) => {
         .then((metadata) => {
           let data = [...metadata];
           data.map((sample, index) => {
-            sample["tools"] = {
-              snpmap: () => {
-                dispatch(setSNPSample(sample["Submission"]));
-                dispatch(setSNPDistance(1));
-                dispatch(
-                  fetchSNPMapDataset({
-                    snpSample: sample["Submission"],
-                    snpDistance: 1,
-                  })
-                );
-                dispatch(setShowPage("snpmap"));
-              },
-              movement: () => {
-                dispatch(setFirstSearchSample(sample["Submission"]));
-                dispatch(
-                  fetchCattleMovementDataset({
-                    searchInput: sample["Submission"],
-                  })
-                );
-                dispatch(setShowPage("cattlemovement"));
-              },
-              nextstrain: async () => {
-                dispatch(setNextstrainIdentifier(sample["Submission"]));
-                dispatch(
-                  fetchNextstrainData({ identifier: sample["Submission"] })
-                );
-                dispatch(
-                  setNextstrainURL(
-                    `${sample["Clade"]}?f_Submission=${sample[
-                      "Submission"
-                    ].replace(/ /g, "")}&p=grid`
-                  )
-                );
-                dispatch(setShowPage("nextstrain"));
-              },
-            };
+            if (sample["Warnings"]) {
+              sample["tools"] = {
+                warnings: sample["Warnings"],
+              };
+            } else {
+              sample["tools"] = {
+                snpmap: () => {
+                  dispatch(setSNPSample(sample["Submission"]));
+                  dispatch(setSNPDistance(1));
+                  dispatch(
+                    fetchSNPMapDataset({
+                      snpSample: sample["Submission"],
+                      snpDistance: 1,
+                    })
+                  );
+                  dispatch(setShowPage("snpmap"));
+                },
+                movement: () => {
+                  dispatch(setFirstSearchSample(sample["Submission"]));
+                  dispatch(
+                    fetchCattleMovementDataset({
+                      searchInput: sample["Submission"],
+                    })
+                  );
+                  dispatch(setShowPage("cattlemovement"));
+                },
+                nextstrain: async () => {
+                  dispatch(setNextstrainIdentifier(sample["Submission"]));
+                  dispatch(
+                    fetchNextstrainData({ identifier: sample["Submission"] })
+                  );
+                  dispatch(
+                    setNextstrainURL(
+                      `${sample["Clade"]}?f_Submission=${sample[
+                        "Submission"
+                      ].replace(/ /g, "")}&p=grid`
+                    )
+                  );
+                  dispatch(setShowPage("nextstrain"));
+                },
+              };
+            }
             return sample;
           });
           setCPHMetadata(data);
@@ -138,10 +144,12 @@ const CPHSearch = ({}) => {
         <Col className="col-9">
           <div className="home-description-container">
             <p className="home-description fs-5">
-              <span className="text-green fw-bold">CPH Search</span> allows you to search by CPH and view samples with available WGS data. You will be able to view the metadata that relates to a
-              sample and the location of that CPH. You can additionally launch
-              the data visualisations for a particular sample from options
-              available in the search table.
+              <span className="text-green fw-bold">CPH Search</span> allows you
+              to search by CPH and view samples with available WGS data. You
+              will be able to view the metadata that relates to a sample and the
+              location of that CPH. You can additionally launch the data
+              visualisations for a particular sample from options available in
+              the search table.
             </p>
           </div>
         </Col>
