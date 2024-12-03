@@ -28,7 +28,6 @@ const CPHSearch = ({}) => {
   );
   const dispatch = useDispatch();
   const [cphMetadata, setCPHMetadata] = useState([]);
-  const [cphWarnings, setCPHWarnings] = useState(null);
   const [cphValue, setCPHValue] = useState();
   const loadOptions = async (inputString) => {
     if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
