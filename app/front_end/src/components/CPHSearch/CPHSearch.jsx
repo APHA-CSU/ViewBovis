@@ -89,8 +89,8 @@ const CPHSearch = ({}) => {
                   );
                   dispatch(
                     setNextstrainURL(
-                      `${sample["Clade"]}?f_Submission=${sample[
-                        "Submission"
+                      `${sample["Clade"]}?f_PreciseLocation=${sample[
+                        "CPH"
                       ].replace(/ /g, "")}&p=grid`
                     )
                   );
