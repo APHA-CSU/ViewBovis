@@ -28,7 +28,6 @@ const CPHSearch = ({}) => {
   );
   const dispatch = useDispatch();
   const [cphMetadata, setCPHMetadata] = useState([]);
-  const [cphWarnings, setCPHWarnings] = useState(null);
   const [cphValue, setCPHValue] = useState();
   const loadOptions = async (inputString) => {
     if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
@@ -89,8 +88,8 @@ const CPHSearch = ({}) => {
                   );
                   dispatch(
                     setNextstrainURL(
-                      `${sample["Clade"]}?f_Submission=${sample[
-                        "Submission"
+                      `${sample["Clade"]}?f_PreciseLocation=${sample[
+                        "CPH"
                       ].replace(/ /g, "")}&p=grid`
                     )
                   );
