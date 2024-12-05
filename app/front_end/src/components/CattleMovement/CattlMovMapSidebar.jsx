@@ -5,6 +5,9 @@ import {
   setSecondMovementDataset,
   setMovementWarnings,
   setSecondMovementWarnings,
+  setFirstSearchSample,
+  setFirstSearchSpinner,
+  fetchCattleMovementDataset,
 } from "./../../features/counter/movementSlice";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingScreen from "./../Utilities/LoadingScreen";
@@ -22,53 +25,19 @@ const CattlMovMapSidebar = ({
     (state) => state.movement.secondMovementWarnings
   );
   const showLayers = useSelector((state) => state.security.showLayers);
-  const [searchInput, setSearchInput] = useState("");
+  const searchInput = useSelector((state) => state.movement.firstSearchSample);
   const [secondSearchInput, setSecondSearchInput] = useState("");
-  const [spinner, setSpinner] = useState(false);
+  const spinner = useSelector((state) => state.movement.firstSearchSpinner);
   const [secondSpinner, setSecondSpinner] = useState(false);
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    setSearchInput(event.target.value);
+    dispatch(setFirstSearchSample(event.target.value));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (searchInput.length === 0) {
-      dispatch(setMovementWarnings("Please input a valid sample"));
-      dispatch(setCattleMovementDataset({}));
-    } else {
-      setSpinner(true);
-      fetch(`/sample/movements?sample_name=${searchInput.toUpperCase().replace(/ /g, "")}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data["warnings"]) {
-            dispatch(setMovementWarnings(data["warning"]));
-            dispatch(setCattleMovementDataset({}));
-          } else {
-            dispatch(setCattleMovementDataset(data));
-            dispatch(setMovementWarnings(null));
-          }
-        })
-        .then(() => {
-          setSpinner(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          dispatch(setCattleMovementDataset({}));
-          dispatch(
-            setMovementWarnings(
-              "Something went wrong: Please report the sample <a referrerpolicy='no-referrer' target='_blank' href='https://teams.microsoft.com/l/channel/19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/General?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId='>here</a>"
-            )
-          );
-          setSpinner(false);
-        });
-    }
+    dispatch(fetchCattleMovementDataset({ searchInput: searchInput }));
   };
 
   const handleSecondChange = (event) => {
@@ -81,7 +50,11 @@ const CattlMovMapSidebar = ({
       dispatch(setSecondMovementDataset({}));
     } else {
       setSecondSpinner(true);
-      fetch(`/sample/movements?sample_name=${secondSearchInput.toUpperCase().replace(/ /g, "")}`)
+      fetch(
+        `/sample/movements?sample_name=${secondSearchInput
+          .toUpperCase()
+          .replace(/ /g, "")}`
+      )
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");

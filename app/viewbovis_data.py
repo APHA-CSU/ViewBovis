@@ -8,7 +8,10 @@ from os import path
 import numpy as np
 import pandas as pd
 
-
+reasons = {"notMbovis": "not M. bovis",
+                   "impureCulture": "contaminated sample",
+                   "lowQualityData": "low quality data",
+                   "identifiedOutlier": "identified outlier"}
 class Request:
     def __init__(self, data_path: str, id: str):
         self._id = id
@@ -492,10 +495,6 @@ class NoWgsDataException(NoDataException):
 
 class ExcludedSubmissionException(NoDataException):
     def __init__(self, id, exclusion):
-        reasons = {"notMbovis": "not M. bovis",
-                   "impureCulture": "contaminated sample",
-                   "lowQualityData": "low quality data",
-                   "identifiedOutlier": "identified outlier"}
         self.message = \
             f"Excluded submission: {id}\nReason: {reasons[exclusion]}"
 
@@ -511,3 +510,48 @@ class MatrixTooLargeException(NoDataException):
                         "isolates). Consider reducing the SNP distance "
                         "threshold or viewing the phylogenetic tree in "
                         "Nextstrain instead.")
+
+class SearchSample():
+    def __init__(self,data_path : str):
+        self._db_connect(data_path)
+        
+    def __del__(self):
+        self._db.close()
+
+    def _db_connect(self, data_path: str):
+        """
+            Connects to the database and assigns the connection objects
+            to attributes of the ViewBovisData class
+        """
+        self._matrix_dir = path.join(data_path, "snp_matrix")
+        db_path = path.join(data_path, "viewbovis.db")
+        self._db = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        self._cursor = self._db.cursor()
+
+    def get_all_cph_matches(self,search_string: str, by: str):
+        if by == "cph":
+            query = """SELECT DISTINCT CPH FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "") LIKE REPLACE(UPPER(:cph_wildcard), " ","")
+            ORDER BY REPLACE(UPPER(CPH), " ", "") ASC"""
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph_wildcard": f'%{search_string}%',
+                                                 "cph" : search_string})
+            return df_cph_metadata.to_dict(orient="records")
+    
+    def get_all_cph_samples(self,cph: str):
+            query = """SELECT * FROM metadata WHERE 
+            REPLACE(UPPER(CPH), " ", "")=REPLACE(UPPER(:cph), " ","")
+            """
+            df_cph_metadata = pd.read_sql_query(query, self._db,
+                                        params={"cph" : cph})
+            df_cph_metarecords =  df_cph_metadata.to_dict(orient="records")
+
+            for sample in df_cph_metarecords:
+                submission = sample["Submission"]
+                df_search = pd.read_sql_query("""SELECT * FROM excluded WHERE 
+                    UPPER(Submission)= REPLACE(UPPER(:submission), " ","")""",
+                    self._db ,params={"submission" : submission})
+                if not df_search.empty:
+                    exclusion = df_search.to_dict(orient="records")[0]["Exclusion"]
+                    sample["Warnings"] = f"Excluded Sample <br/>Reason:{reasons[exclusion]}"
+            return df_cph_metarecords

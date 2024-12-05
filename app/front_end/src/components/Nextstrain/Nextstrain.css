@@ -16,7 +16,22 @@
   border-bottom: 2px solid black;
 }
 
-.nextstrain-iframe-container{
-    height: 98.5% !important;
-    width: 100% !important;
+.nextstrain-iframe-container {
+  height: 98.5% !important;
+  width: 100% !important;
+}
+
+.nextstrain-table-header {
+  background-color: var(--apha-green);
+  color: white;
+  text-align: center !important;
+}
+
+.nextstrain-table-cell {
+  cursor: pointer;
+  text-align: center !important;
+}
+
+.nextstrain-table-cell:hover {
+  background-color: lightgrey !important;
 }

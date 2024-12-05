@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setNextstrainURL } from "../../features/counter/nextstrainSlice";
 
-const NextstrainIframe = ({ url, setNextstrainURL }) => {
+const NextstrainIframe = ({ url }) => {
+  const dispatch = useDispatch();
   const navbarHeight = useSelector((state) => state.security.navbarHeight);
 
   return (
@@ -15,7 +17,7 @@ const NextstrainIframe = ({ url, setNextstrainURL }) => {
         style={{ position: "absolute" }}
         className="nextstrain-backbutton"
         onClick={() => {
-          setNextstrainURL(null);
+          dispatch(setNextstrainURL(null));
         }}
       >
         <span id="back-to-start-page-text">
