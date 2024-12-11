@@ -269,7 +269,7 @@ const Nextstrain = () => {
                 <p className="fs-6">
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2"
+                    href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/How-to%20and%20Glossary/ViewBovis%20How-to%20V5.docx?d=w95ed049e99ff43d79c6a3d6f807b6888&csf=1&web=1&e=VXtN61&nav=eyJoIjoiMjEzMzI3MTM4MCJ9"
                     target="_blank"
                   >
                     How to use Nextstrain guide
@@ -277,7 +277,7 @@ const Nextstrain = () => {
                   <br></br>
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu"
+                    href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_Nextstrain_v1.mp4?csf=1&web=1&e=YY0btU"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -286,7 +286,7 @@ const Nextstrain = () => {
                   <br></br>
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03"
+                    href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Exercises/ViewBovis_Nextstrain_Exercise.docx?d=wcf8a8a16b2e94bb8a8888389d93ed38e&csf=1&web=1&e=7kuEoI"
                     target="_blank"
                     rel="noreferrer"
                   >
