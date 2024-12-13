@@ -6,9 +6,9 @@ from flask_wtf.csrf import CSRFProtect
 
 from viewbovis_data import Request, NoDataException, NoMetaDataException,\
                            NoWgsDataException, NonBovineException,\
-                           MatrixTooLargeException
+                           MatrixTooLargeException, SearchSample
 
-app = Flask(__name__,static_folder='build/static',template_folder='build')
+app = Flask(__name__,static_folder='build/assets',template_folder='build')
 csrf = CSRFProtect(app)
 
 def get_id_no_whitespace():
@@ -71,6 +71,21 @@ def sample():
     get_request_object(id)
     return jsonify(g.request.soi_metadata())
 
+@app.route("/sample/cphsearch", methods=["GET"])
+def cphsearch():
+    search_string = request.args.get("search_string")
+    if not hasattr(g, "request"):
+        g.request = SearchSample(app.data_path)
+    cph_list = g.request.get_all_cph_matches(search_string, "cph")
+    return jsonify(cph_list)
+
+@app.route("/sample/cphsamples", methods=["GET"])
+def cphsamplessearch():
+    cph = request.args.get("cph")
+    if not hasattr(g, "request"):
+        g.request = SearchSample(app.data_path)
+    samples_list = g.request.get_all_cph_samples(cph)
+    return jsonify(samples_list)
 
 @app.route("/sample/movements", methods=["GET"])
 def movements():

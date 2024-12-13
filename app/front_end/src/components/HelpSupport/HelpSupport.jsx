@@ -1,12 +1,15 @@
-import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormImg from "../../imgs/feedback_form.svg";
 import TeamsImg from "../../imgs/ms_teams.svg";
+import { useSelector } from "react-redux";
 
 const HelpSupport = () => {
+  const showHelpSupportPage = useSelector(
+    (state) => state.security.showHelpSupportPage
+  );
   return (
-    <Container fluid>
+    <div className={showHelpSupportPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
       <div className="row alpha-side-margin">
         <div className="govuk-phase-banner ">
@@ -42,7 +45,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J"
+                href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/How-to%20and%20Glossary/ViewBovis%20How-to%20V5.docx?d=w95ed049e99ff43d79c6a3d6f807b6888&csf=1&web=1&e=4UZeGm"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -52,7 +55,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=Baws0J"
+                href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/How-to%20and%20Glossary/ViewBovis%20Glossary%20V3.docx?d=we30490d60dde423ba5db90eff23c035b&csf=1&web=1&e=x1Zkne"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -62,7 +65,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FBackground%20on%20the%20data%20in%20ViewBovis&p=true&ga=1"
+                href="https://defra.sharepoint.com/:f:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/ViewBovis%20data%20background?csf=1&web=1&e=P1921B"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -72,7 +75,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/sites/MSTAPHAViewBovisUserGroup/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMSTAPHAViewBovisUserGroup%2FShared%20Documents%2FGeneral%2FOFFICIAL%2DSENSITIVE%20ViewBovis%20Training%20Material%20%28BETA%29%2FTraining%20Exercises&p=true&ga=1"
+                href="https://defra.sharepoint.com/:f:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Exercises?csf=1&web=1&e=A46Vhz"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -299,7 +302,7 @@ const HelpSupport = () => {
           </div>
         </div>
       </Row>
-    </Container>
+    </div>
   );
 };
 

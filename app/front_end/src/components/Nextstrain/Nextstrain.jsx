@@ -1,11 +1,14 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import nextstrainlogo from "../../imgs/nextstrain-logo.svg";
-import { useState } from "react";
 import NextstrainTable from "./NextstrainTable";
 import NextstrainIframe from "./NextstrainIframe";
 import { useSelector, useDispatch } from "react-redux";
-import { setNextStrainWarnings } from "./../../features/counter/nextstrainSlice.js";
+import {
+  setNextstrainURL,
+  setNextstrainIdentifier,
+  fetchNextstrainData,
+} from "./../../features/counter/nextstrainSlice.js";
 import "./Nextstrain.css";
 
 const Nextstrain = () => {
@@ -16,41 +19,11 @@ const Nextstrain = () => {
     (state) => state.security.showNextStrainPage
   );
   const dispatch = useDispatch();
-  const [identifier, setIdentifier] = useState("");
-  const [tableData, setTableData] = useState({});
-  const [nextstrainURL, setNextstrainURL] = useState(null);
-
-  const fetchNextstrainData = async () => {
-    const response = await fetch(`/sample?sample_name=${identifier.toUpperCase().replace(/ /g, "")}`);
-
-    if (!response.ok) {
-      dispatch(
-        setNextStrainWarnings(
-          "Something went wrong: Please report the sample <a referrerpolicy='no-referrer' target='_blank' href='https://teams.microsoft.com/l/channel/19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/General?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId='>here</a>"
-        )
-      );
-      setTableData({});
-    } else {
-      const json = await response.json();
-      if (json["warnings"]) {
-        dispatch(setNextStrainWarnings(json["warning"]));
-        setTableData({});
-      } else {
-        // Create an array containing table data
-        let tableData = [
-          {
-            cph: `${json.cph}`,
-            county: `${json.county}`,
-            af: `${json.submission}`,
-            eartag: `${json.identifier}`,
-            clade: `${json.clade}`,
-          },
-        ];
-        setTableData({ ...tableData });
-        dispatch(setNextStrainWarnings(null));
-      }
-    }
-  };
+  const identifier = useSelector(
+    (state) => state.nextstrain.nextstrainIdentifier
+  );
+  const tableData = useSelector((state) => state.nextstrain.nextstrainDataset);
+  const nextstrainURL = useSelector((state) => state.nextstrain.nextstrainURL);
 
   return (
     <div className={showNextStrainPage ? "" : "hidden"}>
@@ -158,7 +131,9 @@ const Nextstrain = () => {
                         <div className="govuk-input__wrapper">
                           <input
                             value={identifier}
-                            onChange={(e) => setIdentifier(e.target.value)}
+                            onChange={(e) =>
+                              dispatch(setNextstrainIdentifier(e.target.value))
+                            }
                             className="govuk-input fs-5"
                             id="nextstrain-input"
                             type="text"
@@ -168,7 +143,11 @@ const Nextstrain = () => {
                             className="govuk-input__suffix"
                             aria-hidden="true"
                             style={{ cursor: "pointer" }}
-                            onClick={fetchNextstrainData}
+                            onClick={() => {
+                              dispatch(
+                                fetchNextstrainData({ identifier: identifier })
+                              );
+                            }}
                           >
                             <span>
                               <svg
@@ -196,7 +175,9 @@ const Nextstrain = () => {
                               className="text-hyperlink"
                               id="clade-B111"
                               onClick={() => {
-                                setNextstrainURL(`B1-11?p=grid&tl=Identifier`);
+                                dispatch(
+                                  setNextstrainURL(`B1-11?p=grid&tl=Identifier`)
+                                );
                               }}
                             >
                               B1-11
@@ -207,7 +188,9 @@ const Nextstrain = () => {
                               className="text-hyperlink"
                               id="clade-B613"
                               onClick={() => {
-                                setNextstrainURL(`B6-13?p=grid&tl=Identifier`);
+                                dispatch(
+                                  setNextstrainURL(`B6-13?p=grid&tl=Identifier`)
+                                );
                               }}
                             >
                               B6-13
@@ -219,7 +202,9 @@ const Nextstrain = () => {
                               className="text-hyperlink"
                               id="clade-B671"
                               onClick={() => {
-                                setNextstrainURL(`B6-71?p=grid&tl=Identifier`);
+                                dispatch(
+                                  setNextstrainURL(`B6-71?p=grid&tl=Identifier`)
+                                );
                               }}
                             >
                               B6-71
@@ -230,7 +215,9 @@ const Nextstrain = () => {
                               className="text-hyperlink"
                               id="clade-B691"
                               onClick={() => {
-                                setNextstrainURL(`B6-91?p=grid&tl=Identifier`);
+                                dispatch(
+                                  setNextstrainURL(`B6-91?p=grid&tl=Identifier`)
+                                );
                               }}
                             >
                               B6-91
@@ -262,10 +249,7 @@ const Nextstrain = () => {
                           </span>
                         )}
                         {Object.keys(tableData).length > 0 && (
-                          <NextstrainTable
-                            data={tableData}
-                            setNextstrainURL={setNextstrainURL}
-                          />
+                          <NextstrainTable data={tableData} />
                         )}
                       </Col>
                     </Row>
@@ -285,7 +269,7 @@ const Nextstrain = () => {
                 <p className="fs-6">
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EldmZORVs81MqDipytG9uRABDY-u2YY1u4zU4tSFfh_ZlA?e=zx05n2"
+                    href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/How-to%20and%20Glossary/ViewBovis%20How-to%20V5.docx?d=w95ed049e99ff43d79c6a3d6f807b6888&csf=1&web=1&e=VXtN61&nav=eyJoIjoiMjEzMzI3MTM4MCJ9"
                     target="_blank"
                   >
                     How to use Nextstrain guide
@@ -293,7 +277,7 @@ const Nextstrain = () => {
                   <br></br>
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/EuPuZgYqMcJFidxRIxWcDu8BgAcqyDQrshIMiRHrMfAcQg?e=bN4exu"
+                    href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_Nextstrain_v1.mp4?csf=1&web=1&e=YY0btU"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -302,7 +286,7 @@ const Nextstrain = () => {
                   <br></br>
                   <a
                     className="text-hyperlink"
-                    href="https://defra.sharepoint.com/:f:/s/MSTAPHAViewBovisUserGroup/Et6ajyFNfIJAvUuWKFpdhJcBg2Tb_uR_JWDxp-pGVE67-w?e=P4dY03"
+                    href="https://defra.sharepoint.com/:w:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Exercises/ViewBovis_Nextstrain_Exercise.docx?d=wcf8a8a16b2e94bb8a8888389d93ed38e&csf=1&web=1&e=7kuEoI"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -339,10 +323,7 @@ const Nextstrain = () => {
           </Row>
         </div>
       ) : (
-        <NextstrainIframe
-          url={nextstrainURL}
-          setNextstrainURL={setNextstrainURL}
-        />
+        <NextstrainIframe url={nextstrainURL} />
       )}
     </div>
   );
