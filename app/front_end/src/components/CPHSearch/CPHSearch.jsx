@@ -1,111 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import cphsearch_logo from "../../imgs/cphsearch_logo.svg";
-import AsyncSelect from "react-select/async";
 import "./CPHSearch.css";
-import { useState } from "react";
 import CPHTableComp from "./CPHTableComp";
-import { setShowPage } from "../../features/counter/securitySlice";
-import {
-  setSNPSample,
-  setSNPDistance,
-  fetchSNPMapDataset,
-} from "../../features/counter/counterSlice";
-import {
-  fetchCattleMovementDataset,
-  setFirstSearchSample,
-} from "../../features/counter/movementSlice";
-import {
-  fetchNextstrainData,
-  setNextstrainIdentifier,
-  setNextstrainURL,
-} from "../../features/counter/nextstrainSlice";
+import CPHAsyncSelect from "./CPHAsynSelect";
 
 const CPHSearch = ({}) => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
-  const dispatch = useDispatch();
-  const [cphMetadata, setCPHMetadata] = useState([]);
-  const [cphValue, setCPHValue] = useState();
-  const loadOptions = async (inputString) => {
-    if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
-    return fetch(
-      "/sample/cphsearch?search_string=" +
-        inputString.replace(/ /g, "").toUpperCase()
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        return json.map((cell) => {
-          cell["value"] = cell["CPH"];
-          cell["label"] = cell["CPH"];
-          return cell;
-        });
-      })
-      .catch((error) => {
-        return [];
-      });
-  };
+  const cphWarnings = useSelector((state) => state.cphsearch.cphWarnings);
 
-  const fetchCPHSamples = async () => {
-    if (cphValue?.CPH.length > 0) {
-      fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
-        .then((response) => response.json())
-        .then((metadata) => {
-          let data = [...metadata];
-          data.map((sample, index) => {
-            if (sample["Warnings"]) {
-              sample["tools"] = {
-                warnings: sample["Warnings"],
-              };
-            } else {
-              sample["tools"] = {
-                snpmap: () => {
-                  dispatch(setSNPSample(sample["Submission"]));
-                  dispatch(setSNPDistance(1));
-                  dispatch(
-                    fetchSNPMapDataset({
-                      snpSample: sample["Submission"],
-                      snpDistance: 1,
-                    })
-                  );
-                  dispatch(setShowPage("snpmap"));
-                },
-                movement: () => {
-                  dispatch(setFirstSearchSample(sample["Submission"]));
-                  dispatch(
-                    fetchCattleMovementDataset({
-                      searchInput: sample["Submission"],
-                    })
-                  );
-                  dispatch(setShowPage("cattlemovement"));
-                },
-                nextstrain: async () => {
-                  dispatch(setNextstrainIdentifier(sample["Submission"]));
-                  dispatch(
-                    fetchNextstrainData({ identifier: sample["Submission"] })
-                  );
-                  dispatch(
-                    setNextstrainURL(
-                      `${sample["Clade"]}?f_PreciseLocation=${sample[
-                        "CPH"
-                      ].replace(/ /g, "")}&p=grid`
-                    )
-                  );
-                  dispatch(setShowPage("nextstrain"));
-                },
-              };
-            }
-            return sample;
-          });
-          setCPHMetadata(data);
-        })
-        .catch((error) => {});
-    } else {
-      setCPHMetadata([]);
-    }
-  };
   return (
     <div className={showCPHSearchPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
@@ -154,51 +60,25 @@ const CPHSearch = ({}) => {
         </Col>
       </Row>
       <br />
-      <div className="govuk-input__wrapper">
-        <AsyncSelect
-          type="text"
-          placeholder="Search by CPH"
-          loadOptions={loadOptions}
-          value={cphValue}
-          onChange={(cph) => {
-            setCPHValue(cph);
-          }}
-          isClearable={true}
-          styles={{
-            control: (baseStyles, state) => ({
-              ...baseStyles,
-              width: "60vw",
-              color: "black",
-              fontSize: "14px",
-              height: "35px",
-              boxShadow: "0 2px 0 #002d18",
-              borderRadius: "0px",
-              maxWidth: "500px",
-            }),
-          }}
-        />
-        <div
-          className="govuk-button"
-          aria-hidden="true"
-          style={{ cursor: "pointer" }}
-          onClick={() => fetchCPHSamples()}
-        >
-          <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-search"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-            </svg>
-          </span>
-        </div>
-      </div>
+      <CPHAsyncSelect />
+      {cphWarnings && (
+        <span className="govuk-error-message">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            style={{ marginBottom: "4px" }}
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+          </svg>{" "}
+          <span dangerouslySetInnerHTML={{ __html: cphWarnings }}></span>
+        </span>
+      )}
       <div className="container-fluid">
-        <CPHTableComp samples={cphMetadata} />
+        <CPHTableComp />
       </div>
     </div>
   );
