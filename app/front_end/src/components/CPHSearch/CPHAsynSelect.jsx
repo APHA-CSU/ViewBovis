@@ -20,12 +20,16 @@ import {
   setCphWarnings,
   setCphValue,
 } from "../../features/counter/cphSlice";
+import { useState } from "react";
 
 const CPHAsyncSelect = () => {
   const cphValue = useSelector((state) => state.cphsearch.cphValue);
+  const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
   const loadOptions = async (inputString) => {
-    if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
+    if (inputValue.length < 3) {
+      return [];
+    } else if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
     return fetch(
       "/sample/cphsearch?search_string=" +
         inputString.replace(/ /g, "").toUpperCase()
@@ -112,6 +116,12 @@ const CPHAsyncSelect = () => {
         type="text"
         placeholder="Search by CPH"
         loadOptions={loadOptions}
+        onInputChange={(val) => setInputValue(val)}
+        noOptionsMessage={() => {
+          return inputValue.length < 3
+            ? "Type atlest three characters"
+            : "No options available";
+        }}
         value={cphValue}
         onChange={(cph) => {
           dispatch(setCphValue(cph));
