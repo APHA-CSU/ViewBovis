@@ -67,10 +67,20 @@ source </path/to/the/new/virtualenv/>bin/activate
 ```
 pip install -r requirements.txt
 ```
+6. The frontend of the app depends on `react-Vitejs`, `react-Vitejs` needs `Node.js` and `npm`. To install `Node.js` and `npm`:
+#### Download and install nvm:
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+```
+
+#### Download and install Node.js:
+```
+nvm install 20
+```
 
 ## Running the app
 
-Simply run:
+### To run the backend(Flask) server, Simply run:
 
 ```
 cd app
@@ -82,6 +92,19 @@ This will start a Flask development server listening at localhost on port 5000.
 
 To connect to the app simply visit `http://127.0.0.1:5000` on the device that the server is running on.
 
+### To run the frontend(react Vite.js) server, Simply run:
+```
+cd app/front_end
+```
+```
+npm install
+```
+```
+npm run dev
+```
+This will start a React development server listening at localhost on port 5173. 
+
+To connect to the app simply visit `http://127.0.0.1:5173` on the device that the server is running on.
 ## <a name="data"></a> Data
 
 A local data directory must be structured as follows:
