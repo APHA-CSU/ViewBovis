@@ -26,8 +26,9 @@ const CPHAsyncSelect = () => {
   const cphValue = useSelector((state) => state.cphsearch.cphValue);
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
+
   const loadOptions = async (inputString) => {
-    if (inputValue.length < 3) {
+    if (inputValue.length < 2) {
       return [];
     } else if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
     return fetch(
@@ -46,6 +47,7 @@ const CPHAsyncSelect = () => {
         return [];
       });
   };
+
   const fetchCPHSamples = async () => {
     if (cphValue?.CPH.length > 0) {
       fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
