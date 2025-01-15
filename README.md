@@ -6,7 +6,7 @@
 
 `ViewBovis` is an APHA web application for use as a disease surveillance and breakdown investigation tool for bovine TB. It combines Whole Genome Sequencing (WGS) data of M. bovis with geographical locations of hosts animals to understand bTB transmission.
 
-![Capture](https://github.com/aphascience/ViewBovis/assets/10742324/76f407b7-2351-4a43-8efe-3e02cf1bd0c0)
+![Capture](https://github.com/user-attachments/assets/bbd38dab-0f2d-4a78-8523-561ef1a33d6c)
 
 ## ViewBovis API
 
