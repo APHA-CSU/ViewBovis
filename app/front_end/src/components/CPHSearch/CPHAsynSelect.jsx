@@ -49,7 +49,7 @@ const CPHAsyncSelect = () => {
   };
 
   const fetchCPHSamples = async () => {
-    if (cphValue?.CPH.length > 0) {
+    if (cphValue?.CPH?.length > 0) {
       fetch("/sample/cphsamples?cph=" + cphValue["CPH"])
         .then((response) => response.json())
         .then((metadata) => {
@@ -121,7 +121,7 @@ const CPHAsyncSelect = () => {
         onInputChange={(val) => setInputValue(val)}
         noOptionsMessage={() => {
           return inputValue.length < 3
-            ? "Type atlest three characters"
+            ? "Type atleast three characters"
             : "No options available";
         }}
         value={cphValue}
