@@ -36,14 +36,19 @@ const RiskLayersModel = ({ checkedLayers }) => {
 
   //Function to set polygon colours for Risk Areas
   const riskAreaCols = (area) => {
-    if (area === "High Risk Area" || area === "High TB Area") return "#C62828";
-    else if (area === "Intermediate TB Area" || area === "Edge Area")
-      return "orange";
-    else if (area === "Low Risk Area" || area === "Low TB Area")
-      return "#00C853";
-    else if (area === "TB Free Area") return "#CFD8DC";
-    return "#CFD8DC";
+    const areaCols = {
+      "High Risk Area": "#1873cd",
+      "High TB Area": "#7a378b",
+      "Intermediate TB Area": "#e066ff",
+      "Edge Area": "orange",
+      "Low Risk Area": "#00C853",
+      "Low TB Area": "#ffb3c3",
+      "TB Free Area": "#FFEBBE",
+    };
+
+    return areaCols[area] || "#CFD8DC";
   };
+
 
   //Function to set custom styles for each feature (TB area). "feature" object is obtained from geoJSON.
   const styleRiskArea = (feature) => {
@@ -139,14 +144,15 @@ const RiskLayersModel = ({ checkedLayers }) => {
           "TB Free Area",
         ];
         const colours = [
-          "#C62828",
+          "#1873cd",
           "orange",
           "#00C853",
-          "#C62828",
-          "orange",
-          "#00C853",
-          "#CFD8DC",
+          "#7a378b",
+          "#e066ff",
+          "#ffb3c3",
+          "#FFEBBE",
         ];
+
         const country = ["ENG", "ENG", "ENG", "WAL", "WAL", "WAL", "SCO"];
 
         // Build legend: loop through levels and generate a label with a colored square
