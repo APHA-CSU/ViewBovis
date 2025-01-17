@@ -5,7 +5,7 @@ export const cphSlice = createSlice({
   initialState: {
     cphWarnings: null,
     cphMetadata: [],
-    cphValue: { CPH: "" },
+    cphValue: null,
   },
   reducers: {
     setCphWarnings: (state, action) => {
