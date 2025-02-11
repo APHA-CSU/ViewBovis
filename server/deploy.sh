@@ -1,3 +1,5 @@
+#!/bin/bash
+
 DATA_DIR=$1
 if [ $2 = 'testing' ]
 then
