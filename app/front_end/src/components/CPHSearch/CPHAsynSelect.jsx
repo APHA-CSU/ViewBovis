@@ -113,7 +113,10 @@ const CPHAsyncSelect = () => {
   };
 
   return (
-    <div className="govuk-input__wrapper">
+    <div
+      className="govuk-input__wrapper"
+      onPaste={(e) => setInputValue(e.clipboardData.getData("text"))}
+    >
       <AsyncSelect
         type="text"
         placeholder="Search by CPH"
