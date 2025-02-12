@@ -121,7 +121,7 @@ const CPHTableComp = () => {
               border: "1px solid black",
             }}
           >
-            <div style={{ maxHeight: "50vh", width: 1280 > 1.26 * window.innerWidth ? 1280 : 1.26 * window.innerWidth}}>
+            <div style={{ maxHeight: "80vh", width: 1280 > 1.26 * window.innerWidth ? 1280 : 1.26 * window.innerWidth}}>
               <ReactTabulator
                 style={{ fontSize: 11 > 0.01*window.innerWidth ? 11 : 0.01*window.innerWidth }}
                 columns={columns}
@@ -129,6 +129,7 @@ const CPHTableComp = () => {
               />
             </div>
           </div>
+          <br></br>
         </>
       )}
     </>
