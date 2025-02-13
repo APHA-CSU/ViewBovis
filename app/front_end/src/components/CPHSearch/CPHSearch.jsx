@@ -5,12 +5,14 @@ import cphsearch_logo from "../../imgs/cphsearch_logo.svg";
 import "./CPHSearch.css";
 import CPHTableComp from "./CPHTableComp";
 import CPHAsyncSelect from "./CPHAsynSelect";
+import { useState } from "react";
 
 const CPHSearch = ({}) => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
   const cphWarnings = useSelector((state) => state.cphsearch.cphWarnings);
+  const [cphMetadata, setCphMetadata] = useState([]);
 
   return (
     <div className={showCPHSearchPage ? "container-fluid" : "hidden"}>
@@ -60,7 +62,7 @@ const CPHSearch = ({}) => {
         </Col>
       </Row>
       <br />
-      <CPHAsyncSelect />
+      <CPHAsyncSelect setCphMetadata={setCphMetadata} />
       {cphWarnings && (
         <span className="govuk-error-message">
           <svg
@@ -78,7 +80,7 @@ const CPHSearch = ({}) => {
         </span>
       )}
       <div className="container-fluid">
-        <CPHTableComp />
+        <CPHTableComp samples={cphMetadata} />
       </div>
     </div>
   );

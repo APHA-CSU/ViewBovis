@@ -15,14 +15,10 @@ import {
   setNextstrainIdentifier,
   setNextstrainURL,
 } from "../../features/counter/nextstrainSlice";
-import {
-  setCphMetadata,
-  setCphWarnings,
-  setCphValue,
-} from "../../features/counter/cphSlice";
+import { setCphWarnings, setCphValue } from "../../features/counter/cphSlice";
 import { useState } from "react";
 
-const CPHAsyncSelect = () => {
+const CPHAsyncSelect = ({ setCphMetadata }) => {
   const cphValue = useSelector((state) => state.cphsearch.cphValue);
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
@@ -99,16 +95,16 @@ const CPHAsyncSelect = () => {
             }
             return sample;
           });
-          dispatch(setCphMetadata(data));
+          setCphMetadata(data);
           dispatch(setCphWarnings(null));
         })
         .catch((error) => {
           dispatch(setCphWarnings("Something went wrong"));
-          dispatch(setCphMetadata([]));
+          setCphMetadata([]);
         });
     } else {
       dispatch(setCphWarnings("Please select a sample"));
-      dispatch(setCphMetadata([]));
+      setCphMetadata([]);
     }
   };
 
