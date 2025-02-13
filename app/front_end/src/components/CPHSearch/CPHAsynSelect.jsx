@@ -24,13 +24,17 @@ const CPHAsyncSelect = ({ setCphMetadata }) => {
   const dispatch = useDispatch();
 
   const loadOptions = async (inputString) => {
-    if (inputValue.length < 2) {
+    if (inputString.replace(/ /g, "").length <= 2) {
       return [];
-    } else if (inputString.replace(/ /g, "").toUpperCase() == "") return [];
+    }
     return fetch(
       "/sample/cphsearch?search_string=" +
         inputString.replace(/ /g, "").toUpperCase()
     )
+      .then((response) => {
+        if (response.ok) return response;
+        else throw response.statusText || "Request Failed";
+      })
       .then((response) => response.json())
       .then((json) => {
         return json.map((cell) => {
@@ -40,7 +44,7 @@ const CPHAsyncSelect = ({ setCphMetadata }) => {
         });
       })
       .catch((error) => {
-        return [];
+        return [{ label: `Error, ${error}`, value: "error", isDisabled: true }];
       });
   };
 
@@ -118,8 +122,15 @@ const CPHAsyncSelect = ({ setCphMetadata }) => {
         placeholder="Search by CPH"
         loadOptions={loadOptions}
         onInputChange={(val) => setInputValue(val)}
+        getOptionLabel={(e) =>
+          e.value == "error" ? (
+            <span style={{ color: "red" }}>{e.label}</span>
+          ) : (
+            e.label
+          )
+        }
         noOptionsMessage={() => {
-          return inputValue.length < 3
+          return inputValue.replace(/ /g, "").length < 3
             ? "Type atleast three characters"
             : "No options available";
         }}
