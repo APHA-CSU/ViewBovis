@@ -37,6 +37,12 @@ docker run --rm -d --network host --name viewbovis \
 
 This will also automatically start the app. The container will share the host machine's networking namespace, thanks to `--network host`. Thus, requests on any port of localhost on the host machine will be forwarded to the same port of the container. 
 
+When setting up a serveer for the first time a number of docker target files and directories will need to be created before docker is started:
+    sudo touch /var/log/viewbovis-access.log
+    sudo touch /var/log/viewbovis-error.log
+    sudo mkdir /ViewBovis/layers
+
+
 ### Gunicorn production server
 
 Gunicorn is installed within the Docker image, and implicitly run when the container is launched. Therefore, it is not necessary to install or configure it when setting up the server or deploying the app.
