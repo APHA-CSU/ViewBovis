@@ -4,7 +4,7 @@
 This document is intended as a guide for individuals deploying or managing ViewBovis as a production service. It includes details on:
 1. [containerisation](#docker) with [Docker](https://www.docker.com/); 
 1. [the architecture of application hosting the SCE](#architecture);
-1. [how to connect to and update the server](#ranch-159);
+1. [how to connect to and update the server](#ranch-869);
 1. [the automated procedures and services](#system) which are configured to run the application and log its outputs;
 1. [nginx proxy server](#nginx);
 1. [logging](#logging); 
@@ -57,27 +57,27 @@ The system architecure diagram, shown below, illustrates the data flow for the V
 1. WGS data and sample results csv files are stored within the `s3-csu-003` bucket within the CSU community on the SCE. When new samples are added to the bucket, a job manager (human) uploads sample metadata to LIMS which resides on the DEFRA corporate network.
 1. The metadata warehouse is a SQL database that resides on the corporate network. It links with the LIMS and SAM/CTS databases to provide metadata for the ViewBovis application. 
 1. The WGS data in `s3-csu-003` and metadata warehouse exports are periodically processed by running [`btb-forestry`](https://github.com/APHA-CSU/btb-forestry/tree/main) which generates the SNP matrixes, `viewbovis.db` database file and JSON exports required to serve ViewBovis. `btb-forestry` is manually run on a dev machine by a human service manager and will automatically download the conesnus sequences from `s3-csu-003` and automatically upload the results to `s3-csu-003`. 
-1. The ViewBovis application runs on the production machine `ranch-159` from the `ranch-159` user. This machine has been specifically approved by APHA IT to serve users within the DEFRA corporate network via `port 80`. When the server is booted up it automatically downloads the latest production data from `s3-csu-003` via a system service to `/ViewBovis`.
+1. The ViewBovis application runs on the production machine `ranch-869` from the `ranch-869` user. This machine has been specifically approved by APHA IT to serve users within the DEFRA corporate network via `port 80`. When the server is booted up it automatically downloads the latest production data from `s3-csu-003` via a system service to `/ViewBovis`.
 1. An [nginx](https://nginx.org/en/) proxy server that runs on the machine routes external requests from `port 80` at the `viewbovis-beta.int.sce.network` subdomain to `port 3000` on localhost. The app itself is run using [Gunicorn](https://gunicorn.org/) as production server within a [Docker](https://www.docker.com/) container which shares the host machine's networking namespace. Gunicorn serves the app to `port 3000` within the container and therefore also on the host machine. The Nextsrain Auspice dashboard is also served through nginx on a separate subdomain, `nextstrain-beta.int.sce.network`. Requests at this subdomain are forwarded to port 4001 by nginx. The Auspice dashboard is embedded in the app, using an iframe which points back to the externally facing `nextstrain-beta.int.sce.network` subdomain.
-1. Requests from users on the corporate network are routed to `ranch-159` via the SCE managed PaloAlto VPN service. The VPN manages traffic into and out of the SCE, as well as authenticating requests to users via a login screen. The VPN ensures only those who have been granted access by SCE governance can reach the server. Authenticated requests are routed to `ranch-159`, `port 80`.
+1. Requests from users on the corporate network are routed to `ranch-869` via the SCE managed PaloAlto VPN service. The VPN manages traffic into and out of the SCE, as well as authenticating requests to users via a login screen. The VPN ensures only those who have been granted access by SCE governance can reach the server. Authenticated requests are routed to `ranch-869`, `port 80`.
 
 ![architecture](https://github.com/aphascience/ViewBovis/assets/10742324/081165f2-2785-4335-91ad-a0a77f511b6c)
 
-## <a name="ranch-159"></a> `ranch-159` Management
+## <a name="ranch-869"></a> `ranch-869` Management
 
-`ranch-159` is the production machine that serves multiple applications to the corporate network. To minimise the risks of service disruption, it's crucial the server is managed with care and caution. Think about your actions when interacting with the server, and ask questions if you are unsure. 
+`ranch-869` is the production machine that serves multiple applications to the corporate network. To minimise the risks of service disruption, it's crucial the server is managed with care and caution. Think about your actions when interacting with the server, and ask questions if you are unsure. 
 
-### Access to `ranch-159`
+### Access to `ranch-869`
 
-`ranch-159` can be accessed remotely from a DEFRA computer using SSH or via NoMachine. The `ranch-159` user is the common access user that runs production services. If you are not performing maintainance on the production service, you should login with your personal SCE username. 
+`ranch-869` can be accessed remotely from a DEFRA computer using SSH or via NoMachine. The `ranch-869` user is the common access user that runs production services. If you are not performing maintainance on the production service, you should login with your personal SCE username. 
 
-For a guide on how SSH into an SCE EC2 instance, such as `ranch-159`, see the [SCE SPOL article](https://defra.sharepoint.com/teams/Team741/SitePages/Help-articles.aspx).
+For a guide on how SSH into an SCE EC2 instance, such as `ranch-869`, see the [SCE SPOL article](https://defra.sharepoint.com/teams/Team741/SitePages/Help-articles.aspx).
 
 ## <a name="system"></a> Automated operational procedures
 
-`ranch-159` is turned on automatically at 8am and switched off automatically at 10pm, 7 days a week. 
+`ranch-869` is turned on automatically at 8am and switched off automatically at 10pm, 7 days a week. 
 
-Automatic start-up is managed by SCE support, and power-down is implemented via a cronjob on `ranch-159`.
+Automatic start-up is managed by SCE support, and power-down is implemented via a cronjob on `ranch-869`.
 
 `systemd` is used to manage system services crucial to running the ViewBovis application. 
 
@@ -151,8 +151,8 @@ Output:
              ├─887 nginx: worker process
              └─892 nginx: worker process
 
-Jul 28 08:00:39 ranch-159 systemd[1]: Starting A high performance web server and a reverse proxy server...
-Jul 28 08:00:40 ranch-159 systemd[1]: Started A high performance web server and a reverse proxy server.
+Jul 28 08:00:39 ranch-869 systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jul 28 08:00:40 ranch-869 systemd[1]: Started A high performance web server and a reverse proxy server.
 ```
 
 ### Configuring the proxy server
@@ -194,7 +194,7 @@ This json file is saved daily to `/var/log/viewbovis_requests_YYYY-mm-dd` on the
 
 ## <a name="deploy"></a> Deployment
 
-Before deploying new versions of the software, it is important to deploy a version to the testing domain on `ranch-159`. To deploy a test version:
+Before deploying new versions of the software, it is important to deploy a version to the testing domain on `ranch-869`. To deploy a test version:
 
 1. merge the `main` branch into the `prod-test` branch (this can be done locally):
 
@@ -207,7 +207,7 @@ Before deploying new versions of the software, it is important to deploy a versi
     git push origin prod-test
     ```
     This will automatically trigger the test-deploy workflow in github actions which builds the test docker image and pushes it to DockerHub
-1. log onto `ranch-159` as the `ranch-159` user and update the local test version of this repository:
+1. log onto `ranch-869` as the `ranch-869` user and update the local test version of this repository:
 
     ```
     cd ~/ViewBovis-test
@@ -235,7 +235,7 @@ Before deploying new versions of the software, it is important to deploy a versi
 
 1. publish a new release of the software. For instruction on this, follow the [release process document](https://github.com/aphascience/ViewBovis/blob/main/release_process.md)
 1. merging into the production branch will automatically trigger the deploy workflow in github actions which builds the production docker image and pushes it to DockerHub 
-1. log onto `ranch-159` as the `ranch-159` user and update the local version of this repository:
+1. log onto `ranch-869` as the `ranch-869` user and update the local version of this repository:
 
     ```
     cd ~/ViewBovis
