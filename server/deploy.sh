@@ -27,5 +27,5 @@ docker run --rm -d --network host --name ${NAME} \
     --mount type=bind,source=/var/log/viewbovis-access.log,target=/ViewBovis/access.log \
     --mount type=bind,source=/var/log/viewbovis-error.log,target=/ViewBovis/error.log \
     aphacsubot/viewbovis:${IMAGETAG} gunicorn -b 127.0.0.1:${PORT} -w ${WORKERS} deploy:app \
-    --log-level=info --access-logfile /ViewBovis/$2-access.log \
-    --error-logfile /ViewBovis/$2-error.log
+    --log-level=info --access-logfile /ViewBovis/access.log \
+    --error-logfile /ViewBovis/error.log
