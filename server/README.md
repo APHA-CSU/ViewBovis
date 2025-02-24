@@ -37,7 +37,7 @@ docker run --rm -d --network host --name viewbovis \
 
 This will also automatically start the app. The container will share the host machine's networking namespace, thanks to `--network host`. Thus, requests on any port of localhost on the host machine will be forwarded to the same port of the container. 
 
-When setting up a serveer for the first time a number of docker target files and directories will need to be created before docker is started:
+When setting up a server for the first time a number of docker target files and directories will need to be created before docker is started:
     sudo touch /var/log/viewbovis-access.log
     sudo touch /var/log/viewbovis-error.log
     sudo mkdir /ViewBovis/layers
@@ -77,7 +77,7 @@ The system architecure diagram, shown below, illustrates the data flow for the V
 
 `ranch-869` can be accessed remotely from a DEFRA computer using SSH or via NoMachine. The `ranch-869` user is the common access user that runs production services. If you are not performing maintainance on the production service, you should login with your personal SCE username. 
 
-For a guide on how SSH into an SCE EC2 instance, such as `ranch-869`, see the [SCE SPOL article](https://defra.sharepoint.com/teams/Team741/SitePages/Help-articles.aspx).
+For a guide on how SSH into an SCE EC2 instance, such as `ranch-869`, see the [SCE SPOL article](https://docs.int.sce.network/guides/ssh/basics.html).
 
 ## <a name="system"></a> Automated operational procedures
 
