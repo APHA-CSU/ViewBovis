@@ -5,7 +5,7 @@ Before=shutdown.target
 
 [Service]
 Type=oneshot
-ExecStart=sudo python3.8 /home/ranch-159/ViewBovis/parse_nginx_log.py
+ExecStart=sudo python3 /home/ranch-869/ViewBovis/server/parse_nginx_log.py
 
 [Install]
 WantedBy=halt.target reboot.target shutdown.target

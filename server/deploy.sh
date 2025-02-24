@@ -1,16 +1,24 @@
+#!/bin/bash
+
 DATA_DIR=$1
 if [ $2 = 'testing' ]
-then
-NAME='viewbovis-test'
-IMAGETAG='prod-test'
-PORT='3002'
-WORKERS='1'
+    then
+    NAME='viewbovis-test'
+    IMAGETAG='prod-test'
+    PORT='3002'
+    WORKERS='1'
 elif [ $2 = 'prod' ]
-then
-NAME='viewbovis'
-IMAGETAG='prod'
-PORT='3000'
-WORKERS='8'
+    then
+    NAME='viewbovis'
+    IMAGETAG='prod'
+    PORT='3000'
+    WORKERS='6'
+elif [ $2 = 'training']
+    then
+    NAME='viewbovis-training'
+    IMAGETAG='prod'
+    PORT='3001'
+    WORKERS='2'
 fi
 
 docker run --rm -d --network host --name ${NAME} \

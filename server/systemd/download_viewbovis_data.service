@@ -4,7 +4,7 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-WorkingDirectory=/home/ranch-159/ViewBovis/server/
+WorkingDirectory=/home/ranch-869/ViewBovis/server/
 Type=simple
 ExecStart=bash s3_data_download.sh s3://s3-csu-003/v3-2/btb-forest_prod
 
