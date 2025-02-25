@@ -13,7 +13,7 @@ elif [ $2 = 'prod' ]
     IMAGETAG='prod'
     PORT='3000'
     WORKERS='6'
-elif [ $2 = 'training']
+elif [ $2 = 'training' ]
     then
     NAME='viewbovis-training'
     IMAGETAG='prod'
