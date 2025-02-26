@@ -16,7 +16,7 @@ elif [ $2 = 'prod' ]
 elif [ $2 = 'training' ]
     then
     NAME='viewbovis-training'
-    IMAGETAG='prod'
+    IMAGETAG='prod-training'
     PORT='3001'
     WORKERS='2'
 fi
