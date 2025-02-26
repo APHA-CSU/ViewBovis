@@ -42,6 +42,7 @@ When setting up a server for the first time a number of docker target files and 
     sudo touch /var/log/viewbovis-error.log
     sudo mkdir /var/log/viewbovis
     sudo mkdir /ViewBovis/layers
+    sudo mkdir /Viewbovis-training/layers
 
 
 ### Gunicorn production server
