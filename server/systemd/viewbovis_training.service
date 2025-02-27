@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 WorkingDirectory=/home/ranch-869/ViewBovis/server
 Type=simple
-ExecStart=bash deploy.sh /ViewBovis-training/ training
+ExecStart=bash deploy.sh /Viewbovis-training/ training
 
 [Install]
 WantedBy=multi-user.target

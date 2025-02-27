@@ -40,7 +40,9 @@ This will also automatically start the app. The container will share the host ma
 When setting up a server for the first time a number of docker target files and directories will need to be created before docker is started:
     sudo touch /var/log/viewbovis-access.log
     sudo touch /var/log/viewbovis-error.log
+    sudo mkdir /var/log/viewbovis
     sudo mkdir /ViewBovis/layers
+    sudo mkdir /Viewbovis-training/layers
 
 
 ### Gunicorn production server
@@ -119,7 +121,7 @@ Multiple Applications can be served simultaneously through a single externally-f
 
 Currently, we have two services being served through nginx:
 
-- `viewbovis-bets.int.sce.network` - `port 3000` 
+- `viewbovis-beta.int.sce.network` - `port 3000` 
 - `nextstrain-beta.int.sce.network` - `port 4001`
 
 
