@@ -4,9 +4,9 @@ Requires=network-online.target
 After=network-online.target download_viewbovis_data.service
 
 [Service]
-WorkingDirectory=/home/ranch-159/
+WorkingDirectory=/home/ranch-869
 Type=simple
-ExecStart=/home/ranch-159/.nvm/versions/node/v18.17.0/bin/auspice view --datasetDir /home/ranch-159/NextstrainData/jsonExport
+ExecStart=/home/ranch-869/.config/nvm/versions/node/v22.14.0/bin/auspice view --datasetDir /home/ranch-869/NextstrainData/jsonExport
 
 [Install]
 WantedBy=multi-user.target
