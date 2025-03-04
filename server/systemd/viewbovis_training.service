@@ -1,0 +1,12 @@
+[Unit]
+Description=Start ViewBovis (Training)
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/ranch-869/ViewBovis/server
+Type=simple
+ExecStart=bash deploy.sh /Viewbovis-training/ training
+
+[Install]
+WantedBy=multi-user.target
