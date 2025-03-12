@@ -95,7 +95,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_What%20is%20Phylogeny.mp4?csf=1&web=1&e=FlgXcP"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_What%20is%20Phylogeny_v1.mp4?csf=1&web=1&e=y2cM4H"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -105,7 +105,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Homepage_v1..mp4?csf=1&web=1&e=cvgnfB"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_Homepage_v2.mp4?csf=1&web=1&e=8k6kB1"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -115,7 +115,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Nextstrain_v1.mp4?csf=1&web=1&e=gqk03Q"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_Nextstrain_v1.mp4?csf=1&web=1&e=fDqzoL"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -125,7 +125,7 @@ const HelpSupport = () => {
             <p>
               <a
                 className="text-hyperlink"
-                href="https://defra.sharepoint.com/:v:/r/teams/Team3205/Shared%20Documents%20%20Field%20Epi%20KF/Training/ViewBovis%20Training/OFFICIAL-SENSITIVE%20ViewBovis%20Training%20Material%20(BETA)/Training%20Videos/ViewBovis_Maps_v1.mp4?csf=1&web=1&e=6p3CJW"
+                href="https://defra.sharepoint.com/:v:/r/teams/Team4008/Phase%202%20Documents/VB%20Training%20Content/Documents%20for%20React%20Version%20of%20ViewBovis/Official%20Training%20Documents/Training%20Videos/ViewBovis_Maps_v2.mp4?csf=1&web=1&e=j0S4MY"
                 target="_blank"
                 rel="noreferrer noopener"
               >
