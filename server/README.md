@@ -42,6 +42,7 @@ When setting up a server for the first time a number of docker target files and 
     sudo touch /var/log/viewbovis-error.log
     sudo mkdir /var/log/viewbovis
     sudo mkdir /ViewBovis/layers
+    sudo mkdir /Viewbovis-training/layers
 
 
 ### Gunicorn production server
@@ -236,6 +237,31 @@ Before deploying new versions of the software, it is important to deploy a versi
     ```
     docker kill viewbovis-test
     ```
+
+**Front-end deployment**
+
+   If the front-end has been updated, create a production-ready version in your development branch:
+   
+1. navigate to the front-end directory:
+
+    ```
+    cd app/front_end
+    ```
+
+2. run the build command to create the production version:
+   
+   ```
+   npm run build
+   ```
+if the build process fails with the error `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` allocate more memory to Node.js:
+
+   ```
+   NODE_OPTIONS="--max-old-space-size=8192"
+   npm run build
+   ```
+
+3. merge this front-end build update with the `main` branch.
+4. follow "To deploy a test version" steps above to deploy the new front-end build update to test version.
 
 
 **To deploy a new production version of the software to the server:**
