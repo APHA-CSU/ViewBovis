@@ -6,18 +6,16 @@ const HotspotLayers = ({ isChecked }) => {
   const map = useMap();
   const hotspotCols = function (area) {
     switch (area) {
-      case "HS 28":
-        return "red";
-      case "HS 27":
-        return "blue";
-      case "HS 26":
-        return "orange";
-      case "HS 23":
-        return "yellow";
       case "HS 21":
         return "pink";
+      case "HS 23":
+        return "yellow";
+      case "HS 28":
+        return "red";
       case "HS 29":
         return "purple";
+      case "HS 30":
+        return "blue"
       default:
         return "black";
     }
@@ -36,8 +34,8 @@ const HotspotLayers = ({ isChecked }) => {
   const hotspotLegend = L.control({ position: "bottomright" });
   hotspotLegend.onAdd = function (map) {
     let div = L.DomUtil.create("div", "info legend");
-    const category = ["HS 28", "HS 27", "HS 26", "HS 23", "HS 21", "HS 29"];
-    const colours = ["red", "blue", "orange", "yellow", "pink", "purple"];
+    const category = ["HS 21", "HS 23", "HS 28", "HS 29", "HS 30"];
+    const colours = ["pink", "yellow", "red",  "purple", "blue"];
 
     // Build legend: loop through levels and generate a label with a colored square
 
