@@ -2,12 +2,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FormImg from "../../imgs/feedback_form.svg";
 import TeamsImg from "../../imgs/ms_teams.svg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setShowPage } from "../../features/counter/securitySlice";
 
 const HelpSupport = () => {
   const showHelpSupportPage = useSelector(
     (state) => state.security.showHelpSupportPage
   );
+  const dispatch = useDispatch();
   return (
     <div className={showHelpSupportPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
@@ -80,6 +82,16 @@ const HelpSupport = () => {
                 rel="noreferrer noopener"
               >
                 Training Exercises
+              </a>
+            </p>
+            <p>
+              <a
+                className="text-hyperlink"
+                onClick={() => {
+                  dispatch(setShowPage("faq"));
+                }}
+              >
+                Frequently Asked Questions
               </a>
             </p>
           </div>
