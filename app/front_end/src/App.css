@@ -102,3 +102,12 @@ a.nav-link:hover {
   outline: none !important;
   height: 88vh;
 }
+
+/* FAQ PAGE */
+
+.accordion-button:not(.collapsed) {
+  color: black !important;
+  background-color: white !important;
+  
+}
+
