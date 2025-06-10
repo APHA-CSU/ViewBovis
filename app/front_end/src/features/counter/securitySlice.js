@@ -12,6 +12,7 @@ export const securitySlice = createSlice({
     showCattleMovementPage: false,
     showNextStrainPage: false,
     showHelpSupportPage: false,
+    showFAQpage: false,
     showCPHSearchPage: false,
     activeLink: "home",
   },
@@ -35,6 +36,7 @@ export const securitySlice = createSlice({
       state.showCattleMovementPage = false;
       state.showNextStrainPage = false;
       state.showHelpSupportPage = false;
+      state.showFAQpage = false;
       state.showCPHSearchPage = false;
       switch (action.payload) {
         case "home":
@@ -51,6 +53,9 @@ export const securitySlice = createSlice({
           break;
         case "helpsupport":
           state.showHelpSupportPage = true;
+          break;
+        case "faq":
+          state.showFAQpage = true;
           break;
         case "cphsearch":
           state.showCPHSearchPage = true;
