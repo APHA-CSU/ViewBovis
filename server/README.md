@@ -256,7 +256,7 @@ Before deploying new versions of the software, it is important to deploy a versi
 if the build process fails with the error `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` allocate more memory to Node.js:
 
    ```
-   NODE_OPTIONS="--max-old-space-size=8192"
+   export NODE_OPTIONS="--max-old-space-size=8192"
    npm run build
    ```
 

@@ -4,6 +4,7 @@ import CattleMovement from "./components/CattleMovement/CattleMovement.jsx";
 import SNPMap from "./components/SNPDistance/SNPMap.jsx";
 import Nextstrain from "./components/Nextstrain/Nextstrain.jsx";
 import HelpSupport from "./components/HelpSupport/HelpSupport.jsx";
+import FAQ from "./components/HelpSupport/FAQ.jsx"
 import NavbarComp from "./components/Navbar/NavbarComp.jsx";
 import SecurityModal from "./components/SecurityModal/SecurityModal.jsx";
 import { lazy, useEffect } from "react";
@@ -58,6 +59,7 @@ function App() {
       />
       <Nextstrain />
       <HelpSupport />
+      <FAQ />
     </>
   );
 }
