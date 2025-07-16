@@ -69,7 +69,7 @@ The system architecure diagram, shown below, illustrates the data flow for the V
 1. An [nginx](https://nginx.org/en/) proxy server that runs on the machine routes external requests from `port 80` at the `viewbovis-beta.int.sce.network` subdomain to `port 3000` on localhost. The app itself is run using [Gunicorn](https://gunicorn.org/) as production server within a [Docker](https://www.docker.com/) container which shares the host machine's networking namespace. Gunicorn serves the app to `port 3000` within the container and therefore also on the host machine. The Nextsrain Auspice dashboard is also served through nginx on a separate subdomain, `nextstrain-beta.int.sce.network`. Requests at this subdomain are forwarded to port 4001 by nginx. The Auspice dashboard is embedded in the app, using an iframe which points back to the externally facing `nextstrain-beta.int.sce.network` subdomain.
 1. Requests from users on the corporate network are routed to `ranch-869` via the SCE managed PaloAlto VPN service. The VPN manages traffic into and out of the SCE, as well as authenticating requests to users via a login screen. The VPN ensures only those who have been granted access by SCE governance can reach the server. Authenticated requests are routed to `ranch-869`, `port 80`.
 
-![architecture](https://github.com/aphascience/ViewBovis/assets/10742324/081165f2-2785-4335-91ad-a0a77f511b6c)
+![architecture](https://github.com/user-attachments/assets/deea50c6-6b39-456b-9c5e-856abe1d1527)
 
 ## <a name="ranch-869"></a> `ranch-869` Management
 
