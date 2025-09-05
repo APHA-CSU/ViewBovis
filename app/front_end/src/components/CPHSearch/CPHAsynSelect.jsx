@@ -131,7 +131,7 @@ const CPHAsyncSelect = ({ setCphMetadata }) => {
         }
         noOptionsMessage={() => {
           return inputValue.replace(/ /g, "").length < 3
-            ? "Type atleast three characters"
+            ? "Type at least three characters"
             : "No options available";
         }}
         value={cphValue}

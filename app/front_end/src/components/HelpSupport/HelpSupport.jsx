@@ -5,7 +5,7 @@ import TeamsImg from "../../imgs/ms_teams.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { setShowPage } from "../../features/counter/securitySlice";
 
-const HelpSupport = () => {
+const HelpSupport = ({ Footer, Banner }) => {
   const showHelpSupportPage = useSelector(
     (state) => state.security.showHelpSupportPage
   );
@@ -13,27 +13,7 @@ const HelpSupport = () => {
   return (
     <div className={showHelpSupportPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
-      <div className="row alpha-side-margin">
-        <div className="govuk-phase-banner ">
-          <div>
-            <strong className="govuk-tag govuk-phase-banner__content__tag">
-              BETA
-            </strong>
-            <span>
-              This is a new service &ndash; your{" "}
-              <a
-                className="text-hyperlink"
-                href="https://forms.office.com/e/RXTi1RzGnF"
-                target="_blank"
-                rel="noreferrer"
-              >
-                feedback
-              </a>{" "}
-              will help us to improve it.
-            </span>
-          </div>
-        </div>
-      </div>
+      <Banner />
       {/* <!-- Box Quick-Links Content --> */}
       <Row>
         {/* <!-- Support Documents box --> */}
@@ -290,30 +270,7 @@ const HelpSupport = () => {
         <br></br>
       </Row>
       {/* <!-- Government Footer --> */}
-      <Row className="footer">
-        <div className="d-flex justify-content-between">
-          <div className="text-start footer-text">
-            Service developed and maintained by APHA Science
-          </div>
-          <div>
-            <a
-              className="text-end text-decoration-underline text-hyperlink px-3"
-              href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Technical Support
-            </a>
-            {/* // <!-- Accessibility Statement  */}
-            <a
-              className="text-end text-decoration-underline text-hyperlink"
-              href="#home"
-            >
-              Accessibility Statement
-            </a>
-          </div>
-        </div>
-      </Row>
+      <Footer />
     </div>
   );
 };
