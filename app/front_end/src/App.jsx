@@ -61,7 +61,7 @@ function App() {
       />
       <Nextstrain Footer={Footer} Banner={Banner} />
       <HelpSupport Footer={Footer} Banner={Banner} />
-      <FAQ />
+      <FAQ Footer={Footer} />
     </>
   );
 }
