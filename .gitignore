@@ -4,7 +4,6 @@
 #ignore node modulus of the react app version
 node_modules
 /app/front_end/build
-/app/build
 
 .pnp
 .pnp.js
