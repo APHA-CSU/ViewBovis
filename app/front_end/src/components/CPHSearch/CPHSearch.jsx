@@ -7,7 +7,7 @@ import CPHTableComp from "./CPHTableComp";
 import CPHAsyncSelect from "./CPHAsynSelect";
 import { useState } from "react";
 
-const CPHSearch = ({}) => {
+const CPHSearch = ({ Banner }) => {
   const showCPHSearchPage = useSelector(
     (state) => state.security.showCPHSearchPage
   );
@@ -17,27 +17,7 @@ const CPHSearch = ({}) => {
   return (
     <div className={showCPHSearchPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
-      <div className="row alpha-side-margin">
-        <div className="govuk-phase-banner ">
-          <div>
-            <strong className="govuk-tag govuk-phase-banner__content__tag">
-              BETA
-            </strong>
-            <span>
-              This is a new service &ndash; your{" "}
-              <a
-                className="text-hyperlink"
-                href="https://forms.office.com/e/RXTi1RzGnF"
-                target="_blank"
-                rel="noreferrer"
-              >
-                feedback
-              </a>{" "}
-              will help us to improve it.
-            </span>
-          </div>
-        </div>
-      </div>
+      <Banner />
       <br />
       {/* <!-- Nextstrain Logo and Description -->     */}
       <Row className="align-items-center">

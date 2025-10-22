@@ -4,13 +4,15 @@ import CattleMovement from "./components/CattleMovement/CattleMovement.jsx";
 import SNPMap from "./components/SNPDistance/SNPMap.jsx";
 import Nextstrain from "./components/Nextstrain/Nextstrain.jsx";
 import HelpSupport from "./components/HelpSupport/HelpSupport.jsx";
-import FAQ from "./components/HelpSupport/FAQ.jsx"
+import FAQ from "./components/HelpSupport/FAQ.jsx";
 import NavbarComp from "./components/Navbar/NavbarComp.jsx";
 import SecurityModal from "./components/SecurityModal/SecurityModal.jsx";
 import { lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setShowLayers } from "./features/counter/securitySlice.js";
 import CPHSearch from "./components/CPHSearch/CPHSearch.jsx";
+import Footer from "./components/Footer/Footer.jsx";
+import Banner from "./components/Banner/Banner.jsx";
 
 function App() {
   /* Lazy loading the layers*/
@@ -43,8 +45,8 @@ function App() {
     <>
       <SecurityModal />
       <NavbarComp />
-      <Home />
-      <CPHSearch />
+      <Home Footer={Footer} Banner={Banner} />
+      <CPHSearch Banner={Banner} />
       <SNPMap
         SNPMapComp={SNPMapComp}
         RiskLayers={RiskLayers}
@@ -57,9 +59,9 @@ function App() {
         CountyLayers={CountyLayers}
         HotspotLayers={HotspotLayers}
       />
-      <Nextstrain />
-      <HelpSupport />
-      <FAQ />
+      <Nextstrain Footer={Footer} Banner={Banner} />
+      <HelpSupport Footer={Footer} Banner={Banner} />
+      <FAQ Footer={Footer} />
     </>
   );
 }
