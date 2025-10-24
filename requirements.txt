@@ -2,7 +2,7 @@ flask==2.2.5
 Werkzeug==3.0.6
 pandas==1.5.3
 gunicorn==23.0.0
-requests==2.32.0
+requests==2.32.4
 pytest==7.4.2
 Flask-WTF==1.2.1
 numpy==1.26.3

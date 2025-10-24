@@ -10,7 +10,7 @@ import {
 } from "./../../features/counter/securitySlice.js";
 import "./Home.css";
 
-const Home = () => {
+const Home = ({ Footer, Banner }) => {
   const latestDate = useSelector((state) => state.security.latestDate);
   const showHomePage = useSelector((state) => state.security.showHomePage);
   const dispatch = useDispatch();
@@ -38,27 +38,7 @@ const Home = () => {
     <div className={showHomePage ? "" : "hidden"}>
       <Container fluid data-testid="home-1">
         {/* <!-- Government BETA Banner --> */}
-        <div className="row alpha-side-margin">
-          <div className="govuk-phase-banner ">
-            <div>
-              <strong className="govuk-tag govuk-phase-banner__content__tag">
-                BETA
-              </strong>
-              <span>
-                This is a new service &ndash; your{" "}
-                <a
-                  className="text-hyperlink"
-                  href="https://forms.office.com/e/RXTi1RzGnF"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  feedback
-                </a>{" "}
-                will help us to improve it.
-              </span>
-            </div>
-          </div>
-        </div>
+        <Banner />
         {/* <!-- ViewBovis Logo and Description --> */}
         <Row className="align-items-center">
           {/* <!-- Column: logo --> */}
@@ -83,7 +63,7 @@ const Home = () => {
                 <b>
                   {" "}
                   Please note the scheduled downtime for ViewBovis is from
-                  10pm-8am daily
+                  10pm-6am daily
                 </b>
                 {""}.
               </p>
@@ -230,30 +210,7 @@ const Home = () => {
           </Col>
         </Row>
         {/* <!-- Government Footer --> */}
-        <Row className="footer">
-          <div className="d-flex justify-content-between">
-            <div className="text-start footer-text">
-              Service developed and maintained by APHA Science
-            </div>
-            <div>
-              <a
-                className="text-end text-decoration-underline text-hyperlink px-3"
-                href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Technical Support
-              </a>
-              {/* // <!-- Accessibility Statement  */}
-              <a
-                className="text-end text-decoration-underline text-hyperlink"
-                href="#home"
-              >
-                Accessibility Statement
-              </a>
-            </div>
-          </div>
-        </Row>
+        <Footer />
       </Container>
     </div>
   );

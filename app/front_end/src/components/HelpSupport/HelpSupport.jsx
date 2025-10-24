@@ -4,8 +4,9 @@ import FormImg from "../../imgs/feedback_form.svg";
 import TeamsImg from "../../imgs/ms_teams.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { setShowPage } from "../../features/counter/securitySlice";
+import "./Help.css";
 
-const HelpSupport = () => {
+const HelpSupport = ({ Footer, Banner }) => {
   const showHelpSupportPage = useSelector(
     (state) => state.security.showHelpSupportPage
   );
@@ -13,35 +14,12 @@ const HelpSupport = () => {
   return (
     <div className={showHelpSupportPage ? "container-fluid" : "hidden"}>
       {/* <!-- Government BETA Banner --> */}
-      <div className="row alpha-side-margin">
-        <div className="govuk-phase-banner ">
-          <div>
-            <strong className="govuk-tag govuk-phase-banner__content__tag">
-              BETA
-            </strong>
-            <span>
-              This is a new service &ndash; your{" "}
-              <a
-                className="text-hyperlink"
-                href="https://forms.office.com/e/RXTi1RzGnF"
-                target="_blank"
-                rel="noreferrer"
-              >
-                feedback
-              </a>{" "}
-              will help us to improve it.
-            </span>
-          </div>
-        </div>
-      </div>
+      <Banner />
       {/* <!-- Box Quick-Links Content --> */}
       <Row>
         {/* <!-- Support Documents box --> */}
         <Col>
-          <div
-            className="home-box"
-            style={{ marginTop: "20px", height: "100%" }}
-          >
+          <div className="home-box help">
             <p className="fw-bold">Support Documents</p>
             <p>These support documents should be the first port of call:</p>
             <p>
@@ -98,10 +76,7 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Training Videos box --> */}
         <Col>
-          <div
-            className="home-box"
-            style={{ marginTop: "20px", height: "100%" }}
-          >
+          <div className="home-box help">
             <p className="fw-bold">Training Videos</p>
             <p>These cover different aspects of learning and usability:</p>
             <p>
@@ -148,10 +123,7 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Other links and tools box --> */}
         <Col>
-          <div
-            className="home-box"
-            style={{ marginTop: "20px", height: "100%" }}
-          >
+          <div className="home-box help">
             <p className="fw-bold">Other links and tools</p>
             <p>Other associated tools which may be of use:</p>
             <p>
@@ -214,7 +186,7 @@ const HelpSupport = () => {
                 MAGIC
               </a>
             </p>
-            <h1 style={{ color: "black", fontSize: "11px" }}>
+            <h1 className="help-note">
               Note: We CANNOT provide support with these tools; contact the
               service provider.
             </h1>
@@ -222,10 +194,7 @@ const HelpSupport = () => {
         </Col>
         {/* <!-- Contact Us box --> */}
         <Col>
-          <div
-            className="home-box"
-            style={{ marginTop: "20px", height: "100%" }}
-          >
+          <div className="home-box help">
             <p className="fw-bold">Contact Us</p>
             <p>
               We would love to hear your feedback about the app, any tech issues
@@ -246,7 +215,7 @@ const HelpSupport = () => {
                   ></img>
                 </a>
               </div>
-              <div className="col" style={{ paddingTop: "15px" }}>
+              <div className="col" id="contact-us">
                 <a
                   className="text-hyperlink"
                   href="https://forms.office.com/e/RXTi1RzGnF"
@@ -273,7 +242,7 @@ const HelpSupport = () => {
                   ></img>
                 </a>
               </div>
-              <div className="col" style={{ paddingTop: "20px" }}>
+              <div className="col" id="contact-us">
                 <a
                   className="text-hyperlink"
                   href="https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3AWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2%2Fconversations%3FgroupId%3D9f4fc917-23c7-4ba4-b8ce-155c744d0152%26tenantId%3D770a2450-0227-4c62-90c7-4e38537f1102&type=team&deeplinkId=565be602-619e-4646-aff0-6246102b92fc&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true"
@@ -290,30 +259,7 @@ const HelpSupport = () => {
         <br></br>
       </Row>
       {/* <!-- Government Footer --> */}
-      <Row className="footer">
-        <div className="d-flex justify-content-between">
-          <div className="text-start footer-text">
-            Service developed and maintained by APHA Science
-          </div>
-          <div>
-            <a
-              className="text-end text-decoration-underline text-hyperlink px-3"
-              href="https://teams.microsoft.com/l/team/19%3aWjZwu_WAoBEUo4LzTOKVHI6J35X3EHNIXt7o4H7il6E1%40thread.tacv2/conversations?groupId=9f4fc917-23c7-4ba4-b8ce-155c744d0152&tenantId=770a2450-0227-4c62-90c7-4e38537f1102"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Technical Support
-            </a>
-            {/* // <!-- Accessibility Statement  */}
-            <a
-              className="text-end text-decoration-underline text-hyperlink"
-              href="#home"
-            >
-              Accessibility Statement
-            </a>
-          </div>
-        </div>
-      </Row>
+      <Footer />
     </div>
   );
 };

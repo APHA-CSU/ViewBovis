@@ -9,8 +9,13 @@ const SecurityModal = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-  }, []);
+    if (showModal) {
+      window.scrollTo(0, 0);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showModal]);
 
   return (
     <>
