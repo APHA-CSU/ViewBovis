@@ -1,0 +1,43 @@
+.help {
+  margin-top: 20px;
+  height: 100%;
+}
+
+.help-note {
+  color: black;
+  font-size: 11px;
+}
+
+#contact-us {
+  padding-top: 20px;
+}
+
+.faq-snp-img {
+  width: 400px;
+  height: auto;
+}
+
+.faqsearch-box {
+  position: relative;
+  display: inline-block;
+}
+
+.faqsearch-box input {
+  width: 30vw;
+  padding: 8px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #dee2e6;
+  padding: 8px 36px 8px 8px;
+}
+
+.faqsearch-box button {
+  position: absolute;
+  right: 8px;
+  top: 33%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
